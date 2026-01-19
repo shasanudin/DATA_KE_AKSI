@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data DTSEN</title>
+</head>
+<body>
+
+<div id="navbar"></div>
+
+<section class="container py-5">
+  <h2>Data DTSEN Kecamatan Sumber</h2>
+  <p class="text-muted">Ringkasan data kesejahteraan berbasis wilayah.</p>
+  <hr>
+
+<h4 class="mt-4">Distribusi DTSEN Seluruh Desa/Kelurahan</h4>
+<p class="text-muted">
+  Akumulasi jumlah KK per desil (D1–D10) di Kecamatan Sumber.
+</p>
+
+<div class="table-responsive">
+  <table class="table table-bordered table-sm text-center">
+    <thead class="thead-light">
+      <tr>
+        <th>Desil</th>
+        <th>Total KK</th>
+      </tr>
+    </thead>
+    <tbody id="tabelDesilKecamatan">
+      <tr>
+        <td colspan="2" class="text-muted">Memuat data…</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+  <div class="form-group col-md-4 px-0">
+    <label><strong>Pilih Desa / Kelurahan</strong></label>
+    <select id="wilayahSelect" class="form-control"></select>
+  </div>
+
+  <div class="row text-center mb-4">
+    <div class="col-md-3">
+      <div class="card"><div class="card-body"><h3 id="totalKK">—</h3><p>Total KK</p></div></div>
+    </div>
+    <div class="col-md-3">
+      <div class="card"><div class="card-body"><h3 id="desil12">—%</h3><p>Desil 1–2</p></div></div>
+    </div>
+    <div class="col-md-3">
+      <div class="card"><div class="card-body"><h3 id="desil34">—%</h3><p>Desil 3–4</p></div></div>
+    </div>
+    <div class="col-md-3">
+      <div class="card"><div class="card-body"><h3 id="desil510">—%</h3><p>Desil 5–10</p></div></div>
+    </div>
+  </div>
+
+  <canvas id="desilChart" height="120"></canvas>
+
+  <small class="text-muted">Pembaruan data: <span id="updateData">-</span></small>
+</section>
+
+<script>
+fetch('navbar.html')
+  .then(r => r.text())
+  .then(t => document.getElementById('navbar').innerHTML = t);
+</script>
+
+</body>
+</html>
