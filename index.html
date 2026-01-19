@@ -59,16 +59,30 @@
 <!-- DATA DTSEN -->
 <section id="data" class="container py-5">
   <h2>Data DTSEN Kecamatan Sumber</h2>
-  <p class="text-muted">Ringkasan data kesejahteraan untuk penentuan prioritas program.</p>
+  <p class="text-muted">Ringkasan data kesejahteraan berbasis wilayah.</p>
+
+  <div class="form-group col-md-4 px-0">
+    <label><strong>Pilih Desa / Kelurahan</strong></label>
+    <select id="wilayahSelect" class="form-control"></select>
+  </div>
 
   <div class="row text-center mb-4">
-    <div class="col-md-3"><div class="card"><div class="card-body"><h3 id="totalKK">-</h3><p>Total KK</p></div></div></div>
-    <div class="col-md-3"><div class="card"><div class="card-body"><h3 id="desil12">-%</h3><p>Desil 1–2</p></div></div></div>
-    <div class="col-md-3"><div class="card"><div class="card-body"><h3 id="desil34">-%</h3><p>Desil 3–4</p></div></div></div>
-    <div class="col-md-3"><div class="card"><div class="card-body"><h3 id="desil510">-%</h3><p>Desil 5–10</p></div></div></div>
+    <div class="col-md-3">
+      <div class="card"><div class="card-body"><h3 id="totalKK">—</h3><p>Total KK</p></div></div>
+    </div>
+    <div class="col-md-3">
+      <div class="card"><div class="card-body"><h3 id="desil12">—%</h3><p>Desil 1–2</p></div></div>
+    </div>
+    <div class="col-md-3">
+      <div class="card"><div class="card-body"><h3 id="desil34">—%</h3><p>Desil 3–4</p></div></div>
+    </div>
+    <div class="col-md-3">
+      <div class="card"><div class="card-body"><h3 id="desil510">—%</h3><p>Desil 5–10</p></div></div>
+    </div>
   </div>
 
   <canvas id="desilChart" height="120"></canvas>
+
   <small class="text-muted">Pembaruan data: <span id="updateData">-</span></small>
 </section>
 
@@ -157,46 +171,52 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+let chart;
 fetch('data/dtsen.json')
   .then(res => res.json())
   .then(data => {
-    // Hitung agregat dari seluruh wilayah
-    let totalKK = 0;
-    let totalDesil = Array(10).fill(0);
-
-    data.wilayah.forEach(w => {
-      totalKK += w.total_kk;
-      w.desil.forEach((val, i) => totalDesil[i] += val);
+    const select = document.getElementById('wilayahSelect');
+    data.wilayah.forEach((w, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = w.nama;
+      select.appendChild(opt);
     });
 
-    // Rata-rata persentase desil
-    const avgDesil = totalDesil.map(v => Math.round(v / data.wilayah.length));
-
-    const desil12 = avgDesil[0] + avgDesil[1];
-    const desil34 = avgDesil[2] + avgDesil[3];
-    const desil510 = avgDesil.slice(4).reduce((a,b)=>a+b,0);
-
-    document.getElementById('totalKK').innerText = totalKK.toLocaleString('id-ID');
-    document.getElementById('desil12').innerText = desil12 + '%';
-    document.getElementById('desil34').innerText = desil34 + '%';
-    document.getElementById('desil510').innerText = desil510 + '%';
     document.getElementById('updateData').innerText = data.updated;
 
-    const ctx = document.getElementById('desilChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['D1','D2','D3','D4','D5','D6','D7','D8','D9','D10'],
-        datasets: [{
-          data: avgDesil,
-          backgroundColor: '#0d6efd'
-        }]
-      },
-      options: {
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true, ticks:{ callback:v=>v+'%' } } }
-      }
-    });
+    function renderWilayah(idx) {
+      const w = data.wilayah[idx];
+      document.getElementById('totalKK').innerText = w.total_kk.toLocaleString('id-ID');
+
+      const d12 = w.desil[0] + w.desil[1];
+      const d34 = w.desil[2] + w.desil[3];
+      const d510 = w.desil.slice(4).reduce((a,b)=>a+b,0);
+
+      document.getElementById('desil12').innerText = d12 + '%';
+      document.getElementById('desil34').innerText = d34 + '%';
+      document.getElementById('desil510').innerText = d510 + '%';
+
+      const ctx = document.getElementById('desilChart').getContext('2d');
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['D1','D2','D3','D4','D5','D6','D7','D8','D9','D10'],
+          datasets: [{
+            data: w.desil,
+            backgroundColor: '#0d6efd'
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks:{ callback:v=>v+'%' } } }
+        }
+      });
+    }
+
+    select.addEventListener('change', e => renderWilayah(e.target.value));
+    renderWilayah(0);
   })
   .catch(err => console.error('Gagal load data DTSEN:', err));
 </script>
