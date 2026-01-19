@@ -160,19 +160,35 @@
 fetch('data/dtsen.json')
   .then(res => res.json())
   .then(data => {
-    document.getElementById('totalKK').innerText = data.total_kk.toLocaleString('id-ID');
-    document.getElementById('desil12').innerText = data.desil["1-2"] + '%';
-    document.getElementById('desil34').innerText = data.desil["3-4"] + '%';
-    document.getElementById('desil510').innerText = data.desil["5-10"] + '%';
+    // Hitung agregat dari seluruh wilayah
+    let totalKK = 0;
+    let totalDesil = Array(10).fill(0);
+
+    data.wilayah.forEach(w => {
+      totalKK += w.total_kk;
+      w.desil.forEach((val, i) => totalDesil[i] += val);
+    });
+
+    // Rata-rata persentase desil
+    const avgDesil = totalDesil.map(v => Math.round(v / data.wilayah.length));
+
+    const desil12 = avgDesil[0] + avgDesil[1];
+    const desil34 = avgDesil[2] + avgDesil[3];
+    const desil510 = avgDesil.slice(4).reduce((a,b)=>a+b,0);
+
+    document.getElementById('totalKK').innerText = totalKK.toLocaleString('id-ID');
+    document.getElementById('desil12').innerText = desil12 + '%';
+    document.getElementById('desil34').innerText = desil34 + '%';
+    document.getElementById('desil510').innerText = desil510 + '%';
     document.getElementById('updateData').innerText = data.updated;
 
     const ctx = document.getElementById('desilChart').getContext('2d');
     new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Desil 1','Desil 2','Desil 3','Desil 4','Desil 5','Desil 6','Desil 7','Desil 8','Desil 9','Desil 10'],
+        labels: ['D1','D2','D3','D4','D5','D6','D7','D8','D9','D10'],
         datasets: [{
-          data: data.chart,
+          data: avgDesil,
           backgroundColor: '#0d6efd'
         }]
       },
