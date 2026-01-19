@@ -94,3 +94,26 @@ footer {
     text-align: center;
   }
 }
+
+.badge-risiko {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  display: inline-block;
+}
+
+.risiko-tinggi {
+  background-color: #dc3545; /* merah */
+}
+
+.risiko-sedang {
+  background-color: #ffc107; /* kuning */
+  color: #212529;
+}
+
+.risiko-rendah {
+  background-color: #28a745; /* hijau */
+}
+
