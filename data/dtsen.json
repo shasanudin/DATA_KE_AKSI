@@ -1,11 +1,80 @@
 {
   "kecamatan": "Sumber",
-  "total_kk": 12456,
-  "desil": {
-    "1_2": 28,
-    "3_4": 22,
-    "5_10": 50
-  },
-  "updated": "2026-01-10",
-  "catatan": "Data hasil DTSEN, bersifat dinamis dan dapat berubah"
+  "kabupaten": "Cirebon",
+  "provinsi": "Jawa Barat",
+  "updated": "Januari 2026",
+
+  "wilayah": [
+    {
+      "nama": "Babakan",
+      "total_kk": 920,
+      "desil": [14, 12, 10, 9, 11, 13, 12, 8, 7, 4]
+    },
+    {
+      "nama": "Gegunung",
+      "total_kk": 780,
+      "desil": [15, 13, 11, 10, 12, 11, 9, 8, 7, 4]
+    },
+    {
+      "nama": "Kaliwadas",
+      "total_kk": 640,
+      "desil": [18, 14, 12, 10, 10, 9, 8, 7, 6, 6]
+    },
+    {
+      "nama": "Kemantren",
+      "total_kk": 860,
+      "desil": [12, 11, 10, 9, 13, 14, 12, 9, 6, 4]
+    },
+    {
+      "nama": "Kenanga",
+      "total_kk": 1050,
+      "desil": [10, 9, 10, 11, 14, 15, 13, 8, 6, 4]
+    },
+    {
+      "nama": "Pasalakan",
+      "total_kk": 720,
+      "desil": [17, 14, 12, 10, 11, 10, 9, 7, 6, 4]
+    },
+    {
+      "nama": "Pejambon",
+      "total_kk": 690,
+      "desil": [16, 13, 11, 10, 12, 11, 9, 8, 6, 4]
+    },
+    {
+      "nama": "Perbutulan",
+      "total_kk": 830,
+      "desil": [14, 12, 11, 10, 12, 13, 11, 9, 6, 2]
+    },
+    {
+      "nama": "Sendang",
+      "total_kk": 760,
+      "desil": [15, 13, 12, 10, 11, 11, 10, 8, 6, 4]
+    },
+    {
+      "nama": "Sumber",
+      "total_kk": 1200,
+      "desil": [9, 8, 9, 10, 15, 16, 14, 9, 7, 3]
+    },
+    {
+      "nama": "Tukmudal",
+      "total_kk": 880,
+      "desil": [13, 12, 11, 10, 13, 14, 12, 9, 4, 2]
+    },
+    {
+      "nama": "Watubelah",
+      "total_kk": 810,
+      "desil": [14, 13, 12, 11, 12, 11, 9, 8, 6, 4]
+    },
+    {
+      "nama": "Matangaji",
+      "total_kk": 560,
+      "desil": [19, 15, 13, 11, 10, 9, 8, 7, 5, 3]
+    },
+    {
+      "nama": "Sidawangi",
+      "total_kk": 600,
+      "desil": [18, 15, 13, 11, 10, 9, 8, 7, 5, 4]
+    }
+  ]
 }
+
