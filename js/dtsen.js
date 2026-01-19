@@ -23,6 +23,21 @@ fetch("data/dtsen.json")
     // render tabel
     tbody.innerHTML = "";
     hasil.forEach((w, i) => {
+
+      let status = "";
+      let kelas = "";
+
+      if (w.total >= 30) {
+        status = "Risiko Tinggi";
+        kelas = "risiko-tinggi";
+      } else if (w.total >= 20) {
+        status = "Risiko Sedang";
+        kelas = "risiko-sedang";
+      } else {
+        status = "Risiko Rendah";
+        kelas = "risiko-rendah";
+      }
+
       tbody.innerHTML += `
         <tr>
           <td>${i + 1}</td>
@@ -31,11 +46,13 @@ fetch("data/dtsen.json")
           <td>${w.d1}</td>
           <td>${w.d2}</td>
           <td><strong>${w.total}</strong></td>
-        </tr>
-      `;
-    });
-
-  })
-  .catch(err => {
-    console.error("Gagal load DTSEN:", err);
+          <td>
+            <span class="badge-risiko ${kelas}">
+              ${status}
+            </span>
+          </td>
+      </tr>
+    `;
   });
+
+
