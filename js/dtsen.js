@@ -9,6 +9,33 @@ fetch("data/dtsen.json")
   .then(data => {
 
     /* =========================
+   AGREGASI DESIL KECAMATAN
+========================= */
+
+const tabelDesil = document.getElementById("tabelDesilKecamatan");
+
+// siapkan array total D1–D10
+let totalDesil = Array(10).fill(0);
+
+// akumulasi dari seluruh wilayah
+data.wilayah.forEach(w => {
+  (w.desil || []).forEach((nilai, i) => {
+    totalDesil[i] += Number(nilai) || 0;
+  });
+});
+
+// render tabel
+tabelDesil.innerHTML = "";
+totalDesil.forEach((nilai, i) => {
+  tabelDesil.innerHTML += `
+    <tr>
+      <td>D${i + 1}</td>
+      <td>${nilai.toLocaleString("id-ID")}</td>
+    </tr>
+  `;
+});
+
+    /* =========================
        RINGKASAN DATA KECAMATAN
     ========================= */
 
@@ -114,4 +141,5 @@ fetch("data/dtsen.json")
       `;
     }
   });
+
 
