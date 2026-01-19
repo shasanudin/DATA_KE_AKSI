@@ -1,23 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Data DTSEN</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data DTSEN | Kecamatan Sumber</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div id="navbar"></div>
-
-<section class="container py-5">
+<header class="container py-3">
   <h2>Data DTSEN Kecamatan Sumber</h2>
   <p class="text-muted">Ringkasan data kesejahteraan berbasis wilayah.</p>
   <hr>
-
-<h4 class="mt-4">Distribusi DTSEN Seluruh Desa/Kelurahan</h4>
-<p class="text-muted">
-  Akumulasi jumlah KK per desil (D1–D10) di Kecamatan Sumber.
+  <h4 class="mt-4">Distribusi DTSEN Seluruh Desa/Kelurahan</h4>
+  <p class="text-muted">
+    Akumulasi jumlah KK per desil (D1–D10) di Kecamatan Sumber.
 </p>
+</header>
 
-<div class="table-responsive">
+<div id="navbar"></div>
+
+<main class="table-responsive">
   <table class="table table-bordered table-sm text-center">
     <thead class="thead-light">
       <tr>
@@ -31,15 +36,14 @@
       </tr>
     </tbody>
   </table>
-</div>
+</main>
 
-
-  <div class="form-group col-md-4 px-0">
-    <label><strong>Pilih Desa / Kelurahan</strong></label>
+<main class="form-group col-md-4 px-0">
+  <label><strong>Pilih Desa / Kelurahan</strong></label>
     <select id="wilayahSelect" class="form-control"></select>
-  </div>
+</main>
 
-  <div class="row text-center mb-4">
+<main class="row text-center mb-4">
     <div class="col-md-3">
       <div class="card"><div class="card-body"><h3 id="totalKK">—</h3><p>Total KK</p></div></div>
     </div>
@@ -52,18 +56,87 @@
     <div class="col-md-3">
       <div class="card"><div class="card-body"><h3 id="desil510">—%</h3><p>Desil 5–10</p></div></div>
     </div>
-  </div>
-
   <canvas id="desilChart" height="120"></canvas>
 
   <small class="text-muted">Pembaruan data: <span id="updateData">-</span></small>
-</section>
+</main>
+  
+
+<footer class="py-4 text-center">
+  <small>© TKSK Sumber & Forum Puskesos Kecamatan Sumber</small>
+</footer>
 
 <script>
 fetch('navbar.html')
   .then(r => r.text())
-  .then(t => document.getElementById('navbar').innerHTML = t);
+  .then(html => {
+    document.getElementById('navbar').innerHTML = html;
+
+    const page = location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.nav-link').forEach(a => {
+      if (a.getAttribute('href') === page) {
+        a.classList.add('active');
+      }
+    });
+  });
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- SCRIPTS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let chart;
+fetch('data/dtsen.json')
+  .then(res => res.json())
+  .then(data => {
+    const select = document.getElementById('wilayahSelect');
+    data.wilayah.forEach((w, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = w.nama;
+      select.appendChild(opt);
+    });
+
+    document.getElementById('updateData').innerText = data.updated;
+
+    function renderWilayah(idx) {
+      const w = data.wilayah[idx];
+      document.getElementById('totalKK').innerText = w.total_kk.toLocaleString('id-ID');
+
+      const d12 = w.desil[0] + w.desil[1];
+      const d34 = w.desil[2] + w.desil[3];
+      const d510 = w.desil.slice(4).reduce((a,b)=>a+b,0);
+
+      document.getElementById('desil12').innerText = d12 + '%';
+      document.getElementById('desil34').innerText = d34 + '%';
+      document.getElementById('desil510').innerText = d510 + '%';
+
+      const ctx = document.getElementById('desilChart').getContext('2d');
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['D1','D2','D3','D4','D5','D6','D7','D8','D9','D10'],
+          datasets: [{
+            data: w.desil,
+            backgroundColor: '#0d6efd'
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks:{ callback:v=>v+'%' } } }
+        }
+      });
+    }
+
+    select.addEventListener('change', e => renderWilayah(e.target.value));
+    renderWilayah(0);
+  })
+  .catch(err => console.error('Gagal load data DTSEN:', err));
+</script>
+<script src="js/dtsen.js"></script>
+<script>
 </body>
 </html>
