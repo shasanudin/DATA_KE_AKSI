@@ -1,13 +1,59 @@
 fetch("data/dtsen.json")
-  .then(res => res.json())
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("File dtsen.json tidak ditemukan");
+    }
+    return response.json();
+  })
   .then(data => {
 
-    const tbody = document.getElementById("tabelPrioritas");
+    /* =========================
+       RINGKASAN DATA KECAMATAN
+    ========================= */
 
-    // hitung total desil 1–2 per wilayah
+    let totalKK = 0;
+    let totalD12 = 0;
+    let totalD34 = 0;
+    let totalD510 = 0;
+
+    data.wilayah.forEach(w => {
+      const kk = Number(w.total_kk) || 0;
+      totalKK += kk;
+
+      const d = w.desil || [];
+      totalD12 += (d[0] || 0) + (d[1] || 0);
+      totalD34 += (d[2] || 0) + (d[3] || 0);
+      totalD510 += (d[4] || 0) + (d[5] || 0) + (d[6] || 0) + (d[7] || 0) + (d[8] || 0) + (d[9] || 0);
+    });
+
+    // render ringkasan (AMAN dari undefined)
+    document.getElementById("totalKK").innerText =
+      totalKK.toLocaleString("id-ID");
+
+    document.getElementById("desil12").innerText =
+      totalD12.toLocaleString("id-ID");
+
+    document.getElementById("desil34").innerText =
+      totalD34.toLocaleString("id-ID");
+
+    document.getElementById("desil510").innerText =
+      totalD510.toLocaleString("id-ID");
+
+    document.getElementById("updateData").innerText =
+      data.updated || "-";
+
+
+    /* =========================
+       TABEL PRIORITAS + RISIKO
+    ========================= */
+
+    const tbody = document.getElementById("tabelPrioritas");
+    tbody.innerHTML = "";
+
     const hasil = data.wilayah.map(w => {
-      const d1 = w.desil[0];
-      const d2 = w.desil[1];
+      const d1 = w.desil?.[0] || 0;
+      const d2 = w.desil?.[1] || 0;
+
       return {
         nama: w.nama,
         jenis: w.jenis,
@@ -17,11 +63,9 @@ fetch("data/dtsen.json")
       };
     });
 
-    // urutkan dari tertinggi
+    // sort descending
     hasil.sort((a, b) => b.total - a.total);
 
-    // render tabel
-    tbody.innerHTML = "";
     hasil.forEach((w, i) => {
 
       let status = "";
@@ -51,8 +95,21 @@ fetch("data/dtsen.json")
               ${status}
             </span>
           </td>
-      </tr>
-    `;
+        </tr>
+      `;
+    });
+
+  })
+  .catch(error => {
+    console.error("Gagal load data DTSEN:", error);
+    const tbody = document.getElementById("tabelPrioritas");
+    if (tbody) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" class="text-center text-danger">
+            Gagal memuat data DTSEN
+          </td>
+        </tr>
+      `;
+    }
   });
-
-
