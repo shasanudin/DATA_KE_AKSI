@@ -56,6 +56,38 @@
 </section>
 
 <!-- DATA DTSEN -->
+<section class="container my-5">
+  <h2 class="mb-4">Distribusi Desil DTSEN Kecamatan Sumber</h2>
+  <canvas id="desilChart" height="120"></canvas>
+</section>
+<section class="container my-5">
+  <h2 class="mb-3">Desa dan Kelurahan Kecamatan Sumber</h2>
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>No</th>
+        <th>Nama Desa / Kelurahan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Babakan</td></tr>
+      <tr><td>2</td><td>Gegunung</td></tr>
+      <tr><td>3</td><td>Kaliwadas</td></tr>
+      <tr><td>4</td><td>Kemantren</td></tr>
+      <tr><td>5</td><td>Kenanga</td></tr>
+      <tr><td>6</td><td>Pasalakan</td></tr>
+      <tr><td>7</td><td>Pejambon</td></tr>
+      <tr><td>8</td><td>Perbutulan</td></tr>
+      <tr><td>9</td><td>Sendang</td></tr>
+      <tr><td>10</td><td>Sumber</td></tr>
+      <tr><td>11</td><td>Tukmudal</td></tr>
+      <tr><td>12</td><td>Watubelah</td></tr>
+      <tr><td>13</td><td>Matangaji</td></tr>
+      <tr><td>14</td><td>Sidawangi</td></tr>
+    </tbody>
+  </table>
+</section>
+
 <section id="data" class="container py-5">
   <h2>Data DTSEN Kecamatan Sumber</h2>
   <p class="text-muted">Ringkasan data kesejahteraan untuk penentuan prioritas program.</p>
@@ -138,6 +170,46 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/dtsen.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('desilChart').getContext('2d');
+
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: [
+      'Desil 1',
+      'Desil 2',
+      'Desil 3',
+      'Desil 4',
+      'Desil 5',
+      'Desil 6',
+      'Desil 7',
+      'Desil 8',
+      'Desil 9',
+      'Desil 10'
+    ],
+    datasets: [{
+      label: 'Persentase Rumah Tangga (%)',
+      data: [12, 10, 9, 8, 11, 13, 14, 9, 8, 6],
+      backgroundColor: '#0d6efd'
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: { callback: value => value + '%' }
+      }
+    }
+  }
+});
+</script>
+
 
 </body>
 </html>
