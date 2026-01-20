@@ -3,85 +3,81 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Verifikasi Digital | TKSK Sumber</title>
+    <title>Sistem Verifikasi Digital | TKSK Sumber</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .scanner-container { max-width: 500px; margin: 40px auto; }
+        :root { --primary: #2c3e50; --success: #27ae60; --danger: #e74c3c; }
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
+        .navbar { background: var(--primary) !important; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
         #reader { 
-            width: 100%; 
-            border: none; 
-            border-radius: 20px; 
-            overflow: hidden; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            background: #000;
+            width: 100%; max-width: 450px; margin: 20px auto; 
+            border: 5px solid #fff; border-radius: 20px; 
+            overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
+
         .result-box { 
-            display: none; 
-            margin-top: 25px; 
-            padding: 30px; 
-            border-radius: 20px; 
-            animation: slideIn 0.5s ease-out;
+            display: none; border-radius: 15px; padding: 25px; 
+            margin-top: 20px; border: 2px solid transparent;
+            animation: fadeIn 0.5s ease;
         }
-        .valid { background: #e6fffa; border: 2px solid #38b2ac; color: #234e52; }
-        .invalid { background: #fff5f5; border: 2px solid #feb2b2; color: #742a2a; }
-        .signer-card {
-            background: rgba(255,255,255,0.7);
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .status-valid { background: #e8f5e9; border-color: var(--success); color: #1b5e20; }
+        .status-invalid { background: #ffebee; border-color: var(--danger); color: #b71c1c; }
+
+        .signer-info { background: rgba(255,255,255,0.6); padding: 15px; border-radius: 10px; margin-top: 15px; }
+        .btn-retry { border-radius: 30px; padding: 10px 30px; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div id="navbar"></div>
+<nav class="navbar navbar-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand font-weight-bold" href="#"><i class="fas fa-shield-alt"></i> TKSK SUMBER VERIFY</a>
+    </div>
+</nav>
 
-<div class="container scanner-container text-center">
+<div class="container text-center">
     <div class="mb-4">
-        <h2 class="font-weight-bold text-primary">Verifikasi Dokumen</h2>
-        <p class="text-muted">Validasi keaslian data DTSEN melalui tanda tangan digital ECDSA.</p>
+        <h3 class="font-weight-bold">Pemindai Dokumen Digital</h3>
+        <p class="text-muted">Validasi keaslian laporan DTSEN Kecamatan Sumber</p>
     </div>
 
     <div id="reader"></div>
 
     <div id="result" class="result-box text-left">
-        <div class="text-center mb-4">
-            <div id="statusIcon" style="font-size: 4rem;"></div>
-            <h3 id="statusTitle" class="font-weight-bold"></h3>
+        <div class="text-center mb-3">
+            <i id="mainIcon" class="fas fa-check-circle fa-4x mb-2"></i>
+            <h4 id="statusTitle" class="font-weight-bold"></h4>
         </div>
 
-        <div id="statusContent">
-            <div class="signer-card">
-                <small class="text-muted d-block mb-1"><i class="fas fa-user-shield"></i> Otoritas Penanda Tangan:</small>
-                <strong id="signerName" class="h5">-</strong><br>
-                <span id="signerJob" class="badge badge-primary">-</span>
+        <div id="dataContent">
+            <div class="signer-info">
+                <small class="text-muted d-block uppercase font-weight-bold">Otoritas Penanda Tangan:</small>
+                <div id="signerName" class="h5 mb-0">-</div>
+                <div id="signerJob" class="badge badge-primary">-</div>
             </div>
 
-            <div class="mt-3">
-                <label class="small font-weight-bold text-uppercase text-muted">Detail Laporan:</label>
-                <div class="p-2 border rounded bg-white font-italic" id="statusDetail"></div>
-            </div>
+            <hr>
 
-            <div class="mt-3 small text-muted">
-                <i class="fas fa-fingerprint"></i> Digital ID: <span id="docID" class="text-monospace"></span>
+            <div class="row small">
+                <div class="col-6 text-muted">ID Dokumen:</div>
+                <div id="resID" class="col-6 font-weight-bold text-right text-monospace">-</div>
+                <div class="col-6 text-muted mt-2">Konten Data:</div>
+                <div id="resMsg" class="col-6 font-weight-bold text-right mt-2">-</div>
             </div>
+            
+            <p id="footerNote" class="mt-4 small text-center italic"></p>
         </div>
 
-        <button onclick="location.reload()" class="btn btn-block btn-outline-dark mt-4 shadow-sm">
-            <i class="fas fa-sync-alt"></i> Pindai Ulang
+        <button onclick="location.reload()" class="btn btn-block btn-primary btn-retry mt-4 shadow">
+            <i class="fas fa-qrcode"></i> PINDAI DOKUMEN LAIN
         </button>
     </div>
 
     <div class="mt-5 text-muted small">
-        <i class="fas fa-info-circle"></i> Sistem ini menggunakan <strong>Public Key Infrastructure (PKI)</strong> 
-        untuk menjamin integritas data Kecamatan Sumber.
+        Sistem Keamanan Berbasis <br> <strong>Elliptic Curve Digital Signature Algorithm (ECDSA)</strong>
     </div>
 </div>
 
@@ -89,28 +85,76 @@
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <script>
-  // Logika verifikasi tetap menggunakan jsrsasign di sisi klien
-async function onScanSuccess(decodedText) {
-    const payload = JSON.parse(decodedText);
-    const keyRes = await fetch('js/public_key.json');
-    const keyData = await keyRes.json();
+    let publicKeyData = null;
 
-    const sig = new KJUR.crypto.Signature({"alg": "SHA256withECDSA"});
-    sig.init(keyData.pem);
-    sig.updateString(payload.msg);
-    
-    if (sig.verify(payload.sig)) {
-        renderValidUI(payload, keyData);
-    } else {
-        renderInvalidUI();
+    // 1. Inisialisasi: Load Config Kunci Publik
+    async function initSystem() {
+        try {
+            const response = await fetch('js/public_key.json');
+            publicKeyData = await response.json();
+            startScanner();
+        } catch (err) {
+            alert("Sistem Error: Gagal memuat kunci verifikasi (public_key.json tidak ditemukan)");
+        }
     }
-}
-</script>
-<script>
-    // Load Navbar
-    fetch('navbar.html').then(r => r.text()).then(html => {
-        document.getElementById('navbar').innerHTML = html;
-    });
+
+    // 2. Setup Pemindai Kamera
+    const html5QrCode = new Html5Qrcode("reader");
+    function startScanner() {
+        html5QrCode.start(
+            { facingMode: "environment" }, 
+            { fps: 15, qrbox: { width: 250, height: 250 } },
+            onScanSuccess
+        ).catch(err => alert("Kamera tidak dapat diakses: " + err));
+    }
+
+    // 3. Logika Verifikasi Digital Signature
+    function onScanSuccess(decodedText) {
+        html5QrCode.stop();
+        document.getElementById('reader').style.display = 'none';
+        
+        const resultBox = document.getElementById('result');
+        const icon = document.getElementById('mainIcon');
+        const title = document.getElementById('statusTitle');
+        const note = document.getElementById('footerNote');
+
+        resultBox.style.display = 'block';
+
+        try {
+            const payload = JSON.parse(decodedText);
+            
+            // Verifikasi ECDSA SHA256
+            const sig = new KJUR.crypto.Signature({"alg": "SHA256withECDSA"});
+            sig.init(publicKeyData.pem);
+            sig.updateString(payload.msg);
+            
+            const isAuthentic = sig.verify(payload.sig);
+
+            if (isAuthentic) {
+                // Tampilan JIKA ASLI
+                resultBox.className = "result-box status-valid";
+                icon.className = "fas fa-check-circle fa-4x text-success mb-2";
+                title.innerText = "DOKUMEN TERVERIFIKASI";
+                
+                document.getElementById('signerName').innerText = publicKeyData.pemilik;
+                document.getElementById('signerJob').innerText = publicKeyData.jabatan;
+                document.getElementById('resID').innerText = payload.id;
+                document.getElementById('resMsg').innerText = payload.msg;
+                note.innerText = "* Data ini sah dan belum mengalami perubahan sejak ditandatangani.";
+            } else {
+                throw new Error("Mismatch");
+            }
+        } catch (e) {
+            // Tampilan JIKA PALSU
+            resultBox.className = "result-box status-invalid";
+            icon.className = "fas fa-times-circle fa-4x text-danger mb-2";
+            title.innerText = "DATA TIDAK VALID";
+            document.getElementById('dataContent').style.display = 'none';
+            note.innerText = "PERINGATAN: QR Code tidak mengandung tanda tangan digital resmi atau data telah dimanipulasi secara ilegal.";
+        }
+    }
+
+    initSystem();
 </script>
 
 </body>
