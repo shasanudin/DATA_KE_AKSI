@@ -3,357 +3,121 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dari Data ke Aksi | TKSK & Puskesos Kec. Sumber</title>
-  <meta name="description" content="Dari Data ke Aksi – Pemanfaatan Data DTSEN oleh TKSK Sumber dan Forum Puskesos Kecamatan Sumber">
-
-  <!-- Bootstrap CSS -->
+  <title>Beranda | TKSK & Puskesos Kecamatan Sumber</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+    .hero { background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; padding: 80px 0; }
+    .card-stats { border: none; border-radius: 12px; transition: transform 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .card-stats:hover { transform: translateY(-5px); }
+    .section-title { font-weight: 700; margin-bottom: 30px; position: relative; }
+    .section-title::after { content: ''; display: block; width: 50px; height: 4px; background: #007bff; margin-top: 10px; }
+  </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="container py-3">
+<header class="container py-3 bg-white">
   <div class="row align-items-center">
-    <div class="col-md-4">
-      <img src="assets/img/logo/logo-tksk.png" alt="Logo TKSK" height="55">
-      <img src="assets/img/logo/logo-puskesos.png" alt="Logo Puskesos" height="55" class="ml-2">
+    <div class="col-md-6">
+      <img src="assets/img/logo/logo-tksk.png" alt="TKSK" height="50">
+      <img src="assets/img/logo/logo-puskesos.png" alt="Puskesos" height="50" class="ml-2">
     </div>
-    <div class="col-md-4 text-center">
-      <h3 class="mb-0">DARI DATA KE AKSI</h3>
-      <small class="text-muted">TKSK & Forum Puskesos Kecamatan Sumber</small>
-    </div>
-    <div class="col-md-4 text-right">
-      <a href="#kontak" class="btn btn-sm btn-outline-secondary">Kontak</a>
+    <div class="col-md-6 text-right d-none d-md-block">
+      <span class="text-muted small">Update Terakhir: <strong id="updateDataHeader">-</strong></span>
     </div>
   </div>
 </header>
 
-<!-- NAVBAR -->
 <div id="navbar"></div>
 
-<script>
-fetch('navbar.html')
-  .then(response => response.text())
-  .then(html => {
-    document.getElementById('navbar').innerHTML = html;
-  });
-</script>
-
-
-<!-- HERO -->
-<section class="hero py-5">
+<section class="hero text-center">
   <div class="container">
-    <h1>Dari Data ke Aksi</h1>
-    <p class="lead">Pemanfaatan Data DTSEN sebagai dasar perencanaan dan aksi kesejahteraan sosial di Kecamatan Sumber.</p>
+    <h1 class="display-4 font-weight-bold">Dari Data ke Aksi</h1>
+    <p class="lead opacity-75">Satu Data Kesejahteraan Sosial untuk Transformasi Pelayanan di Kecamatan Sumber.</p>
+    <div class="mt-4">
+      <a href="data.html" class="btn btn-light btn-lg px-4 mr-2">Lihat Data</a>
+      <a href="prioritas.html" class="btn btn-outline-light btn-lg px-4">Prioritas Intervensi</a>
+    </div>
   </div>
 </section>
 
-<!-- DATA DTSEN -->
-<section id="data" class="container py-5">
-  <h2>Data DTSEN Kecamatan Sumber</h2>
-  <p class="text-muted">Ringkasan data kesejahteraan berbasis wilayah.</p>
-  <hr>
-
-<h4 class="mt-4">Distribusi DTSEN Seluruh Desa/Kelurahan</h4>
-<p class="text-muted">
-  Akumulasi jumlah KK per desil (D1–D10) di Kecamatan Sumber.
-</p>
-
-<div class="table-responsive">
-  <table class="table table-bordered table-sm text-center">
-    <thead class="thead-light">
-      <tr>
-        <th>Desil</th>
-        <th>Total KK</th>
-      </tr>
-    </thead>
-    <tbody id="tabelDesilKecamatan">
-      <tr>
-        <td colspan="2" class="text-muted">Memuat data…</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-
-  <div class="form-group col-md-4 px-0">
-    <label><strong>Pilih Desa / Kelurahan</strong></label>
-    <select id="wilayahSelect" class="form-control"></select>
-  </div>
-
-  <div class="row text-center mb-4">
-    <div class="col-md-3">
-      <div class="card"><div class="card-body"><h3 id="totalKK">—</h3><p>Total KK</p></div></div>
+<main class="container py-5">
+  <h2 class="section-title">Dashboard Kecamatan</h2>
+  <div class="row mb-5">
+    <div class="col-md-3 mb-3">
+      <div class="card card-stats bg-white text-dark py-3">
+        <div class="card-body text-center">
+          <h2 id="totalKK" class="font-weight-bold text-primary">-</h2>
+          <p class="text-muted mb-0">Total Keluarga (KK)</p>
+        </div>
+      </div>
     </div>
-    <div class="col-md-3">
-      <div class="card"><div class="card-body"><h3 id="desil12">—%</h3><p>Desil 1–2</p></div></div>
+    <div class="col-md-3 mb-3">
+      <div class="card card-stats bg-white text-dark py-3">
+        <div class="card-body text-center">
+          <h2 id="desil12" class="font-weight-bold text-danger">-</h2>
+          <p class="text-muted mb-0">Extreme Poverty (D1-2)</p>
+        </div>
+      </div>
     </div>
-    <div class="col-md-3">
-      <div class="card"><div class="card-body"><h3 id="desil34">—%</h3><p>Desil 3–4</p></div></div>
+    <div class="col-md-3 mb-3">
+      <div class="card card-stats bg-white text-dark py-3">
+        <div class="card-body text-center">
+          <h2 id="desil34" class="font-weight-bold text-warning">-</h2>
+          <p class="text-muted mb-0">Rentan Sosial (D3-4)</p>
+        </div>
+      </div>
     </div>
-    <div class="col-md-3">
-      <div class="card"><div class="card-body"><h3 id="desil510">—%</h3><p>Desil 5–10</p></div></div>
+    <div class="col-md-3 mb-3">
+      <div class="card card-stats bg-white text-dark py-3">
+        <div class="card-body text-center">
+          <h2 id="desil510" class="font-weight-bold text-success">-</h2>
+          <p class="text-muted mb-0">Kesejahteraan Atas (D5-10)</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <canvas id="desilChart" height="120"></canvas>
-
-  <small class="text-muted">Pembaruan data: <span id="updateData">-</span></small>
-</section>
-
-<div class="mb-3 text-right">
-  <button onclick="window.print()" class="btn btn-primary btn-sm">
-    Cetak Laporan PDF
-  </button>
-</div>
-
-
-<!-- PRIORITAS INTERVENSI -->
-  <div class="text-center mb-4 d-none d-print-block">
-  <h3>LAPORAN PRIORITAS INTERVENSI SOSIAL</h3>
-  <p>
-    Kecamatan Sumber, Kabupaten Cirebon<br>
-    Sumber Data: DTSEN<br>
-    Update: <span id="updateData"></span>
-  </p>
-</div>
-
-<section id="prioritas" class="container py-5">
-  <h2>Prioritas Intervensi Sosial (Desil 1–2)</h2>
-  <p class="text-muted">
-    Daftar wilayah berdasarkan jumlah KK Desil 1–2 tertinggi.
-  </p>
-
-  <div class="table-responsive">
-    <table class="table table-bordered table-sm">
-      <thead class="thead-dark">
-        <tr>
-          <th>Peringkat</th>
-          <th>Wilayah</th>
-          <th>Jenis</th>
-          <th>D1</th>
-          <th>D2</th>
-          <th>Total</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="tabelPrioritas">
-        <tr>
-          <td colspan="6" class="text-center text-muted">
-            Memuat data…
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="row">
+    <div class="col-lg-8 mb-4">
+      <div class="card shadow-sm p-4">
+        <h5>Distribusi Kesejahteraan Wilayah</h5>
+        <div class="form-group mt-3">
+          <select id="wilayahSelect" class="form-control w-50"></select>
+        </div>
+        <canvas id="desilChart" height="150"></canvas>
+      </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+      <div class="list-group shadow-sm">
+        <div class="list-group-item bg-dark text-white font-weight-bold">Akses Cepat</div>
+        <a href="alur.html" class="list-group-item list-group-item-action">📘 Pelajari Alur DTSEN</a>
+        <a href="aplikasi.html" class="list-group-item list-group-item-action">💻 Login SIMPELPAS</a>
+        <a href="verifikasi.html" class="list-group-item list-group-item-action">✅ Verifikasi Dokumen QR</a>
+        <a href="kontak.html" class="list-group-item list-group-item-action">📞 Layanan Pengaduan</a>
+      </div>
+    </div>
   </div>
-</section>
+</main>
 
-
-<!-- ALUR DTSEN -->
-<section id="alur" class="bg-light py-5">
-  <div class="container">
-    <h2>Alur DTSEN</h2>
-    <ol>
-      <li>Pengumpulan data lapangan</li>
-      <li>Verifikasi dan validasi</li>
-      <li>Penetapan desil kesejahteraan</li>
-      <li>Perencanaan program</li>
-      <li>Aksi dan monitoring</li>
-    </ol>
+<footer class="bg-dark text-white py-5 mt-5">
+  <div class="container text-center">
+    <p class="mb-0">© 2026 TKSK Sumber & Forum Puskesos Kecamatan Sumber</p>
+    <small class="text-muted">Kabupaten Cirebon, Jawa Barat</small>
   </div>
-</section>
-
-<!-- ILMU DTSEN -->
-<section id="ilmu" class="container py-5">
-  <h2>Ilmu DTSEN</h2>
-  <p>Desil 1–10 menggambarkan tingkat kesejahteraan rumah tangga. Semakin kecil desil, semakin tinggi prioritas intervensi sosial.</p>
-</section>
-
-<!-- APLIKASI -->
-<section id="aplikasi" class="bg-light py-5">
-  <div class="container">
-    <h2>Aplikasi Pendukung</h2>
-    <ul>
-      <li><strong>SIMPELPAS</strong> – Sistem Pelayanan Sosial</li>
-      <li><strong>SIPEPEG</strong> – Sistem Pendataan dan Pengelolaan Pegawai</li>
-    </ul>
-    <h2>Verifikasi Tanda Tangan Dokumen</h2>
-    <textarea id="qrInput" rows="5" placeholder="Tempel isi QR Code di sini"></textarea>
-    <button onclick="verify()">Verifikasi</button>
-    <div id="result"></div>
-  </div>
-  </section>
-
-<!-- WILAYAH -->
-<section id="wilayah" class="container py-5">
-  <h2>Desa & Kelurahan Kecamatan Sumber</h2>
-  <table class="table table-bordered table-striped">
-    <thead class="table-dark"><tr><th>No</th><th>Nama Desa / Kelurahan</th></tr></thead>
-    <tbody>
-      <tr><td>1</td><td>Babakan</td></tr>
-      <tr><td>2</td><td>Gegunung</td></tr>
-      <tr><td>3</td><td>Kaliwadas</td></tr>
-      <tr><td>4</td><td>Kemantren</td></tr>
-      <tr><td>5</td><td>Kenanga</td></tr>
-      <tr><td>6</td><td>Pasalakan</td></tr>
-      <tr><td>7</td><td>Pejambon</td></tr>
-      <tr><td>8</td><td>Perbutulan</td></tr>
-      <tr><td>9</td><td>Sendang</td></tr>
-      <tr><td>10</td><td>Sumber</td></tr>
-      <tr><td>11</td><td>Tukmudal</td></tr>
-      <tr><td>12</td><td>Watubelah</td></tr>
-      <tr><td>13</td><td>Matangaji</td></tr>
-      <tr><td>14</td><td>Sidawangi</td></tr>
-    </tbody>
-  </table>
-</section>
-
-<!-- BERITA -->
-<section id="berita" class="container py-5">
-  <h2>Berita & Kegiatan</h2>
-  <p>Dokumentasi kegiatan TKSK dan Forum Puskesos Kecamatan Sumber.</p>
-</section>
-
-<!-- STRUKTUR -->
-<section id="struktur" class="bg-light py-5">
-  <div class="container">
-    <h2>Struktur Organisasi</h2>
-    <p>Susunan TKSK dan Forum Puskesos Kecamatan Sumber.</p>
-  </div>
-</section>
-
-<!-- KONTAK -->
-<section id="kontak" class="container py-5">
-  <h2>Kontak Kami</h2>
-  <p>Email dan alamat resmi.</p>
-</section>
-
-<!-- FOOTER -->
-<footer class="py-4 text-center">
-  <small>© TKSK Sumber & Forum Puskesos Kecamatan Sumber</small>
 </footer>
 
-<!-- SCRIPTS -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-let chart;
-fetch('data/dtsen.json')
-  .then(res => res.json())
-  .then(data => {
-    const select = document.getElementById('wilayahSelect');
-    data.wilayah.forEach((w, i) => {
-      const opt = document.createElement('option');
-      opt.value = i;
-      opt.textContent = w.nama;
-      select.appendChild(opt);
-    });
-
-    document.getElementById('updateData').innerText = data.updated;
-
-    function renderWilayah(idx) {
-      const w = data.wilayah[idx];
-      document.getElementById('totalKK').innerText = w.total_kk.toLocaleString('id-ID');
-
-      const d12 = w.desil[0] + w.desil[1];
-      const d34 = w.desil[2] + w.desil[3];
-      const d510 = w.desil.slice(4).reduce((a,b)=>a+b,0);
-
-      document.getElementById('desil12').innerText = d12 + '%';
-      document.getElementById('desil34').innerText = d34 + '%';
-      document.getElementById('desil510').innerText = d510 + '%';
-
-      const ctx = document.getElementById('desilChart').getContext('2d');
-      if (chart) chart.destroy();
-      chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['D1','D2','D3','D4','D5','D6','D7','D8','D9','D10'],
-          datasets: [{
-            data: w.desil,
-            backgroundColor: '#0d6efd'
-          }]
-        },
-        options: {
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true, ticks:{ callback:v=>v+'%' } } }
-        }
-      });
-    }
-
-    select.addEventListener('change', e => renderWilayah(e.target.value));
-    renderWilayah(0);
-  })
-  .catch(err => console.error('Gagal load data DTSEN:', err));
-</script>
 <script src="js/dtsen.js"></script>
 <script>
-async function verify() {
-  const output = document.getElementById("result");
-  output.innerHTML = "Memverifikasi...";
-
-  let data;
-  try {
-    data = JSON.parse(document.getElementById("qrInput").value);
-  } catch {
-    output.innerHTML = "❌ Format QR tidak valid";
-    return;
-  }
-
-  if (data.schema !== "dtsen-signature-v1") {
-    output.innerHTML = "❌ Skema tidak dikenali";
-    return;
-  }
-
-  const enc = new TextEncoder();
-  const hashBytes = Uint8Array.from(
-    data.hash.match(/.{1,2}/g).map(b => parseInt(b, 16))
-  );
-
-  const signature = Uint8Array.from(atob(data.signature), c => c.charCodeAt(0));
-
-  const pem = await fetch("/public-key.pem").then(r => r.text());
-  const keyData = pem
-    .replace(/-----(BEGIN|END) PUBLIC KEY-----/g, "")
-    .replace(/\s+/g, "");
-
-  const binaryKey = Uint8Array.from(atob(keyData), c => c.charCodeAt(0));
-
-  const publicKey = await crypto.subtle.importKey(
-    "spki",
-    binaryKey,
-    { name: "ECDSA", namedCurve: "P-256" },
-    false,
-    ["verify"]
-  );
-
-  const valid = await crypto.subtle.verify(
-    { name: "ECDSA", hash: "SHA-256" },
-    publicKey,
-    signature,
-    hashBytes
-  );
-
-  output.innerHTML = valid
-    ? "✅ DOKUMEN SAH DAN TIDAK DIMODIFIKASI"
-    : "❌ TANDA TANGAN TIDAK VALID / DOKUMEN DIUBAH";
-}
+  // Script untuk memuat Navbar
+  fetch('navbar.html')
+    .then(r => r.text())
+    .then(html => document.getElementById('navbar').innerHTML = html);
 </script>
-
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
