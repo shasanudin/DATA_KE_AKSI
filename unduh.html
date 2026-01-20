@@ -3,31 +3,22 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cetak Dokumen DTSEN | TKSK Sumber</title>
+    <title>Cetak Laporan DTSEN | TKSK Sumber</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <style>
         body { background-color: #f4f4f4; font-family: "Times New Roman", Times, serif; }
         .paper {
-            background: white;
-            width: 210mm;
-            min-height: 297mm;
-            padding: 20mm;
-            margin: 20px auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            position: relative;
+            background: white; width: 210mm; min-height: 297mm;
+            padding: 20mm; margin: 20px auto; box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        .kop-surat {
-            border-bottom: 3px double #000;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-        }
-        .logo-kop { height: 80px; }
-        .qr-section { margin-top: 50px; }
-        #qrcode img { margin: 0 auto; }
+        .kop-surat { border-bottom: 4px double #000; margin-bottom: 20px; padding-bottom: 10px; }
+        .logo-kop { height: 75px; }
+        .table-dtsen { font-size: 14px; }
+        .qr-box { border: 1px solid #ccc; padding: 10px; display: inline-block; }
         
         @media print {
             body { background: none; }
-            .paper { margin: 0; box-shadow: none; width: 100%; }
+            .paper { margin: 0; box-shadow: none; width: 100%; page-break-after: always; }
             .no-print { display: none; }
         }
     </style>
@@ -35,113 +26,163 @@
 <body>
 
 <div class="container no-print py-4 text-center">
-    <button onclick="window.print()" class="btn btn-primary">Cetak / Simpan PDF</button>
-    <a href="index.html" class="btn btn-secondary">Kembali</a>
-</div>
-
-<div class="paper" id="surat">
-    <div class="kop-surat">
-        <div class="row align-items-center">
-            <div class="col-2 text-center">
-                <img src="assets/img/logo/logo-tksk.png" class="logo-kop" alt="Logo TKSK">
+    <div class="card p-3 mb-4 shadow-sm">
+        <h5>Panel Kendali Cetak</h5>
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <select id="tipeLaporan" class="form-control">
+                    <option value="agregat">1. Agregasi Kecamatan (Total)</option>
+                    <option value="prioritas">2. Daftar Prioritas (Ranking D1-2)</option>
+                    <option value="wilayah">3. Laporan Per Kelurahan/Desa</option>
+                </select>
             </div>
-            <div class="col-8 text-center">
-                <h4 class="mb-0">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN</h4>
-                <h5 class="mb-0">KECAMATAN SUMBER - KABUPATEN CIREBON</h5>
-                <h3 class="font-weight-bold">DARI DATA KE AKSI</h3>
-                <p class="mb-0 small">Sekretariat: Kantor Kecamatan Sumber, Jl. Raden Dewi Sartika No. 1</p>
+            <div class="col-md-3" id="selectWilayahContainer" style="display:none;">
+                <select id="wilayahSelect" class="form-control"></select>
             </div>
-            <div class="col-2 text-center">
-                <img src="assets/img/logo/logo-puskesos.png" class="logo-kop" alt="Logo Puskesos">
+            <div class="col-md-3">
+                <button onclick="generateReport()" class="btn btn-success">Generate Data</button>
+                <button onclick="window.print()" class="btn btn-primary">Cetak PDF</button>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="text-right mb-4">
-        Sumber, <span id="tglSurat"></span>
+<div class="paper" id="cetakArea">
+    <div class="kop-surat">
+        <div class="row align-items-center text-center">
+            <div class="col-2"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
+            <div class="col-8">
+                <h5 class="mb-0">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</h5>
+                <h4 class="font-weight-bold mb-0">FORUM PUSKESOS KECAMATAN SUMBER</h4>
+                <h2 class="font-weight-bold" style="color: #0056b3;">DARI DATA KE AKSI</h2>
+                <p class="mb-0 small">Alamat: Kantor Kecamatan Sumber Kab. Cirebon, Jawa Barat 45155</p>
+            </div>
+            <div class="col-2"><img src="assets/img/logo/logo-puskesos.png" class="logo-kop"></div>
+        </div>
     </div>
 
     <div class="text-center mb-4">
-        <h5 class="text-decoration-underline font-weight-bold">LAPORAN RINGKAS DATA KESEJAHTERAAN (DTSEN)</h5>
-        <p>Nomor: 460 / <span id="nomorSurat">001</span> / TKSK-SBR / 2026</p>
+        <h5 id="judulLaporan" class="font-weight-bold text-uppercase">LAPORAN AGREGASI DTSEN KECAMATAN</h5>
+        <p>Periode Data: <span id="periodeText">-</span></p>
     </div>
 
-    <div class="content">
-        <p>Berdasarkan hasil pemutakhiran data DTSEN periode <strong id="periodeData">-</strong>, berikut disampaikan ringkasan statistik wilayah:</p>
-        
-        <table class="table table-bordered">
-            <tr>
-                <th width="40%">Wilayah</th>
-                <td id="namaWilayah">-</td>
-            </tr>
-            <tr>
-                <th>Total KK</th>
-                <td id="totalSurat">-</td>
-            </tr>
-            <tr>
-                <th>Prioritas (Desil 1-2)</th>
-                <td id="prioSurat">-</td>
-            </tr>
-        </table>
-
-        <p class="mt-4">Demikian data ini disampaikan untuk dipergunakan sebagai dasar perencanaan program perlindungan sosial di tingkat desa/kelurahan.</p>
+    <div id="kontenData">
+        <p class="text-center py-5">Silahkan klik "Generate Data" untuk memuat laporan.</p>
     </div>
 
-    <div class="qr-section row">
-        <div class="col-8">
-            <p class="small text-muted italic">** Dokumen ini sah dan diverifikasi secara digital menggunakan kunci publik (Public Key). Pindai QR Code untuk validasi keaslian data.</p>
+    <div class="row mt-5">
+        <div class="col-7">
+            <p class="small text-muted">** Dokumen ini dihasilkan secara otomatis oleh sistem "Dari Data Ke Aksi" TKSK Sumber. Keaslian data dapat diverifikasi melalui QR Code di samping menggunakan public_key.pem.</p>
         </div>
-        <div class="col-4 text-center">
-            <p class="mb-1">TKSK KEC. SUMBER</p>
-            <div id="qrcode" class="my-2"></div>
-            <p class="font-weight-bold mb-0">KOORDINATOR</p>
-            <small>NIP. TKSK-SBR.2026.01</small>
+        <div class="col-5 text-center">
+            <p>Sumber, <span id="tglSekarang"></span></p>
+            <p class="mb-4">Mengetahui,<br>TKSK Kecamatan Sumber</p>
+            <div id="qrcode" class="qr-box mb-2"></div>
+            <p class="font-weight-bold mb-0">KOORDINATOR TKSK</p>
+            <small>ID Verifikasi: <span id="hashID">-</span></small>
         </div>
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Ambil data dari sessionStorage (dikirim dari index.html) atau default
-        const selectedIndex = localStorage.getItem('lastSelectedWilayah') || 0;
+let globalData;
 
-        fetch('data/dtsen.json')
-            .then(res => res.json())
-            .then(data => {
-                const w = data.wilayah[selectedIndex];
-                const d = w.desil;
-                
-                // Isi Elemen Surat
-                document.getElementById('tglSurat').innerText = new Date().toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
-                document.getElementById('periodeData').innerText = data.updated;
-                document.getElementById('namaWilayah').innerText = w.nama;
-                document.getElementById('totalSurat').innerText = w.total_kk.toLocaleString('id-ID') + " KK";
-                
-                const prio = (((d[0] + d[1]) / w.total_kk) * 100).toFixed(1);
-                document.getElementById('prioSurat').innerText = prio + "% dari populasi";
+document.getElementById('tipeLaporan').addEventListener('change', function() {
+    document.getElementById('selectWilayahContainer').style.display = (this.value === 'wilayah') ? 'block' : 'none';
+});
 
-                // GENERATE SIGNATURE DATA (Simulasi Hash Data)
-                // Ini menggabungkan data krusial untuk diverifikasi
-                const signContent = {
-                    schema: "dtsen-signature-v1",
-                    wilayah: w.nama,
-                    total: w.total_kk,
-                    hash: btoa(w.nama + w.total_kk + data.updated), // Simulasi hash
-                    publicKeyPath: "public_key.pem"
-                };
-
-                // Render QR Code
-                new QRCode(document.getElementById("qrcode"), {
-                    text: JSON.stringify(signContent),
-                    width: 100,
-                    height: 100,
-                    colorDark : "#000000",
-                    colorLight : "#ffffff",
-                    correctLevel : QRCode.CorrectLevel.H
-                });
-            });
+fetch('data/dtsen.json')
+    .then(res => res.json())
+    .then(data => {
+        globalData = data;
+        document.getElementById('periodeText').innerText = data.updated;
+        document.getElementById('tglSekarang').innerText = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+        
+        const sel = document.getElementById('wilayahSelect');
+        data.wilayah.forEach((w, i) => {
+            let opt = document.createElement('option');
+            opt.value = i; opt.textContent = w.nama;
+            sel.appendChild(opt);
+        });
     });
+
+function generateReport() {
+    const tipe = document.getElementById('tipeLaporan').value;
+    const konten = document.getElementById('kontenData');
+    const judul = document.getElementById('judulLaporan');
+    let html = "";
+    let signaturePayload = "";
+
+    if (tipe === 'agregat') {
+        judul.innerText = "LAPORAN AGREGASI DTSEN KECAMATAN SUMBER";
+        let agregat = Array(10).fill(0);
+        let grandTotal = 0;
+        globalData.wilayah.forEach(w => {
+            grandTotal += w.total_kk;
+            w.desil.forEach((v, i) => { agregat[i] += v; });
+        });
+
+        html = `<table class="table table-bordered text-center">
+            <thead class="thead-light"><tr><th>KATEGORI</th><th>JUMLAH KK</th><th>PERSENTASE</th></tr></thead>
+            <tbody>`;
+        for(let i=0; i<5; i++) {
+            let p = ((agregat[i]/grandTotal)*100).toFixed(1);
+            html += `<tr><td>Desil ${i+1}</td><td>${agregat[i].toLocaleString()}</td><td>${p}%</td></tr>`;
+        }
+        let d610 = agregat.slice(5).reduce((a,b)=>a+b,0);
+        html += `<tr class="table-success"><td>Desil 6-10</td><td>${d610.toLocaleString()}</td><td>${((d610/grandTotal)*100).toFixed(1)}%</td></tr>
+                 <tr class="font-weight-bold"><td>TOTAL KECAMATAN</td><td>${grandTotal.toLocaleString()}</td><td>100%</td></tr></tbody></table>`;
+        signaturePayload = "Kec-Sumber-" + grandTotal;
+
+    } else if (tipe === 'prioritas') {
+        judul.innerText = "DAFTAR PRIORITAS INTERVENSI SOSIAL (DESIL 1-2)";
+        let ranking = globalData.wilayah.map(w => ({
+            nama: w.nama,
+            totalPrio: w.desil[0] + w.desil[1],
+            persen: (((w.desil[0] + w.desil[1])/w.total_kk)*100).toFixed(1)
+        })).sort((a,b) => b.totalPrio - a.totalPrio);
+
+        html = `<table class="table table-bordered table-sm">
+            <thead><tr class="text-center"><th>RANK</th><th>DESA/KELURAHAN</th><th>JUMLAH D1-2</th><th>% KERENTANAN</th></tr></thead><tbody>`;
+        ranking.forEach((r, i) => {
+            html += `<tr><td class="text-center">${i+1}</td><td>${r.nama}</td><td class="text-center">${r.totalPrio}</td><td class="text-center">${r.persen}%</td></tr>`;
+        });
+        html += `</tbody></table>`;
+        signaturePayload = "Prio-Intervensi-" + ranking.length;
+
+    } else {
+        const idx = document.getElementById('wilayahSelect').value;
+        const w = globalData.wilayah[idx];
+        judul.innerText = "LAPORAN DETAIL DATA DESA/KELURAHAN: " + w.nama;
+        const d610 = w.desil.slice(5).reduce((a,b)=>a+b,0);
+        
+        html = `<p>Detail distribusi kesejahteraan untuk wilayah ${w.nama}:</p>
+            <table class="table table-bordered">
+                <tr><th>Total Kepala Keluarga (KK)</th><td>${w.total_kk}</td></tr>
+                <tr><th>Sangat Miskin (Desil 1)</th><td>${w.desil[0]}%</td></tr>
+                <tr><th>Miskin (Desil 2)</th><td>${w.desil[1]}%</td></tr>
+                <tr><th>Rentan (Desil 3-4)</th><td>${w.desil[2]+w.desil[3]}%</td></tr>
+                <tr><th>Mampu/Sejahtera (Desil 6-10)</th><td>${d610}%</td></tr>
+            </table>`;
+        signaturePayload = "Wil-" + w.nama + "-" + w.total_kk;
+    }
+
+    konten.innerHTML = html;
+    updateQRCode(signaturePayload);
+}
+
+function updateQRCode(payload) {
+    const qrDiv = document.getElementById("qrcode");
+    qrDiv.innerHTML = "";
+    const hash = btoa(payload + globalData.updated).substring(0, 12);
+    document.getElementById('hashID').innerText = "SIGN-" + hash;
+    
+    new QRCode(qrDiv, {
+        text: JSON.stringify({id: hash, data: payload, verifier: "TKSK-SUMBER-SIGNATURE"}),
+        width: 100, height: 100
+    });
+}
 </script>
 </body>
 </html>
