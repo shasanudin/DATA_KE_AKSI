@@ -45,35 +45,47 @@ fetch("data/dtsen.json")
       `).join("");
     }
 
-    /* 3. TABEL PRIORITAS + RISIKO */
-    const tbodyPrioritas = document.getElementById("tabelPrioritas");
-    if (tbodyPrioritas) {
-      const hasil = data.wilayah.map(w => ({
-        nama: w.nama,
-        jenis: w.jenis,
-        d1: w.desil?.[0] || 0,
-        d2: w.desil?.[1] || 0,
-        total: (w.desil?.[0] || 0) + (w.desil?.[1] || 0)
-      })).sort((a, b) => b.total - a.total);
+   /* 3. TABEL PRIORITAS + RISIKO */
+const tbodyPrioritas = document.getElementById("tabelPrioritas");
+if (tbodyPrioritas) {
+  const hasil = data.wilayah.map(w => {
+    // Pastikan data dikonversi ke Number untuk menghindari kesalahan String
+    const d1 = Number(w.desil?.[0] || 0);
+    const d2 = Number(w.desil?.[1] || 0);
+    const totalD1D2 = d1 + d2;
 
-      tbodyPrioritas.innerHTML = hasil.map((w, i) => {
-        let status = "Prioritas Rendah", kelas = "Prioritas-rendah";
-        if (w.total >= 400) { status = "Prioritas Tinggi"; kelas = "Prioritas-tinggi"; }
-        else if (w.total >= 200) { status = "Prioritas Sedang"; kelas = "Prioritas-sedang"; }
+    return {
+      nama: w.nama,
+      jenis: w.jenis,
+      d1: d1,
+      d2: d2,
+      total: totalD1D2
+    };
+  }).sort((a, b) => b.total - a.total);
 
-        return `
-          <tr>
-            <td>${i + 1}</td>
-            <td>${w.nama}</td>
-            <td>${w.jenis}</td>
-            <td>${w.d1}</td>
-            <td>${w.d2}</td>
-            <td><strong>${w.total}</strong></td>
-            <td><span class="badge-risiko ${kelas}">${status}</span></td>
-          </tr>
-        `;
-      }).join("");
+  tbodyPrioritas.innerHTML = hasil.map((w, i) => {
+    let status = "Prioritas Rendah", kelas = "prioritas-rendah";
+
+    // Logika pengecekan status
+    if (w.total >= 400) { 
+        status = "Prioritas Tinggi"; 
+        kelas = "prioritas-tinggi"; 
+    } else if (w.total >= 200) { 
+        status = "Prioritas Sedang"; 
+        kelas = "prioritas-sedang"; 
     }
-  })
-  .catch(error => console.error("Gagal load data DTSEN:", error));
+
+    return `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${w.nama}</td>
+        <td>${w.jenis}</td>
+        <td>${w.d1.toLocaleString('id-ID')}</td>
+        <td>${w.d2.toLocaleString('id-ID')}</td>
+        <td><strong>${w.total.toLocaleString('id-ID')}</strong></td>
+        <td><span class="badge-risiko ${kelas}">${status}</span></td>
+      </tr>
+    `;
+  }).join("");
+}
 
