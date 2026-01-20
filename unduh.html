@@ -109,5 +109,9 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="js/unduh.js"></script> <script>
+        // Loader Navbar Sederhana
+        fetch('navbar.html').then(r => r.text()).then(h => document.getElementById('navbar').innerHTML = h);
+    </script>
 </body>
 </html>
