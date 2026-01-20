@@ -1,16 +1,14 @@
-// Variabel global untuk Chart
 let myChart;
 
 fetch('data/dtsen.json')
     .then(res => res.json())
     .then(data => {
-        const select = document.getElementById('wilayahSelect');
-        
-        // 1. Update Header Tanggal
-        const updateHeader = document.getElementById('updateDataHeader');
-        if (updateHeader) updateHeader.innerText = data.updated;
+        // --- 1. UPDATE TANGGAL (Header & Body) ---
+        // Mencari elemen dengan ID updateDataHeader ATAU updateData
+        const dateEl = document.getElementById('updateDataHeader') || document.getElementById('updateData');
+        if (dateEl) dateEl.innerText = data.updated;
 
-        // 2. Hitung Agregat Seluruh Kecamatan untuk Stat Cards
+        // --- 2. HITUNG AGREGAT KECAMATAN (Untuk Stat Cards) ---
         let totalKKKec = 0;
         let d12Kec = 0;
         let d34Kec = 0;
@@ -18,25 +16,29 @@ fetch('data/dtsen.json')
 
         data.wilayah.forEach(w => {
             totalKKKec += w.total_kk;
-            // Menjumlahkan angka riil (bukan %) untuk agregat kecamatan
+            // D1 + D2 (Angka riil)
             d12Kec += (w.desil[0] + w.desil[1]);
+            // D3 + D4
             d34Kec += (w.desil[2] + w.desil[3]);
+            // D5 sampai akhir
             d510Kec += w.desil.slice(4).reduce((a, b) => a + b, 0);
         });
 
-        // Isi angka ke Card Dashboard (Gunakan toLocaleString agar ada titik ribuan)
-        const safeSetText = (id, text) => {
+        // Helper untuk mengisi teks secara aman
+        const safeSet = (id, val) => {
             const el = document.getElementById(id);
-            if (el) el.innerText = text;
+            if (el) el.innerText = val;
         };
 
-        safeSetText('totalKK', totalKKKec.toLocaleString('id-ID'));
-        safeSetText('desil12', d12Kec.toLocaleString('id-ID'));
-        safeSetText('desil34', d34Kec.toLocaleString('id-ID'));
-        safeSetText('desil510', d510Kec.toLocaleString('id-ID'));
+        safeSet('totalKK', totalKKKec.toLocaleString('id-ID'));
+        safeSet('desil12', d12Kec.toLocaleString('id-ID'));
+        safeSet('desil34', d34Kec.toLocaleString('id-ID'));
+        safeSet('desil510', d510Kec.toLocaleString('id-ID'));
 
-        // 3. Inisialisasi Dropdown Wilayah
+        // --- 3. DROPDOWN & CHART ---
+        const select = document.getElementById('wilayahSelect');
         if (select) {
+            select.innerHTML = ""; // Bersihkan dropdown
             data.wilayah.forEach((w, i) => {
                 const opt = document.createElement('option');
                 opt.value = i;
@@ -44,23 +46,28 @@ fetch('data/dtsen.json')
                 select.appendChild(opt);
             });
 
-            select.addEventListener('change', e => renderDashboardChart(e.target.value, data));
+            select.addEventListener('change', e => renderChart(e.target.value, data));
             
-            // Render awal (wilayah pertama)
-            renderDashboardChart(0, data);
+            // Render awal wilayah pertama
+            renderChart(0, data);
         }
     })
-    .catch(err => console.error("Gagal memuat data:", err));
+    .catch(err => console.error("Gagal memuat data JSON:", err));
 
-function renderDashboardChart(idx, data) {
+function renderChart(idx, data) {
     const w = data.wilayah[idx];
+    if (!w) return;
+
     const d = w.desil;
     const total = w.total_kk;
 
-    // Helper hitung %
+    // Fungsi hitung persen terhadap total KK wilayah tersebut
     const kePersen = (val) => (total > 0 ? ((val / total) * 100).toFixed(1) : 0);
 
-    const ctx = document.getElementById('desilChart').getContext('2d');
+    const canvas = document.getElementById('desilChart');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
     if (myChart) myChart.destroy();
 
     myChart = new Chart(ctx, {
@@ -74,8 +81,8 @@ function renderDashboardChart(idx, data) {
                     kePersen(d[2]), kePersen(d[3]), 
                     kePersen(d[4]), kePersen(d.slice(5).reduce((a,b)=>a+b,0))
                 ],
-                backgroundColor: ['#dc3545', '#dc3545', '#ffc107', '#ffc107', '#28a745', '#28a745'],
-                borderRadius: 5
+                backgroundColor: ['#dc3545', '#dc3545', '#ffc107', '#ffc107', '#007bff', '#28a745'],
+                borderRadius: 4
             }]
         },
         options: {
@@ -84,9 +91,7 @@ function renderDashboardChart(idx, data) {
             scales: {
                 y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }
             },
-            plugins: {
-                legend: { display: false }
-            }
+            plugins: { legend: { display: false } }
         }
     });
 }
