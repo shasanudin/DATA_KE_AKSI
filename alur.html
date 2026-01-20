@@ -136,35 +136,54 @@
 <script>
 async function unduhAlurPDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4');
     const element = document.querySelector('.news-container');
     const tombol = document.querySelector('.no-print');
 
-    // Sembunyikan tombol saat proses capture
     tombol.style.display = 'none';
+
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    const margin = 10;
+    const printableWidth = pageWidth - margin * 2;
+    const printableHeight = pageHeight - margin * 2;
 
     try {
         const canvas = await html2canvas(element, {
-            scale: 2, // Meningkatkan kualitas gambar
-            useCORS: true
+            scale: 1.5,           // KOMPRESI UTAMA
+            useCORS: true,
+            backgroundColor: '#ffffff'
         });
-        
-        const imgData = canvas.toDataURL('image/png');
-        const imgProps = doc.getImageProperties(imgData);
-        const pdfWidth = doc.internal.pageSize.getWidth() - 20; // Margin 10mm
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-        doc.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight);
-        doc.save('Alur-DTSEN-TKSK-Sumber.pdf');
-    } catch (error) {
-        console.error("Gagal membuat PDF:", error);
-        alert("Terjadi kesalahan saat mengunduh PDF.");
+        const imgData = canvas.toDataURL('image/jpeg', 0.7); // JPEG KOMPRES
+        const imgWidth = printableWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        let heightLeft = imgHeight;
+        let position = margin;
+
+        pdf.addImage(imgData, 'JPEG', margin, position, imgWidth, imgHeight);
+        heightLeft -= printableHeight;
+
+        while (heightLeft > 0) {
+            pdf.addPage();
+            position = heightLeft - imgHeight + margin;
+            pdf.addImage(imgData, 'JPEG', margin, position, imgWidth, imgHeight);
+            heightLeft -= printableHeight;
+        }
+
+        pdf.save('Alur-DTSEN-TKSK-Sumber.pdf');
+
+    } catch (err) {
+        console.error(err);
+        alert('Gagal membuat PDF');
     } finally {
-        // Tampilkan kembali tombol
         tombol.style.display = 'block';
     }
 }
 </script>
+
     
 </body>
 </html>
