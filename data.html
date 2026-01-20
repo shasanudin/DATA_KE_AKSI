@@ -140,39 +140,33 @@ fetch('data/dtsen.json')
 function renderWilayah(idx, data) {
     const w = data.wilayah[idx];
     const d = w.desil;
+    const totalKK = w.total_kk;
 
-    // Update Label Card
-    document.getElementById('totalKK').innerText = w.total_kk.toLocaleString('id-ID');
-    document.getElementById('desil1').innerText = d[0] + '%';
-    document.getElementById('desil2').innerText = d[1] + '%';
-    document.getElementById('desil3').innerText = d[2] + '%';
-    document.getElementById('desil4').innerText = d[3] + '%';
+    // Fungsi pembantu untuk menghitung % secara aman
+    const hitungPersen = (nilai) => {
+        return totalKK > 0 ? ((nilai / totalKK) * 100).toFixed(1) : 0;
+    };
+
+    // Update Label Card dengan perhitungan otomatis
+    document.getElementById('desil1').innerText = hitungPersen(d[0]) + '%';
+    document.getElementById('desil2').innerText = hitungPersen(d[1]) + '%';
+    document.getElementById('desil3').innerText = hitungPersen(d[2]) + '%';
+    document.getElementById('desil4').innerText = hitancePersen(d[3]) + '%';
     
-    const total610 = d.slice(5).reduce((a, b) => a + b, 0);
-    document.getElementById('desil510').innerText = total610 + '%';
+    // Gabungkan D6-10 (Jumlahkan angka riil dulu, baru dipersentasekan)
+    const jumlah610 = d.slice(5).reduce((a, b) => a + b, 0);
+    document.getElementById('desil510').innerText = hitungPersen(jumlah610) + '%';
 
-    // Update Chart
-    const ctx = document.getElementById('desilChart').getContext('2d');
-    if (chart) chart.destroy();
-
-    chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6-10'],
-            datasets: [{
-                label: 'Persentase Populasi (%)',
-                data: [d[0], d[1], d[2], d[3], d[4], total610],
-                backgroundColor: ['#dc3545', '#ffc107', '#0d6efd', '#6610f2', '#fd7e14', '#28a745'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } },
-            plugins: { legend: { display: false } }
-        }
-    });
+    // Update Data Chart
+    chart.data.datasets[0].data = [
+        hitungPersen(d[0]), 
+        hitungPersen(d[1]), 
+        hitungPersen(d[2]), 
+        hitungPersen(d[3]), 
+        hitungPersen(d[4]), 
+        hitungPersen(jumlah610)
+    ];
+    chart.update();
 }
 </script>
 </body>
