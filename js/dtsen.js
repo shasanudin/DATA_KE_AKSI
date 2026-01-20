@@ -79,7 +79,7 @@ fetch("data/dtsen.json")
   .then(data => {
     // 1. Cari elemen tbody
     const tbody = document.getElementById("tabelPrioritas");
-    
+    }
     // 2. CEK: Jika elemen tidak ada (misal di halaman Beranda), jangan lanjut
     if (!tbody) {
       console.warn("Elemen tabelPrioritas tidak ditemukan. Lewati pengisian tabel.");
@@ -138,6 +138,7 @@ fetch("data/dtsen.json")
   .catch(error => {
     console.error("Gagal load data DTSEN:", error);
   });
+
 
 
 
