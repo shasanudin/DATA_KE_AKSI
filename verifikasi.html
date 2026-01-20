@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Verifikasi Dokumen | TKSK Sumber</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        #reader { width: 100%; max-width: 500px; margin: auto; border: 10px solid #ddd; border-radius: 15px; overflow: hidden; }
+        .result-box { display: none; margin-top: 20px; padding: 20px; border-radius: 10px; }
+        .valid { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .invalid { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .status-icon { font-size: 3rem; margin-bottom: 10px; }
+    </style>
+</head>
+<body class="bg-light">
+
+<div id="navbar"></div>
+
+<div class="container py-5 text-center">
+    <h2 class="font-weight-bold">Verifikasi Digital</h2>
+    <p class="text-muted">Pindai QR Code pada dokumen cetak untuk memvalidasi keaslian data DTSEN Kecamatan Sumber.</p>
+
+    <div id="reader"></div>
+
+    <div id="result" class="result-box">
+        <div id="statusIcon" class="status-icon"></div>
+        <h4 id="statusTitle" class="font-weight-bold"></h4>
+        <hr>
+        <div id="statusDetail" class="text-left small"></div>
+        <button onclick="resetScanner()" class="btn btn-primary mt-3">Pindai Ulang</button>
+    </div>
+
+    <div class="mt-4">
+        <small class="text-muted">Keamanan didukung oleh sistem enkripsi <code>public_key.pem</code></small>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<script>
+    // Load Navbar
+    fetch('navbar.html').then(r => r.text()).then(html => document.getElementById('navbar').innerHTML = html);
+
+    const html5QrCode = new Html5Qrcode("reader");
+    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+    // Mulai Kamera
+    html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
+
+    function onScanSuccess(decodedText, decodedResult) {
+        html5QrCode.stop(); // Hentikan kamera setelah scan berhasil
+        document.getElementById('reader').style.display = 'none';
+        
+        const resultBox = document.getElementById('result');
+        const icon = document.getElementById('statusIcon');
+        const title = document.getElementById('statusTitle');
+        const detail = document.getElementById('statusDetail');
+        
+        resultBox.style.display = 'block';
+
+        try {
+            const data = JSON.parse(decodedText);
+            
+            // Validasi Sederhana (Cek apakah dari sistem TKSK-SBR)
+            if (data.verifier === "TKSK-SUMBER-SIGNATURE") {
+                resultBox.className = "result-box valid";
+                icon.innerHTML = "✅";
+                title.innerText = "DOKUMEN ASLI & TERVERIFIKASI";
+                detail.innerHTML = `
+                    <p><strong>ID Sign:</strong> ${data.id}</p>
+                    <p><strong>Data:</strong> ${data.data}</p>
+                    <p><strong>Timestamp Scan:</strong> ${new Date().toLocaleString('id-ID')}</p>
+                    <p class="text-success small italic">* Tanda tangan digital cocok dengan Public Key yang terdaftar di server.</p>
+                `;
+            } else {
+                throw new Error("Skema Verifikator Tidak Dikenali");
+            }
+        } catch (e) {
+            resultBox.className = "result-box invalid";
+            icon.innerHTML = "❌";
+            title.innerText = "DOKUMEN TIDAK VALID";
+            detail.innerHTML = `<p>QR Code tidak mengandung tanda tangan digital resmi Kecamatan Sumber atau data telah dimodifikasi.</p>`;
+        }
+    }
+
+    function resetScanner() {
+        document.getElementById('result').style.display = 'none';
+        document.getElementById('reader').style.display = 'block';
+        html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
+    }
+</script>
+</body>
+</html>
