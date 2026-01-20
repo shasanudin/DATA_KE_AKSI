@@ -138,6 +138,7 @@ fetch('data/dtsen.json')
 
 // 3. Fungsi Render Detail Wilayah
 function renderWilayah(idx, data) {
+    localStorage.setItem('lastSelectedWilayah', idx);
     const w = data.wilayah[idx];
     const d = w.desil;
     const totalKK = w.total_kk;
