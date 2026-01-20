@@ -3,12 +3,11 @@ let myChart;
 fetch('data/dtsen.json')
     .then(res => res.json())
     .then(data => {
-        // --- 1. UPDATE TANGGAL (Header & Body) ---
-        // Mencari elemen dengan ID updateDataHeader ATAU updateData
+        // 1. Update Tanggal
         const dateEl = document.getElementById('updateDataHeader') || document.getElementById('updateData');
         if (dateEl) dateEl.innerText = data.updated;
 
-        // --- 2. HITUNG AGREGAT KECAMATAN (Untuk Stat Cards) ---
+        // 2. Hitung Agregat Kecamatan
         let totalKKKec = 0;
         let d12Kec = 0;
         let d34Kec = 0;
@@ -16,82 +15,96 @@ fetch('data/dtsen.json')
 
         data.wilayah.forEach(w => {
             totalKKKec += w.total_kk;
-            // D1 + D2 (Angka riil)
             d12Kec += (w.desil[0] + w.desil[1]);
-            // D3 + D4
             d34Kec += (w.desil[2] + w.desil[3]);
-            // D5 sampai akhir
             d510Kec += w.desil.slice(4).reduce((a, b) => a + b, 0);
         });
 
-        // Helper untuk mengisi teks secara aman
-        const safeSet = (id, val) => {
-            const el = document.getElementById(id);
-            if (el) el.innerText = val;
-        };
+        // 3. Jalankan Animasi Angka Berjalan (Counter)
+        animateValue("totalKK", 0, totalKKKec, 1500);
+        animateValue("desil12", 0, d12Kec, 1500);
+        animateValue("desil34", 0, d34Kec, 1500);
+        animateValue("desil510", 0, d510Kec, 1500);
 
-        safeSet('totalKK', totalKKKec.toLocaleString('id-ID'));
-        safeSet('desil12', d12Kec.toLocaleString('id-ID'));
-        safeSet('desil34', d34Kec.toLocaleString('id-ID'));
-        safeSet('desil510', d510Kec.toLocaleString('id-ID'));
-
-        // --- 3. DROPDOWN & CHART ---
+        // 4. Inisialisasi Dropdown
         const select = document.getElementById('wilayahSelect');
         if (select) {
-            select.innerHTML = ""; // Bersihkan dropdown
             data.wilayah.forEach((w, i) => {
                 const opt = document.createElement('option');
                 opt.value = i;
                 opt.textContent = w.nama;
                 select.appendChild(opt);
             });
-
-            select.addEventListener('change', e => renderChart(e.target.value, data));
-            
-            // Render awal wilayah pertama
-            renderChart(0, data);
+            select.addEventListener('change', e => renderSimplifiedChart(e.target.value, data));
+            renderSimplifiedChart(0, data);
         }
     })
-    .catch(err => console.error("Gagal memuat data JSON:", err));
+    .catch(err => console.error("Data gagal dimuat:", err));
 
-function renderChart(idx, data) {
+// --- FUNGSI ANIMASI ANGKA ---
+function animateValue(id, start, end, duration) {
+    const obj = document.getElementById(id);
+    if (!obj) return;
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const value = Math.floor(progress * (end - start) + start);
+        obj.innerText = value.toLocaleString('id-ID');
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+    window.requestAnimationFrame(step);
+}
+
+// --- FUNGSI GRAFIK SEDERHANA (3 KATEGORI) ---
+function renderSimplifiedChart(idx, data) {
     const w = data.wilayah[idx];
     if (!w) return;
 
-    const d = w.desil;
     const total = w.total_kk;
-
-    // Fungsi hitung persen terhadap total KK wilayah tersebut
     const kePersen = (val) => (total > 0 ? ((val / total) * 100).toFixed(1) : 0);
 
-    const canvas = document.getElementById('desilChart');
-    if (!canvas) return;
+    // Kelompokkan Data agar tabel/grafik tidak panjang
+    const kelompokData = [
+        kePersen(w.desil[0] + w.desil[1]), // Sangat Miskin
+        kePersen(w.desil[2] + w.desil[3]), // Rentan
+        kePersen(w.desil.slice(4).reduce((a,b)=>a+b,0)) // Mampu
+    ];
 
-    const ctx = canvas.getContext('2d');
+    const ctx = document.getElementById('desilChart').getContext('2d');
     if (myChart) myChart.destroy();
 
     myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6-10'],
+            labels: ['D1-D2 (Sangat Miskin)', 'D3-D4 (Rentan)', 'D5-D10 (Mampu)'],
             datasets: [{
-                label: 'Persentase (%)',
-                data: [
-                    kePersen(d[0]), kePersen(d[1]), 
-                    kePersen(d[2]), kePersen(d[3]), 
-                    kePersen(d[4]), kePersen(d.slice(5).reduce((a,b)=>a+b,0))
-                ],
-                backgroundColor: ['#dc3545', '#dc3545', '#ffc107', '#ffc107', '#007bff', '#28a745'],
-                borderRadius: 4
+                data: kelompokData,
+                backgroundColor: ['#dc3545', '#ffc107', '#28a745'],
+                borderRadius: 8,
+                barThickness: 50 // Membuat batang lebih proporsional
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }
+                y: { 
+                    beginAtZero: true, 
+                    max: 100, 
+                    ticks: { callback: v => v + '%' } 
+                }
             },
-            plugins: { legend: { display: false } }
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => `Proporsi: ${context.raw}%`
+                    }
+                }
+            }
         }
     });
 }
