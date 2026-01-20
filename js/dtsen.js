@@ -77,15 +77,21 @@ fetch("data/dtsen.json")
     fetch('data/dtsen.json')
   .then(res => res.json())
   .then(data => {
+    // 1. Cari elemen tbody
     const tbody = document.getElementById("tabelPrioritas");
-    if (!tbody) return; // Keluar jika bukan di halaman prioritas
+    
+    // 2. CEK: Jika elemen tidak ada (misal di halaman Beranda), jangan lanjut
+    if (!tbody) {
+      console.warn("Elemen tabelPrioritas tidak ditemukan. Lewati pengisian tabel.");
+      return; 
+    }
 
+    // 3. Jika ada, baru jalankan manipulasi
     tbody.innerHTML = "";
 
     const hasil = data.wilayah.map(w => {
       const d1 = w.desil?.[0] || 0;
       const d2 = w.desil?.[1] || 0;
-
       return {
         nama: w.nama,
         jenis: w.jenis,
@@ -95,7 +101,6 @@ fetch("data/dtsen.json")
       };
     });
 
-    // Urutkan dari total tertinggi (Desil 1 + Desil 2)
     hasil.sort((a, b) => b.total - a.total);
 
     hasil.forEach((w, i) => {
@@ -118,9 +123,9 @@ fetch("data/dtsen.json")
           <td>${i + 1}</td>
           <td>${w.nama}</td>
           <td>${w.jenis}</td>
-          <td>${w.d1}%</td>
-          <td>${w.d2}%</td>
-          <td><strong>${w.total}%</strong></td>
+          <td>${w.d1}</td>
+          <td>${w.d2}</td>
+          <td><strong>${w.total}</strong></td>
           <td>
             <span class="badge-risiko ${kelas}">
               ${status}
@@ -132,11 +137,8 @@ fetch("data/dtsen.json")
   })
   .catch(error => {
     console.error("Gagal load data DTSEN:", error);
-    const tbody = document.getElementById("tabelPrioritas");
-    if (tbody) {
-      tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Gagal memuat data</td></tr>`;
-    }
   });
+
 
 
 
