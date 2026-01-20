@@ -138,9 +138,3 @@ fetch("data/dtsen.json")
   .catch(error => {
     console.error("Gagal load data DTSEN:", error);
   });
-
-
-
-
-
-
