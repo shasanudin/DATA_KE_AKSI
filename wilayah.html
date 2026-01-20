@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heatmap DTSEN | Kecamatan Sumber</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<style>
+#map { height: 520px; border-radius: 6px; }
+.slider-box {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<header class="container py-3 border-bottom">
+  <div class="row align-items-center">
+    <div class="col-md-4">
+      <img src="assets/img/logo/logo-tksk.png" height="45">
+      <img src="assets/img/logo/logo-puskesos.png" height="45" class="ml-2">
+    </div>
+    <div class="col-md-4 text-center">
+      <h5 class="mb-0 font-weight-bold">DARI DATA KE AKSI</h5>
+      <small class="text-muted">Kecamatan Sumber</small>
+    </div>
+    <div class="col-md-4 text-right text-muted small">
+      Heatmap DTSEN
+    </div>
+  </div>
+</header>
+
+<div id="navbar"></div>
+
+<main class="container py-4">
+
+<h4>Heatmap Kepadatan Berdasarkan Desil</h4>
+<p class="text-muted">
+Geser slider untuk melihat sebaran kepadatan keluarga pada desil tertentu.
+</p>
+
+<div class="slider-box">
+  <label>
+    <strong>Desil:</strong>
+    <span id="labelDesil">1 (Sangat Miskin)</span>
+  </label>
+  <input type="range" id="desilSlider" min="1" max="10" value="1" class="custom-range">
+</div>
+
+<div id="map"></div>
+
+</main>
+
+<footer class="text-center py-4 border-top">
+<small>© TKSK & Forum Puskesos Kecamatan Sumber</small>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+<script>
+/* =====================
+   NAVBAR
+===================== */
+fetch('navbar.html')
+.then(r => r.text())
+.then(html => {
+  document.getElementById('navbar').innerHTML = html;
+});
+
+/* =====================
+   MAP INIT
+===================== */
+const map = L.map('map').setView([-6.87,108.57], 12);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  attribution:'© OpenStreetMap'
+}).addTo(map);
+
+let heatLayer;
+let dtsenData = [];
+
+const desilLabel = [
+  "Sangat Miskin","Miskin","Rentan Miskin","Rentan",
+  "Menengah Bawah","Menengah","Menengah Atas",
+  "Sejahtera Awal","Sejahtera","Sangat Sejahtera"
+];
+
+/* =====================
+   LOAD JSON
+===================== */
+fetch("data/dtsen-wilayah.json")
+.then(r => r.json())
+.then(json => {
+  dtsenData = json.wilayah;
+  updateHeatmap(1);
+});
+
+/* =====================
+   UPDATE HEATMAP
+===================== */
+function updateHeatmap(desil) {
+  if (heatLayer) map.removeLayer(heatLayer);
+
+  const heatData = [];
+
+  dtsenData.forEach(w => {
+    const nilai = Number(w.desil[desil - 1] || 0);
+    if (nilai > 0) {
+      heatData.push([w.lat, w.lng, nilai / 100]);
+    }
+  });
+
+  heatLayer = L.heatLayer(heatData, {
+    radius: 35,
+    blur: 25,
+    maxZoom: 13,
+    gradient: {
+      0.2: "blue",
+      0.4: "lime",
+      0.6: "orange",
+      0.8: "red"
+    }
+  }).addTo(map);
+
+  document.getElementById("labelDesil").innerText =
+    desil + " (" + desilLabel[desil - 1] + ")";
+}
+
+/* =====================
+   SLIDER EVENT
+===================== */
+document.getElementById("desilSlider").addEventListener("input", e => {
+  updateHeatmap(Number(e.target.value));
+});
+</script>
+
+</body>
+</html>
