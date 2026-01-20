@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Laporan Bulanan DTSEN</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+body { font-family: "Times New Roman", serif; }
+.page { padding: 30px; page-break-after: always; }
+.no-print { margin: 20px; }
+.ttd { height: 100px; }
+hr { border-top: 1px solid #000; }
+</style>
+</head>
+
+<body>
+
+<div class="no-print">
+<button class="btn btn-danger" onclick="exportPDF()">Export PDF</button>
+</div>
+
+<div id="laporan">
+
+<!-- ================= HALAMAN 1 ================= -->
+<div class="page container">
+<h4 class="text-center font-weight-bold">LAPORAN BULANAN DATA DTSEN</h4>
+<p class="text-center">
+Kecamatan <span id="kecamatan"></span> –
+Kabupaten <span id="kabupaten"></span>
+</p>
+<hr>
+
+<p>
+Laporan ini disusun berdasarkan Data Terpadu Sosial Ekonomi Nasional (DTSEN)
+sebagai dasar perencanaan dan intervensi kesejahteraan sosial.
+</p>
+
+<p><strong>Update Data:</strong> <span id="updated"></span></p>
+
+<h5>Grafik Distribusi Desil Rumah Tangga</h5>
+<canvas id="chartDesil"></canvas>
+</div>
+
+<!-- ================= HALAMAN 2 ================= -->
+<div class="page container">
+<h5>Rekapitulasi Total Rumah Tangga per Desil</h5>
+
+<table class="table table-bordered table-sm">
+<thead class="thead-light">
+<tr><th>Desil</th><th>Jumlah KK</th></tr>
+</thead>
+<tbody id="tabelDesil"></tbody>
+</table>
+
+<p>
+Kelompok Desil 1 dan Desil 2 merupakan prioritas utama dalam pelaksanaan
+program perlindungan dan pemberdayaan sosial.
+</p>
+</div>
+
+<!-- ================= HALAMAN 3 (TTD) ================= -->
+<div class="page container">
+<div class="row text-center mt-5">
+
+<div class="col-6">
+<p>Mengetahui,<br>Camat Sumber</p>
+<div class="ttd"></div>
+<p><strong>(............................)</strong><br>
+NIP. ............................</p>
+</div>
+
+<div class="col-6">
+<p id="tanggalTTD"></p>
+<p>TKSK Kecamatan Sumber</p>
+<div id="qrcode"></div>
+<p class="mt-2"><strong>Shidiq Hasanudin, S.IP</strong></p>
+</div>
+
+</div>
+</div>
+
+</div>
+
+<script>
+let chart;
+
+// ================= FETCH DTSEN.JSON =================
+fetch("data/dtsen.json")
+.then(res => res.json())
+.then(data => {
+
+  document.getElementById("kecamatan").innerText = data.kecamatan;
+  document.getElementById("kabupaten").innerText = data.kabupaten;
+  document.getElementById("updated").innerText = data.updated;
+
+  const totalDesil = Array(10).fill(0);
+
+  data.wilayah.forEach(w => {
+    w.desil.forEach((val, i) => {
+      totalDesil[i] += Number(val) || 0;
+    });
+  });
+
+  // ================= TABEL =================
+  document.getElementById("tabelDesil").innerHTML =
+    totalDesil.map((v, i) => `
+      <tr>
+        <td>D${i+1}</td>
+        <td>${v.toLocaleString("id-ID")}</td>
+      </tr>`).join("");
+
+  // ================= GRAFIK =================
+  chart = new Chart(document.getElementById("chartDesil"), {
+    type: "bar",
+    data: {
+      labels: totalDesil.map((_, i) => "D"+(i+1)),
+      datasets: [{
+        data: totalDesil,
+        backgroundColor: "#007bff"
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  generateQR(data, totalDesil);
+});
+
+// ================= QR E-SIGN ECDSA =================
+async function generateQR(data, totalDesil) {
+
+  const payload = {
+    dokumen: "Laporan Bulanan DTSEN",
+    kecamatan: data.kecamatan,
+    periode: data.updated,
+    total_D1_D2: totalDesil[0] + totalDesil[1],
+    penandatangan: "Shidiq Hasanudin, S.IP",
+    jabatan: "TKSK Kecamatan Sumber",
+    timestamp: new Date().toISOString()
+  };
+
+  const encoder = new TextEncoder();
+  const encoded = encoder.encode(JSON.stringify(payload));
+
+  const keyPair = await crypto.subtle.generateKey(
+    { name: "ECDSA", namedCurve: "P-256" },
+    true,
+    ["sign", "verify"]
+  );
+
+  const signature = await crypto.subtle.sign(
+    { name: "ECDSA", hash: "SHA-256" },
+    keyPair.privateKey,
+    encoded
+  );
+
+  const qrData = {
+    payload,
+    signature: btoa(String.fromCharCode(...new Uint8Array(signature))),
+    algo: "ECDSA-P256-SHA256"
+  };
+
+  new QRCode(document.getElementById("qrcode"), {
+    text: JSON.stringify(qrData),
+    width: 120,
+    height: 120
+  });
+
+  document.getElementById("tanggalTTD").innerText =
+    "Sumber, " + new Date().toLocaleDateString("id-ID",
+    { day:"numeric", month:"long", year:"numeric" });
+}
+
+// ================= EXPORT PDF =================
+function exportPDF() {
+  html2pdf().set({
+    margin: 10,
+    filename: "Laporan_DTSEN_"+Date.now()+".pdf",
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: "mm", format: "a4" }
+  }).from(document.getElementById("laporan")).save();
+}
+</script>
+
+</body>
+</html>
