@@ -85,37 +85,19 @@ footer {
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .hero h1 {
-    font-size: 2rem;
-  }
-
-  header {
-    text-align: center;
-  }
-}
-
+/* Styling untuk status pada tabel */
 .badge-risiko {
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #fff;
-  display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #fff;
+    display: inline-block;
 }
 
-.risiko-tinggi {
-  background-color: #dc3545; /* merah */
-}
-
-.risiko-sedang {
-  background-color: #ffc107; /* kuning */
-  color: #212529;
-}
-
-.risiko-rendah {
-  background-color: #28a745; /* hijau */
-}
+.risiko-tinggi { background-color: #dc3545; } /* Merah */
+.risiko-sedang { background-color: #ffc107; color: #212529; } /* Kuning */
+.risiko-rendah { background-color: #28a745; } /* Hijau */
 
 /* =========================
    MODE CETAK / PDF
@@ -151,6 +133,7 @@ footer {
     max-width: 100% !important;
   }
 }
+
 
 
 
