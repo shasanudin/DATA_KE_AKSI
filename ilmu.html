@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Memahami Ilmu DTSEN dan Klasifikasi Desil</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body {
+    font-family: "Times New Roman", serif;
+    background: #f4f4f4;
+    margin: 0;
+}
+header {
+    background: #1f4e79;
+    color: white;
+    padding: 20px;
+}
+.container {
+    width: 80%;
+    margin: auto;
+    background: white;
+    padding: 25px;
+}
+.meta {
+    color: #666;
+    font-size: 14px;
+}
+.read-more {
+    display: none;
+}
+button {
+    background: #1f4e79;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+button:hover {
+    background: #163b5c;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    border: 1px solid #333;
+    padding: 8px;
+}
+th {
+    background: #ddd;
+}
+footer {
+    text-align: center;
+    font-size: 13px;
+    margin: 20px;
+    color: #555;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Memahami Ilmu DTSEN dan Klasifikasi Desil</h1>
+<p>Model Berita Sosial & Statistik</p>
+</header>
+
+<div class="container" id="content">
+
+<p class="meta">Dipublikasikan: 2026 | Kategori: Sosial & Statistik Nasional</p>
+
+<p>
+DTSEN atau <b>Data Terpadu Sosial Ekonomi Nasional</b> merupakan basis data nasional
+yang digunakan pemerintah untuk memetakan kondisi kesejahteraan masyarakat Indonesia.
+Data ini menjadi rujukan utama dalam penyaluran bantuan sosial, subsidi, dan program perlindungan sosial.
+</p>
+
+<button onclick="toggleRead()">Baca Selengkapnya</button>
+
+<div class="read-more" id="more">
+
+<h2>Pengertian Desil</h2>
+<p>
+Desil adalah pembagian penduduk menjadi sepuluh kelompok berdasarkan tingkat
+kesejahteraan ekonomi, mulai dari yang paling miskin (Desil 1)
+hingga yang paling sejahtera (Desil 10).
+</p>
+
+<h2>Klasifikasi Desil DTSEN</h2>
+
+<table>
+<tr>
+<th>Desil</th>
+<th>Kategori Ekonomi</th>
+<th>Karakteristik Umum</th>
+</tr>
+<tr><td>Desil 1</td><td>Sangat Miskin</td><td>Kebutuhan dasar tidak terpenuhi</td></tr>
+<tr><td>Desil 2</td><td>Miskin</td><td>Pendapatan sangat rendah</td></tr>
+<tr><td>Desil 3</td><td>Rentan Miskin</td><td>Rawan jatuh miskin</td></tr>
+<tr><td>Desil 4</td><td>Rentan</td><td>Pendapatan pas-pasan</td></tr>
+<tr><td>Desil 5</td><td>Menengah Bawah</td><td>Kebutuhan pokok terpenuhi</td></tr>
+<tr><td>Desil 6</td><td>Menengah</td><td>Pendapatan stabil</td></tr>
+<tr><td>Desil 7</td><td>Menengah Atas</td><td>Memiliki tabungan</td></tr>
+<tr><td>Desil 8</td><td>Sejahtera Awal</td><td>Aset cukup</td></tr>
+<tr><td>Desil 9</td><td>Sejahtera</td><td>Pendapatan tinggi</td></tr>
+<tr><td>Desil 10</td><td>Sangat Sejahtera</td><td>Aset dan pendapatan sangat tinggi</td></tr>
+</table>
+
+<h2>Contoh Nyata Keluarga (KK) Berdasarkan Desil</h2>
+
+<ul>
+<li><b>Desil 1:</b> KK buruh tani tanpa lahan, rumah tidak layak huni.</li>
+<li><b>Desil 2:</b> KK buruh harian dengan penghasilan tidak tetap.</li>
+<li><b>Desil 3:</b> KK pedagang kecil dengan omzet minim.</li>
+<li><b>Desil 4:</b> KK pekerja informal, pendapatan cukup makan.</li>
+<li><b>Desil 5:</b> KK karyawan kontrak dengan gaji UMK.</li>
+<li><b>Desil 6:</b> KK pegawai tetap swasta.</li>
+<li><b>Desil 7:</b> KK ASN golongan menengah.</li>
+<li><b>Desil 8:</b> KK pengusaha kecil mapan.</li>
+<li><b>Desil 9:</b> KK pengusaha menengah.</li>
+<li><b>Desil 10:</b> KK pemilik aset besar dan investasi.</li>
+</ul>
+
+<button onclick="downloadPDF()">Download PDF</button>
+
+</div>
+
+</div>
+
+<footer>
+© 2026 Edukasi Sosial DTSEN
+</footer>
+
+<script>
+function toggleRead() {
+    const more = document.getElementById("more");
+    more.style.display = more.style.display === "none" ? "block" : "none";
+}
+
+function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("p", "mm", "a4");
+    const text = document.getElementById("content").innerText;
+
+    const lines = pdf.splitTextToSize(text, 180);
+    let y = 10;
+
+    lines.forEach(line => {
+        if (y > 280) {
+            pdf.addPage();
+            y = 10;
+        }
+        pdf.text(15, y, line);
+        y += 7;
+    });
+
+    pdf.save("DTSEN_dan_Desil.pdf");
+}
+</script>
+
+</body>
+</html>
