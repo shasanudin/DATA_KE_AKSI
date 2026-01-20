@@ -1,0 +1,138 @@
+{
+  "kecamatan": "Sumber",
+  "kabupaten": "Cirebon",
+  "provinsi": "Jawa Barat",
+  "updated": "Januari 2026",
+
+  "wilayah": [
+    {
+      "kode": "3209031001",
+      "nama": "Sumber",
+      "jenis": "Kelurahan", 
+      "lat": -6.7591392,
+      "lng": 108.4788453,
+      "total_kk": 3351,
+      "desil": [287,292,374,376,365,1418,0,0,0,239]
+    },
+    {
+      "kode": "3209032001",
+      "nama": "Babakan",
+      "jenis": "Kelurahan",
+      "lat": -6.7685404,
+      "lng": 108.4834288,
+      "total_kk": 1392,
+      "desil": [243,212,185,156,110,412,0,0,0,74]
+    }
+	{
+      "kode": "3209032002",
+      "nama": "Gegunung",
+      "jenis": "Kelurahan",
+	  "lat": -6.768492,
+      "lng": 108.465404,
+      "total_kk": 780,
+      "desil": [15, 13, 11, 10, 12, 11, 9, 8, 7, 4]
+    },
+    {
+      "kode": "3209032003",
+      "nama": "Kaliwadas",
+      "jenis": "Kelurahan",
+	  "lat": -6.7492126,
+      "lng": 108.4780806,
+      "total_kk": 640,
+      "desil": [18, 14, 12, 10, 10, 9, 8, 7, 6, 6]
+    },
+    {
+      "kode": "3209032004",
+      "nama": "Kemantren",
+      "jenis": "Kelurahan",
+	  "lat": -6.7580494,
+      "lng": 108.4896831,
+      "total_kk": 860,
+      "desil": [12, 11, 10, 9, 13, 14, 12, 9, 6, 4]
+    },
+    {
+      "kode": "3209032005",
+      "nama": "Kenanga",
+      "jenis": "Kelurahan",
+	  "lat": -6.7561909,
+      "lng": 108.461578,
+      "total_kk": 1050,
+      "desil": [10, 9, 10, 11, 14, 15, 13, 8, 6, 4]
+    },
+    {
+      "kode": "3209032006",
+      "nama": "Pasalakan",
+      "jenis": "Kelurahan",
+	  "lat": -6.739725,
+      "lng": 108.4852216,
+      "total_kk": 3219,
+      "desil": [365, 346, 419, 353, 376, 1229, 0, 0, 0, 131]
+    },
+    {
+      "kode": "3209032007",
+      "nama": "Pejambon",
+      "jenis": "Kelurahan",
+	  "lat": -6.7401867,
+      "lng": 108.4987329,
+      "total_kk": 1781,
+      "desil": [139, 184, 242, 206, 174, 774, 0, 0, 0, 62]
+    },
+    {
+      "kode": "3209032008",
+      "nama": "Perbutulan",
+      "jenis": "Kelurahan",
+	  "lat": -6.7481069,
+      "lng": 108.4878044,
+      "total_kk": 1419,
+      "desil": [140, 150, 247, 220, 115, 509, 0, 0, 0, 38]
+    },
+    {
+      "kode": "3209032009",
+      "nama": "Sendang",
+      "jenis": "Kelurahan",
+	  "lat": -6.7589206,
+      "lng": 108.4941926,
+      "total_kk": 1444,
+      "desil": [183, 134, 197, 198, 130, 638, 0, 0, 0, 94]
+    },
+    {
+      "kode": "3209032010",
+      "nama": "Tukmudal",
+      "jenis": "Kelurahan",
+	  "lat": -6.7590187,
+      "lng": 108.4680171,
+      "total_kk": 4667,
+      "desil": [185, 194, 244, 297, 279, 3184, 0, 0, 0, 284]
+    },
+    {
+      "kode": "3209032011",
+      "nama": "Watubelah",
+      "jenis": "Kelurahan",
+	  "lat": -6.7366719,
+      "lng": 108.4932053,
+      "total_kk": 810,
+      "desil": [14, 13, 12, 11, 12, 11, 9, 8, 6, 4]
+    },
+    {
+      "kode": "3209032012",
+      "nama": "Matangaji",
+      "jenis": "Desa",
+	  "lat": -6.7950024,
+      "lng": 108.4571922,
+      "total_kk": 1753,
+      "desil": [178, 199, 199, 195, 217, 715, 0, 0, 0, 50]
+    },
+    {
+      "kode": "3209032013",
+      "nama": "Sidawangi",
+      "jenis": "Desa",
+	  "lat": -6.7870701,
+      "lng": 108.4738256,
+      "total_kk": 600,
+      "desil": [18, 15, 13, 11, 10, 9, 8, 7, 5, 4]
+    }
+  ]
+}
+
+  ]
+}
