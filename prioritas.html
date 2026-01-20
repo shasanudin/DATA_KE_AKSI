@@ -4,86 +4,113 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dari Data ke Aksi | TKSK & Puskesos Kec. Sumber</title>
+
   <meta name="description" content="Dari Data ke Aksi – Pemanfaatan Data DTSEN oleh TKSK Sumber dan Forum Puskesos Kecamatan Sumber">
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-<header class="container py-3">
+<!-- HEADER -->
+<header class="container py-3 border-bottom">
   <div class="row align-items-center">
     <div class="col-md-4">
       <img src="assets/img/logo/logo-tksk.png" alt="Logo TKSK" height="55">
       <img src="assets/img/logo/logo-puskesos.png" alt="Logo Puskesos" height="55" class="ml-2">
     </div>
+
     <div class="col-md-4 text-center">
-      <h3 class="mb-0">DARI DATA KE AKSI</h3>
+      <h4 class="mb-0 font-weight-bold">DARI DATA KE AKSI</h4>
       <small class="text-muted">TKSK & Forum Puskesos Kecamatan Sumber</small>
     </div>
+
     <div class="col-md-4 text-right">
       <a href="#kontak" class="btn btn-sm btn-outline-secondary">Kontak</a>
     </div>
   </div>
 </header>
 
-
+<!-- NAVBAR (LOAD EXTERNAL) -->
 <div id="navbar"></div>
 
-  <main id="prioritas" class="container py-5">
-    <h2>Prioritas Intervensi Sosial (Desil 1–2)</h2>
-    
-    <div class="row mb-3">
-      <div class="col-md-3">Total KK: <span id="totalKK">0</span></div>
-      <div class="col-md-3">Desil 1-2: <span id="desil12">0%</span></div>
-      <div class="col-md-3">Desil 3-4: <span id="desil34">0%</span></div>
-      <div class="col-md-3">Desil 5-10: <span id="desil510">0%</span></div>
-    </div>
+<!-- MAIN CONTENT -->
+<main id="prioritas" class="container py-5">
 
-    <div class="mb-5">
-      <canvas id="desilChart"></canvas>
-    </div>
+  <h2 class="mb-4">Prioritas Intervensi Sosial (Desil 1–2)</h2>
 
-    <div class="table-responsive">
-      <table class="table table-bordered table-sm">
-        <thead class="thead-dark">
-          <tr>
-            <th>Peringkat</th>
-            <th>Wilayah</th>
-            <th>Jenis</th>
-            <th>D1</th>
-            <th>D2</th>
-            <th>Total</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="tabelPrioritas">
-          </tbody>
-      </table>
-    </div>
-  </main>
+  <!-- RINGKASAN -->
+  <div class="row mb-4">
+    <div class="col-md-3"><strong>Total KK:</strong> <span id="totalKK">0</span></div>
+    <div class="col-md-3"><strong>Desil 1–2:</strong> <span id="desil12">0%</span></div>
+    <div class="col-md-3"><strong>Desil 3–4:</strong> <span id="desil34">0%</span></div>
+    <div class="col-md-3"><strong>Desil 5–10:</strong> <span id="desil510">0%</span></div>
+  </div>
 
-  <footer class="py-4 text-center">
-    <small>© TKSK Sumber & Forum Puskesos Kecamatan Sumber</small>
-  </footer>
+  <!-- CHART -->
+  <div class="mb-5">
+    <canvas id="desilChart" height="120"></canvas>
+  </div>
 
-  </body>
+  <!-- TABEL -->
+  <div class="table-responsive">
+    <table class="table table-bordered table-sm">
+      <thead class="thead-dark">
+        <tr>
+          <th>Peringkat</th>
+          <th>Wilayah</th>
+          <th>Jenis</th>
+          <th>D1</th>
+          <th>D2</th>
+          <th>Total</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tabelPrioritas">
+        <!-- diisi via JS -->
+      </tbody>
+    </table>
+  </div>
 
+</main>
+
+<!-- FOOTER -->
+<footer class="py-4 text-center border-top">
+  <small>© TKSK Sumber & Forum Puskesos Kecamatan Sumber</small>
+</footer>
+
+<!-- JS LIBRARIES -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+
+<!-- LOAD NAVBAR -->
 <script>
 fetch('navbar.html')
-  .then(r => r.text())
+  .then(res => res.text())
   .then(html => {
     document.getElementById('navbar').innerHTML = html;
 
     const page = location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.nav-link').forEach(a => {
-      if (a.getAttribute('href') === page) {
-        a.classList.add('active');
+    document.querySelectorAll('.nav-link').forEach(link => {
+      if (link.getAttribute('href') === page) {
+        link.classList.add('active');
       }
     });
   });
 </script>
 
+<!-- DATA & LOGIC DTSEN -->
 <script src="js/dtsen.js"></script>
+
+</body>
+</html>
