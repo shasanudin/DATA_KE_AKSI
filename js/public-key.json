@@ -1,8 +1,5 @@
 {
-  "pem": "/public-key.pem",
-  "algoritma": "ECDSA-secp256r1-SHA256",
-  "pemilik": "Shidiq Hasanudin, S.IP",
-  "jabatan": "TKSK Kecamatan Sumber",
-  "berlaku_mulai": "2026-01-01",
-  "berlaku_sampai": "2028-12-31"
+  "id": "UNIK-ID-LAPORAN",
+  "msg": "ISI-LAPORAN-YANG-AKAN-DIVALIDASI",
+  "sig": "HASIL-SIGNATURE-DARI-PRIVATE-KEY"
 }
