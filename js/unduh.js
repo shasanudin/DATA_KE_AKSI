@@ -1,59 +1,78 @@
 let globalData;
 
-// 1. Inisialisasi Data (Auto-run)
+// Load data saat halaman dibuka
 async function initApp() {
     try {
         const res = await fetch('data/dtsen.json');
         globalData = await res.json();
-        console.log("Data Berhasil Dimuat");
     } catch (err) {
-        console.error("Gagal memuat JSON:", err);
+        console.error("Gagal load data/dtsen.json");
     }
 }
 initApp();
 
-// 2. Fungsi Utama (Harus di Luar agar bisa dipanggil onclick)
 async function generateReport() {
-    if (!globalData) {
-        alert("Data belum siap, silakan tunggu sebentar...");
-        return;
-    }
+    if (!globalData) return alert("Data sedang dimuat...");
 
     const tipe = document.getElementById('tipeLaporan').value;
-    const id = "DTSEN-" + Date.now();
-    const msg = `Kec-Sumber-${tipe}-${globalData.updated}`;
+    const reportID = "DTSEN-" + Date.now();
+    const msgPayload = `Kec-Sumber-${tipe}-${globalData.updated}`;
 
-    // TAMPILKAN HASIL TABEL (Logika render Anda...)
-    document.getElementById('kontenData').innerHTML = "Memproses Laporan...";
+    // Tampilkan Header Laporan
+    document.getElementById('reportPreview').style.display = 'block';
+    document.getElementById('periodeText').innerText = globalData.updated;
+    document.getElementById('tglSekarang').innerText = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
 
-    // JALANKAN PROSES QR OTOMATIS
-    await prepareQR(id, msg);
+    // 1. Render Tabel Berdasarkan Tipe
+    if (tipe === 'agregat') {
+        document.getElementById('judulLaporan').innerText = "Laporan Agregasi Kec. Sumber";
+        renderAgregat();
+    } else {
+        document.getElementById('judulLaporan').innerText = "Daftar Prioritas Kerentanan Sosial";
+        renderPrioritas();
+    }
+
+    // 2. Jalankan Pembuatan QR
+    prepareQR(reportID, msgPayload);
 }
 
-// 3. Fungsi Sinkronisasi ke Server Otomatis
-async function prepareQR(id, msg) {
+function prepareQR(id, msg) {
     const qrDiv = document.getElementById("qrcode");
-    qrDiv.innerHTML = "Menandatangani...";
+    qrDiv.innerHTML = ""; // Reset QR
 
-    try {
-        // Ganti URL ini dengan URL Server Backend Anda nanti
-        const response = await fetch('http://localhost:3000/api/sign-report', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id, msg: msg })
-        });
+    // Tampilkan ID unik
+    document.getElementById('hashID').innerText = id;
 
-        const signedData = await response.json();
+    // METODE AWAL: Minta Signature Manual
+    const sig = prompt("Masukkan Signature HEX (Dari Signer Tool) untuk validasi QR ini:", "");
 
-        qrDiv.innerHTML = "";
+    if (sig) {
+        const payload = { id: id, msg: msg, sig: sig.trim() };
         new QRCode(qrDiv, {
-            text: JSON.stringify(signedData),
-            width: 110,
-            height: 110,
-            correctLevel: QRCode.CorrectLevel.H
+            text: JSON.stringify(payload),
+            width: 120,
+            height: 120
         });
-    } catch (err) {
-        qrDiv.innerHTML = "<small class='text-danger'>Server Signer Offline</small>";
-        console.error("Gagal Sign:", err);
+        alert("Dokumen berhasil ditandatangani secara digital.");
+    } else {
+        alert("Peringatan: Mencetak tanpa tanda tangan digital.");
+        new QRCode(qrDiv, {
+            text: JSON.stringify({id: id, msg: msg, sig: "UNSIGNED"}),
+            width: 120,
+            height: 120
+        });
     }
+}
+
+// Fungsi pembantu render tabel
+function renderAgregat() {
+    let html = `<table class="table table-bordered table-sm text-center">
+        <thead class="thead-light"><tr><th>Kategori</th><th>Jumlah KK</th></tr></thead>
+        <tbody><tr><td>Total Terdata</td><td>${globalData.wilayah.reduce((a,b)=>a+b.total_kk,0).toLocaleString('id-ID')}</td></tr></tbody>
+    </table>`;
+    document.getElementById('kontenData').innerHTML = html;
+}
+
+function renderPrioritas() {
+    document.getElementById('kontenData').innerHTML = "<p class='text-center'>Data Prioritas Terlampir.</p>";
 }
