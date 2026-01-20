@@ -161,5 +161,13 @@ footer {
   }
 </style>
 
+<style>
+    @media print {
+        .no-print { display: none !important; }
+        body { background: white; }
+        .news-container { box-shadow: none; border: none; padding: 0; }
+    }
+</style>
+
 
 
