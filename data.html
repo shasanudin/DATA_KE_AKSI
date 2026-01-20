@@ -1,218 +1,179 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Data DTSEN | TKSK & Puskesos Sumber</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Data DTSEN | TKSK & Puskesos Sumber</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <header class="container py-3">
-  <div class="row align-items-center text-center">
-    <div class="col-md-4 text-left">
-      <img src="assets/img/logo/logo-tksk.png" alt="Logo" height="50">
-      <img src="assets/img/logo/logo-puskesos.png" alt="Logo" height="50">
+    <div class="row align-items-center text-center">
+        <div class="col-md-4 text-left">
+            <img src="assets/img/logo/logo-tksk.png" alt="Logo" height="50">
+            <img src="assets/img/logo/logo-puskesos.png" alt="Logo" height="50" class="ml-2">
+        </div>
+        <div class="col-md-4">
+            <h3 class="mb-0 font-weight-bold">DARI DATA KE AKSI</h3>
+            <small>Kecamatan Sumber</small>
+        </div>
     </div>
-    <div class="col-md-4">
-      <h3 class="mb-0 font-weight-bold">DARI DATA KE AKSI</h3>
-      <small>Kecamatan Sumber</small>
-    </div>
-  </div>
 </header>
 
 <div id="navbar"></div>
 
 <main class="container py-4">
-  <h2>Data DTSEN Kecamatan Sumber</h2>
-  <p class="text-muted">Ringkasan data kesejahteraan berbasis wilayah.</p>
-  <hr>
+    <h2>Data DTSEN Kecamatan Sumber</h2>
+    <p class="text-muted">Ringkasan data kesejahteraan berbasis wilayah.</p>
+    <hr>
 
-  <h4 class="mt-4">Distribusi DTSEN Kecamatan (Agregasi)</h4>
-  <div class="table-responsive col-md-6 px-0">
-    <table class="table table-bordered table-sm text-center">
-      <thead class="thead-light">
-        <tr>
-          <th>Kategori Desil</th>
-          <th>Total KK</th>
-        </tr>
-      </thead>
-      <tbody id="tabelDesilKecamatan">
-        </tbody>
-    </table>
-  </div>
+    <h4 class="mt-4">Distribusi DTSEN Kecamatan (Agregasi)</h4>
+    <div class="table-responsive col-md-6 px-0">
+        <table class="table table-bordered table-sm text-center">
+            <thead class="thead-light">
+                <tr>
+                    <th>Kategori Desil</th>
+                    <th>Total KK</th>
+                </tr>
+            </thead>
+            <tbody id="tabelDesilKecamatan">
+                </tbody>
+        </table>
+    </div>
 
-  <div class="form-group col-md-4 px-0 mt-5">
-    <label><strong>Pilih Desa / Kelurahan</strong></label>
-    <select id="wilayahSelect" class="form-control"></select>
-  </div>
+    <div class="form-group col-md-4 px-0 mt-5">
+        <label><strong>Pilih Desa / Kelurahan</strong></label>
+        <select id="wilayahSelect" class="form-control"></select>
+    </div>
 
-  <div class="row text-center mb-4">
-    <div class="col-md-2 mb-2">
-      <div class="card shadow-sm"><div class="card-body p-2"><h4 id="totalKK">—</h4><small>Total KK</small></div></div>
+    <div class="row text-center mb-4">
+        <div class="col-md-2 mb-2">
+            <div class="card shadow-sm"><div class="card-body p-2"><h4 id="totalKK">—</h4><small>Total KK</small></div></div>
+        </div>
+        <div class="col-md-2 mb-2">
+            <div class="card shadow-sm border-danger"><div class="card-body p-2"><h4 id="desil1">—</h4><small>Desil 1</small></div></div>
+        </div>
+        <div class="col-md-2 mb-2">
+            <div class="card shadow-sm border-warning"><div class="card-body p-2"><h4 id="desil2">—</h4><small>Desil 2</small></div></div>
+        </div>
+        <div class="col-md-2 mb-2">
+            <div class="card shadow-sm"><div class="card-body p-2"><h4 id="desil3">—</h4><small>Desil 3</small></div></div>
+        </div>
+        <div class="col-md-2 mb-2">
+            <div class="card shadow-sm"><div class="card-body p-2"><h4 id="desil4">—</h4><small>Desil 4</small></div></div>
+        </div>
+        <div class="col-md-2 mb-2">
+            <div class="card shadow-sm border-success"><div class="card-body p-2"><h4 id="desil510">—</h4><small>Desil 6-10</small></div></div>
+        </div>
     </div>
-    <div class="col-md-2 mb-2">
-      <div class="card shadow-sm border-danger"><div class="card-body p-2"><h4 id="desil1">—</h4><small>Desil 1</small></div></div>
-    </div>
-    <div class="col-md-2 mb-2">
-      <div class="card shadow-sm border-warning"><div class="card-body p-2"><h4 id="desil2">—</h4><small>Desil 2</small></div></div>
-    </div>
-    <div class="col-md-2 mb-2">
-      <div class="card shadow-sm"><div class="card-body p-2"><h4 id="desil3">—</h4><small>Desil 3</small></div></div>
-    </div>
-    <div class="col-md-2 mb-2">
-      <div class="card shadow-sm"><div class="card-body p-2"><h4 id="desil4">—</h4><small>Desil 4</small></div></div>
-    </div>
-    <div class="col-md-2 mb-2">
-      <div class="card shadow-sm border-success"><div class="card-body p-2"><h4 id="desil510">—</h4><small>Desil 6-10</small></div></div>
-    </div>
-  </div>
 
-  <canvas id="desilChart" height="100"></canvas>
-  <p class="mt-3 small text-muted">Pembaruan data: <span id="updateData">-</span></p>
+    <div style="height: 300px; position: relative;">
+        <canvas id="desilChart"></canvas>
+    </div>
+    
+    <p class="mt-3 small text-muted">Pembaruan data: <span id="updateData">-</span></p>
 </main>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<footer class="py-4 text-center border-top">
+    <small>© TKSK Sumber & Forum Puskesos Kecamatan Sumber</small>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 let chart;
-fetch('data/dtsen.json')
-  .then(res => res.json())
-  .then(data => {
-    const select = document.getElementById('wilayahSelect');
-    const updateDataEl = document.getElementById('updateData');
-    const tabelKec = document.getElementById('tabelDesilKecamatan');
 
-    updateDataEl.innerText = data.updated;
-
-    // 1. PROSES TABEL KECAMATAN (D6-10 Digabung)
-    let agregat = Array(10).fill(0);
-    data.wilayah.forEach(w => {
-      w.desil.forEach((val, i) => { agregat[i] += val; });
-    });
-
-    let rowHtml = "";
-    // Render D1 sampai D5
-    for(let i=0; i<5; i++) {
-      rowHtml += `<tr><td>Desil ${i+1}</td><td>${agregat[i].toLocaleString('id-ID')}</td></tr>`;
-    }
-    // Gabungkan D6 sampai D10 (indeks 5 sampai 9)
-    let gabungD610 = agregat.slice(5).reduce((a, b) => a + b, 0);
-    rowHtml += `<tr class="table-success"><td><strong>Desil 6-10</strong></td><td><strong>${gabungD610.toLocaleString('id-ID')}</strong></td></tr>`;
-    tabelKec.innerHTML = rowHtml;
-
-    // 2. DROPDOWN MENU
-    data.wilayah.forEach((w, i) => {
-      const opt = document.createElement('option');
-      opt.value = i; opt.textContent = w.nama;
-      select.appendChild(opt);
-    });
-
-    // 3. FUNGSI RENDER DETAIL WILAYAH
-function renderWilayah(idx, data) {
-  const w = data.wilayah[idx];
-  const d = w.desil; // Mengambil array [D1, D2, ... D10] dari JSON
-
-  // Update Angka Total KK
-  document.getElementById('totalKK').innerText = w.total_kk.toLocaleString('id-ID');
-
-  // Update Persentase Desil 1 sampai 4 ke Card/Label
-  if (document.getElementById('desil1')) document.getElementById('desil1').innerText = d[0] + '%';
-  if (document.getElementById('desil2')) document.getElementById('desil2').innerText = d[1] + '%';
-  if (document.getElementById('desil3')) document.getElementById('desil3').innerText = d[2] + '%';
-  if (document.getElementById('desil4')) document.getElementById('desil4').innerText = d[3] + '%';
-  
-  // LOGIKA PENGGABUNGAN: Ambil index 5 sampai akhir (D6-D10)
-  // d[5]=D6, d[6]=D7, d[7]=D8, d[8]=D9, d[9]=D10
-  const total610 = d.slice(5).reduce((a, b) => a + b, 0);
-  
-  // Tampilkan hasil gabungan D6-10 pada elemen desil510 (atau sesuaikan ID-nya)
-  const el510 = document.getElementById('desil510');
-  if (el510) el510.innerText = total610 + '%';
-
-  // 4. CHART (Visualisasi: 5 Batang Individu + 1 Batang Gabungan)
-  const ctx = document.getElementById('desilChart').getContext('2d');
-  
-  // Hancurkan chart lama jika ada agar tidak tumpang tindih
-  if (chart) chart.destroy();
-  
-  chart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6-10 (Sejahtera)'],
-      datasets: [{
-        label: 'Persentase Populasi (%)',
-        // Data diambil dari array desil asli dan variabel total610
-        data: [d[0], d[1], d[2], d[3], d[4], total610],
-        backgroundColor: [
-          '#dc3545', // D1 (Merah - Sangat Prioritas)
-          '#ffc107', // D2 (Kuning)
-          '#0d6efd', // D3 (Biru)
-          '#6610f2', // D4 (Ungu)
-          '#fd7e14', // D5 (Oranye)
-          '#28a745'  // D6-10 (Hijau - Sejahtera)
-        ],
-        borderWidth: 1
-      }]
-    },
-    options: { 
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: { 
-        y: { 
-          beginAtZero: true,
-          ticks: { callback: (value) => value + '%' }
-        } 
-      },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: (context) => `Porsi: ${context.raw}%`
-          }
-        }
-      }
-    }
-  });
-}
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-  // Script untuk memuat Navbar dan menandai menu aktif
-  fetch('navbar.html')
+// 1. Muat Navbar
+fetch('navbar.html')
     .then(r => r.text())
     .then(html => {
-      document.getElementById('navbar').innerHTML = html;
-      
-      // Menandai halaman aktif secara otomatis
-      const currentPage = location.pathname.split('/').pop() || 'index.html';
-      document.querySelectorAll('.nav-link').forEach(link => {
-        if (link.getAttribute('href') === currentPage) {
-          link.classList.add('active');
-          link.parentElement.classList.add('active');
-        }
-      });
+        document.getElementById('navbar').innerHTML = html;
+        const currentPage = location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
     });
-</script>
-<script>
+
+// 2. Muat Data JSON
 fetch('data/dtsen.json')
-  .then(res => res.json())
-  .then(data => {
-    // ... kode inisialisasi select ...
+    .then(res => res.json())
+    .then(data => {
+        const select = document.getElementById('wilayahSelect');
+        document.getElementById('updateData').innerText = data.updated;
+
+        // A. Proses Tabel Agregasi Kecamatan
+        const tabelKec = document.getElementById('tabelDesilKecamatan');
+        let agregat = Array(10).fill(0);
+        data.wilayah.forEach(w => {
+            w.desil.forEach((val, i) => { agregat[i] += val; });
+        });
+
+        let rowHtml = "";
+        for(let i=0; i<5; i++) {
+            rowHtml += `<tr><td>Desil ${i+1}</td><td>${agregat[i].toLocaleString('id-ID')}</td></tr>`;
+        }
+        let gabungD610Kec = agregat.slice(5).reduce((a, b) => a + b, 0);
+        rowHtml += `<tr class="table-success font-weight-bold"><td>Desil 6-10</td><td>${gabungD610Kec.toLocaleString('id-ID')}</td></tr>`;
+        tabelKec.innerHTML = rowHtml;
+
+        // B. Inisialisasi Dropdown
+        data.wilayah.forEach((w, i) => {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = w.nama;
+            select.appendChild(opt);
+        });
+
+        // C. Event Listener & Render Awal
+        select.addEventListener('change', e => renderWilayah(e.target.value, data));
+        renderWilayah(0, data);
+    })
+    .catch(err => console.error("Gagal memuat data:", err));
+
+// 3. Fungsi Render Detail Wilayah
+function renderWilayah(idx, data) {
+    const w = data.wilayah[idx];
+    const d = w.desil;
+
+    // Update Label Card
+    document.getElementById('totalKK').innerText = w.total_kk.toLocaleString('id-ID');
+    document.getElementById('desil1').innerText = d[0] + '%';
+    document.getElementById('desil2').innerText = d[1] + '%';
+    document.getElementById('desil3').innerText = d[2] + '%';
+    document.getElementById('desil4').innerText = d[3] + '%';
     
-    // Panggil render pertama kali untuk wilayah pertama
-    renderWilayah(0, data); 
-    
-    // Event listener saat user mengganti wilayah
-    select.addEventListener('change', e => renderWilayah(e.target.value, data));
-  });
+    const total610 = d.slice(5).reduce((a, b) => a + b, 0);
+    document.getElementById('desil510').innerText = total610 + '%';
+
+    // Update Chart
+    const ctx = document.getElementById('desilChart').getContext('2d');
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6-10'],
+            datasets: [{
+                label: 'Persentase Populasi (%)',
+                data: [d[0], d[1], d[2], d[3], d[4], total610],
+                backgroundColor: ['#dc3545', '#ffc107', '#0d6efd', '#6610f2', '#fd7e14', '#28a745'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+}
 </script>
 </body>
 </html>
