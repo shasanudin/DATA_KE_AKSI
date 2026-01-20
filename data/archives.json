@@ -1,12 +1,12 @@
 {
   "daftar_arsip": [
     {
-      "periode": "Januari 2025",
-      "file": "data/archive/dtsen_2025_01.json",
+      "periode": "Januari 2026",
+      "file": "data/archive/dtsen_2026_01.json",
       "keterangan": "Data awal tahun - Verifikasi Semester 1"
     },
     {
-      "periode": "Februari 2025",
+      "periode": "Februari 2026",
       "file": "data/archive/dtsen_2025_02.json",
       "keterangan": "Pembaruan pasca-musdes"
     }
