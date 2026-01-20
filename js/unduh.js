@@ -1,78 +1,70 @@
-let globalData;
+let chart; // Variabel global untuk grafik
 
-// Load data saat halaman dibuka
-async function initApp() {
-    try {
-        const res = await fetch('data/dtsen.json');
-        globalData = await res.json();
-    } catch (err) {
-        console.error("Gagal load data/dtsen.json");
+// 1. Ambil data dari dtsen.json
+fetch('data/dtsen.json')
+  .then(res => res.json())
+  .then(data => {
+    const select = document.getElementById('wilayahSelect');
+    
+    // 2. Isi Dropdown dengan daftar Desa/Kelurahan
+    data.wilayah.forEach((w, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = w.nama;
+      select.appendChild(opt);
+    });
+
+    // 3. Fungsi untuk menggambar grafik berdasarkan pilihan
+    function updateChart(idx) {
+      const w = data.wilayah[idx];
+      const d = w.desil; // Ambil array desil dari JSON
+      
+      // Gabungkan Desil 6 sampai 10 (index 5 s/d 9)
+      const total610 = d.slice(5).reduce((a, b) => a + b, 0);
+
+      const ctx = document.getElementById('desilChart').getContext('2d');
+      
+      // Hancurkan chart sebelumnya jika ada (agar tidak tumpang tindih)
+      if (chart) chart.destroy();
+
+      chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6-10'],
+          datasets: [{
+            label: 'Persentase (%)',
+            // Data D1-D5 individu, D6-10 digabung
+            data: [d[0], d[1], d[2], d[3], d[4], total610],
+            backgroundColor: [
+              '#dc3545', // D1 (Merah)
+              '#ffc107', // D2 (Kuning)
+              '#0d6efd', // D3 (Biru)
+              '#6610f2', // D4 (Ungu)
+              '#fd7e14', // D5 (Oranye)
+              '#28a745'  // D6-10 (Hijau)
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { 
+              beginAtZero: true, 
+              max: 100, // Skala maksimal 100%
+              ticks: { callback: v => v + '%' } 
+            }
+          }
+        }
+      });
     }
-}
-initApp();
 
-async function generateReport() {
-    if (!globalData) return alert("Data sedang dimuat...");
+    // 4. Listener saat dropdown diubah
+    select.addEventListener('change', e => updateChart(e.target.value));
 
-    const tipe = document.getElementById('tipeLaporan').value;
-    const reportID = "DTSEN-" + Date.now();
-    const msgPayload = `Kec-Sumber-${tipe}-${globalData.updated}`;
-
-    // Tampilkan Header Laporan
-    document.getElementById('reportPreview').style.display = 'block';
-    document.getElementById('periodeText').innerText = globalData.updated;
-    document.getElementById('tglSekarang').innerText = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
-
-    // 1. Render Tabel Berdasarkan Tipe
-    if (tipe === 'agregat') {
-        document.getElementById('judulLaporan').innerText = "Laporan Agregasi Kec. Sumber";
-        renderAgregat();
-    } else {
-        document.getElementById('judulLaporan').innerText = "Daftar Prioritas Kerentanan Sosial";
-        renderPrioritas();
-    }
-
-    // 2. Jalankan Pembuatan QR
-    prepareQR(reportID, msgPayload);
-}
-
-function prepareQR(id, msg) {
-    const qrDiv = document.getElementById("qrcode");
-    qrDiv.innerHTML = ""; // Reset QR
-
-    // Tampilkan ID unik
-    document.getElementById('hashID').innerText = id;
-
-    // METODE AWAL: Minta Signature Manual
-    const sig = prompt("Masukkan Signature HEX (Dari Signer Tool) untuk validasi QR ini:", "");
-
-    if (sig) {
-        const payload = { id: id, msg: msg, sig: sig.trim() };
-        new QRCode(qrDiv, {
-            text: JSON.stringify(payload),
-            width: 120,
-            height: 120
-        });
-        alert("Dokumen berhasil ditandatangani secara digital.");
-    } else {
-        alert("Peringatan: Mencetak tanpa tanda tangan digital.");
-        new QRCode(qrDiv, {
-            text: JSON.stringify({id: id, msg: msg, sig: "UNSIGNED"}),
-            width: 120,
-            height: 120
-        });
-    }
-}
-
-// Fungsi pembantu render tabel
-function renderAgregat() {
-    let html = `<table class="table table-bordered table-sm text-center">
-        <thead class="thead-light"><tr><th>Kategori</th><th>Jumlah KK</th></tr></thead>
-        <tbody><tr><td>Total Terdata</td><td>${globalData.wilayah.reduce((a,b)=>a+b.total_kk,0).toLocaleString('id-ID')}</td></tr></tbody>
-    </table>`;
-    document.getElementById('kontenData').innerHTML = html;
-}
-
-function renderPrioritas() {
-    document.getElementById('kontenData').innerHTML = "<p class='text-center'>Data Prioritas Terlampir.</p>";
-}
+    // 5. Render pertama kali (wilayah pertama/index 0)
+    updateChart(0);
+  })
+  .catch(err => console.error("Gagal memuat file JSON:", err));
