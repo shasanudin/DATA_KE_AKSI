@@ -84,6 +84,26 @@
                 </div>
             </div>
 
+            <div class="mt-5 p-4 border rounded bg-white shadow-sm">
+    <h5 class="font-weight-bold text-dark mb-3"><i class="fas fa-clipboard-list text-primary"></i> Dokumen Persyaratan Usulan Mandiri</h5>
+    <p class="small text-muted mb-4">Pastikan dokumen berikut telah difotokopi sebanyak 2 rangkap sebelum diserahkan ke Petugas Puskesos/Operator Desa:</p>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <ul class="list-unstyled">
+                <li class="mb-2">✅ <strong>Kartu Keluarga (KK)</strong> terbaru.</li>
+                <li class="mb-2">✅ <strong>KTP-el</strong> asli dan fotokopi.</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <ul class="list-unstyled">
+                <li class="mb-2">📸 <strong>Foto Rumah</strong> (Tampak depan dan ruang tamu).</li>
+                <li class="mb-2">📍 <strong>Titik Koordinat</strong> rumah (Akan dibantu oleh petugas).</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
             <div class="mt-5 p-4 bg-light border-left border-primary italic">
                 <p><em>"Dengan alur yang transparan ini, diharapkan tidak ada lagi bantuan yang salah sasaran. Dari data yang akurat, kita wujudkan aksi nyata bagi warga Kecamatan Sumber,"</em> pungkas Koordinator TKSK Sumber.</p>
             </div>
@@ -94,6 +114,12 @@
 
         </div>
     </div>
+
+    <div class="text-right mb-4 no-print">
+    <button onclick="unduhAlurPDF()" class="btn btn-outline-danger">
+        <i class="fas fa-file-pdf"></i> Unduh Panduan PDF
+    </button>
+</div>
 </main>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -102,5 +128,43 @@
     fetch('navbar.html').then(r => r.text()).then(html => document.getElementById('navbar').innerHTML = html);
 </script>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+async function unduhAlurPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const element = document.querySelector('.news-container');
+    const tombol = document.querySelector('.no-print');
+
+    // Sembunyikan tombol saat proses capture
+    tombol.style.display = 'none';
+
+    try {
+        const canvas = await html2canvas(element, {
+            scale: 2, // Meningkatkan kualitas gambar
+            useCORS: true
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const imgProps = doc.getImageProperties(imgData);
+        const pdfWidth = doc.internal.pageSize.getWidth() - 20; // Margin 10mm
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        doc.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight);
+        doc.save('Alur-DTSEN-TKSK-Sumber.pdf');
+    } catch (error) {
+        console.error("Gagal membuat PDF:", error);
+        alert("Terjadi kesalahan saat mengunduh PDF.");
+    } finally {
+        // Tampilkan kembali tombol
+        tombol.style.display = 'block';
+    }
+}
+</script>
+    
 </body>
 </html>
