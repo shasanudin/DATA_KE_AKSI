@@ -57,9 +57,9 @@ fetch("data/dtsen.json")
       })).sort((a, b) => b.total - a.total);
 
       tbodyPrioritas.innerHTML = hasil.map((w, i) => {
-        let status = "Risiko Rendah", kelas = "risiko-rendah";
-        if (w.total >= 30) { status = "Risiko Tinggi"; kelas = "risiko-tinggi"; }
-        else if (w.total >= 20) { status = "Risiko Sedang"; kelas = "risiko-sedang"; }
+        let status = "Prioritas Rendah", kelas = "Prioritas-rendah";
+        if (w.total >= 400) { status = "Prioritas Tinggi"; kelas = "Prioritas-tinggi"; }
+        else if (w.total >= 200) { status = "Prioritas Sedang"; kelas = "Prioritas-sedang"; }
 
         return `
           <tr>
@@ -76,3 +76,4 @@ fetch("data/dtsen.json")
     }
   })
   .catch(error => console.error("Gagal load data DTSEN:", error));
+
