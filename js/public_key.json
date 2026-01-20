@@ -1,5 +1,5 @@
 {
-  "pem": "-----BEGIN PUBLIC KEY-----MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzzmj3tgm7GPSL4uNBnIBJAickAkkKJPSoGQk0G8vqCjwMz6N3GZWJn3rBbbLJps4tUtKzq7+8cfLZfdzxoxASA==-----END PUBLIC KEY-----",
+  "pem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzzmj3tgm7GPSL4uNBnIBJAickAkk\nKJPSoGQk0G8vqCjwMz6N3GZWJn3rBbbLJps4tUtKzq7+8cfLZfdzxoxASA==\n-----END PUBLIC KEY-----",
   "algoritma": "ECDSA-secp256r1-SHA256",
   "pemilik": "Shidiq Hasanudin, S.IP",
   "jabatan": "TKSK Kecamatan Sumber",
