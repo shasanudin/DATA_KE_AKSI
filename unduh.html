@@ -3,26 +3,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Data DTSEN | TKSK & Puskesos Sumber</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <header class="container py-3">
-    <div class="row align-items-center text-center">
-        <div class="col-md-4 text-left">
-            <img src="assets/img/logo/logo-tksk.png" alt="Logo" height="50">
-            <img src="assets/img/logo/logo-puskesos.png" alt="Logo" height="50" class="ml-2">
-        </div>
-        <div class="col-md-4">
-            <h3 class="mb-0 font-weight-bold">DARI DATA KE AKSI</h3>
-            <small>Kecamatan Sumber</small>
-        </div>
-    </div>
-</header>
-
-<div id="navbar"></div>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cetak Laporan DTSEN | TKSK Sumber</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <style>
@@ -36,14 +16,38 @@
         .table-dtsen { font-size: 14px; }
         .qr-box { border: 1px solid #ccc; padding: 10px; display: inline-block; }
         
+        /* ATURAN CETAK */
         @media print {
-            body { background: none; }
-            .paper { margin: 0; box-shadow: none; width: 100%; page-break-after: always; }
-            .no-print { display: none; }
+            body { background: none; padding: 0; }
+            .no-print { display: none !important; } /* Menyembunyikan elemen no-print */
+            #navbar { display: none !important; }   /* Memastikan navigasi hilang */
+            header { display: none !important; }   /* Memastikan header atas hilang */
+            .paper { 
+                margin: 0; 
+                box-shadow: none; 
+                width: 100%; 
+                padding: 10mm; /* Menyesuaikan margin saat cetak */
+            }
+            @page { margin: 0; } /* Menghilangkan header/footer otomatis browser */
         }
     </style>
 </head>
 <body>
+
+<header class="container py-3 no-print">
+    <div class="row align-items-center text-center">
+        <div class="col-md-4 text-left">
+            <img src="assets/img/logo/logo-tksk.png" alt="Logo" height="50">
+            <img src="assets/img/logo/logo-puskesos.png" alt="Logo" height="50" class="ml-2">
+        </div>
+        <div class="col-md-4">
+            <h3 class="mb-0 font-weight-bold">DARI DATA KE AKSI</h3>
+            <small>Kecamatan Sumber</small>
+        </div>
+    </div>
+</header>
+
+<div id="navbar" class="no-print"></div>
 
 <div class="container no-print py-4 text-center">
     <div class="card p-3 mb-4 shadow-sm">
@@ -92,7 +96,7 @@
 
     <div class="row mt-5">
         <div class="col-7">
-            <p class="small text-muted">** Dokumen ini dihasilkan secara otomatis oleh sistem "Dari Data Ke Aksi" TKSK Sumber. Keaslian data dapat diverifikasi melalui QR Code di samping menggunakan public_key.pem.</p>
+            <p class="small text-muted">** Dokumen ini dihasilkan secara otomatis oleh sistem "Dari Data Ke Aksi" TKSK Sumber. Keaslian data dapat diverifikasi melalui QR Code di samping.</p>
         </div>
         <div class="col-5 text-center">
             <p>Sumber, <span id="tglSekarang"></span></p>
@@ -105,120 +109,5 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-let globalData;
-
-document.getElementById('tipeLaporan').addEventListener('change', function() {
-    document.getElementById('selectWilayahContainer').style.display = (this.value === 'wilayah') ? 'block' : 'none';
-});
-
-fetch('data/dtsen.json')
-    .then(res => res.json())
-    .then(data => {
-        globalData = data;
-        document.getElementById('periodeText').innerText = data.updated;
-        document.getElementById('tglSekarang').innerText = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
-        
-        const sel = document.getElementById('wilayahSelect');
-        data.wilayah.forEach((w, i) => {
-            let opt = document.createElement('option');
-            opt.value = i; opt.textContent = w.nama;
-            sel.appendChild(opt);
-        });
-    });
-
-function generateReport() {
-    const tipe = document.getElementById('tipeLaporan').value;
-    const konten = document.getElementById('kontenData');
-    const judul = document.getElementById('judulLaporan');
-    let html = "";
-    let signaturePayload = "";
-
-    if (tipe === 'agregat') {
-        judul.innerText = "LAPORAN AGREGASI DTSEN KECAMATAN SUMBER";
-        let agregat = Array(10).fill(0);
-        let grandTotal = 0;
-        globalData.wilayah.forEach(w => {
-            grandTotal += w.total_kk;
-            w.desil.forEach((v, i) => { agregat[i] += v; });
-        });
-
-        html = `<table class="table table-bordered text-center">
-            <thead class="thead-light"><tr><th>KATEGORI</th><th>JUMLAH KK</th><th>PERSENTASE</th></tr></thead>
-            <tbody>`;
-        for(let i=0; i<5; i++) {
-            let p = ((agregat[i]/grandTotal)*100).toFixed(1);
-            html += `<tr><td>Desil ${i+1}</td><td>${agregat[i].toLocaleString()}</td><td>${p}%</td></tr>`;
-        }
-        let d610 = agregat.slice(5).reduce((a,b)=>a+b,0);
-        html += `<tr class="table-success"><td>Desil 6-10</td><td>${d610.toLocaleString()}</td><td>${((d610/grandTotal)*100).toFixed(1)}%</td></tr>
-                 <tr class="font-weight-bold"><td>TOTAL KECAMATAN</td><td>${grandTotal.toLocaleString()}</td><td>100%</td></tr></tbody></table>`;
-        signaturePayload = "Kec-Sumber-" + grandTotal;
-
-    } else if (tipe === 'prioritas') {
-        judul.innerText = "DAFTAR PRIORITAS INTERVENSI SOSIAL (DESIL 1-2)";
-        let ranking = globalData.wilayah.map(w => ({
-            nama: w.nama,
-            totalPrio: w.desil[0] + w.desil[1],
-            persen: (((w.desil[0] + w.desil[1])/w.total_kk)*100).toFixed(1)
-        })).sort((a,b) => b.totalPrio - a.totalPrio);
-
-        html = `<table class="table table-bordered table-sm">
-            <thead><tr class="text-center"><th>RANK</th><th>DESA/KELURAHAN</th><th>JUMLAH D1-2</th><th>% KERENTANAN</th></tr></thead><tbody>`;
-        ranking.forEach((r, i) => {
-            html += `<tr><td class="text-center">${i+1}</td><td>${r.nama}</td><td class="text-center">${r.totalPrio}</td><td class="text-center">${r.persen}%</td></tr>`;
-        });
-        html += `</tbody></table>`;
-        signaturePayload = "Prio-Intervensi-" + ranking.length;
-
-    } else {
-        const idx = document.getElementById('wilayahSelect').value;
-        const w = globalData.wilayah[idx];
-        judul.innerText = "LAPORAN DETAIL DATA DESA/KELURAHAN: " + w.nama;
-        const d610 = w.desil.slice(5).reduce((a,b)=>a+b,0);
-        
-        html = `<p>Detail distribusi kesejahteraan untuk wilayah ${w.nama}:</p>
-            <table class="table table-bordered">
-                <tr><th>Total Kepala Keluarga (KK)</th><td>${w.total_kk}</td></tr>
-                <tr><th>Sangat Miskin (Desil 1)</th><td>${w.desil[0]}%</td></tr>
-                <tr><th>Miskin (Desil 2)</th><td>${w.desil[1]}%</td></tr>
-                <tr><th>Rentan (Desil 3-4)</th><td>${w.desil[2]+w.desil[3]}%</td></tr>
-                <tr><th>Mampu/Sejahtera (Desil 6-10)</th><td>${d610}%</td></tr>
-            </table>`;
-        signaturePayload = "Wil-" + w.nama + "-" + w.total_kk;
-    }
-
-    konten.innerHTML = html;
-    updateQRCode(signaturePayload);
-}
-
-function updateQRCode(payload) {
-    const qrDiv = document.getElementById("qrcode");
-    qrDiv.innerHTML = "";
-    const hash = btoa(payload + globalData.updated).substring(0, 12);
-    document.getElementById('hashID').innerText = "SIGN-" + hash;
-    
-    new QRCode(qrDiv, {
-        text: JSON.stringify({id: hash, data: payload, verifier: "TKSK-SUMBER-SIGNATURE"}),
-        width: 100, height: 100
-    });
-}
-</script>
-<script>
-fetch('navbar.html')
-  .then(r => r.text())
-  .then(html => {
-    document.getElementById('navbar').innerHTML = html;
-
-    const page = location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.nav-link').forEach(a => {
-      if (a.getAttribute('href') === page) {
-        a.classList.add('active');
-      }
-    });
-  });
-</script>
-
-<script src="js/dtsen.js"></script>
 </body>
 </html>
