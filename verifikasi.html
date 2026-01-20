@@ -37,21 +37,23 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.5.25/jsrsasign-all-min.js"></script>
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <script>
-    // Load Navbar
-    fetch('navbar.html').then(r => r.text()).then(html => document.getElementById('navbar').innerHTML = html);
+    // Public Key Anda
+    const publicKeyPEM = `-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzzmj3tgm7GPSL4uNBnIBJAickAkk
+KJPSoGQk0G8vqCjwMz6N3GZWJn3rBbbLJps4tUtKzq7+8cfLZfdzxoxASA==
+-----END PUBLIC KEY-----`;
 
     const html5QrCode = new Html5Qrcode("reader");
     const config = { fps: 10, qrbox: { width: 250, height: 250 } };
 
-    // Mulai Kamera
     html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
 
-    function onScanSuccess(decodedText, decodedResult) {
-        html5QrCode.stop(); // Hentikan kamera setelah scan berhasil
+    function onScanSuccess(decodedText) {
+        html5QrCode.stop();
         document.getElementById('reader').style.display = 'none';
         
         const resultBox = document.getElementById('result');
@@ -62,34 +64,41 @@
         resultBox.style.display = 'block';
 
         try {
-            const data = JSON.parse(decodedText);
+            const payload = JSON.parse(decodedText);
             
-            // Validasi Sederhana (Cek apakah dari sistem TKSK-SBR)
-            if (data.verifier === "TKSK-SUMBER-SIGNATURE") {
+            // Logika Verifikasi Digital Signature
+            // payload.sig = Tanda tangan (hex)
+            // payload.msg = Data asli (Kec-Sumber-...)
+            
+            const sig = new KJUR.crypto.Signature({"alg": "SHA256withECDSA"});
+            sig.init(publicKeyPEM);
+            sig.updateString(payload.msg);
+            
+            const isValid = sig.verify(payload.sig);
+
+            if (isValid) {
                 resultBox.className = "result-box valid";
                 icon.innerHTML = "✅";
                 title.innerText = "DOKUMEN ASLI & TERVERIFIKASI";
                 detail.innerHTML = `
-                    <p><strong>ID Sign:</strong> ${data.id}</p>
-                    <p><strong>Data:</strong> ${data.data}</p>
-                    <p><strong>Timestamp Scan:</strong> ${new Date().toLocaleString('id-ID')}</p>
-                    <p class="text-success small italic">* Tanda tangan digital cocok dengan Public Key yang terdaftar di server.</p>
+                    <p><strong>ID Dokumen:</strong> ${payload.id}</p>
+                    <p><strong>Konten Data:</strong> ${payload.msg}</p>
+                    <p><strong>Metode:</strong> ECDSA P-256 (Verified)</p>
+                    <p class="text-success small italic">* Data ini otentik dan belum diubah sejak ditandatangani oleh TKSK Sumber.</p>
                 `;
             } else {
-                throw new Error("Skema Verifikator Tidak Dikenali");
+                throw new Error("Tanda Tangan Tidak Cocok");
             }
         } catch (e) {
             resultBox.className = "result-box invalid";
             icon.innerHTML = "❌";
-            title.innerText = "DOKUMEN TIDAK VALID";
-            detail.innerHTML = `<p>QR Code tidak mengandung tanda tangan digital resmi Kecamatan Sumber atau data telah dimodifikasi.</p>`;
+            title.innerText = "VERIFIKASI GAGAL";
+            detail.innerHTML = `<p>QR Code tidak valid atau tanda tangan digital telah dimanipulasi. Jangan mempercayai data pada dokumen ini.</p>`;
         }
     }
 
     function resetScanner() {
-        document.getElementById('result').style.display = 'none';
-        document.getElementById('reader').style.display = 'block';
-        html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
+        location.reload(); // Refresh halaman untuk reset total
     }
 </script>
 </body>
