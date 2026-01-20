@@ -22,7 +22,7 @@
   </div>
 </header>
 
-<div id="navbar.html"></div>
+<div id="navbar"></div>
 
 <main class="container py-4">
   <h2>Data DTSEN Kecamatan Sumber</h2>
@@ -146,6 +146,29 @@ fetch('data/dtsen.json')
     select.addEventListener('change', e => renderWilayah(e.target.value));
     renderWilayah(0);
   });
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // Script untuk memuat Navbar dan menandai menu aktif
+  fetch('navbar.html')
+    .then(r => r.text())
+    .then(html => {
+      document.getElementById('navbar').innerHTML = html;
+      
+      // Menandai halaman aktif secara otomatis
+      const currentPage = location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.nav-link').forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+          link.parentElement.classList.add('active');
+        }
+      });
+    });
 </script>
 </body>
 </html>
