@@ -142,31 +142,58 @@ function renderWilayah(idx, data) {
     const d = w.desil;
     const totalKK = w.total_kk;
 
-    // Fungsi pembantu untuk menghitung % secara aman
+    // Fungsi pembantu untuk menghitung persentase secara otomatis
+    // Rumus: (Nilai Desil / Total KK) * 100
     const hitungPersen = (nilai) => {
         return totalKK > 0 ? ((nilai / totalKK) * 100).toFixed(1) : 0;
     };
 
-    // Update Label Card dengan perhitungan otomatis
+    // Update Label Card dengan angka yang sudah dihitung ke persen
+    document.getElementById('totalKK').innerText = totalKK.toLocaleString('id-ID');
     document.getElementById('desil1').innerText = hitungPersen(d[0]) + '%';
     document.getElementById('desil2').innerText = hitungPersen(d[1]) + '%';
     document.getElementById('desil3').innerText = hitungPersen(d[2]) + '%';
-    document.getElementById('desil4').innerText = hitancePersen(d[3]) + '%';
+    document.getElementById('desil4').innerText = hitungPersen(d[3]) + '%'; // Nama fungsi sudah diperbaiki di sini
     
-    // Gabungkan D6-10 (Jumlahkan angka riil dulu, baru dipersentasekan)
+    // Gabungkan D6 sampai D10 (hitung jumlah riilnya dulu)
     const jumlah610 = d.slice(5).reduce((a, b) => a + b, 0);
     document.getElementById('desil510').innerText = hitungPersen(jumlah610) + '%';
 
-    // Update Data Chart
-    chart.data.datasets[0].data = [
-        hitungPersen(d[0]), 
-        hitungPersen(d[1]), 
-        hitungPersen(d[2]), 
-        hitungPersen(d[3]), 
-        hitungPersen(d[4]), 
-        hitungPersen(jumlah610)
-    ];
-    chart.update();
+    // Update Grafik (Chart)
+    const ctx = document.getElementById('desilChart').getContext('2d');
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6-10'],
+            datasets: [{
+                label: 'Proporsi (%)',
+                // Data diubah menjadi persen sebelum dimasukkan ke chart
+                data: [
+                    hitungPersen(d[0]), 
+                    hitungPersen(d[1]), 
+                    hitungPersen(d[2]), 
+                    hitungPersen(d[3]), 
+                    hitungPersen(d[4]), 
+                    hitungPersen(jumlah610)
+                ],
+                backgroundColor: ['#dc3545', '#ffc107', '#0d6efd', '#6610f2', '#fd7e14', '#28a745']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { 
+                y: { 
+                    beginAtZero: true, 
+                    max: 100, // Mengunci agar maksimal grafik adalah 100%
+                    ticks: { callback: v => v + '%' } 
+                } 
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
 }
 </script>
 </body>
