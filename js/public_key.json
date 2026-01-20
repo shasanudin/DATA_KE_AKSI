@@ -1,5 +1,7 @@
 {
-  "id": "DTSEN-0001",
-  "msg": "PRABOWOKOPLOK",
-  "sig": "3045022100e850b0dd4ac16fe4760f4d1a827d796a1fb44ac7bcaa3aa5533e616e10c299df022061d1505d5fab00eae31f21ef6e2892b7d13c90805ea42bc6afd6f35e8a6b893d"
+  "pem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzzmj3tgm7GPSL4uNBnIBJAickAkk\nKJPSoGQk0G8vqCjwMz6N3GZWJn3rBbbLJps4tUtKzq7+8cfLZfdzxoxASA==\n-----END PUBLIC KEY-----",
+  "algoritma": "ECDSA-secp256r1-SHA256",
+  "pemilik": "Shidiq Hasanudin, S.IP",
+  "jabatan": "TKSK Kecamatan Sumber",
+  "berlaku_sampai": "2028-12-31"
 }
