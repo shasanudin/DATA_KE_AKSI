@@ -3,37 +3,48 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Verifikasi Dokumen | TKSK Sumber</title>
+    <title>Verifikasi Digital | TKSK Sumber</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/style.css">
     <style>
-        #reader { width: 100%; max-width: 500px; margin: auto; border: 10px solid #ddd; border-radius: 15px; overflow: hidden; }
-        .result-box { display: none; margin-top: 20px; padding: 20px; border-radius: 10px; }
-        .valid { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .invalid { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .status-icon { font-size: 3rem; margin-bottom: 10px; }
+        body { background-color: #f8f9fa; font-family: 'Inter', sans-serif; }
+        #reader { width: 100%; max-width: 450px; margin: auto; border: 8px solid #fff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; }
+        .result-box { display: none; margin-top: 25px; padding: 25px; border-radius: 15px; border: 2px solid transparent; }
+        .valid { background-color: #e6fffa; border-color: #38b2ac; color: #234e52; }
+        .invalid { background-color: #fff5f5; border-color: #feb2b2; color: #742a2a; }
+        .signer-badge { background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #cbd5e0; margin-bottom: 15px; }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
 <div id="navbar"></div>
 
 <div class="container py-5 text-center">
-    <h2 class="font-weight-bold">Verifikasi Digital</h2>
-    <p class="text-muted">Pindai QR Code pada dokumen cetak untuk memvalidasi keaslian data DTSEN Kecamatan Sumber.</p>
+    <h2 class="font-weight-bold">Verifikator QR DTSEN</h2>
+    <p class="text-muted mb-4">Arahkan kamera ke QR Code pada dokumen laporan resmi.</p>
 
     <div id="reader"></div>
 
-    <div id="result" class="result-box">
-        <div id="statusIcon" class="status-icon"></div>
-        <h4 id="statusTitle" class="font-weight-bold"></h4>
-        <hr>
-        <div id="statusDetail" class="text-left small"></div>
-        <button onclick="resetScanner()" class="btn btn-primary mt-3">Pindai Ulang</button>
+    <div id="result" class="result-box text-left">
+        <div class="text-center">
+            <h1 id="statusIcon" style="font-size: 4rem;"></h1>
+            <h4 id="statusTitle" class="font-weight-bold mb-3"></h4>
+        </div>
+        
+        <div id="statusContent">
+            <div class="signer-badge">
+                <small class="text-muted d-block text-uppercase">Penanda Tangan Digital:</small>
+                <strong id="signerName">Shidiq Hasanudin, S.IP</strong><br>
+                <span class="badge badge-info" id="signerJob">TKSK Kecamatan Sumber</span>
+            </div>
+            
+            <div id="statusDetail" class="small"></div>
+        </div>
+
+        <button onclick="location.reload()" class="btn btn-block btn-primary mt-4">Pindai Dokumen Lain</button>
     </div>
 
-    <div class="mt-4">
-        <small class="text-muted">Keamanan didukung oleh sistem enkripsi <code>public_key.pem</code></small>
+    <div class="mt-5">
+        <small class="text-muted">Security Protocol: <strong>ECDSA-secp256r1-SHA256</strong></small>
     </div>
 </div>
 
@@ -41,17 +52,20 @@
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <script>
-    // Public Key Anda
-    const publicKeyPEM = `-----BEGIN PUBLIC KEY-----
+    // 1. DATA KUNCI PUBLIK (Sinkron dengan metadata Anda)
+    const PUBLIC_KEY_PEM = `-----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzzmj3tgm7GPSL4uNBnIBJAickAkk
 KJPSoGQk0G8vqCjwMz6N3GZWJn3rBbbLJps4tUtKzq7+8cfLZfdzxoxASA==
 -----END PUBLIC KEY-----`;
 
+    // 2. INISIALISASI SCANNER
     const html5QrCode = new Html5Qrcode("reader");
-    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+    const config = { fps: 15, qrbox: { width: 250, height: 250 } };
 
-    html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
+    html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
+        .catch(err => alert("Kamera gagal diakses: " + err));
 
+    // 3. LOGIKA VERIFIKASI
     function onScanSuccess(decodedText) {
         html5QrCode.stop();
         document.getElementById('reader').style.display = 'none';
@@ -66,40 +80,38 @@ KJPSoGQk0G8vqCjwMz6N3GZWJn3rBbbLJps4tUtKzq7+8cfLZfdzxoxASA==
         try {
             const payload = JSON.parse(decodedText);
             
-            // Logika Verifikasi Digital Signature
-            // payload.sig = Tanda tangan (hex)
-            // payload.msg = Data asli (Kec-Sumber-...)
-            
+            // Proses Verifikasi Signature ECDSA
             const sig = new KJUR.crypto.Signature({"alg": "SHA256withECDSA"});
-            sig.init(publicKeyPEM);
-            sig.updateString(payload.msg);
+            sig.init(PUBLIC_KEY_PEM);
+            sig.updateString(payload.msg); // Memeriksa isi pesan
             
+            // Payload.sig harus dalam format HEX
             const isValid = sig.verify(payload.sig);
 
             if (isValid) {
                 resultBox.className = "result-box valid";
                 icon.innerHTML = "✅";
-                title.innerText = "DOKUMEN ASLI & TERVERIFIKASI";
+                title.innerText = "DOKUMEN VALID";
                 detail.innerHTML = `
-                    <p><strong>ID Dokumen:</strong> ${payload.id}</p>
-                    <p><strong>Konten Data:</strong> ${payload.msg}</p>
-                    <p><strong>Metode:</strong> ECDSA P-256 (Verified)</p>
-                    <p class="text-success small italic">* Data ini otentik dan belum diubah sejak ditandatangani oleh TKSK Sumber.</p>
+                    <p class="mb-1"><strong>ID Laporan:</strong> ${payload.id}</p>
+                    <p class="mb-1"><strong>Isi Data:</strong> ${payload.msg}</p>
+                    <hr>
+                    <p class="mb-0 text-success italic">Verified by TKSK Digital Signature System. Data ini sesuai dengan database asli.</p>
                 `;
             } else {
-                throw new Error("Tanda Tangan Tidak Cocok");
+                throw new Error("Signature Mismatch");
             }
         } catch (e) {
             resultBox.className = "result-box invalid";
             icon.innerHTML = "❌";
-            title.innerText = "VERIFIKASI GAGAL";
-            detail.innerHTML = `<p>QR Code tidak valid atau tanda tangan digital telah dimanipulasi. Jangan mempercayai data pada dokumen ini.</p>`;
+            title.innerText = "DOKUMEN TIDAK SAH";
+            detail.innerHTML = `<p class="mb-0">QR Code tidak memiliki tanda tangan digital yang valid atau data telah dimanipulasi.</p>`;
+            document.getElementById('statusContent').style.display = 'none';
         }
     }
 
-    function resetScanner() {
-        location.reload(); // Refresh halaman untuk reset total
-    }
+    // Load Navbar
+    fetch('navbar.html').then(r => r.text()).then(html => document.getElementById('navbar').innerHTML = html);
 </script>
 </body>
 </html>
