@@ -28,20 +28,26 @@ async function generateReport() {
             renderDetailWilayah(data.wilayah[wilayahIdx], kontenData);
         }
 
-        // Generate QR Code (Link verifikasi dummy)
+        // Cari bagian ini di dalam fungsi generateReport() di js/unduh.js
         const qrContainer = document.getElementById('qrcode');
-        qrContainer.innerHTML = "";
+        qrContainer.innerHTML = ""; // Bersihkan QR lama
+
         new QRCode(qrContainer, {
             text: `https://tksksumber.com/verifikasi/${document.getElementById('hashID').innerText}`,
-            width: 80,
-            height: 80
+            width: 85,
+            height: 85,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
         });
 
-    } catch (error) {
-        console.error("Gagal memuat data:", error);
-        kontenData.innerHTML = '<div class="alert alert-danger">Gagal memuat data JSON. Pastikan file tersedia.</div>';
-    }
-}
+// Tambahan opsional: Pastikan gambar QR yang dihasilkan otomatis memiliki margin auto
+        setTimeout(() => {
+            const qrImg = qrContainer.querySelector('img');
+            if(qrImg) {
+                qrImg.style.margin = "0 auto";
+            }
+        }, 100);
 
 // 1. Render Tabel Agregat Kecamatan
 function renderAgregat(data, container) {
