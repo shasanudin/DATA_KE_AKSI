@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontak Kami - DATA KE AKSI</title>
+    
+    <link rel="icon" type="image/png" href="assets/img/logo/logo-tksk.png">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #fcfcfd; 
+            color: #343f52;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .text-primary { color: var(--primary-color) !important; }
+        
+        /* Contact Section Styling */
+        .contact-wrapper {
+            padding: 60px 0;
+        }
+
+        .map-container {
+            height: 100%;
+            min-height: 450px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .contact-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .icon-box {
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eef4ff;
+            border-radius: 12px;
+            color: var(--primary-color);
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover .icon-box {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            background-color: #fefefe;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .btn-submit {
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+        }
+
+        footer {
+            background: #21262e;
+            color: #9499a3;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light sticky-top shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-primary" href="index.html">
+            <img src="assets/img/logo/logo-tksk.png" alt="Logo" width="30" class="d-inline-block align-text-top me-2">
+            DATA KE AKSI
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto fw-semibold">
+                <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+                <li class="nav-item"><a class="nav-link active" href="kontak.html">Kontak</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container contact-wrapper">
+    <div class="row text-center mb-5">
+        <div class="col-lg-7 mx-auto">
+            <h1 class="display-5 fw-bold mb-3">Hubungi Kami</h1>
+            <p class="lead text-muted">Aspirasi, pertanyaan, atau laporan Anda sangat berarti untuk akurasi data kemiskinan dan pelayanan sosial yang lebih baik.</p>
+        </div>
+    </div>
+
+    <div class="row gx-lg-5 gy-5 align-items-stretch">
+        <div class="col-lg-6">
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.854181827464!2d108.48006437459616!3d-6.759325993237197!2m3!1f0!2f0!3f0!3m2!1i1024!2i1024!2f103.1!3m2!1i1024!2i1024!2f1!4m5!3s0x2b6f1ca54101e43b%3A0x6a11e8e2e012e12e!2sJl.%20Sunan%20Drajat%20No.16%2C%20Sumber%2C%20Kec.%20Sumber%2C%20Kabupaten%20Cirebon%2C%20Jawa%20Barat%2045611!5e0!3m2!1sid!2sid!4v1700000000000" 
+                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="contact-card h-100">
+                <h3 class="fw-bold mb-4">Kirim Pesan</h3>
+                
+                <div class="row g-4 mb-5">
+                    <div class="col-sm-6 contact-item">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-box me-3">
+                                <i class="uil uil-whatsapp"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">WhatsApp</h6>
+                                <p class="mb-0 small"><a href="https://wa.me/6288214940995" class="text-decoration-none text-muted">0882-1494-0995</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 contact-item">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-box me-3">
+                                <i class="uil uil-envelope"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Email</h6>
+                                <p class="mb-0 small"><a href="mailto:tksksumber@gmail.com" class="text-decoration-none text-muted">tksksumber@gmail.com</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form action="https://formspree.io/f/xojeagla" method="POST">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Nama Lengkap</label>
+                            <input type="text" name="name" class="form-control" placeholder="Nama Anda" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Email / WhatsApp</label>
+                            <input type="text" name="contact" class="form-control" placeholder="kontak@anda.com" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-semibold">Subjek Laporan</label>
+                            <select name="subject" class="form-control">
+                                <option value="Pertanyaan Umum">Pertanyaan Umum</option>
+                                <option value="Laporan DTSEN">Laporan Data DTSEN</option>
+                                <option value="Pengaduan Bansos">Pengaduan Bansos</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-semibold">Isi Pesan</label>
+                            <textarea name="message" class="form-control" rows="4" placeholder="Tuliskan pesan Anda secara detail..." required></textarea>
+                        </div>
+                        
+                        <input type="text" name="_gotcha" style="display:none">
+
+                        <div class="col-12 pt-2">
+                            <button type="submit" class="btn btn-primary btn-submit w-100">
+                                <i class="uil uil-message me-2"></i>Kirim Sekarang
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <div class="p-4 rounded-4 bg-white shadow-sm border">
+                <i class="uil uil-map-marker text-primary fs-2 mb-2 d-block"></i>
+                <h5 class="fw-bold">Lokasi Kantor</h5>
+                <p class="mb-0 text-muted">Jl. Sunan Drajat No. 16, Sumber, Kec. Sumber, Kabupaten Cirebon, Jawa Barat 45611</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="py-5 mt-5">
+    <div class="container text-center">
+        <p class="mb-1 text-white fw-bold">DATA KE AKSI</p>
+        <p class="small mb-0">© 2026 Shidiq Hasanudin, S.IP - TKSK Kecamatan Sumber.</p>
+        <p class="small">Pelayanan Sosial Responsif & Akuntabel.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
