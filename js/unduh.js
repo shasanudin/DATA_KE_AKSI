@@ -1,7 +1,5 @@
-/**
- * Fungsi untuk memproses data dan menampilkan laporan
- */
-async function generateReport() {
+// Memastikan fungsi tersedia secara global
+window.generateReport = async function() {
     const tipe = document.getElementById('tipeLaporan').value;
     const wilayahIdx = document.getElementById('wilayahSelect').value;
     const kontenData = document.getElementById('kontenData');
@@ -11,6 +9,7 @@ async function generateReport() {
 
     try {
         const response = await fetch('data/dtsen.json');
+        if (!response.ok) throw new Error("File JSON tidak ditemukan");
         const data = await response.json();
         
         document.getElementById('periodeText').innerText = data.updated || "Januari 2026";
@@ -43,9 +42,9 @@ async function generateReport() {
 
     } catch (e) {
         console.error(e);
-        kontenData.innerHTML = '<div class="alert alert-danger">Error: Gagal memproses data.</div>';
+        kontenData.innerHTML = `<div class="alert alert-danger">Error: ${e.message}</div>`;
     }
-}
+};
 
 function renderAgregat(data, container) {
     let sum = Array(10).fill(0);
@@ -86,7 +85,7 @@ function renderDetailWilayah(w, container) {
     container.innerHTML = html;
 }
 
-// Inisialisasi
+// Inisialisasi Dropdown
 document.addEventListener('DOMContentLoaded', () => {
     fetch('data/dtsen.json')
         .then(r => r.json())
@@ -100,16 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     s.appendChild(o);
                 });
             }
-        })
-        .catch(err => console.error("Gagal load JSON:", err));
+        }).catch(err => console.log("JSON Load Error"));
 
     const tipeLap = document.getElementById('tipeLaporan');
     if (tipeLap) {
         tipeLap.onchange = function() {
             const container = document.getElementById('selectWilayahContainer');
-            if (container) {
-                container.style.display = (this.value === 'wilayah') ? 'block' : 'none';
-            }
+            if (container) container.style.display = (this.value === 'wilayah') ? 'block' : 'none';
         };
     }
 });
