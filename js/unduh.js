@@ -1,3 +1,6 @@
+/**
+ * Fungsi untuk memproses data dan menampilkan laporan
+ */
 async function generateReport() {
     const tipe = document.getElementById('tipeLaporan').value;
     const wilayahIdx = document.getElementById('wilayahSelect').value;
@@ -22,11 +25,13 @@ async function generateReport() {
             renderPrioritas(data, kontenData);
         } else if (tipe === 'wilayah') {
             const w = data.wilayah[wilayahIdx];
-            judulLaporan.innerText = `DETAIL DATA DTSEN ${w.nama.toUpperCase()}`;
-            renderDetailWilayah(w, kontenData);
+            if (w) {
+                judulLaporan.innerText = `DETAIL DATA DTSEN ${w.nama.toUpperCase()}`;
+                renderDetailWilayah(w, kontenData);
+            }
         }
 
-        // Render QR Code Tengah
+        // Render QR Code
         const qrContainer = document.getElementById('qrcode');
         qrContainer.innerHTML = "";
         new QRCode(qrContainer, {
@@ -37,7 +42,8 @@ async function generateReport() {
         });
 
     } catch (e) {
-        kontenData.innerHTML = '<div class="alert alert-danger">Error: Data tidak ditemukan.</div>';
+        console.error(e);
+        kontenData.innerHTML = '<div class="alert alert-danger">Error: Gagal memproses data.</div>';
     }
 }
 
@@ -80,15 +86,30 @@ function renderDetailWilayah(w, container) {
     container.innerHTML = html;
 }
 
-// Inisialisasi awal
+// Inisialisasi
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('data/dtsen.json').then(r => r.json()).then(data => {
-        const s = document.getElementById('wilayahSelect');
-        data.wilayah.forEach((w, i) => {
-            let o = document.createElement('option'); o.value = i; o.textContent = w.nama; s.appendChild(o);
-        });
-    });
-    document.getElementById('tipeLaporan').onchange = function() {
-        document.getElementById('selectWilayahContainer').style.display = (this.value === 'wilayah') ? 'block' : 'none';
-    };
+    fetch('data/dtsen.json')
+        .then(r => r.json())
+        .then(data => {
+            const s = document.getElementById('wilayahSelect');
+            if (s) {
+                data.wilayah.forEach((w, i) => {
+                    let o = document.createElement('option');
+                    o.value = i;
+                    o.textContent = w.nama;
+                    s.appendChild(o);
+                });
+            }
+        })
+        .catch(err => console.error("Gagal load JSON:", err));
+
+    const tipeLap = document.getElementById('tipeLaporan');
+    if (tipeLap) {
+        tipeLap.onchange = function() {
+            const container = document.getElementById('selectWilayahContainer');
+            if (container) {
+                container.style.display = (this.value === 'wilayah') ? 'block' : 'none';
+            }
+        };
+    }
 });
