@@ -156,9 +156,66 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="js/unduh.js"></script> 
 <script>
+    // Load Navbar
     fetch('navbar.html').then(r => r.text()).then(h => document.getElementById('navbar').innerHTML = h);
+
+    // Set Initial Metadata
     document.getElementById('tglSekarang').innerText = new Date().toLocaleDateString('id-ID', {year:'numeric', month:'long', day:'numeric'});
     document.getElementById('hashNomor').innerText = Math.floor(100 + Math.random() * 899);
+    document.getElementById('hashID').innerText = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+    // Toggle Wilayah Select based on Report Type
+    document.getElementById('tipeLaporan').addEventListener('change', function() {
+        const container = document.getElementById('selectWilayahContainer');
+        container.style.display = (this.value === 'wilayah') ? 'block' : 'none';
+    });
+
+    // THE FIX: Define the missing function
+    function generateReport() {
+        const tipe = document.getElementById('tipeLaporan').value;
+        const konten = document.getElementById('kontenData');
+        const judul = document.getElementById('judulLaporan');
+        
+        // Update Title
+        if(tipe === 'agregat') judul.innerText = "LAPORAN AGREGASI DTSEN KECAMATAN";
+        if(tipe === 'prioritas') judul.innerText = "DAFTAR PRIORITAS (D1-D2) KECAMATAN";
+        if(tipe === 'wilayah') judul.innerText = "LAPORAN DETAIL DATA WILAYAH";
+
+        // Show Loading
+        konten.innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary"></div><p>Memproses data...</p></div>';
+
+        // Simulate Data Fetching (Replace this with your actual data logic)
+        setTimeout(() => {
+            let html = `
+                <table class="table table-bordered table-sm" style="font-size: 12px;">
+                    <thead class="bg-light text-center">
+                        <tr>
+                            <th>No</th>
+                            <th>Indikator / Wilayah</th>
+                            <th>Total KPM</th>
+                            <th>Status Verivali</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="text-center">1</td><td>Kelurahan Sumber</td><td class="text-center">145</td><td class="text-center">Selesai</td></tr>
+                        <tr><td class="text-center">2</td><td>Desa Watubelah</td><td class="text-center">98</td><td class="text-center">Proses</td></tr>
+                    </tbody>
+                </table>
+            `;
+            konten.innerHTML = html;
+            
+            // Generate QR Code after data loads
+            document.getElementById('qrcode').innerHTML = ""; // Clear old QR
+            new QRCode(document.getElementById("qrcode"), {
+                text: "VERIF-DTSEN-" + document.getElementById('hashNomor').innerText,
+                width: 80,
+                height: 80
+            });
+        }, 800);
+    }
+
+    // Initial load
+    window.onload = generateReport;
 </script>
 </body>
 </html>
