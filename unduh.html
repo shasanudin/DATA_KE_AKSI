@@ -159,7 +159,7 @@
 
         try {
             // AMBIL DATA DARI JSON
-            const response = await fetch('dtsen.json');
+            const response = await fetch('data/dtsen.json');
             if (!response.ok) throw new Error('File dtsen.json tidak ditemukan');
             const data = await response.json();
 
