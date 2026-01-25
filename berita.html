@@ -1,0 +1,22 @@
+<h1>Berita Terbaru</h1>
+<div id="news"></div>
+
+<script>
+fetch("data/berita.json")
+.then(r => r.json())
+.then(data => {
+
+  data.sort((a,b) => new Date(b.date) - new Date(a.date))
+
+  news.innerHTML = data.map(n => `
+    <article style="border-bottom:1px solid #ccc;padding:15px 0;">
+      <h2>
+        ${n.title} 
+        ${n.priority === "high" ? "🔥" : ""}
+      </h2>
+      <small>${n.source} — ${n.date}</small>
+      <p>${n.content.replace(/\n/g,"<br>")}</p>
+    </article>
+  `).join("")
+})
+</script>
