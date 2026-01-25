@@ -1,0 +1,8 @@
+{
+  "users": [
+    { "username": "operator", "password": "12345", "role": "Operator" },
+    { "username": "tksk", "password": "12345", "role": "TKSK" },
+    { "username": "camat", "password": "12345", "role": "Camat" },
+    { "username": "dinsos", "password": "12345", "role": "Dinsos" }
+  ]
+}
