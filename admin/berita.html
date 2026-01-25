@@ -1,0 +1,93 @@
+<h2>Editor Berita</h2>
+
+<div id="list"></div>
+
+<button onclick="add()">+ Tambah Berita</button>
+<button onclick="save()">Simpan ke GitHub</button>
+
+<script>
+const OWNER = "USERNAME_GITHUB"
+const REPO = "REPO_NAME"
+const PATH = "data/berita.json"
+const TOKEN = "GITHUB_PAT"
+
+let news = []
+
+async function load() {
+  let res = await fetch(`https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${PATH}`)
+  news = await res.json()
+  render()
+}
+
+function render() {
+  list.innerHTML = ""
+  news.forEach((n, i) => {
+    list.innerHTML += `
+      <div style="border:1px solid #ccc;padding:15px;margin:15px 0;">
+        <input value="${n.title || ""}" placeholder="Judul Berita"
+          oninput="news[${i}].title=this.value"><br><br>
+
+        <input value="${n.source || ""}" placeholder="Sumber"
+          oninput="news[${i}].source=this.value"><br><br>
+
+        <input value="${n.date || ""}" placeholder="Tanggal (2026-01-26)"
+          oninput="news[${i}].date=this.value"><br><br>
+
+        <textarea style="width:100%;height:100px;" 
+          placeholder="Isi Berita"
+          oninput="news[${i}].content=this.value">${n.content || ""}</textarea><br><br>
+
+        <label>
+          Prioritas:
+          <select onchange="news[${i}].priority=this.value">
+            <option value="normal" ${n.priority=="normal"?"selected":""}>Normal</option>
+            <option value="high" ${n.priority=="high"?"selected":""}>High</option>
+          </select>
+        </label>
+        <br><br>
+
+        <button onclick="remove(${i})">Hapus</button>
+      </div>
+    `
+  })
+}
+
+function add() {
+  news.push({
+    title: "",
+    source: "",
+    date: new Date().toISOString().slice(0,10),
+    content: "",
+    priority: "normal"
+  })
+  render()
+}
+
+function remove(i) {
+  news.splice(i, 1)
+  render()
+}
+
+async function save() {
+  let file = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`)
+  let info = await file.json()
+
+  let content = btoa(unescape(encodeURIComponent(JSON.stringify(news, null, 2))))
+
+  await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `token ${TOKEN}`
+    },
+    body: JSON.stringify({
+      message: "Update berita.json",
+      content,
+      sha: info.sha
+    })
+  })
+
+  alert("Berita berhasil disimpan!")
+}
+
+load()
+</script>
