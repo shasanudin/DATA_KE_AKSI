@@ -1,0 +1,108 @@
+{
+  "updated": "Januari 2026",
+  "kecamatan": "Sumber",
+  "kabupaten": "Cirebon",
+  "provinsi": "Jawa Barat",
+  "programs": ["PKH", "BPNT", "PBI"],
+
+  "wilayah": [
+    {
+      "kode": "3209031001",
+      "nama": "Sumber",
+      "jenis": "Kelurahan",
+      "total_kk": 3351,
+      "bansos": { "PKH": 812, "BPNT": 1023, "PBI": 1350 }
+    },
+    {
+      "kode": "3209032001",
+      "nama": "Babakan",
+      "jenis": "Kelurahan",
+      "total_kk": 1392,
+      "bansos": { "PKH": 420, "BPNT": 580, "PBI": 690 }
+    },
+    {
+      "kode": "3209032002",
+      "nama": "Gegunung",
+      "jenis": "Kelurahan",
+      "total_kk": 1868,
+      "bansos": { "PKH": 560, "BPNT": 720, "PBI": 860 }
+    },
+    {
+      "kode": "3209032003",
+      "nama": "Kaliwadas",
+      "jenis": "Kelurahan",
+      "total_kk": 3389,
+      "bansos": { "PKH": 980, "BPNT": 1210, "PBI": 1480 }
+    },
+    {
+      "kode": "3209032004",
+      "nama": "Kemantren",
+      "jenis": "Kelurahan",
+      "total_kk": 1753,
+      "bansos": { "PKH": 510, "BPNT": 690, "PBI": 820 }
+    },
+    {
+      "kode": "3209032005",
+      "nama": "Kenanga",
+      "jenis": "Kelurahan",
+      "total_kk": 2908,
+      "bansos": { "PKH": 870, "BPNT": 1080, "PBI": 1320 }
+    },
+    {
+      "kode": "3209032006",
+      "nama": "Pasalakan",
+      "jenis": "Kelurahan",
+      "total_kk": 3219,
+      "bansos": { "PKH": 950, "BPNT": 1180, "PBI": 1400 }
+    },
+    {
+      "kode": "3209032007",
+      "nama": "Pejambon",
+      "jenis": "Kelurahan",
+      "total_kk": 1781,
+      "bansos": { "PKH": 520, "BPNT": 710, "PBI": 840 }
+    },
+    {
+      "kode": "3209032008",
+      "nama": "Perbutulan",
+      "jenis": "Kelurahan",
+      "total_kk": 1419,
+      "bansos": { "PKH": 410, "BPNT": 560, "PBI": 670 }
+    },
+    {
+      "kode": "3209032009",
+      "nama": "Sendang",
+      "jenis": "Kelurahan",
+      "total_kk": 1444,
+      "bansos": { "PKH": 430, "BPNT": 590, "PBI": 710 }
+    },
+    {
+      "kode": "3209032010",
+      "nama": "Tukmudal",
+      "jenis": "Kelurahan",
+      "total_kk": 4667,
+      "bansos": { "PKH": 1320, "BPNT": 1680, "PBI": 2100 }
+    },
+    {
+      "kode": "3209032011",
+      "nama": "Watubelah",
+      "jenis": "Kelurahan",
+      "total_kk": 2751,
+      "bansos": { "PKH": 810, "BPNT": 1040, "PBI": 1260 }
+    },
+    {
+      "kode": "3209032012",
+      "nama": "Matangaji",
+      "jenis": "Desa",
+      "total_kk": 1753,
+      "bansos": { "PKH": 510, "BPNT": 720, "PBI": 890 }
+    },
+    {
+      "kode": "3209032013",
+      "nama": "Sidawangi",
+      "jenis": "Desa",
+      "total_kk": 2294,
+      "bansos": { "PKH": 680, "BPNT": 910, "PBI": 1080 }
+    }
+  ]
+}
