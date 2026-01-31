@@ -1,3 +1,9 @@
+// 1. Load Navbar
+  fetch('navbar.html')
+    .then(r => r.text())
+    .then(html => { document.getElementById('navbar').innerHTML = html; })
+    .catch(err => console.warn("Navbar tidak ditemukan"));
+
 // ==============================
 // GLOBAL VARIABLES
 // ==============================
