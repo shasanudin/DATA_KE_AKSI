@@ -16,21 +16,27 @@
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
+/* --- Update pada Body --- */
 body.dashboard-body {
     display: flex;
     background-color: var(--bg-color);
     color: var(--text-main);
     min-height: 100vh;
+    overflow-x: hidden; /* Mencegah geser horizontal */
+    overflow-y: auto;   /* Memastikan scroll vertikal aktif */
 }
 
-/* --- Sidebar --- */
+/* --- Update pada Sidebar --- */
 .sidebar {
     width: 260px;
     background-color: var(--sidebar-color);
     color: white;
     padding: 1.5rem;
     position: fixed;
+    top: 0;
+    left: 0;
     height: 100vh;
+    z-index: 100; /* Supaya tetap di atas */
 }
 
 .sidebar-header h3 {
@@ -69,14 +75,16 @@ body.dashboard-body {
     color: white;
 }
 
-/* --- Main Content Area --- */
+/* --- Update pada Main Content --- */
 .main-content {
     flex: 1;
-    margin-left: 260px; /* Menghindari tertutup sidebar */
+    margin-left: 260px; 
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Memposisikan konten ke tengah secara horizontal */
+    align-items: center;
+    /* Hapus height: 100vh jika ada, biarkan konten menentukan tinggi */
+    min-height: 100vh; 
 }
 
 .content-header {
@@ -96,6 +104,7 @@ body.dashboard-body {
     background: var(--white);
     width: 100%;
     max-width: 900px; /* Lebar maksimal form agar tidak terlalu lebar di layar besar */
+    margin-bottom: 50px; /* Memberi ruang di bawah tombol simpan */
     padding: 2.5rem;
     border-radius: 1rem;
     box-shadow: var(--shadow);
