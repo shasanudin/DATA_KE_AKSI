@@ -4,14 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistik Desil - DATA KE AKSI</title>
-    <link rel="stylesheet" href="input_data.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="input_data.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .stats-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; width: 100%; max-width: 1000px; }
-        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: var(--shadow); text-align: center; border-top: 4px solid var(--primary-color); }
+        /* Perbaikan agar grafik tidak memanjang ke bawah */
+        .stats-card-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 15px; 
+            margin-bottom: 25px; 
+            width: 100%; 
+            max-width: 1000px; 
+        }
+        .stat-card { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: var(--shadow); 
+            text-align: center; 
+            border-top: 4px solid var(--primary-color); 
+        }
         .stat-card h4 { font-size: 0.8rem; color: #64748b; text-transform: uppercase; }
         .stat-card p { font-size: 1.5rem; font-weight: bold; color: #1e293b; margin-top: 5px; }
-        .chart-full { width: 100%; max-width: 1000px; background: white; padding: 25px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 20px; }
+        
+        /* Container Grafik dengan Tinggi Tetap */
+        .chart-full { 
+            width: 100%; 
+            max-width: 1000px; 
+            height: 400px; /* Mengunci tinggi agar tidak melar */
+            background: white; 
+            padding: 25px; 
+            border-radius: 12px; 
+            box-shadow: var(--shadow); 
+            margin-bottom: 20px; 
+            position: relative; /* Penting untuk Chart.js responsive */
+        }
+        .chart-full h3 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: #1e293b;
+        }
     </style>
 </head>
 <body class="dashboard-body">
@@ -30,7 +63,7 @@
     <main class="main-content">
         <section class="content-header">
             <h1>Analisis Statistik Desil</h1>
-            <p>Visualisasi sebaran peringkat kesejahteraan masyarakat.</p>
+            <p>Visualisasi sebaran peringkat kesejahteraan masyarakat Kecamatan Sumber.</p>
         </section>
 
         <div class="stats-card-grid">
@@ -53,133 +86,132 @@
             <canvas id="mainDesilChart"></canvas>
         </div>
 
-        <div class="form-grid" style="width: 100%; max-width: 1000px;">
-            <div class="chart-full">
-                <h3>Radar Profil Kesejahteraan</h3>
-                <canvas id="radarDesilChart"></canvas>
-            </div>
+        <div class="chart-full">
+            <h3>Radar Profil Kesejahteraan</h3>
+            <canvas id="radarDesilChart"></canvas>
         </div>
     </main>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
-        authDomain: "data-ke-aksi-auth.firebaseapp.com",
-        projectId: "data-ke-aksi-auth",
-        storageBucket: "data-ke-aksi-auth.firebasestorage.app",
-        messagingSenderId: "631382692174",
-        appId: "1:631382692174:web:c10a099fb3021849eace1f"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
+            authDomain: "data-ke-aksi-auth.firebaseapp.com",
+            projectId: "data-ke-aksi-auth",
+            storageBucket: "data-ke-aksi-auth.firebasestorage.app",
+            messagingSenderId: "631382692174",
+            appId: "1:631382692174:web:c10a099fb3021849eace1f"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    // Simpan instance chart secara global agar bisa dihancurkan/update tanpa error
-    let mainChartInstance = null;
-    let radarChartInstance = null;
+        let mainChartInstance = null;
+        let radarChartInstance = null;
 
-    async function loadStatistics() {
-        try {
-            const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
-            
-            if (querySnapshot.empty) {
-                console.warn("Belum ada data di Firestore.");
-                return;
+        async function loadStatistics() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
+                
+                if (querySnapshot.empty) {
+                    console.warn("Data kosong.");
+                    return;
+                }
+
+                let aggregateDesil = Array(10).fill(0);
+                let totalKKGlobal = 0;
+                let highestD1 = -1;
+                let wilayahHighestD1 = "N/A";
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (data.desil && Array.isArray(data.desil)) {
+                        data.desil.forEach((val, i) => {
+                            const num = parseInt(val) || 0;
+                            aggregateDesil[i] += num;
+                            if (i === 0 && num > highestD1) { 
+                                highestD1 = num; 
+                                wilayahHighestD1 = data.nama; 
+                            }
+                        });
+                        totalKKGlobal += parseInt(data.total_kk) || 0;
+                    }
+                });
+
+                // Update UI
+                document.getElementById('totalD1').innerText = aggregateDesil[0].toLocaleString();
+                document.getElementById('topWilayah').innerText = wilayahHighestD1;
+                const rentan = aggregateDesil[0] + aggregateDesil[1] + aggregateDesil[2];
+                const persen = totalKKGlobal > 0 ? ((rentan / totalKKGlobal) * 100).toFixed(1) : 0;
+                document.getElementById('avgMiskin').innerText = persen + "%";
+
+                renderCharts(aggregateDesil);
+            } catch (err) {
+                console.error("Gagal memuat statistik:", err);
             }
+        }
 
-            let aggregateDesil = Array(10).fill(0);
-            let totalKKGlobal = 0;
-            let highestD1 = -1;
-            let wilayahHighestD1 = "Belum Ada Data";
+        function renderCharts(dataDesil) {
+            // Hapus chart lama jika ada agar tidak tumpang tindih
+            if (mainChartInstance) mainChartInstance.destroy();
+            if (radarChartInstance) radarChartInstance.destroy();
 
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                if (data.desil && Array.isArray(data.desil)) {
-                    data.desil.forEach((val, i) => {
-                        const numVal = parseInt(val) || 0;
-                        aggregateDesil[i] += numVal;
-                        
-                        // Cari wilayah dengan Desil 1 terbanyak
-                        if (i === 0 && numVal > highestD1) { 
-                            highestD1 = numVal; 
-                            wilayahHighestD1 = data.nama; 
-                        }
-                    });
-                    totalKKGlobal += parseInt(data.total_kk) || 0;
+            // 1. Line Chart
+            const ctxMain = document.getElementById('mainDesilChart').getContext('2d');
+            mainChartInstance = new Chart(ctxMain, {
+                type: 'line',
+                data: {
+                    labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10'],
+                    datasets: [{
+                        label: 'Jumlah KK',
+                        data: dataDesil,
+                        fill: true,
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        borderColor: '#007bff',
+                        tension: 0.3,
+                        pointRadius: 4
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, // Penting agar mengikuti tinggi CSS
+                    plugins: { legend: { display: false } }
                 }
             });
 
-            // Update Kartu Statistik
-            document.getElementById('totalD1').innerText = aggregateDesil[0].toLocaleString();
-            document.getElementById('topWilayah').innerText = wilayahHighestD1;
-            
-            // Hitung Rata-rata Desil 1-3 (Kelompok Rentan)
-            const kelompokRentan = aggregateDesil[0] + aggregateDesil[1] + aggregateDesil[2];
-            const persentaseRentan = totalKKGlobal > 0 ? ((kelompokRentan / totalKKGlobal) * 100).toFixed(1) : 0;
-            document.getElementById('avgMiskin').innerText = persentaseRentan + "%";
-
-            renderCharts(aggregateDesil);
-        } catch (error) {
-            console.error("Error loading stats:", error);
-            if(error.message.includes("permissions")) {
-                alert("Akses ditolak. Pastikan Rules di Firebase Console sudah diatur ke 'allow read, write: if true;' atau Anda sudah login.");
-            }
+            // 2. Radar Chart
+            const ctxRadar = document.getElementById('radarDesilChart').getContext('2d');
+            radarChartInstance = new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['Sangat Miskin', 'Miskin', 'Menengah Bawah', 'Menengah', 'Mampu'],
+                    datasets: [{
+                        label: 'Proporsi Wilayah',
+                        data: [
+                            dataDesil[0], 
+                            dataDesil[1] + dataDesil[2], 
+                            dataDesil[3] + dataDesil[4] + dataDesil[5],
+                            dataDesil[6] + dataDesil[7],
+                            dataDesil[8] + dataDesil[9]
+                        ],
+                        backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                        borderColor: '#f59e0b',
+                        borderWidth: 2
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, // Mencegah radar meluber ke bawah
+                    scales: {
+                        r: { beginAtZero: true }
+                    }
+                }
+            });
         }
-    }
 
-    function renderCharts(dataDesil) {
-        // Hancurkan chart lama jika ada (mencegah tumpang tindih visual)
-        if (mainChartInstance) mainChartInstance.destroy();
-        if (radarChartInstance) radarChartInstance.destroy();
-
-        // 1. Line Chart (Tren Distribusi)
-        const ctxMain = document.getElementById('mainDesilChart').getContext('2d');
-        mainChartInstance = new Chart(ctxMain, {
-            type: 'line',
-            data: {
-                labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10'],
-                datasets: [{
-                    label: 'Jumlah KK per Desil',
-                    data: dataDesil,
-                    fill: true,
-                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                    borderColor: '#007bff',
-                    pointBackgroundColor: '#007bff',
-                    tension: 0.3
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-
-        // 2. Radar Chart (Profil Kesejahteraan)
-        const ctxRadar = document.getElementById('radarDesilChart').getContext('2d');
-        radarChartInstance = new Chart(ctxRadar, {
-            type: 'radar',
-            data: {
-                labels: ['Sangat Miskin', 'Miskin', 'Menengah Bawah', 'Menengah', 'Mampu'],
-                datasets: [{
-                    label: 'Distribusi Kumulatif',
-                    data: [
-                        dataDesil[0], 
-                        dataDesil[1] + dataDesil[2], 
-                        dataDesil[3] + dataDesil[4] + dataDesil[5],
-                        dataDesil[6] + dataDesil[7],
-                        dataDesil[8] + dataDesil[9]
-                    ],
-                    backgroundColor: 'rgba(245, 158, 11, 0.2)',
-                    borderColor: '#f59e0b',
-                    borderWidth: 2
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-    }
-
-    // Jalankan saat halaman dimuat
-    loadStatistics();
-</script>
+        loadStatistics();
+    </script>
 </body>
 </html>
