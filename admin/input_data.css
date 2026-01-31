@@ -1,0 +1,126 @@
+/* Container Utama Form */
+.form-container {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+    border: 1px solid #eef2f5;
+}
+
+/* Judul Section */
+.form-section-title {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #007bff;
+    display: inline-block;
+}
+
+/* Grid Layout untuk Informasi Umum */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* Grouping Input & Label */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #546e7a;
+}
+
+.input-group input, 
+.input-group select {
+    padding: 12px 15px;
+    border: 1px solid #cfd8dc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+}
+
+.input-group input:focus {
+    border-color: #007bff;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    outline: none;
+}
+
+/* Desain Khusus Grid Desil */
+.desil-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.desil-inputs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 kolom agar rapi (D1-D5 atas, D6-D10 bawah) */
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .desil-inputs {
+        grid-template-columns: repeat(2, 1fr); /* Tampilan HP jadi 2 kolom */
+    }
+}
+
+.desil-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.desil-item label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #007bff;
+    text-align: center;
+}
+
+.desil-item input {
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Tombol Simpan */
+.btn-submit-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.btn-primary:disabled {
+    background-color: #b0bec5;
+    cursor: not-allowed;
+}
