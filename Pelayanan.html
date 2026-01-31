@@ -13,6 +13,7 @@
             --info: #17a2b8;
             --success: #28a745;
             --warning: #ffc107;
+            --dark: #343a40;
         }
 
         body { font-family: 'Inter', sans-serif; background-color: #f4f7f6; color: #333; }
@@ -23,6 +24,7 @@
             padding: 50px 0;
             margin-bottom: 30px;
             border-radius: 0 0 30px 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         .card-custom {
@@ -34,8 +36,8 @@
         }
         .card-custom:hover { transform: translateY(-5px); }
 
-        .stat-value { font-weight: 700; font-size: 1.5rem; }
-        .stat-label { font-size: 0.75rem; color: #6c757d; text-transform: uppercase; font-weight: 600; }
+        .stat-value { font-weight: 700; font-size: 1.8rem; margin-bottom: 0; }
+        .stat-label { font-size: 0.75rem; color: #6c757d; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
         .table-container {
             background: white;
@@ -48,15 +50,12 @@
         .section-title::after {
             content: '';
             position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 40px;
-            height: 4px;
-            background: var(--info);
-            border-radius: 2px;
+            left: 0; bottom: 0; width: 40px; height: 4px;
+            background: var(--info); border-radius: 2px;
         }
 
-        footer { background: #212529; color: #aaa; }
+        footer { background: var(--dark); color: #aaa; }
+        .help-link { color: var(--primary); font-weight: 600; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -66,29 +65,29 @@
 <section class="data-hero text-center">
     <div class="container">
         <h1 class="font-weight-bold">Monitoring Pelayanan</h1>
-        <p class="lead opacity-75">Statistik DTKS, SKTM, dan Pengaduan per Wilayah</p>
+        <p class="lead opacity-75">Visualisasi data DTKS, SKTM, dan Pengaduan Masyarakat</p>
     </div>
 </section>
 
 <main class="container">
     <div class="row">
         <div class="col-lg-5 mb-4">
-            <h5 class="section-title">Total Pelayanan Kecamatan</h5>
+            <h5 class="section-title">Rekapitulasi Kecamatan</h5>
             <div class="table-container">
                 <table class="table table-hover mb-0">
                     <thead>
                         <tr>
-                            <th>Jenis Layanan</th>
-                            <th class="text-right">Total Data</th>
+                            <th>Kategori Layanan</th>
+                            <th class="text-right">Total</th>
                         </tr>
                     </thead>
-                    <tbody id="tabelTotalKecamatan">
+                    <tbody id="tabelTotalLayanan">
                         </tbody>
                 </table>
             </div>
-            <div class="mt-4 p-3 card-custom border-left border-info" style="border-left-width: 5px !important;">
-                <p class="small text-muted mb-0"><i class="fas fa-info-circle mr-1"></i> Butuh bantuan teknis terkait data?</p>
-                <a href="kontak.html" class="small font-weight-bold">Hubungi Kontak Bantuan &rarr;</a>
+            <div class="mt-4 p-3 card-custom bg-light">
+                <p class="small text-muted mb-2"><i class="fas fa-question-circle mr-1"></i> Mengalami kendala data?</p>
+                <a href="kontak.html" class="help-link">Hubungi Kontak Bantuan <i class="fas fa-arrow-right ml-1"></i></a>
             </div>
         </div>
 
@@ -97,27 +96,32 @@
             <div class="card card-custom p-4 mb-4">
                 <div class="form-group mb-0">
                     <label class="small font-weight-bold text-muted">PILIH DESA / KELURAHAN</label>
-                    <select id="wilayahSelect" class="form-control">
-                        <option>Memuat data...</option>
-                    </select>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-transparent border-right-0"><i class="fas fa-map-marked-alt text-info"></i></span>
+                        </div>
+                        <select id="wilayahSelect" class="form-control border-left-0 shadow-none">
+                            <option>Memuat data...</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
             <div class="row text-center mb-4">
                 <div class="col-4">
-                    <div class="card card-custom p-3 border-bottom border-primary" style="border-bottom-width: 4px !important;">
+                    <div class="card card-custom p-3 border-bottom border-primary" style="border-bottom-width: 5px !important;">
                         <p class="stat-label mb-1">DTKS</p>
                         <h3 id="statDTKS" class="stat-value text-primary">—</h3>
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="card card-custom p-3 border-bottom border-warning" style="border-bottom-width: 4px !important;">
+                    <div class="card card-custom p-3 border-bottom border-warning" style="border-bottom-width: 5px !important;">
                         <p class="stat-label mb-1">Pengaduan</p>
                         <h3 id="statPengaduan" class="stat-value text-warning">—</h3>
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="card card-custom p-3 border-bottom border-success" style="border-bottom-width: 4px !important;">
+                    <div class="card card-custom p-3 border-bottom border-success" style="border-bottom-width: 5px !important;">
                         <p class="stat-label mb-1">SKTM</p>
                         <h3 id="statSKTM" class="stat-value text-success">—</h3>
                     </div>
@@ -125,7 +129,6 @@
             </div>
 
             <div class="card card-custom p-4">
-                <h6 class="font-weight-bold mb-3 text-muted">Perbandingan Volume Layanan</h6>
                 <div style="height: 300px;">
                     <canvas id="layananChart"></canvas>
                 </div>
@@ -135,8 +138,8 @@
 </main>
 
 <footer class="py-5 mt-5">
-    <div class="container text-center text-white small">
-        © 2026 TKSK & Puskesos Sumber
+    <div class="container text-center">
+        <p class="small mb-0">© 2026 TKSK Sumber & Puskesos Sumber. All Rights Reserved.</p>
     </div>
 </footer>
 
@@ -166,33 +169,38 @@
 
     async function initFirebaseData() {
         try {
-            // Ambil koleksi pelayanan_desa
-            const querySnapshot = await getDocs(collection(db, "pelayanan_desa"));
+            // Mengambil dari koleksi wilayah_desa (asumsi koleksi sama dengan data.html)
+            const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
             const select = document.getElementById('wilayahSelect');
-            const tabelTotal = document.getElementById('tabelTotalKecamatan');
+            const tabelTotal = document.getElementById('tabelTotalLayanan');
             
             cachedData = [];
             let totalKec = { dtks: 0, pengaduan: 0, sktm: 0 };
 
             querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                cachedData.push(data);
+                const docData = doc.data();
+                cachedData.push(docData);
                 
-                // Hitung Agregat Kecamatan
-                totalKec.dtks += parseInt(data.layanan?.dtks || 0);
-                totalKec.pengaduan += parseInt(data.layanan?.pengaduan || 0);
-                totalKec.sktm += parseInt(data.layanan?.sktm || 0);
+                // Akses sesuai model input: data.layanan.dtks
+                if (docData.layanan) {
+                    totalKec.dtks += parseInt(docData.layanan.dtks || 0);
+                    totalKec.pengaduan += parseInt(docData.layanan.pengaduan || 0);
+                    totalKec.sktm += parseInt(docData.layanan.sktm || 0);
+                }
             });
 
-            // Render Tabel Agregat (Sisi Kiri)
+            // Update Tabel Kiri (Agregat)
             tabelTotal.innerHTML = `
-                <tr><td>Data Terpadu Kesejahteraan (DTKS)</td><td class="text-right font-weight-bold">${totalKec.dtks}</td></tr>
+                <tr><td>Usulan DTKS</td><td class="text-right font-weight-bold">${totalKec.dtks}</td></tr>
                 <tr><td>Pengaduan Masyarakat</td><td class="text-right font-weight-bold">${totalKec.pengaduan}</td></tr>
-                <tr><td>Surat Ket. Tidak Mampu (SKTM)</td><td class="text-right font-weight-bold">${totalKec.sktm}</td></tr>
-                <tr class="table-info font-weight-bold"><td>TOTAL SEMUA LAYANAN</td><td class="text-right">${totalKec.dtks + totalKec.pengaduan + totalKec.sktm}</td></tr>
+                <tr><td>Penerbitan SKTM</td><td class="text-right font-weight-bold">${totalKec.sktm}</td></tr>
+                <tr class="table-info font-weight-bold text-primary">
+                    <td>TOTAL LAYANAN</td>
+                    <td class="text-right">${totalKec.dtks + totalKec.pengaduan + totalKec.sktm}</td>
+                </tr>
             `;
 
-            // Isi Dropdown (Sisi Kanan)
+            // Isi Dropdown (Urut Abjad)
             select.innerHTML = "";
             cachedData.sort((a, b) => (a.nama || "").localeCompare(b.nama || "")).forEach((w, i) => {
                 const opt = document.createElement('option');
@@ -205,45 +213,44 @@
             if(cachedData.length > 0) renderWilayah(0);
 
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Firebase Error:", error);
             document.getElementById('wilayahSelect').innerHTML = "<option>Gagal memuat data</option>";
         }
     }
 
     function renderWilayah(idx) {
-        const data = cachedData[idx];
-        const val = {
-            dtks: parseInt(data.layanan?.dtks || 0),
-            pengaduan: parseInt(data.layanan?.pengaduan || 0),
-            sktm: parseInt(data.layanan?.sktm || 0)
-        };
+        const item = cachedData[idx];
+        // Sinkronisasi dengan model Map "layanan"
+        const l = item.layanan || { dtks: 0, pengaduan: 0, sktm: 0 };
 
-        // Update Stat Cards
-        document.getElementById('statDTKS').innerText = val.dtks;
-        document.getElementById('statPengaduan').innerText = val.pengaduan;
-        document.getElementById('statSKTM').innerText = val.sktm;
+        // Update Kartu Statistik
+        document.getElementById('statDTKS').innerText = l.dtks;
+        document.getElementById('statPengaduan').innerText = l.pengaduan;
+        document.getElementById('statSKTM').innerText = l.sktm;
 
-        // Update Chart (Model Doughnut agar berbeda dengan data.html)
+        // Render Grafik Bar (Agar konsisten dengan data.html)
         const ctx = document.getElementById('layananChart').getContext('2d');
         if (chart) chart.destroy();
 
         chart = new Chart(ctx, {
-            type: 'doughnut',
+            type: 'bar',
             data: {
                 labels: ['DTKS', 'Pengaduan', 'SKTM'],
                 datasets: [{
-                    data: [val.dtks, val.pengaduan, val.sktm],
+                    label: 'Jumlah Layanan',
+                    data: [l.dtks, l.pengaduan, l.sktm],
                     backgroundColor: ['#007bff', '#ffc107', '#28a745'],
-                    borderWidth: 0
+                    borderRadius: 8
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom' }
-                },
-                cutout: '70%'
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { drawBorder: false, color: '#f0f0f0' } },
+                    x: { grid: { display: false } }
+                }
             }
         });
     }
