@@ -157,8 +157,13 @@
     <div class="col-lg-8 mb-4">
       <div class="card shadow-sm border-0 p-4" style="border-radius: 15px;">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="font-weight-bold mb-0 text-dark">Distribusi Desil (D1-D10)</h5>
-          <select id="wilayahSelect" class="form-control form-control-sm w-auto border-primary shadow-none">
+          <h3 class="font-weight-bold mb-0 text-dark">Distribusi Desil (D1-D10)</h3>
+          <label for="wilayahSelect" class="sr-only">
+            Pilih Wilayah Desa
+          </label>
+          <select id="wilayahSelect"
+                  class="form-control form-control-sm w-auto border-primary shadow-none">
+          </select>
             <option>Memuat data...</option>
           </select>
         </div>
@@ -178,10 +183,17 @@
             <div class="icon-circle mr-3"><i class="fab fa-whatsapp"></i></div>
             <div>
               <small class="text-muted d-block">WhatsApp Center</small>
-              <a href="https://wa.me/6288214940995" target="_blank" class="text-dark font-weight-bold">0882-1494-0995</a>
+              <a href="https://wa.me/6288214940995"
+                 target="_blank"
+                 class="btn btn-primary btn-block shadow-sm py-2 font-weight-bold"
+                 aria-label="Hubungi WhatsApp Center TKSK Sumber">
+                 0882-1494-0995
+              </a>
             </div>
           </div>
-          <a href="kontak.html" class="btn btn-primary btn-block shadow-sm py-2 font-weight-bold">Kirim Pengaduan</a>
+          <a href="kontak.html" class="btn btn-primary btn-block shadow-sm py-2 font-weight-bold" aria-label="Kirim Pengaduan ke TKSK Sumber">
+            <i class="fas fa-paper-plane mr-1" aria-hidden="true"></i> Kirim Pengaduan
+          </a>
         </div>
       </div>
 
@@ -242,10 +254,11 @@
   typeEffect();
 
   // 3. Real-time Clock Header
-  setInterval(() => {
-    const now = new Date();
-    document.getElementById('realtimeClock').innerText = now.toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' });
-  }, 1000);
+setInterval(() => {
+  const now = new Date();
+  document.getElementById('realtimeClock').innerText =
+    now.toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' });
+  }, 60000); // 1 menit
 
   // 4. Firebase Real-time Listener
   function startDashboard() {
@@ -354,4 +367,5 @@
 </script>
 </body>
 </html>
+
 
