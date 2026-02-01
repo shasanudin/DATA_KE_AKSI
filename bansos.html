@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
-<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Data DTSEN | TKSK & Puskesos Sumber</title>
+    <title>Data Bansos | TKSK & Puskesos Sumber</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -45,17 +44,9 @@
             transform: translateY(-5px);
         }
 
-        .stat-value {
+        .stat {
             font-weight: 700;
-            font-size: 1.5rem;
-            margin-bottom: 0;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: #6c757d;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 1.4rem;
         }
 
         /* Table Styling */
@@ -72,48 +63,7 @@
             font-size: 0.75rem;
         }
 
-        .section-title {
-            font-weight: 700;
-            position: relative;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .section-title::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 40px;
-            height: 4px;
-            background: var(--primary);
-            border-radius: 2px;
-        }
-
-        select.form-control {
-            border-radius: 10px;
-            border: 2px solid #e0e0e0;
-            height: 45px;
-            font-weight: 600;
-        }
-        select.form-control:focus {
-            border-color: var(--primary);
-            box-shadow: none;
-        }
-
         footer { background: #212529; color: #aaa; }
-      
-        body {
-        font-family: 'Inter', sans-serif;
-        background:#f4f7f6;
-        }
-        .card-custom {
-        border-radius: 15px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-        }
-        .stat {
-        font-weight: 700;
-        font-size: 1.4rem;
-        }
     </style>
 </head>
 <body>
@@ -135,135 +85,188 @@
 <div class="container my-5">
 
 <h3 class="font-weight-bold mb-3">Dashboard Data Bantuan Sosial</h3>
-<p class="text-muted mb-4">Rekap PKH, BPNT, dan PBI Kecamatan Sumber</p>
+<p class="text-muted mb-4">Rekap PKH, BPNT, dan PBI Kecamatan Sumber (Real-time Database)</p>
 
-<!-- KPI -->
 <div class="row mb-4">
-
-<div class="col-md-3 mb-3">
-<div class="card card-custom p-3">
-<p class="small text-muted mb-1">Total KK</p>
-<div id="totalKK" class="stat">—</div>
-</div>
-</div>
-
-<div class="col-md-3 mb-3">
-<div class="card card-custom p-3">
-<p class="small text-muted mb-1">Penerima PKH</p>
-<div id="totalPKH" class="stat text-primary">—</div>
-</div>
-</div>
-
-<div class="col-md-3 mb-3">
-<div class="card card-custom p-3">
-<p class="small text-muted mb-1">Penerima BPNT</p>
-<div id="totalBPNT" class="stat text-success">—</div>
-</div>
-</div>
-
-<div class="col-md-3 mb-3">
-<div class="card card-custom p-3">
-<p class="small text-muted mb-1">Penerima PBI</p>
-<div id="totalPBI" class="stat text-danger">—</div>
-</div>
+    <div class="col-md-3 mb-3">
+        <div class="card card-custom p-3">
+            <p class="small text-muted mb-1">Total KK</p>
+            <div id="totalKK" class="stat">—</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card card-custom p-3">
+            <p class="small text-muted mb-1">Penerima PKH</p>
+            <div id="totalPKH" class="stat text-primary">—</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card card-custom p-3">
+            <p class="small text-muted mb-1">Penerima BPNT</p>
+            <div id="totalBPNT" class="stat text-success">—</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card card-custom p-3">
+            <p class="small text-muted mb-1">Penerima PBI</p>
+            <div id="totalPBI" class="stat text-danger">—</div>
+        </div>
+    </div>
 </div>
 
-</div>
-
-<!-- Table -->
 <div class="card card-custom p-4 mb-4">
-<h5 class="font-weight-bold mb-3">Distribusi Bantuan per Desa/Kelurahan</h5>
-<table class="table table-bordered table-sm">
-<thead>
-<tr>
-<th>Desa</th>
-<th>Total KK</th>
-<th>PKH</th>
-<th>BPNT</th>
-<th>PBI</th>
-<th>Cakupan (%)</th>
-</tr>
-</thead>
-<tbody id="bansosTable"></tbody>
-</table>
+    <h5 class="font-weight-bold mb-3">Distribusi Bantuan per Desa/Kelurahan</h5>
+    <div class="table-responsive">
+        <table class="table table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th>Desa</th>
+                    <th>Total KK</th>
+                    <th>PKH</th>
+                    <th>BPNT</th>
+                    <th>PBI</th>
+                    <th>Cakupan (%)</th>
+                </tr>
+            </thead>
+            <tbody id="bansosTable">
+                <tr><td colspan="6" class="text-center">Mengambil data dari Firebase...</td></tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<!-- Chart -->
 <div class="card card-custom p-4">
-<h5 class="font-weight-bold mb-3">Grafik Cakupan Bantuan</h5>
-<canvas id="bansosChart" height="120"></canvas>
+    <h5 class="font-weight-bold mb-3">Grafik Cakupan Bantuan</h5>
+    <div style="position: relative; height: 300px;">
+        <canvas id="bansosChart"></canvas>
+    </div>
 </div>
 
 </div>
 
-<script>
-// 1. Muat Navbar (Konsisten dengan Beranda)
-fetch('navbar.html')
-    .then(r => r.text())
-    .then(html => {
+<footer class="py-5 mt-5 text-center">
+    <p class="small mb-0">© 2026 TKSK Sumber & Forum Puskesos Kecamatan Sumber</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
+        authDomain: "data-ke-aksi-auth.firebaseapp.com",
+        projectId: "data-ke-aksi-auth",
+        storageBucket: "data-ke-aksi-auth.firebasestorage.app",
+        messagingSenderId: "631382692174",
+        appId: "1:631382692174:web:c10a099fb3021849eace1f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    let bansosChart;
+
+    // Load Navbar
+    fetch('navbar.html').then(r => r.text()).then(html => {
         document.getElementById('navbar').innerHTML = html;
     });
-  
-fetch('data/bansos.json')
-.then(r => r.json())
-.then(data => {
 
-    let totalKK = 0;
-    let totalPKH = 0;
-    let totalBPNT = 0;
-    let totalPBI = 0;
+    // Real-time listener for Bansos data
+    function listenBansos() {
+        onSnapshot(collection(db, "wilayah_desa"), (snapshot) => {
+            let totalKK = 0;
+            let totalPKH = 0;
+            let totalBPNT = 0;
+            let totalPBI = 0;
+            let rows = "";
+            let wilayahNames = [];
+            let pkhData = [];
+            let bpntData = [];
+            let pbiData = [];
 
-    let rows = "";
+            // Sort data by name
+            const sortedDocs = snapshot.docs.map(doc => doc.data())
+                               .sort((a, b) => (a.nama || "").localeCompare(b.nama || ""));
 
-    data.wilayah.forEach(w => {
-        let pkh = w.bansos.PKH;
-        let bpnt = w.bansos.BPNT;
-        let pbi = w.bansos.PBI;
+            sortedDocs.forEach(w => {
+                // Get data from Firebase nested object (bansos: { PKH, BPNT, PBI })
+                const b = w.bansos || { PKH: 0, BPNT: 0, PBI: 0 };
+                const pkh = parseInt(b.PKH || 0);
+                const bpnt = parseInt(b.BPNT || 0);
+                const pbi = parseInt(b.PBI || 0);
+                const kk = parseInt(w.total_kk || 0);
 
-        let totalTerima = pkh + bpnt + pbi;
-        let cakupan = ((totalTerima / w.total_kk) * 100).toFixed(1);
+                const totalTerima = pkh + bpnt + pbi;
+                const cakupan = kk > 0 ? ((totalTerima / kk) * 100).toFixed(1) : 0;
 
-        totalKK += w.total_kk;
-        totalPKH += pkh;
-        totalBPNT += bpnt;
-        totalPBI += pbi;
+                totalKK += kk;
+                totalPKH += pkh;
+                totalBPNT += bpnt;
+                totalPBI += pbi;
 
-        rows += `
-        <tr>
-            <td>${w.nama}</td>
-            <td class="text-right">${w.total_kk}</td>
-            <td class="text-right">${pkh}</td>
-            <td class="text-right">${bpnt}</td>
-            <td class="text-right">${pbi}</td>
-            <td class="text-right font-weight-bold">${cakupan}%</td>
-        </tr>`;
-    });
+                // Build Table Rows
+                rows += `
+                <tr>
+                    <td>${w.nama}</td>
+                    <td class="text-right">${kk.toLocaleString('id-ID')}</td>
+                    <td class="text-right text-primary">${pkh.toLocaleString('id-ID')}</td>
+                    <td class="text-right text-success">${bpnt.toLocaleString('id-ID')}</td>
+                    <td class="text-right text-danger">${pbi.toLocaleString('id-ID')}</td>
+                    <td class="text-right font-weight-bold">${cakupan}%</td>
+                </tr>`;
 
-    document.getElementById('totalKK').innerText = totalKK.toLocaleString('id-ID');
-    document.getElementById('totalPKH').innerText = totalPKH.toLocaleString('id-ID');
-    document.getElementById('totalBPNT').innerText = totalBPNT.toLocaleString('id-ID');
-    document.getElementById('totalPBI').innerText = totalPBI.toLocaleString('id-ID');
+                // Collect Chart Data
+                wilayahNames.push(w.nama);
+                pkhData.push(pkh);
+                bpntData.push(bpnt);
+                pbiData.push(pbi);
+            });
 
-    document.getElementById('bansosTable').innerHTML = rows;
+            // Update KPI
+            document.getElementById('totalKK').innerText = totalKK.toLocaleString('id-ID');
+            document.getElementById('totalPKH').innerText = totalPKH.toLocaleString('id-ID');
+            document.getElementById('totalBPNT').innerText = totalBPNT.toLocaleString('id-ID');
+            document.getElementById('totalPBI').innerText = totalPBI.toLocaleString('id-ID');
 
-    // Chart
-    const ctx = document.getElementById('bansosChart');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: data.wilayah.map(w => w.nama),
-            datasets: [
-                { label: 'PKH', data: data.wilayah.map(w => w.bansos.PKH), backgroundColor:'#007bff' },
-                { label: 'BPNT', data: data.wilayah.map(w => w.bansos.BPNT), backgroundColor:'#28a745' },
-                { label: 'PBI', data: data.wilayah.map(w => w.bansos.PBI), backgroundColor:'#dc3545' }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: { legend: { position: 'top' } }
-        }
-    });
-});
+            // Update Table
+            document.getElementById('bansosTable').innerHTML = rows;
+
+            // Update Chart
+            updateChart(wilayahNames, pkhData, bpntData, pbiData);
+        });
+    }
+
+    function updateChart(labels, pkh, bpnt, pbi) {
+        const ctx = document.getElementById('bansosChart').getContext('2d');
+        if (bansosChart) bansosChart.destroy();
+
+        bansosChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'PKH', data: pkh, backgroundColor: '#007bff' },
+                    { label: 'BPNT', data: bpnt, backgroundColor: '#28a745' },
+                    { label: 'PBI', data: pbi, backgroundColor: '#dc3545' }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true },
+                    x: { ticks: { font: { size: 10 } } }
+                },
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+
+    listenBansos();
 </script>
 
 </body>
