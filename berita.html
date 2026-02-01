@@ -32,6 +32,7 @@
         <h1 class="display-4 font-weight-bold">Warta & Jurnal Kegiatan</h1>
         <p class="lead">Dokumentasi dan Kesimpulan Program Kesejahteraan Sosial Kecamatan Sumber</p>
     </div>
+    <div id="navbar"></div>
 </div>
 
 <div class="container">
@@ -51,6 +52,13 @@
     </div>
 </footer>
 
+<script>
+  // 1. Load Navbar
+  fetch('navbar.html')
+    .then(r => r.text())
+    .then(html => { document.getElementById('navbar').innerHTML = html; })
+    .catch(err => console.warn("Navbar tidak ditemukan"));
+</script>
 <script>
 // Contoh Data JSON (Anda bisa memindahkannya ke file data/berita.json nanti)
 const dataBerita = [
