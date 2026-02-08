@@ -1,10 +1,12 @@
 // ============================
-// FIREBASE MODULAR (SAMA INDEX)
+// FIREBASE MODULAR
 // ============================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
-// CONFIG SAMA PERSIS INDEX
+// ============================
+// CONFIG
+// ============================
 const firebaseConfig = {
   apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
   authDomain: "data-ke-aksi-auth.firebaseapp.com",
@@ -17,41 +19,63 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// ============================
+// STATE
+// ============================
 let cachedData = [];
 
 // ============================
-// LOAD NAVBAR (SAMAKAN INDEX)
+// UTIL
 // ============================
-fetch('navbar.html')
-  .then(r => r.text())
-  .then(h => document.getElementById('navbar').innerHTML = h)
-  .catch(()=>{});
+const toInt = v => parseInt(v) || 0;
+const el = id => document.getElementById(id);
 
 // ============================
-// REALTIME DATA LISTENER
+// INIT
+// ============================
+document.addEventListener("DOMContentLoaded", () => {
+
+  loadNavbar();
+  bindModeSwitch();
+  startUnduh();
+
+});
+
+// ============================
+// NAVBAR
+// ============================
+function loadNavbar() {
+
+  fetch('navbar.html')
+    .then(r => r.text())
+    .then(h => {
+      const nav = el('navbar');
+      if(nav) nav.innerHTML = h;
+    })
+    .catch(()=>{});
+
+}
+
+// ============================
+// REALTIME LISTENER
 // ============================
 function startUnduh() {
 
   onSnapshot(collection(db, "wilayah_desa"), (snapshot) => {
 
-    cachedData = [];
-
-    snapshot.forEach(doc => {
-      cachedData.push(doc.data());
-    });
-
+    cachedData = snapshot.docs.map(d => d.data());
     populateDesa();
+
   });
 
 }
 
 // ============================
-// POPULATE DROPDOWN DESA
+// DROPDOWN DESA
 // ============================
 function populateDesa() {
 
-  const select = document.getElementById('desaSelect');
-
+  const select = el('desaSelect');
   if(!select) return;
 
   select.innerHTML = "";
@@ -59,10 +83,12 @@ function populateDesa() {
   cachedData
     .sort((a,b)=> (a.nama||"").localeCompare(b.nama||""))
     .forEach((d,i)=>{
+
       const opt = document.createElement('option');
       opt.value = i;
-      opt.textContent = d.nama;
+      opt.textContent = d.nama || "-";
       select.appendChild(opt);
+
     });
 
 }
@@ -70,66 +96,83 @@ function populateDesa() {
 // ============================
 // MODE SWITCH
 // ============================
-document.getElementById('mode').addEventListener('change', e => {
+function bindModeSwitch(){
 
-  document.getElementById('desaWrap').style.display =
-    e.target.value === "desa" ? "block" : "none";
+  const mode = el('mode');
+  if(!mode) return;
 
-});
+  mode.addEventListener('change', e => {
+
+    const wrap = el('desaWrap');
+    if(wrap){
+      wrap.style.display =
+        e.target.value === "desa" ? "block" : "none";
+    }
+
+  });
+
+}
 
 // ============================
-// GENERATE LAPORAN
+// GENERATE
 // ============================
-window.generate = function() {
+window.generate = function(){
 
   if(cachedData.length === 0){
     alert("Data belum siap.");
     return;
   }
 
-  const mode = document.getElementById('mode').value;
-  const konten = document.getElementById('kontenData');
+  const mode = el('mode').value;
+  const konten = el('kontenData');
+  const judul = el('judulLaporan');
 
-  if(mode === "agregat") {
+  if(!konten || !judul) return;
 
-    let totalKK = 0;
-    let totalD12 = 0;
+  // ============================
+  // AGREGAT
+  // ============================
+  if(mode === "agregat"){
 
-    cachedData.forEach(d => {
-      totalKK += parseInt(d.total_kk||0);
+    const result = cachedData.reduce((acc,d)=>{
+
+      acc.totalKK += toInt(d.total_kk);
 
       if(d.desil){
-        const dv = d.desil.map(v=>parseInt(v)||0);
-        totalD12 += dv[0] + dv[1];
+        const dv = d.desil.map(toInt);
+        acc.totalD12 += (dv[0]||0)+(dv[1]||0);
       }
-    });
+
+      return acc;
+
+    },{totalKK:0,totalD12:0});
 
     konten.innerHTML = `
-      <p>Total KK Kecamatan : <b>${totalKK.toLocaleString('id-ID')}</b></p>
-      <p>Miskin Ekstrem D1-D2 : <b>${totalD12.toLocaleString('id-ID')}</b></p>
+      <p>Total KK Kecamatan : <b>${result.totalKK.toLocaleString('id-ID')}</b></p>
+      <p>Miskin Ekstrem D1-D2 : <b>${result.totalD12.toLocaleString('id-ID')}</b></p>
     `;
 
-    document.getElementById('judulLaporan').innerText =
-      "REKAP AGREGASI KECAMATAN SUMBER";
+    judul.innerText = "REKAP AGREGASI KECAMATAN SUMBER";
   }
 
-  if(mode === "prioritas") {
+  // ============================
+  // PRIORITAS
+  // ============================
+  if(mode === "prioritas"){
 
-    let rows = "";
+    const rows = cachedData.map(d=>{
 
-    cachedData.forEach(d=>{
+      const dv = (d.desil||[]).map(toInt);
+      const total = (dv[0]||0)+(dv[1]||0);
 
-      const dv = d.desil || [];
-      const prioritas =
-        (parseInt(dv[0])||0)+(parseInt(dv[1])||0);
-
-      rows += `
+      return `
         <tr>
-          <td>${d.nama}</td>
-          <td>${prioritas.toLocaleString('id-ID')}</td>
+          <td>${d.nama||"-"}</td>
+          <td>${total.toLocaleString('id-ID')}</td>
         </tr>
       `;
-    });
+
+    }).join("");
 
     konten.innerHTML = `
       <table class="table table-bordered">
@@ -140,24 +183,24 @@ window.generate = function() {
       </table>
     `;
 
-    document.getElementById('judulLaporan').innerText =
-      "PRIORITAS DTSEN D1-D2";
+    judul.innerText = "PRIORITAS DTSEN D1-D2";
   }
 
-  if(mode === "desa") {
+  // ============================
+  // DESA
+  // ============================
+  if(mode === "desa"){
 
-    const idx = document.getElementById('desaSelect').value;
+    const idx = el('desaSelect').value;
     const d = cachedData[idx];
-
     if(!d) return;
 
     konten.innerHTML = `
       <p>Nama Desa : <b>${d.nama}</b></p>
-      <p>Total KK : <b>${(d.total_kk||0).toLocaleString('id-ID')}</b></p>
+      <p>Total KK : <b>${toInt(d.total_kk).toLocaleString('id-ID')}</b></p>
     `;
 
-    document.getElementById('judulLaporan').innerText =
-      "REKAP DESA " + d.nama.toUpperCase();
+    judul.innerText = "REKAP DESA " + (d.nama||"").toUpperCase();
   }
 
   generateMeta();
@@ -165,30 +208,26 @@ window.generate = function() {
 };
 
 // ============================
-// META CETAK
+// META
 // ============================
 function generateMeta(){
 
   const now = new Date();
-
-  document.getElementById('tglSekarang').innerText =
-    now.toLocaleDateString('id-ID',{dateStyle:'long'});
-
   const hash = Math.random().toString(36).substring(2,7).toUpperCase();
 
-  document.getElementById('hashNomor').innerText = hash;
-  document.getElementById('hashID').innerText = hash;
+  el('tglSekarang').innerText =
+    now.toLocaleDateString('id-ID',{dateStyle:'long'});
 
-  document.getElementById('qrcode').innerHTML="";
-  new QRCode(document.getElementById("qrcode"), {
-    text: hash,
+  el('hashNomor').innerText = hash;
+  el('hashID').innerText = hash;
+
+  const qr = el("qrcode");
+  qr.innerHTML="";
+
+  new QRCode(qr,{
+    text:hash,
     width:80,
     height:80
   });
 
 }
-
-// ============================
-// START
-// ============================
-startUnduh();
