@@ -11,45 +11,33 @@
 
 <style>
 body{font-family:'Inter',sans-serif;background:#f4f7f6;}
-.paper{background:#fff;width:210mm;min-height:297mm;padding:15mm 20mm;margin:30px auto;box-shadow:0 0 20px rgba(0,0,0,.05);font-family:"Times New Roman";color:#000;}
-.kop-surat-container{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #000;padding-bottom:10px;}
-.logo-box{width:85px;flex-shrink:0;}
+.paper{background:#fff;width:210mm;min-height:297mm;padding:15mm 20mm;margin:30px auto;
+box-shadow:0 0 20px rgba(0,0,0,.05);font-family:"Times New Roman";}
+.kop-surat-container{display:flex;align-items:center;justify-content:space-between;
+border-bottom:3px solid #000;padding-bottom:10px;}
+.logo-box{width:80px;}
 .logo-kop{width:100%;}
 .teks-kop{text-align:center;flex-grow:1;}
-.kop-line{border-bottom:1px solid #000;margin:2px 0 20px;}
-.qr-box{border:1px solid #eee;padding:5px;background:#fff;display:inline-block;}
-.card-custom{border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,.05);background:#fff;}
+.kop-line{border-bottom:1px solid #000;margin:5px 0 20px;}
+.qr-box{border:1px solid #ccc;padding:5px;display:inline-block;}
+.card-custom{border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,.05);}
 
 @media print{
-body *{visibility:hidden;}
-.paper,.paper *{visibility:visible;}
-.paper{position:absolute;left:0;top:0;width:100%!important;margin:0!important;padding:10mm!important;box-shadow:none!important;}
-.no-print,#navbar,header,.container.my-5,button{display:none!important;}
-@page{size:A4;margin:0;}
+  body *{visibility:hidden;}
+  .paper,.paper *{visibility:visible;}
+  .paper{position:absolute;left:0;top:0;width:100%;margin:0;padding:10mm;box-shadow:none;}
+  .no-print{display:none!important;}
+  @page{size:A4;margin:0;}
 }
 </style>
 </head>
 
 <body>
 
-<header class="container py-3 bg-white no-print">
-<div class="row align-items-center">
-<div class="col-md-6">
-<img src="assets/img/logo/logo-tksk.png" height="45">
-<img src="assets/img/logo/logo-puskesos.png" height="45" class="ml-2 border-left pl-2">
-</div>
-<div class="col-md-6 text-right d-none d-md-block">
-<span class="badge badge-primary px-3 py-2">Satu Data Terpadu</span>
-</div>
-</div>
-</header>
+<div class="container my-4 no-print">
+<h4 class="font-weight-bold mb-3">Panel Unduh & Rekap DTSEN</h4>
 
-<div id="navbar" class="no-print"></div>
-
-<div class="container my-5 no-print">
-<h3 class="font-weight-bold mb-3">Panel Unduh & Rekap DTSEN</h3>
-
-<div class="card card-custom p-4 mb-4">
+<div class="card card-custom p-4">
 <div class="row align-items-end">
 
 <div class="col-md-4">
@@ -57,7 +45,7 @@ body *{visibility:hidden;}
 <select id="mode" class="form-control">
 <option value="agregat">Agregasi Kecamatan</option>
 <option value="prioritas">Prioritas DTSEN (D1–D2)</option>
-<option value="desa">Rekap Per Desa + Persentase</option>
+<option value="desa">Rekap Per Desa</option>
 </select>
 </div>
 
@@ -67,12 +55,9 @@ body *{visibility:hidden;}
 </div>
 
 <div class="col-md-4 text-right">
-<button id="btnGenerate" class="btn btn-primary px-4">
-Generate Data
-</button>
-
-<button id="btnPrint" class="btn btn-dark px-4 ml-2">
-<i class="fas fa-print mr-1"></i> Cetak ke PDF
+<button onclick="generate()" class="btn btn-primary px-4">Generate</button>
+<button onclick="window.print()" class="btn btn-dark px-4 ml-2">
+<i class="fas fa-print"></i> Cetak
 </button>
 </div>
 
@@ -80,40 +65,37 @@ Generate Data
 </div>
 </div>
 
-<div class="container mb-5 no-print">
-<div id="output" class="bg-white p-4 card-custom" style="display:none;"></div>
-</div>
-
-<div class="paper" id="cetakArea">
+<div class="paper">
 
 <div class="kop-surat-container">
 <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
 <div class="teks-kop">
-<h6 style="font-size:14px;margin:0;">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</h6>
-<h5 class="font-weight-bold" style="font-size:16px;margin:2px 0;">FORUM PUSKESOS KECAMATAN SUMBER</h5>
-<h2 class="font-weight-bold" style="font-size:26px;margin:4px 0;">DARI DATA KE AKSI</h2>
+<h6 style="margin:0;font-size:14px;">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN</h6>
+<h5 class="font-weight-bold" style="margin:2px 0;">FORUM PUSKESOS KECAMATAN SUMBER</h5>
+<h2 class="font-weight-bold" style="margin:2px 0;">DARI DATA KE AKSI</h2>
 <p style="font-size:11px;">Sekretariat: Jl. Sunan Drajat No.16</p>
 </div>
-<div class="logo-box text-right"><img src="assets/img/logo/logo-puskesos.png" class="logo-kop"></div>
+<div class="logo-box"><img src="assets/img/logo/logo-puskesos.png" class="logo-kop"></div>
 </div>
 
 <div class="kop-line"></div>
 
-<div class="text-center mb-4">
-<h5 id="judulLaporan" class="font-weight-bold text-uppercase" style="text-decoration:underline;">MEMPROSES LAPORAN...</h5>
-<p class="mb-0">Nomor: 460 / <span id="hashNomor">...</span> / TKSK-SBR / 2026</p>
+<div class="text-center mb-3">
+<h5 id="judulLaporan" class="font-weight-bold text-uppercase"
+style="text-decoration:underline;">MENUNGGU DATA</h5>
+<p>Nomor: 460 / <span id="hashNomor">-</span> / TKSK-SBR / 2026</p>
 </div>
 
-<div id="kontenData" style="min-height:500px;">
-<p class="text-center mt-5">Silahkan klik tombol <b>Generate Data</b>.</p>
+<div id="kontenData" style="min-height:480px;font-size:12px;">
+<p class="text-center mt-5">Klik <b>Generate</b> untuk menampilkan data</p>
 </div>
 
 <div class="row mt-4">
 <div class="col-7">
 <div style="border:1px solid #000;padding:8px;font-size:10px;">
-<strong>Catatan Verifikasi:</strong><br>
-- Data diambil dari database DTSEN.<br>
-- D1-D2 kategori kerentanan tinggi.
+<strong>Catatan:</strong><br>
+Data bersumber dari DTSEN.<br>
+Kategori D1–D2 adalah miskin ekstrem.
 </div>
 </div>
 
@@ -121,7 +103,7 @@ Generate Data
 <p>Sumber, <span id="tglSekarang"></span></p>
 <div id="qrcode" class="qr-box mb-2"></div>
 <p class="font-weight-bold mb-0">SHIDIQ HASANUDIN, S.IP</p>
-<small>ID Verif: <span id="hashID">-</span></small>
+<small>ID Verif: <span id="hashID"></span></small>
 </div>
 </div>
 
@@ -129,6 +111,5 @@ Generate Data
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script type="module" src="js/unduh.js"></script>
-
 </body>
 </html>
