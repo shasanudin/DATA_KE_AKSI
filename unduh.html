@@ -11,28 +11,28 @@
 
 <style>
 body{font-family:'Inter',sans-serif;background:#f4f7f6;}
-.paper{background:#fff;width:210mm;min-height:297mm;padding:15mm 20mm;margin:30px auto;box-shadow:0 0 20px rgba(0,0,0,.05);font-family:"Times New Roman";color:#000;}
-.kop-surat-container{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #000;padding-bottom:10px;}
+.paper{background:#fff;width:210mm;min-height:297mm;padding:15mm 20mm;margin:10px auto;box-shadow:0 0 20px rgba(0,0,0,.05);font-family:"Times New Roman";color:#000;page-break-after: always;}
+.kop-surat-container{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #000;padding-bottom:5px;margin-bottom:5px;}
 .logo-box{width:85px;flex-shrink:0;}
 .logo-kop{width:100%;}
 .teks-kop{text-align:center;flex-grow:1;}
 .kop-line{border-bottom:1px solid #000;margin:2px 0 10px;}
 .qr-box{border:1px solid #eee;padding:5px;background:#fff;display:inline-block;}
 .card-custom{border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,.05);background:#fff;}
-
+h5{margin-top:0;}
+ul{padding-left: 20px;}
 @media print{
-body *{visibility:hidden;}
-.paper,.paper *{visibility:visible;}
-.paper{position:absolute;left:0;top:0;width:100%!important;margin:0!important;padding:10mm!important;box-shadow:none!important;}
-.no-print,#navbar,header,.container.my-5,button{display:none!important;}
-@page{size:A4;margin:0;}
+  body *{visibility:hidden;}
+  .paper,.paper *{visibility:visible;}
+  .paper{position:absolute;left:0;top:0;width:100%!important;margin:0!important;padding:10mm 15mm!important;box-shadow:none!important;}
+  .no-print,#navbar,header,.container.my-5,button{display:none!important;}
+  @page{size:A4;margin:5mm;}
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER PANEL -->
 <header class="container py-3 bg-white no-print">
 <div class="row align-items-center">
 <div class="col-md-6">
@@ -68,23 +68,21 @@ body *{visibility:hidden;}
 </div>
 
 <div class="col-md-4 text-right">
-<button id="btnGenerate" class="btn btn-primary px-4">Generate Data</button>
-<button id="btnPrint" class="btn btn-dark px-4 ml-2"><i class="fas fa-print mr-1"></i> Cetak ke PDF</button>
+<button id="btnGenerate" class="btn btn-primary px-4">
+Generate Data
+</button>
+
+<button id="btnPrint" class="btn btn-dark px-4 ml-2">
+<i class="fas fa-print mr-1"></i> Cetak ke PDF
+</button>
 </div>
 
 </div>
 </div>
 </div>
 
-<!-- OUTPUT HIDDEN UNTUK DEBUG -->
-<div class="container mb-5 no-print">
-<div id="output" class="bg-white p-4 card-custom" style="display:none;"></div>
-</div>
-
-<!-- CETAK AREA -->
-<div class="paper" id="cetakArea">
-
-  <!-- KOP SURAT -->
+<div class="paper">
+  <!-- Halaman 1: Agregasi -->
   <div class="kop-surat-container">
     <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
     <div class="teks-kop">
@@ -95,25 +93,49 @@ body *{visibility:hidden;}
     </div>
     <div class="logo-box text-right"><img src="assets/img/logo/logo-puskesos.png" class="logo-kop"></div>
   </div>
-
   <div class="kop-line"></div>
+  <p class="text-center mb-2">Nomor: 460 / <span id="hashNomor">...</span> / TKSK-SBR / 2026</p>
+  <div id="kontenHal1"></div>
+</div>
 
-  <!-- NOMOR SURAT DI BAWAH KOP SURAT -->
-  <p class="text-center font-weight-bold mb-3">Nomor: 460 / <span id="hashNomor">---</span> / TKSK-SBR / 2026</p>
+<div class="paper">
+  <!-- Halaman 2: Prioritas D1-D2 -->
+  <div class="kop-surat-container">
+    <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
+    <div class="teks-kop">
+      <h2 class="font-weight-bold" style="font-size:18px;margin:4px 0;">PRIORITAS DTSEN D1-D2</h2>
+    </div>
+    <div class="logo-box"></div>
+  </div>
+  <div class="kop-line"></div>
+  <div id="kontenHal2"></div>
+</div>
 
-  <!-- HALAMAN 1 -->
-  <div id="kontenHal1" style="page-break-after:always;"></div>
+<div class="paper">
+  <!-- Halaman 3: Rekap Bansos -->
+  <div class="kop-surat-container">
+    <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
+    <div class="teks-kop">
+      <h2 class="font-weight-bold" style="font-size:18px;margin:4px 0;">REKAP BANSOS PER DESA</h2>
+    </div>
+    <div class="logo-box"></div>
+  </div>
+  <div class="kop-line"></div>
+  <div id="kontenHal3"></div>
+</div>
 
-  <!-- HALAMAN 2 -->
-  <div id="kontenHal2" style="page-break-after:always;"></div>
+<div class="paper">
+  <!-- Halaman 4: Rekap Layanan + QR -->
+  <div class="kop-surat-container">
+    <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
+    <div class="teks-kop">
+      <h2 class="font-weight-bold" style="font-size:18px;margin:4px 0;">REKAP LAYANAN PER DESA</h2>
+    </div>
+    <div class="logo-box"></div>
+  </div>
+  <div class="kop-line"></div>
+  <div id="kontenHal4"></div>
 
-  <!-- HALAMAN 3 -->
-  <div id="kontenHal3" style="page-break-after:always;"></div>
-
-  <!-- HALAMAN 4 -->
-  <div id="kontenHal4" style="page-break-after:always;"></div>
-
-  <!-- TTD + QR -->
   <div class="row mt-4">
     <div class="col-7">
       <div style="border:1px solid #000;padding:8px;font-size:10px;">
@@ -129,15 +151,10 @@ body *{visibility:hidden;}
       <small>ID Verif: <span id="hashID">-</span></small>
     </div>
   </div>
-
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script type="module" src="js/unduh.js"></script>
-<script>
-document.getElementById("btnGenerate").onclick = ()=>window.generate();
-document.getElementById("btnPrint").onclick = ()=>window.print();
-</script>
 
 </body>
 </html>
