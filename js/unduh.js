@@ -2,137 +2,117 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebas
 import { getFirestore, collection, onSnapshot }
 from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
-/* ================= FIREBASE ================= */
-const firebaseConfig = {
-  apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
-  authDomain: "data-ke-aksi-auth.firebaseapp.com",
-  projectId: "data-ke-aksi-auth"
-};
-
-const app = initializeApp(firebaseConfig);
+/* FIREBASE */
+const app = initializeApp({
+  apiKey:"AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
+  authDomain:"data-ke-aksi-auth.firebaseapp.com",
+  projectId:"data-ke-aksi-auth"
+});
 const db = getFirestore(app);
 
-/* ================= STATE ================= */
-let cachedData = [];
-
-/* ================= UTIL ================= */
+let data = [];
 const el = id => document.getElementById(id);
-const toInt = v => parseInt(v) || 0;
+const toInt = v => parseInt(v)||0;
 
-/* ================= LOAD DATA ================= */
-onSnapshot(collection(db,"wilayah_desa"), snap=>{
-  cachedData = snap.docs.map(d=>d.data());
-  populateDesa();
+/* LOAD */
+onSnapshot(collection(db,"wilayah_desa"), s=>{
+  data = s.docs.map(d=>d.data());
 });
 
-/* ================= DESA DROPDOWN ================= */
-function populateDesa(){
-  const s = el("desaSelect");
-  if(!s) return;
-  s.innerHTML="";
-  cachedData
-    .sort((a,b)=>(a.nama||"").localeCompare(b.nama||""))
-    .forEach((d,i)=>{
-      const o=document.createElement("option");
-      o.value=i;
-      o.textContent=d.nama;
-      s.appendChild(o);
-    });
-}
-
-/* ================= MODE SWITCH ================= */
-el("mode").addEventListener("change",e=>{
-  el("desaWrap").style.display =
-    e.target.value==="desa" ? "block" : "none";
-});
-
-/* ================= GENERATE ================= */
+/* GENERATE */
 window.generate = function(){
 
-  const mode = el("mode").value;
-  const konten = el("kontenData");
-  const judul = el("judulLaporan");
+  const totalKK = data.reduce((a,b)=>a+toInt(b.total_kk),0);
 
-  let html = "";
+  /* ===== DTSEN ===== */
+  let dtsen = Array(10).fill(0);
+  data.forEach(d=>{
+    d.desil?.forEach((v,i)=>dtsen[i]+=toInt(v));
+  });
 
-  const hitung = (d, jenis)=>{
-    if(jenis==="dtsen")
-      return toInt(d.desil?.[0]) + toInt(d.desil?.[1]);
-    if(jenis==="bansos")
-      return toInt(d.bansos?.bpnt)
-           + toInt(d.bansos?.pkh)
-           + toInt(d.bansos?.pbi);
-    if(jenis==="layanan")
-      return toInt(d.layanan?.dtks)
-           + toInt(d.layanan?.pengaduan)
-           + toInt(d.layanan?.sktm);
-    return 0;
-  };
+  const d610 = dtsen.slice(5).reduce((a,b)=>a+b,0);
 
-  const jenisList = [
-    {key:"dtsen",label:"A. DTSEN (D1–D2)"},
-    {key:"bansos",label:"B. BANSOS"},
-    {key:"layanan",label:"C. LAYANAN SOSIAL"}
-  ];
+  let html = `
+  <h6 class="font-weight-bold">A. REKAP DTSEN</h6>
+  <table class="table table-bordered table-sm">
+  <tr><th>Desil</th><th>Jumlah</th><th>%</th></tr>`;
 
-  if(mode==="agregat"){
-
-    jenisList.forEach(j=>{
-      let totalKK=0, total=0;
-
-      cachedData.forEach(d=>{
-        totalKK+=toInt(d.total_kk);
-        total+=hitung(d,j.key);
-      });
-
-      const persen=totalKK?((total/totalKK)*100).toFixed(2):0;
-
-      html+=`
-      <h6 class="font-weight-bold mt-3">${j.label}</h6>
-      <table class="table table-bordered table-sm">
-        <tr><th width="40%">Total KK</th><td>${totalKK}</td></tr>
-        <tr><th>Jumlah</th><td>${total}</td></tr>
-        <tr><th>Persentase</th><td>${persen}%</td></tr>
-      </table>`;
-    });
-
-    judul.innerText="LAPORAN TERPADU AGREGASI KECAMATAN";
+  for(let i=0;i<5;i++){
+    html+=`<tr>
+      <td>D${i+1}</td>
+      <td>${dtsen[i]}</td>
+      <td>${((dtsen[i]/totalKK)*100).toFixed(2)}%</td>
+    </tr>`;
   }
 
-  if(mode==="desa"){
-    const d=cachedData[el("desaSelect").value];
+  html+=`
+  <tr>
+    <td>D6–D10</td>
+    <td>${d610}</td>
+    <td>${((d610/totalKK)*100).toFixed(2)}%</td>
+  </tr></table>`;
 
-    jenisList.forEach(j=>{
-      const val=hitung(d,j.key);
-      const persen=d.total_kk?((val/d.total_kk)*100).toFixed(2):0;
+  /* ===== BANSOS ===== */
+  let bpnt=0,pkh=0,pbi=0;
+  data.forEach(d=>{
+    bpnt+=toInt(d.bansos?.bpnt);
+    pkh+=toInt(d.bansos?.pkh);
+    pbi+=toInt(d.bansos?.pbi);
+  });
 
-      html+=`
-      <h6 class="font-weight-bold mt-3">${j.label}</h6>
-      <table class="table table-bordered table-sm">
-        <tr><th width="40%">Nama Desa</th><td>${d.nama}</td></tr>
-        <tr><th>Jumlah</th><td>${val}</td></tr>
-        <tr><th>Persentase</th><td>${persen}%</td></tr>
-      </table>`;
-    });
+  html+=`
+  <h6 class="font-weight-bold">B. BANTUAN SOSIAL</h6>
+  <table class="table table-bordered table-sm">
+  <tr><th>Jenis</th><th>Jumlah</th><th>%</th></tr>
+  <tr><td>BPNT</td><td>${bpnt}</td><td>${((bpnt/totalKK)*100).toFixed(2)}%</td></tr>
+  <tr><td>PKH</td><td>${pkh}</td><td>${((pkh/totalKK)*100).toFixed(2)}%</td></tr>
+  <tr><td>PBI</td><td>${pbi}</td><td>${((pbi/totalKK)*100).toFixed(2)}%</td></tr>
+  </table>`;
 
-    judul.innerText="LAPORAN TERPADU DESA "+d.nama.toUpperCase();
-  }
+  /* ===== PELAYANAN ===== */
+  let dtks=0,peng=0,sktm=0;
+  data.forEach(d=>{
+    dtks+=toInt(d.layanan?.dtks);
+    peng+=toInt(d.layanan?.pengaduan);
+    sktm+=toInt(d.layanan?.sktm);
+  });
 
-  konten.innerHTML = html;
+  html+=`
+  <h6 class="font-weight-bold">C. PELAYANAN SOSIAL</h6>
+  <table class="table table-bordered table-sm">
+  <tr><th>Jenis</th><th>Jumlah</th><th>%</th></tr>
+  <tr><td>DTKS</td><td>${dtks}</td><td>${((dtks/totalKK)*100).toFixed(2)}%</td></tr>
+  <tr><td>Pengaduan</td><td>${peng}</td><td>${((peng/totalKK)*100).toFixed(2)}%</td></tr>
+  <tr><td>SKTM</td><td>${sktm}</td><td>${((sktm/totalKK)*100).toFixed(2)}%</td></tr>
+  </table>`;
+
+  el("kontenHal1").innerHTML = html;
+
+  /* ===== HALAMAN 2 PRIORITAS ===== */
+  const prior = data.map(d=>{
+    const v=d.desil||[];
+    return {nama:d.nama,total:(toInt(v[0])+toInt(v[1]))};
+  }).sort((a,b)=>b.total-a.total);
+
+  el("kontenHal2").innerHTML = `
+  <table class="table table-bordered table-sm">
+  <tr><th>No</th><th>Desa</th><th>D1–D2</th></tr>
+  ${prior.map((d,i)=>`
+    <tr><td>${i+1}</td><td>${d.nama}</td><td>${d.total}</td></tr>
+  `).join("")}
+  </table>`;
+
   generateMeta();
 };
 
-/* ================= META ================= */
+/* META */
 function generateMeta(){
-  const now=new Date();
   const hash=Math.random().toString(36).substring(2,7).toUpperCase();
-
-  el("tglSekarang").innerText =
-    now.toLocaleDateString("id-ID",{dateStyle:"long"});
   el("hashNomor").innerText = hash;
   el("hashID").innerText = hash;
-
-  const qr = el("qrcode");
+  el("tglSekarang").innerText =
+    new Date().toLocaleDateString("id-ID",{dateStyle:"long"});
+  const qr=el("qrcode");
   qr.innerHTML="";
   new QRCode(qr,{text:"VERIF-"+hash,width:80,height:80});
 }
