@@ -45,53 +45,42 @@ body{background:#f4f7f6;}
 <button onclick="generate()" class="btn btn-primary">Generate</button>
 <button onclick="window.print()" class="btn btn-dark ml-2">Cetak</button>
 </div>
+<div class="paper" id="cetakArea">
 
-<!-- HALAMAN 1 -->
-<div class="paper">
+  <!-- KOP SURAT -->
+  <div class="kop-surat-container"> ... </div>
+  <div class="kop-line"></div>
 
-<div class="kop-surat-container">
-<div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
-<div class="teks-kop">
-<h6>TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</h6>
-<h5 class="font-weight-bold">FORUM PUSKESOS KECAMATAN SUMBER</h5>
-<h2 class="font-weight-bold">DARI DATA KE AKSI</h2>
-<p style="font-size:11px">Sekretariat: Jl. Sunan Drajat No.16</p>
-</div>
-<div class="logo-box text-right"><img src="assets/img/logo/logo-puskesos.png" class="logo-kop"></div>
-</div>
+  <!-- HALAMAN 1 -->
+  <div id="kontenHal1" style="page-break-after:always;"></div>
 
-<div class="kop-line"></div>
+  <!-- HALAMAN 2 -->
+  <div id="kontenHal2" style="page-break-after:always;"></div>
 
-<div class="text-center mb-3">
-<h5 class="font-weight-bold text-uppercase">LAPORAN TERPADU DTSEN</h5>
-<p>Nomor: 460 / <span id="hashNomor">XXXXX</span> / TKSK-SBR / 2026</p>
-</div>
+  <!-- HALAMAN 3 -->
+  <div id="kontenHal3" style="page-break-after:always;"></div>
 
-<div id="kontenHal1"></div>
+  <!-- HALAMAN 4 -->
+  <div id="kontenHal4"></div>
 
-<div class="row mt-4">
-<div class="col-7">
-<div style="border:1px solid #000;padding:8px;font-size:10px">
-<strong>Catatan:</strong><br>
-Data bersumber dari DTSEN dan Firebase Sistem Data Terpadu.
-</div>
-</div>
-<div class="col-5 text-center">
-<p>Sumber, <span id="tglSekarang"></span></p>
-<div id="qrcode" class="qr-box mb-2"></div>
-<p class="font-weight-bold mb-0">SHIDIQ HASANUDIN, S.IP</p>
-<small>ID Verif: <span id="hashID"></span></small>
-</div>
-</div>
+  <!-- TTD + QR -->
+  <div class="row mt-4">
+    <div class="col-7">
+      <div style="border:1px solid #000;padding:8px;font-size:10px;">
+        <strong>Catatan Verifikasi:</strong><br>
+        - Data diambil dari database DTSEN.<br>
+        - D1-D2 kategori kerentanan tinggi.
+      </div>
+    </div>
+    <div class="col-5 text-center">
+      <p>Sumber, <span id="tglSekarang"></span></p>
+      <div id="qrcode" class="qr-box mb-2"></div>
+      <p class="font-weight-bold mb-0">SHIDIQ HASANUDIN, S.IP</p>
+      <small>ID Verif: <span id="hashID">-</span></small>
+      <p>Nomor: 460 / <span id="hashNomor">---</span> / TKSK-SBR / 2026</p>
+    </div>
+  </div>
 
-</div>
-
-<!-- HALAMAN 2 -->
-<div class="paper page-break">
-<h5 class="text-center font-weight-bold mb-3">
-HALAMAN II – PRIORITAS DESA DTSEN (D1–D2)
-</h5>
-<div id="kontenHal2"></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
