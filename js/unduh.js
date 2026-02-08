@@ -24,8 +24,7 @@ onSnapshot(collection(db,"wilayah_desa"), snap=>{
 function populateDesa(){
   const s = el("desaSelect");
   s.innerHTML="";
-  cachedData
-    .sort((a,b)=>a.nama.localeCompare(b.nama))
+  cachedData.sort((a,b)=>a.nama.localeCompare(b.nama))
     .forEach((d,i)=>{
       const o=document.createElement("option");
       o.value=i; o.textContent=d.nama;
@@ -41,101 +40,98 @@ el("mode").addEventListener("change",e=>{
 window.generate = function(){
 
   const mode = el("mode").value;
+  const jenis = el("jenisLaporan").value;
   const konten = el("kontenData");
   const judul = el("judulLaporan");
 
   // ================= AGREGAT =================
   if(mode==="agregat"){
 
-    let totalKK=0, totalD12=0;
+    let totalKK=0, total=0;
 
     cachedData.forEach(d=>{
       totalKK+=toInt(d.total_kk);
-      if(d.desil){
-        totalD12+=toInt(d.desil[0])+toInt(d.desil[1]);
+
+      if(jenis==="dtsen"){
+        total+=toInt(d.desil?.[0])+toInt(d.desil?.[1]);
+      }
+      if(jenis==="bansos"){
+        total+=toInt(d.bansos?.bpnt)+toInt(d.bansos?.pkh)+toInt(d.bansos?.pbi);
+      }
+      if(jenis==="layanan"){
+        total+=toInt(d.layanan?.dtks)+toInt(d.layanan?.pengaduan)+toInt(d.layanan?.sktm);
       }
     });
 
-    const persen = totalKK
-      ? ((totalD12/totalKK)*100).toFixed(2)
-      : 0;
+    const persen = totalKK ? ((total/totalKK)*100).toFixed(2) : 0;
 
     konten.innerHTML=`
     <table class="table table-bordered">
       <tr><th>Total KK</th><td>${totalKK}</td></tr>
-      <tr><th>D1–D2</th><td>${totalD12}</td></tr>
+      <tr><th>Total ${jenis.toUpperCase()}</th><td>${total}</td></tr>
       <tr><th>Persentase</th><td>${persen}%</td></tr>
     </table>`;
 
-    judul.innerText="REKAP AGREGASI KECAMATAN";
+    judul.innerText="AGREGASI KECAMATAN - "+jenis.toUpperCase();
   }
 
   // ================= PRIORITAS =================
   if(mode==="prioritas"){
 
-    const rows = cachedData
-      .map(d=>{
-        const d12 = d.desil
-          ? toInt(d.desil[0])+toInt(d.desil[1]) : 0;
-        const persen = d.total_kk
-          ? ((d12/d.total_kk)*100).toFixed(2) : 0;
-        return {...d,d12,persen};
-      })
-      .sort((a,b)=>b.d12-a.d12)
-      .map(d=>`
-        <tr>
-          <td>${d.nama}</td>
-          <td class="text-right">${d.d12}</td>
-          <td class="text-right">${d.persen}%</td>
-        </tr>
-      `).join("");
+    const rows = cachedData.map(d=>{
+      let val=0;
+      if(jenis==="dtsen") val=toInt(d.desil?.[0])+toInt(d.desil?.[1]);
+      if(jenis==="bansos") val=toInt(d.bansos?.bpnt)+toInt(d.bansos?.pkh)+toInt(d.bansos?.pbi);
+      if(jenis==="layanan") val=toInt(d.layanan?.dtks)+toInt(d.layanan?.pengaduan)+toInt(d.layanan?.sktm);
+
+      return {nama:d.nama,val,total_kk:d.total_kk};
+    })
+    .sort((a,b)=>b.val-a.val)
+    .map(d=>{
+      const persen=d.total_kk?((d.val/d.total_kk)*100).toFixed(2):0;
+      return `
+      <tr>
+        <td>${d.nama}</td>
+        <td class="text-right">${d.val}</td>
+        <td class="text-right">${persen}%</td>
+      </tr>`;
+    }).join("");
 
     konten.innerHTML=`
     <table class="table table-bordered table-sm">
       <thead>
         <tr>
           <th>Desa</th>
-          <th>D1–D2</th>
+          <th>Jumlah</th>
           <th>% dari KK</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
     </table>`;
 
-    judul.innerText="PRIORITAS DTSEN D1–D2";
+    judul.innerText="PRIORITAS DESA - "+jenis.toUpperCase();
   }
 
   // ================= DESA =================
   if(mode==="desa"){
 
-    const d = cachedData[el("desaSelect").value];
-    const d12 = d.desil
-      ? toInt(d.desil[0])+toInt(d.desil[1]) : 0;
-    const persen = d.total_kk
-      ? ((d12/d.total_kk)*100).toFixed(2) : 0;
+    const d=cachedData[el("desaSelect").value];
+    let total=0;
+
+    if(jenis==="dtsen") total=toInt(d.desil?.[0])+toInt(d.desil?.[1]);
+    if(jenis==="bansos") total=toInt(d.bansos?.bpnt)+toInt(d.bansos?.pkh)+toInt(d.bansos?.pbi);
+    if(jenis==="layanan") total=toInt(d.layanan?.dtks)+toInt(d.layanan?.pengaduan)+toInt(d.layanan?.sktm);
+
+    const persen=d.total_kk?((total/d.total_kk)*100).toFixed(2):0;
 
     konten.innerHTML=`
     <table class="table table-bordered table-sm">
       <tr><th>Nama Desa</th><td>${d.nama}</td></tr>
       <tr><th>Total KK</th><td>${d.total_kk}</td></tr>
-      <tr><th>D1–D2</th><td>${d12}</td></tr>
+      <tr><th>Total ${jenis.toUpperCase()}</th><td>${total}</td></tr>
       <tr><th>Persentase</th><td>${persen}%</td></tr>
     </table>`;
 
     judul.innerText="REKAP DESA "+d.nama.toUpperCase();
   }
-
-  meta();
 };
-
-function meta(){
-  const now=new Date();
-  const hash=Math.random().toString(36).substring(2,7).toUpperCase();
-  el("tglSekarang").innerText =
-    now.toLocaleDateString("id-ID",{dateStyle:"long"});
-  el("hashNomor").innerText=hash;
-  el("hashID").innerText=hash;
-
-  el("qrcode").innerHTML="";
-  new QRCode(el("qrcode"),{text:hash,width:80,height:80});
-}
