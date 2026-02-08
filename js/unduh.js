@@ -74,7 +74,7 @@ function generate(){
 
   generateMeta();
 
-  // Hal 1: Agregasi
+  // Halaman 1: Agregasi
   const totalKK = cachedData.reduce((a,d)=>a+toInt(d.total_kk),0);
   const totalD12 = cachedData.reduce((a,d)=>{
     const dv=(d.desil||[]).map(toInt);
@@ -97,7 +97,7 @@ function generate(){
     </table>
   `;
 
-  // Hal 2: Prioritas Desa
+  // Halaman 2: Prioritas Desa
   const prioritas = cachedData.map(d=>{
     const dv=(d.desil||[]).map(toInt);
     const totalD12Desa=(dv[0]||0)+(dv[1]||0);
@@ -106,23 +106,68 @@ function generate(){
   }).sort((a,b)=>b.totalD12Desa-a.totalD12Desa);
 
   el('kontenHal2').innerHTML=`
+    <h5 class="text-center font-weight-bold">PRIORITAS DESA D1-D2</h5>
     <table class="table table-bordered">
       <thead><tr><th>Desa</th><th>D1-D2</th><th>Persentase</th></tr></thead>
       <tbody>${prioritas.map(d=>`<tr><td>${d.nama}</td><td>${d.totalD12Desa}</td><td>${d.persen}%</td></tr>`).join('')}</tbody>
     </table>
   `;
 
-  // Hal 3: Bansos
-  el('kontenHal3').innerHTML=cachedData.map(d=>{
-    const bansos=d.bansos||{};
-    return `<p><b>${d.nama}</b></p><ul>${Object.entries(bansos).map(([k,v])=>`<li>${k}: ${v}</li>`).join('')}</ul>`;
+  // Halaman 3: Bansos per desa
+  let rowsBansos = cachedData.map(d=>{
+    const b = d.bansos || {};
+    return `
+      <tr>
+        <td>${d.nama}</td>
+        <td>${b.bpnt||0}</td>
+        <td>${b.pbi||0}</td>
+        <td>${b.pkh||0}</td>
+      </tr>
+    `;
   }).join('');
 
-  // Hal 4: Layanan + QR
-  el('kontenHal4').innerHTML=cachedData.map(d=>{
-    const layanan=d.layanan||{};
-    return `<p><b>${d.nama}</b></p><ul>${Object.entries(layanan).map(([k,v])=>`<li>${k}: ${v}</li>`).join('')}</ul>`;
+  el('kontenHal3').innerHTML=`
+    <h5 class="text-center font-weight-bold">REKAP BANSOS PER DESA</h5>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Desa</th>
+          <th>BPNT</th>
+          <th>PBI</th>
+          <th>PKH</th>
+        </tr>
+      </thead>
+      <tbody>${rowsBansos}</tbody>
+    </table>
+  `;
+
+  // Halaman 4: Layanan per desa
+  let rowsLayanan = cachedData.map(d=>{
+    const l = d.layanan || {};
+    return `
+      <tr>
+        <td>${d.nama}</td>
+        <td>${l.dtks||0}</td>
+        <td>${l.pengaduan||0}</td>
+        <td>${l.sktm||0}</td>
+      </tr>
+    `;
   }).join('');
+
+  el('kontenHal4').innerHTML=`
+    <h5 class="text-center font-weight-bold">REKAP LAYANAN PER DESA</h5>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Desa</th>
+          <th>DTKS</th>
+          <th>Pengaduan</th>
+          <th>SKTM</th>
+        </tr>
+      </thead>
+      <tbody>${rowsLayanan}</tbody>
+    </table>
+  `;
 }
 
 function generateMeta(){
