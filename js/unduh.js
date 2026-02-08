@@ -20,7 +20,7 @@ const db = getFirestore(app);
 // STATE
 // ============================
 let cachedData = [];
-let suratCounter = 0; // counter per hari
+let suratCounter = 0; // counter per generate
 
 const toInt = v => parseInt(v)||0;
 const el = id => document.getElementById(id);
@@ -32,6 +32,13 @@ document.addEventListener("DOMContentLoaded", ()=>{
   loadNavbar();
   bindModeSwitch();
   startUnduh();
+
+  // tombol generate
+  const btnGen = el('btnGenerate');
+  if(btnGen) btnGen.addEventListener('click', generate);
+
+  const btnPrint = el('btnPrint');
+  if(btnPrint) btnPrint.addEventListener('click', ()=>window.print());
 });
 
 function loadNavbar(){
@@ -71,22 +78,36 @@ function bindModeSwitch(){
 }
 
 // ============================
-// GENERATE
+// GENERATE 4 HALAMAN
 // ============================
-window.generate = function(){
+function generate(){
   if(cachedData.length===0){ alert("Data belum siap."); return; }
 
-  ['kontenHal1','kontenHal2','kontenHal3','kontenHal4'].forEach(id=>el(id).innerHTML="");
+  // kosongkan semua konten
+  ['kontenHal1','kontenHal2','kontenHal3','kontenHal4'].forEach(id=>{
+    const elId = el(id);
+    if(elId) elId.innerHTML="";
+  });
 
   generateMeta();
 
-  // Halaman 1: Agregasi kecamatan
+  // ----------------------------
+  // HALAMAN 1: AGREGASI
+  // ----------------------------
   const totalKK = cachedData.reduce((a,d)=>a+toInt(d.total_kk),0);
   const totalD12 = cachedData.reduce((a,d)=>{
     const dv = (d.desil||[]).map(toInt);
     return a+(dv[0]||0)+(dv[1]||0);
   },0);
   const persenD12 = totalKK ? ((totalD12/totalKK)*100).toFixed(2) : 0;
+
+  // jumlah desil
+  const sumDesil = [0,0,0,0,0,0]; // 0..4 + 5-9
+  cachedData.forEach(d=>{
+    const dv = (d.desil||[]).map(toInt);
+    for(let i=0;i<5;i++) sumDesil[i]+= dv[i]||0;
+    sumDesil[5]+= dv.slice(5,10).reduce((a,v)=>a+v,0);
+  });
 
   el('kontenHal1').innerHTML = `
     <h5 class="text-center font-weight-bold">REKAP AGREGASI KECAMATAN</h5>
@@ -97,19 +118,15 @@ window.generate = function(){
         <tr><th>Desil 1</th><th>Desil 2</th><th>Desil 3</th><th>Desil 4</th><th>Desil 5</th><th>Desil 6-10</th></tr>
       </thead>
       <tbody>
-        <tr>${cachedData.reduce((cells,d)=>{
-          const dv = (d.desil||[]).map(toInt);
-          cells[0]+= dv[0]||0; cells[1]+= dv[1]||0; cells[2]+= dv[2]||0;
-          cells[3]+= dv[3]||0; cells[4]+= dv[4]||0;
-          cells[5]+= dv.slice(5,10).reduce((a,v)=>a+v,0);
-          return cells;
-        },[0,0,0,0,0,0]).map(v=>`<td>${v}</td>`).join('')}</tr>
+        <tr>${sumDesil.map(v=>`<td>${v}</td>`).join('')}</tr>
       </tbody>
     </table>
   `;
 
-  // Halaman 2: Prioritas D1-D2
-  const rowsPrioritas = cachedData.map(d=>{
+  // ----------------------------
+  // HALAMAN 2: PRIORITAS D1-D2
+  // ----------------------------
+  const prioritas = cachedData.map(d=>{
     const dv = (d.desil||[]).map(toInt);
     const totalD12Desa = (dv[0]||0)+(dv[1]||0);
     const persen = d.total_kk ? ((totalD12Desa/toInt(d.total_kk))*100).toFixed(2) : 0;
@@ -117,49 +134,45 @@ window.generate = function(){
   }).sort((a,b)=> b.totalD12Desa - a.totalD12Desa);
 
   el('kontenHal2').innerHTML = `
-    <h5 class="text-center font-weight-bold">PRIORITAS DTSEN D1-D2</h5>
     <table class="table table-bordered">
       <thead>
         <tr><th>Desa</th><th>D1-D2</th><th>Persentase</th></tr>
       </thead>
       <tbody>
-        ${rowsPrioritas.map(d=>`<tr><td>${d.nama}</td><td>${d.totalD12Desa}</td><td>${d.persen}%</td></tr>`).join('')}
+        ${prioritas.map(d=>`<tr><td>${d.nama}</td><td>${d.totalD12Desa}</td><td>${d.persen}%</td></tr>`).join('')}
       </tbody>
     </table>
   `;
 
-  // Halaman 3: Rekap Bansos
-  el('kontenHal3').innerHTML = `
-    <h5 class="text-center font-weight-bold">REKAP BANSOS PER DESA</h5>
-    ${cachedData.map(d=>{
-      const bansos = d.bansos||{};
-      return `<p><b>${d.nama}</b></p><ul>${Object.entries(bansos).map(([k,v])=>`<li>${k}: ${v}</li>`).join('')}</ul>`;
-    }).join('')}
-  `;
+  // ----------------------------
+  // HALAMAN 3: REKAP BANSOS
+  // ----------------------------
+  el('kontenHal3').innerHTML = cachedData.map(d=>{
+    const bansos = d.bansos||{};
+    return `<p><b>${d.nama}</b></p><ul>${Object.entries(bansos).map(([k,v])=>`<li>${k}: ${v}</li>`).join('')}</ul>`;
+  }).join('');
 
-  // Halaman 4: Rekap Layanan
-  el('kontenHal4').innerHTML = `
-    <h5 class="text-center font-weight-bold">REKAP LAYANAN PER DESA</h5>
-    ${cachedData.map(d=>{
-      const layanan = d.layanan||{};
-      return `<p><b>${d.nama}</b></p><ul>${Object.entries(layanan).map(([k,v])=>`<li>${k}: ${v}</li>`).join('')}</ul>`;
-    }).join('')}
-  `;
-};
+  // ----------------------------
+  // HALAMAN 4: REKAP LAYANAN + QR
+  // ----------------------------
+  el('kontenHal4').innerHTML = cachedData.map(d=>{
+    const layanan = d.layanan||{};
+    return `<p><b>${d.nama}</b></p><ul>${Object.entries(layanan).map(([k,v])=>`<li>${k}: ${v}</li>`).join('')}</ul>`;
+  }).join('');
+}
 
 // ============================
-// META
+// META: nomor surat & QR
 // ============================
 function generateMeta(){
   const now = new Date();
   el('tglSekarang').innerText = now.toLocaleDateString('id-ID',{dateStyle:'long'});
 
-  // Nomor surat: 3 digit + counter per hari
-  const counter = (++suratCounter)%1000; 
-  const nomorSurat = counter.toString().padStart(3,'0');
-  el('hashNomor').innerText = nomorSurat;
+  // Nomor surat: 3 digit counter
+  suratCounter = (suratCounter+1)%1000;
+  el('hashNomor').innerText = suratCounter.toString().padStart(3,'0');
 
-  // QR ID unik
+  // QR unik
   const qrId = Math.random().toString(36).substring(2,10).toUpperCase();
   el('hashID').innerText = qrId;
 
