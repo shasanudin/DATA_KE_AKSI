@@ -11,26 +11,23 @@
 
 <style>
 body{font-family:'Inter',sans-serif;background:#f4f7f6;}
-.paper{background:#fff;width:210mm;min-height:297mm;padding:15mm 20mm;margin:10px auto;box-shadow:0 0 20px rgba(0,0,0,.05);font-family:"Times New Roman";color:#000;page-break-after: always;}
-.kop-surat-container{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #000;padding-bottom:5px;margin-bottom:5px;}
+.paper{background:#fff;width:210mm;min-height:297mm;padding:15mm 20mm;margin:30px auto;box-shadow:0 0 20px rgba(0,0,0,.05);font-family:"Times New Roman";color:#000;}
+.kop-surat-container{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #000;padding-bottom:10px;}
 .logo-box{width:85px;flex-shrink:0;}
 .logo-kop{width:100%;}
 .teks-kop{text-align:center;flex-grow:1;}
 .kop-line{border-bottom:1px solid #000;margin:2px 0 10px;}
 .qr-box{border:1px solid #eee;padding:5px;background:#fff;display:inline-block;}
 .card-custom{border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,.05);background:#fff;}
-h5{margin-top:0;}
-ul{padding-left: 20px;}
 @media print{
   body *{visibility:hidden;}
   .paper,.paper *{visibility:visible;}
-  .paper{position:absolute;left:0;top:0;width:100%!important;margin:0!important;padding:10mm 15mm!important;box-shadow:none!important;}
+  .paper{position:absolute;left:0;top:0;width:100%!important;margin:0!important;padding:10mm!important;box-shadow:none!important;}
   .no-print,#navbar,header,.container.my-5,button{display:none!important;}
-  @page{size:A4;margin:5mm;}
+  @page{size:A4;margin:10mm;}
 }
 </style>
 </head>
-
 <body>
 
 <header class="container py-3 bg-white no-print">
@@ -49,7 +46,6 @@ ul{padding-left: 20px;}
 
 <div class="container my-5 no-print">
 <h3 class="font-weight-bold mb-3">Panel Unduh & Rekap DTSEN</h3>
-
 <div class="card card-custom p-4 mb-4">
 <div class="row align-items-end">
 
@@ -58,7 +54,7 @@ ul{padding-left: 20px;}
 <select id="mode" class="form-control">
 <option value="agregat">Agregasi Kecamatan</option>
 <option value="prioritas">Prioritas DTSEN (D1–D2)</option>
-<option value="desa">Rekap Per Desa + Persentase</option>
+<option value="desa">Rekap Per Desa</option>
 </select>
 </div>
 
@@ -71,7 +67,6 @@ ul{padding-left: 20px;}
 <button id="btnGenerate" class="btn btn-primary px-4">
 Generate Data
 </button>
-
 <button id="btnPrint" class="btn btn-dark px-4 ml-2">
 <i class="fas fa-print mr-1"></i> Cetak ke PDF
 </button>
@@ -81,80 +76,53 @@ Generate Data
 </div>
 </div>
 
-<div class="paper">
-  <!-- Halaman 1: Agregasi -->
-  <div class="kop-surat-container">
-    <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
-    <div class="teks-kop">
-      <h6 style="font-size:14px;margin:0;">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</h6>
-      <h5 class="font-weight-bold" style="font-size:16px;margin:2px 0;">FORUM PUSKESOS KECAMATAN SUMBER</h5>
-      <h2 class="font-weight-bold" style="font-size:26px;margin:4px 0;">DARI DATA KE AKSI</h2>
-      <p style="font-size:11px;">Sekretariat: Jl. Sunan Drajat No.16</p>
-    </div>
-    <div class="logo-box text-right"><img src="assets/img/logo/logo-puskesos.png" class="logo-kop"></div>
-  </div>
-  <div class="kop-line"></div>
-  <p class="text-center mb-2">Nomor: 460 / <span id="hashNomor">...</span> / TKSK-SBR / 2026</p>
-  <div id="kontenHal1"></div>
+<div class="paper" id="cetakArea">
+<div class="kop-surat-container">
+<div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
+<div class="teks-kop">
+<h6 style="font-size:14px;margin:0;">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</h6>
+<h5 class="font-weight-bold" style="font-size:16px;margin:2px 0;">FORUM PUSKESOS KECAMATAN SUMBER</h5>
+<h2 class="font-weight-bold" style="font-size:26px;margin:4px 0;">DARI DATA KE AKSI</h2>
+<p style="font-size:11px;">Sekretariat: Jl. Sunan Drajat No.16</p>
+</div>
+<div class="logo-box text-right"><img src="assets/img/logo/logo-puskesos.png" class="logo-kop"></div>
 </div>
 
-<div class="paper">
-  <!-- Halaman 2: Prioritas D1-D2 -->
-  <div class="kop-surat-container">
-    <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
-    <div class="teks-kop">
-      <h2 class="font-weight-bold" style="font-size:18px;margin:4px 0;">PRIORITAS DTSEN D1-D2</h2>
-    </div>
-    <div class="logo-box"></div>
-  </div>
-  <div class="kop-line"></div>
-  <div id="kontenHal2"></div>
+<div class="kop-line"></div>
+<p class="text-center mb-3">Nomor: 460 / <span id="hashNomor">---</span> / TKSK-SBR / 2026</p>
+
+<!-- Halaman 1: Agregasi -->
+<div id="kontenHal1" style="min-height:250px;"></div>
+
+<!-- Halaman 2: Prioritas Desa -->
+<div style="page-break-before:always;" id="kontenHal2" style="min-height:250px;"></div>
+
+<!-- Halaman 3: Rekap Bansos -->
+<div style="page-break-before:always;" id="kontenHal3" style="min-height:250px;"></div>
+
+<!-- Halaman 4: Rekap Layanan + QR + TTD -->
+<div style="page-break-before:always;" id="kontenHal4" style="min-height:250px;"></div>
+
+<div class="row mt-4">
+<div class="col-7">
+<div style="border:1px solid #000;padding:8px;font-size:10px;">
+<strong>Catatan Verifikasi:</strong><br>
+- Data diambil dari database DTSEN.<br>
+- D1-D2 kategori kerentanan tinggi.
+</div>
 </div>
 
-<div class="paper">
-  <!-- Halaman 3: Rekap Bansos -->
-  <div class="kop-surat-container">
-    <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
-    <div class="teks-kop">
-      <h2 class="font-weight-bold" style="font-size:18px;margin:4px 0;">REKAP BANSOS PER DESA</h2>
-    </div>
-    <div class="logo-box"></div>
-  </div>
-  <div class="kop-line"></div>
-  <div id="kontenHal3"></div>
+<div class="col-5 text-center">
+<p>Sumber, <span id="tglSekarang"></span></p>
+<div id="qrcode" class="qr-box mb-2"></div>
+<p class="font-weight-bold mb-0">SHIDIQ HASANUDIN, S.IP</p>
+<small>ID Verif: <span id="hashID">-</span></small>
+</div>
 </div>
 
-<div class="paper">
-  <!-- Halaman 4: Rekap Layanan + QR -->
-  <div class="kop-surat-container">
-    <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
-    <div class="teks-kop">
-      <h2 class="font-weight-bold" style="font-size:18px;margin:4px 0;">REKAP LAYANAN PER DESA</h2>
-    </div>
-    <div class="logo-box"></div>
-  </div>
-  <div class="kop-line"></div>
-  <div id="kontenHal4"></div>
-
-  <div class="row mt-4">
-    <div class="col-7">
-      <div style="border:1px solid #000;padding:8px;font-size:10px;">
-        <strong>Catatan Verifikasi:</strong><br>
-        - Data diambil dari database DTSEN.<br>
-        - D1-D2 kategori kerentanan tinggi.
-      </div>
-    </div>
-    <div class="col-5 text-center">
-      <p>Sumber, <span id="tglSekarang"></span></p>
-      <div id="qrcode" class="qr-box mb-2"></div>
-      <p class="font-weight-bold mb-0">SHIDIQ HASANUDIN, S.IP</p>
-      <small>ID Verif: <span id="hashID">-</span></small>
-    </div>
-  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script type="module" src="js/unduh.js"></script>
-
+<script type="module" src="unduh.js"></script>
 </body>
 </html>
