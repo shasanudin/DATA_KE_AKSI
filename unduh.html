@@ -2,54 +2,104 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Laporan Terpadu DTSEN</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data DTSEN | TKSK & Puskesos Sumber</title>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <style>
-body{background:#f4f7f6;}
-.paper{
-  width:210mm;
-  min-height:297mm;
-  padding:15mm 20mm;
-  margin:20px auto;
-  background:#fff;
-  font-family:"Times New Roman";
-  color:#000;
-}
-.page-break{page-break-before:always;}
-.kop-surat-container{
-  display:flex;justify-content:space-between;align-items:center;
-  border-bottom:3px solid #000;padding-bottom:10px;
-}
-.logo-box{width:85px;}
+body{font-family:'Inter',sans-serif;background:#f4f7f6;}
+.paper{background:#fff;width:210mm;min-height:297mm;padding:15mm 20mm;margin:30px auto;box-shadow:0 0 20px rgba(0,0,0,.05);font-family:"Times New Roman";color:#000;}
+.kop-surat-container{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #000;padding-bottom:10px;}
+.logo-box{width:85px;flex-shrink:0;}
 .logo-kop{width:100%;}
 .teks-kop{text-align:center;flex-grow:1;}
-.kop-line{border-bottom:1px solid #000;margin:4px 0 20px;}
-.qr-box{border:1px solid #000;padding:4px;display:inline-block;}
+.kop-line{border-bottom:1px solid #000;margin:2px 0 10px;}
+.qr-box{border:1px solid #eee;padding:5px;background:#fff;display:inline-block;}
+.card-custom{border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,.05);background:#fff;}
 
 @media print{
-  body *{visibility:hidden;}
-  .paper,.paper *{visibility:visible;}
-  .paper{position:absolute;left:0;top:0;margin:0;}
-  .no-print{display:none;}
+body *{visibility:hidden;}
+.paper,.paper *{visibility:visible;}
+.paper{position:absolute;left:0;top:0;width:100%!important;margin:0!important;padding:10mm!important;box-shadow:none!important;}
+.no-print,#navbar,header,.container.my-5,button{display:none!important;}
+@page{size:A4;margin:0;}
 }
 </style>
 </head>
 
 <body>
 
-<!-- PANEL -->
-<div class="container my-4 no-print">
-<button onclick="generate()" class="btn btn-primary">Generate</button>
-<button onclick="window.print()" class="btn btn-dark ml-2">Cetak</button>
+<!-- HEADER PANEL -->
+<header class="container py-3 bg-white no-print">
+<div class="row align-items-center">
+<div class="col-md-6">
+<img src="assets/img/logo/logo-tksk.png" height="45">
+<img src="assets/img/logo/logo-puskesos.png" height="45" class="ml-2 border-left pl-2">
 </div>
+<div class="col-md-6 text-right d-none d-md-block">
+<span class="badge badge-primary px-3 py-2">Satu Data Terpadu</span>
+</div>
+</div>
+</header>
+
+<div id="navbar" class="no-print"></div>
+
+<div class="container my-5 no-print">
+<h3 class="font-weight-bold mb-3">Panel Unduh & Rekap DTSEN</h3>
+
+<div class="card card-custom p-4 mb-4">
+<div class="row align-items-end">
+
+<div class="col-md-4">
+<label class="small font-weight-bold">Mode Download</label>
+<select id="mode" class="form-control">
+<option value="agregat">Agregasi Kecamatan</option>
+<option value="prioritas">Prioritas DTSEN (D1–D2)</option>
+<option value="desa">Rekap Per Desa + Persentase</option>
+</select>
+</div>
+
+<div class="col-md-4" id="desaWrap" style="display:none;">
+<label class="small font-weight-bold">Pilih Desa</label>
+<select id="desaSelect" class="form-control"></select>
+</div>
+
+<div class="col-md-4 text-right">
+<button id="btnGenerate" class="btn btn-primary px-4">Generate Data</button>
+<button id="btnPrint" class="btn btn-dark px-4 ml-2"><i class="fas fa-print mr-1"></i> Cetak ke PDF</button>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- OUTPUT HIDDEN UNTUK DEBUG -->
+<div class="container mb-5 no-print">
+<div id="output" class="bg-white p-4 card-custom" style="display:none;"></div>
+</div>
+
+<!-- CETAK AREA -->
 <div class="paper" id="cetakArea">
 
   <!-- KOP SURAT -->
-  <div class="kop-surat-container"> ... </div>
+  <div class="kop-surat-container">
+    <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
+    <div class="teks-kop">
+      <h6 style="font-size:14px;margin:0;">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</h6>
+      <h5 class="font-weight-bold" style="font-size:16px;margin:2px 0;">FORUM PUSKESOS KECAMATAN SUMBER</h5>
+      <h2 class="font-weight-bold" style="font-size:26px;margin:4px 0;">DARI DATA KE AKSI</h2>
+      <p style="font-size:11px;">Sekretariat: Jl. Sunan Drajat No.16</p>
+    </div>
+    <div class="logo-box text-right"><img src="assets/img/logo/logo-puskesos.png" class="logo-kop"></div>
+  </div>
+
   <div class="kop-line"></div>
+
+  <!-- NOMOR SURAT DI BAWAH KOP SURAT -->
+  <p class="text-center font-weight-bold mb-3">Nomor: 460 / <span id="hashNomor">---</span> / TKSK-SBR / 2026</p>
 
   <!-- HALAMAN 1 -->
   <div id="kontenHal1" style="page-break-after:always;"></div>
@@ -61,7 +111,7 @@ body{background:#f4f7f6;}
   <div id="kontenHal3" style="page-break-after:always;"></div>
 
   <!-- HALAMAN 4 -->
-  <div id="kontenHal4"></div>
+  <div id="kontenHal4" style="page-break-after:always;"></div>
 
   <!-- TTD + QR -->
   <div class="row mt-4">
@@ -77,7 +127,6 @@ body{background:#f4f7f6;}
       <div id="qrcode" class="qr-box mb-2"></div>
       <p class="font-weight-bold mb-0">SHIDIQ HASANUDIN, S.IP</p>
       <small>ID Verif: <span id="hashID">-</span></small>
-      <p>Nomor: 460 / <span id="hashNomor">---</span> / TKSK-SBR / 2026</p>
     </div>
   </div>
 
@@ -85,5 +134,10 @@ body{background:#f4f7f6;}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script type="module" src="js/unduh.js"></script>
+<script>
+document.getElementById("btnGenerate").onclick = ()=>window.generate();
+document.getElementById("btnPrint").onclick = ()=>window.print();
+</script>
+
 </body>
 </html>
