@@ -1,231 +1,274 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cetak Dokumen DTSEN | TKSK & Puskesos Sumber</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cetak Dokumen DTSEN | TKSK & Puskesos Kecamatan Sumber</title>
 
-<!-- CSS LIBRARIES -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- CSS LIBRARIES -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-<style>
-/* ============ GLOBAL STYLES ============ */
-body {
-    font-family: 'Inter', sans-serif;
-    background: #f4f7f6;
-    padding-bottom: 50px;
-}
+    <style>
+        /* ============ GLOBAL STYLES ============ */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f7f6;
+            padding-bottom: 50px;
+        }
 
-/* ============ KERTAS A4 ============ */
-.paper {
-    background: #fff;
-    width: 210mm;
-    min-height: 297mm;
-    padding: 15mm 20mm;
-    margin: 30px auto;
-    box-shadow: 0 0 20px rgba(0,0,0,.05);
-    font-family: "Times New Roman", Times, serif;
-    color: #000;
-    position: relative;
-}
+        /* ============ KERTAS A4 ============ */
+        .paper {
+            background: #fff;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm 20mm;
+            margin: 30px auto;
+            box-shadow: 0 0 20px rgba(0,0,0,.05);
+            font-family: "Times New Roman", Times, serif;
+            color: #000;
+            position: relative;
+        }
 
-/* ============ KOP SURAT STANDAR PEMERINTAH ============ */
-.kop-surat-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 3px solid #000;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-    position: relative;
-}
+        /* ============ KOP SURAT STANDAR PEMERINTAH ============ */
+        .kop-surat-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            position: relative;
+        }
 
-.logo-box {
-    width: 85px;
-    flex-shrink: 0;
-}
+        .logo-box {
+            width: 85px;
+            flex-shrink: 0;
+        }
 
-.logo-kop {
-    width: 100%;
-    max-height: 85px;
-    object-fit: contain;
-}
+        .logo-kop {
+            width: 100%;
+            max-height: 85px;
+            object-fit: contain;
+        }
 
-.teks-kop {
-    text-align: center;
-    flex-grow: 1;
-}
+        .teks-kop {
+            text-align: center;
+            flex-grow: 1;
+        }
 
-.instansi-utama {
-    font-size: 14px;
-    font-weight: 600;
-    margin: 0;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
+        .instansi-utama {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
 
-.nama-lembaga {
-    font-size: 18px;
-    font-weight: 700;
-    margin: 2px 0;
-    text-transform: uppercase;
-    color: #000;
-}
+        .nama-lembaga {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 2px 0;
+            text-transform: uppercase;
+            color: #000;
+        }
 
-.nama-program {
-    font-size: 26px;
-    font-weight: 800;
-    margin: 4px 0;
-    letter-spacing: 1px;
-    color: #000;
-}
+        .nama-program {
+            font-size: 26px;
+            font-weight: 800;
+            margin: 4px 0;
+            letter-spacing: 1px;
+            color: #000;
+        }
 
-.alamat-kantor {
-    font-size: 11px;
-    margin: 2px 0;
-    font-style: normal;
-}
+        .alamat-kantor {
+            font-size: 11px;
+            margin: 2px 0;
+            font-style: normal;
+        }
 
-/* ============ KOP HALAMAN LANJUTAN ============ */
-.kop-lanjutan {
-    margin-bottom: 25px;
-    border-bottom: 1px solid #666;
-    padding-bottom: 8px;
-}
+        /* ============ KOP HALAMAN LANJUTAN ============ */
+        .kop-lanjutan {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #666;
+            padding-bottom: 8px;
+        }
 
-.kop-lanjutan .instansi-singkat {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: #333;
-}
+        .kop-lanjutan .instansi-singkat {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #333;
+        }
 
-.nomor-surat-lanjutan {
-    font-size: 11px;
-    color: #333;
-}
+        .nomor-surat-lanjutan {
+            font-size: 11px;
+            color: #333;
+        }
 
-/* ============ STYLE SURAT ============ */
-.judul-surat {
-    font-size: 16px;
-    font-weight: 700;
-    text-align: center;
-    text-decoration: underline;
-    margin: 20px 0;
-    text-transform: uppercase;
-}
+        /* ============ STYLE SURAT ============ */
+        .judul-surat {
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: underline;
+            margin: 20px 0;
+            text-transform: uppercase;
+        }
 
-.tabel-data {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 15px 0;
-    font-size: 11px;
-}
+        .tabel-data {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 11px;
+        }
 
-.tabel-data th {
-    background: #f0f0f0;
-    font-weight: 600;
-    padding: 8px 5px;
-    border: 1px solid #000;
-    text-align: center;
-}
+        .tabel-data th {
+            background: #f0f0f0;
+            font-weight: 600;
+            padding: 8px 5px;
+            border: 1px solid #000;
+            text-align: center;
+        }
 
-.tabel-data td {
-    padding: 6px 5px;
-    border: 1px solid #000;
-}
+        .tabel-data td {
+            padding: 6px 5px;
+            border: 1px solid #000;
+        }
 
-.tabel-data tfoot tr {
-    background: #f5f5f5;
-    font-weight: 700;
-}
+        .tabel-data tfoot tr {
+            background: #f5f5f5;
+            font-weight: 700;
+        }
 
-/* ============ TANDA TANGAN ============ */
-.nama-ttd {
-    font-weight: 700;
-    margin-top: 5px;
-    text-decoration: underline;
-    font-size: 14px;
-}
+        /* ============ TANDA TANGAN ============ */
+        .nama-ttd {
+            font-weight: 700;
+            margin-top: 5px;
+            text-decoration: underline;
+            font-size: 14px;
+        }
 
-/* ============ QR CODE ============ */
-.qr-box {
-    border: 1px solid #ddd;
-    padding: 10px;
-    background: #fff;
-    display: inline-block;
-    margin: 10px auto;
-}
+        /* ============ QR CODE ============ */
+        .qr-box {
+            border: 1px solid #ddd;
+            padding: 10px;
+            background: #fff;
+            display: inline-block;
+            margin: 10px auto;
+        }
 
-.qr-placeholder {
-    width: 100px;
-    height: 100px;
-    background: #f9f9f9;
-    border: 1px dashed #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-}
+        .qr-placeholder {
+            width: 100px;
+            height: 100px;
+            background: #f9f9f9;
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
 
-/* ============ FOOTER SURAT ============ */
-.footer-surat {
-    font-size: 10px;
-    text-align: center;
-    margin-top: 30px;
-    color: #666;
-    border-top: 1px dashed #999;
-    padding-top: 10px;
-}
+        /* ============ FOOTER SURAT ============ */
+        .footer-surat {
+            font-size: 10px;
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            border-top: 1px dashed #999;
+            padding-top: 10px;
+        }
 
-/* ============ INFO PANEL ============ */
-.info-badge {
-    font-size: 11px;
-    padding: 6px 12px;
-}
+        /* ============ INFO PANEL ============ */
+        .info-badge {
+            font-size: 11px;
+            padding: 6px 12px;
+        }
 
-/* ============ MEDIA PRINT ============ */
-@media print {
-    body * {
-        visibility: hidden;
-    }
-    .paper, .paper * {
-        visibility: visible;
-    }
-    .paper {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 15mm 20mm !important;
-        box-shadow: none !important;
-    }
-    .no-print, #navbar, header, .container.my-5, button, .card, .btn {
-        display: none !important;
-    }
-    @page {
-        size: A4;
-        margin: 15mm 20mm;
-    }
-}
+        /* ============ LOADING OVERLAY ============ */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+        }
 
-/* ============ UTILITY ============ */
-.fw-bold {
-    font-weight: 700;
-}
+        .loading-overlay.show {
+            display: flex;
+        }
 
-.badge {
-    font-size: 11px;
-    padding: 5px 10px;
-}
+        /* ============ MEDIA PRINT ============ */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .paper, .paper * {
+                visibility: visible;
+            }
+            .paper {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 15mm 20mm !important;
+                box-shadow: none !important;
+            }
+            .no-print, #navbar, header, .container.my-5, button, .card, .btn, .loading-overlay {
+                display: none !important;
+            }
+            @page {
+                size: A4;
+                margin: 15mm 20mm;
+            }
+        }
 
-.table-responsive {
-    overflow-x: auto;
-}
-</style>
+        /* ============ UTILITY ============ */
+        .fw-bold {
+            font-weight: 700;
+        }
+
+        .badge {
+            font-size: 11px;
+            padding: 5px 10px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        /* ============ PRIORITY BADGES ============ */
+        .priority-high {
+            background: #dc3545;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .priority-medium {
+            background: #ffc107;
+            color: black;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .priority-low {
+            background: #28a745;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
 
@@ -238,7 +281,7 @@ body {
         </div>
         <div class="col-md-6 text-right d-none d-md-block">
             <span class="badge badge-primary px-3 py-2">
-                <i class="fas fa-file-alt mr-1"></i> Satu Data Terpadu DTSEN
+                <i class="fas fa-file-alt mr-1"></i> DTSEN - TKSK & Puskesos Sumber
             </span>
         </div>
     </div>
@@ -255,7 +298,10 @@ body {
                 <i class="fas fa-file-pdf mr-2 text-primary"></i>
                 Cetak Dokumen DTSEN Kecamatan Sumber
             </h3>
-            <p class="text-muted">Generate laporan lengkap dengan kop surat resmi - <span class="text-primary font-weight-bold">MENAMPILKAN SEMUA DATA TANPA BATASAN</span></p>
+            <p class="text-muted">
+                Generate laporan lengkap dengan kop surat resmi - 
+                <span class="text-primary font-weight-bold">MENAMPILKAN SEMUA DATA TANPA BATASAN</span>
+            </p>
         </div>
     </div>
     
@@ -270,7 +316,7 @@ body {
                             </label>
                             <select id="mode" class="form-control">
                                 <option value="agregat">📊 Agregasi Data Kecamatan (Semua Desa)</option>
-                                <option value="prioritas">🎯 Prioritas Intervensi Desil 1-2</option>
+                                <option value="prioritas">🎯 Prioritas Intervensi (Kriteria >500/300-500/<300)</option>
                                 <option value="desa">🏘️ Rekap Data Per Desa</option>
                             </select>
                         </div>
@@ -306,6 +352,9 @@ body {
                                 <span class="badge badge-info mb-1">
                                     <i class="fas fa-clock mr-1"></i> Update: <span id="lastUpdateInfo">-</span>
                                 </span>
+                                <span class="badge badge-warning mb-1 ml-2">
+                                    <i class="fas fa-chart-line mr-1"></i> Prioritas: >500 | 300-500 | <300
+                                </span>
                             </div>
                             <div>
                                 <span class="badge badge-primary px-3 py-2" id="dataCountInfo" style="font-size: 12px;">
@@ -319,13 +368,23 @@ body {
         </div>
     </div>
     
-    <!-- INFORMASI TAMBAHAN -->
+    <!-- INFORMASI TAMBAHAN - KRITERIA PRIORITAS BARU -->
     <div class="alert alert-info d-flex align-items-center">
         <i class="fas fa-info-circle fa-2x mr-3"></i>
         <div>
-            <strong>SHOW ALL DATA - TANPA BATASAN!</strong><br>
-            Sistem menampilkan <span id="totalDesaInfo">SEMUA</span> desa/kelurahan se-Kecamatan Sumber tanpa limitasi 10 data. 
-            Data diambil langsung dari Firebase secara real-time.
+            <strong>📋 KRITERIA PRIORITAS INTERVENSI BARU (SESUAI KEBIJAKAN):</strong><br>
+            <span class="badge priority-high mr-1">PRIORITAS TINGGI</span> >500 KK (D1+D2) - Intervensi Segera &nbsp;&nbsp;
+            <span class="badge priority-medium mr-1">PRIORITAS SEDANG</span> 300-500 KK (D1+D2) - Monitoring Intensif &nbsp;&nbsp;
+            <span class="badge priority-low">PRIORITAS RENDAH</span> <300 KK (D1+D2) - Pemantauan Rutin
+        </div>
+    </div>
+    
+    <!-- INFORMASI DTSEN -->
+    <div class="alert alert-success d-flex align-items-center">
+        <i class="fas fa-calculator fa-2x mr-3"></i>
+        <div>
+            <strong>📊 PERHITUNGAN RASIO LAYANAN:</strong><br>
+            Seluruh rasio layanan (SKTM, Pengaduan, Cakupan) dihitung berdasarkan <strong>TOTAL KELUARGA DTSEN (Desil 1-10)</strong>, bukan berdasarkan DTKS.
         </div>
     </div>
 </div>
@@ -395,7 +454,7 @@ body {
         </div>
     </div>
 
-    <!-- ======= HALAMAN 2: PRIORITAS INTERVENSI DTSEN ======= -->
+    <!-- ======= HALAMAN 2: PRIORITAS INTERVENSI DTSEN (KRITERIA BARU) ======= -->
     <div style="page-break-before: always;" class="halaman-2">
         <!-- KOP LANJUTAN DENGAN NOMOR SURAT YANG SAMA -->
         <div class="kop-lanjutan">
@@ -409,6 +468,14 @@ body {
         <p style="font-size: 12px; text-align: center; margin-bottom: 20px;">
             <em>Data Prioritas Berdasarkan Jumlah Desil 1 dan 2 (Sangat Miskin & Miskin)</em>
         </p>
+        
+        <!-- KRITERIA PRIORITAS BARU -->
+        <div style="background: #e3f2fd; padding: 10px; margin-bottom: 20px; border-left: 4px solid #0d6efd; font-size: 11px;">
+            <strong>⚡ KRITERIA PRIORITAS BARU:</strong> 
+            <span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 3px; margin-left: 10px;">TINGGI >500 KK</span>
+            <span style="background: #ffc107; color: black; padding: 2px 8px; border-radius: 3px; margin-left: 5px;">SEDANG 300-500 KK</span>
+            <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; margin-left: 5px;">RENDAH <300 KK</span>
+        </div>
         
         <!-- KONTEN HALAMAN 2 - PRIORITAS INTERVENSI (SEMUA DESA) -->
         <div id="kontenHal2" style="min-height: 250px;">
@@ -447,7 +514,7 @@ body {
 
         <h4 class="judul-surat">REKAPITULASI LAYANAN SOSIAL</h4>
         <p style="font-size: 12px; text-align: center; margin-bottom: 20px;">
-            <em>Data Layanan Sosial, DTKS, Pengaduan, dan SKTM</em>
+            <em>Data Layanan Sosial, Pembaruan DTSEN, Pengaduan, dan SKTM</em>
         </p>
         
         <!-- KONTEN HALAMAN 4 - LAYANAN SOSIAL (REAL-TIME DARI FIREBASE) -->
@@ -471,6 +538,8 @@ body {
                     <strong style="font-size: 12px;">VERIFIKASI DAN VALIDASI DATA:</strong><br>
                     ✓ Data bersumber dari Database DTSEN Kementerian Sosial RI<br>
                     ✓ Telah diverifikasi oleh Tenaga Kesejahteraan Sosial Kecamatan (TKSK)<br>
+                    ✓ Kriteria Prioritas: <strong>Tinggi >500 | Sedang 300-500 | Rendah <300</strong><br>
+                    ✓ Rasio layanan berdasarkan <strong>Total KK DTSEN (Desil 1-10)</strong><br>
                     ✓ Berlaku untuk periode <span id="periodeData">2026</span><br>
                     <span style="color: #666;">* Dokumen ini ditandatangani secara elektronik</span>
                 </div>
@@ -513,9 +582,11 @@ body {
 </div> <!-- Tutup paper -->
 
 <!-- LOADING OVERLAY - NO PRINT -->
-<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99999; justify-content: center; align-items: center;" class="no-print">
+<div id="loadingOverlay" class="loading-overlay no-print">
     <div class="bg-white p-5 rounded-lg text-center shadow-lg">
-        <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
+        <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
         <h5 class="font-weight-bold">Memproses Data...</h5>
         <p class="text-muted mb-0">Mengambil data dari Firebase</p>
     </div>
@@ -528,29 +599,42 @@ body {
 
 <!-- NAVBAR LOADER -->
 <script>
-    // Load navbar with error handling
-    fetch('navbar.html')
-        .then(response => {
-            if (!response.ok) throw new Error('Navbar not found');
-            return response.text();
-        })
-        .then(html => {
-            document.getElementById('navbar').innerHTML = html;
-        })
-        .catch(e => {
-            console.log('Navbar tidak dimuat:', e.message);
-            document.getElementById('navbar').innerHTML = `
-                <nav class="navbar navbar-expand-lg navbar-dark bg-primary no-print">
-                    <div class="container">
-                        <span class="navbar-brand">DTSEN - TKSK Sumber</span>
-                    </div>
-                </nav>
-            `;
-        });
-    
-    // Set tahun periode otomatis
-    document.getElementById('periodeData') && (document.getElementById('periodeData').textContent = new Date().getFullYear());
-    document.getElementById('periodeDataTahun') && (document.getElementById('periodeDataTahun').textContent = new Date().getFullYear());
+    (function() {
+        // Load navbar with error handling
+        fetch('navbar.html')
+            .then(response => {
+                if (!response.ok) throw new Error('Navbar not found');
+                return response.text();
+            })
+            .then(html => {
+                const navbar = document.getElementById('navbar');
+                if (navbar) navbar.innerHTML = html;
+            })
+            .catch(e => {
+                console.log('Navbar tidak dimuat:', e.message);
+                const navbar = document.getElementById('navbar');
+                if (navbar) {
+                    navbar.innerHTML = `
+                        <nav class="navbar navbar-expand-lg navbar-dark bg-primary no-print">
+                            <div class="container">
+                                <a class="navbar-brand" href="#">
+                                    <i class="fas fa-file-alt mr-2"></i>
+                                    DTSEN - TKSK & Puskesos Kecamatan Sumber
+                                </a>
+                            </div>
+                        </nav>
+                    `;
+                }
+            });
+        
+        // Set tahun periode otomatis
+        const tahun = new Date().getFullYear();
+        const periodeData = document.getElementById('periodeData');
+        const periodeDataTahun = document.getElementById('periodeDataTahun');
+        
+        if (periodeData) periodeData.textContent = tahun;
+        if (periodeDataTahun) periodeDataTahun.textContent = tahun;
+    })();
 </script>
 
 <!-- MAIN SCRIPT - unduh.js (MODULE) -->
@@ -560,10 +644,39 @@ body {
 <script>
     // Fallback untuk menampilkan pesan jika unduh.js gagal dimuat
     window.addEventListener('error', function(e) {
-        if (e.target && (e.target.src || e.target.href) && e.target.src.includes('unduh.js')) {
-            document.getElementById('kontenHal1').innerHTML = '<div class="alert alert-danger">Gagal memuat modul unduh.js. Refresh halaman atau cek koneksi.</div>';
+        if (e.target && e.target.tagName === 'SCRIPT' && e.target.src && e.target.src.includes('unduh.js')) {
+            const kontenHal1 = document.getElementById('kontenHal1');
+            const kontenHal2 = document.getElementById('kontenHal2');
+            const kontenHal3 = document.getElementById('kontenHal3');
+            const kontenHal4 = document.getElementById('kontenHal4');
+            
+            const errorMessage = `
+                <div class="alert alert-danger m-3">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    <strong>Gagal memuat modul unduh.js!</strong><br>
+                    Silakan refresh halaman atau periksa koneksi internet Anda.
+                    <br><small>Error: ${e.message || 'Unknown error'}</small>
+                </div>
+            `;
+            
+            if (kontenHal1) kontenHal1.innerHTML = errorMessage;
+            if (kontenHal2) kontenHal2.innerHTML = errorMessage;
+            if (kontenHal3) kontenHal3.innerHTML = errorMessage;
+            if (kontenHal4) kontenHal4.innerHTML = errorMessage;
         }
     }, true);
+    
+    // Toggle loading overlay
+    window.toggleLoading = function(show) {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) {
+            if (show) {
+                overlay.classList.add('show');
+            } else {
+                overlay.classList.remove('show');
+            }
+        }
+    };
 </script>
 
 </body>
