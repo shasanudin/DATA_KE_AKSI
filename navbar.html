@@ -1,133 +1,134 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-3">
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-2">
     <div class="container">
-        <!-- Brand/Logo -->
+        <!-- Brand/Logo - Diperkecil -->
         <a class="navbar-brand d-flex align-items-center" href="index.html">
-            <img src="assets/img/logo/logo-tksk.png" alt="TKSK" height="40" class="d-inline-block align-text-top me-2">
-            <span class="fw-bold text-primary" style="font-size: 1.1rem; color: #0d6efd !important;">DARI DATA KE AKSI</span>
+            <img src="assets/img/logo/logo-tksk.png" alt="TKSK" height="35" class="d-inline-block align-text-top mr-2">
+            <span class="fw-bold text-primary" style="font-size: 0.95rem; color: #0d6efd !important;">DARI DATA KE AKSI</span>
         </a>
         
-        <!-- Mobile Toggle Button with Animation -->
+        <!-- Mobile Toggle Button -->
         <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbarNav" 
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
-                style="outline: none; box-shadow: none;">
-            <span class="navbar-toggler-icon"></span>
+                style="outline: none; box-shadow: none; padding: 6px 10px;">
+            <span class="navbar-toggler-icon" style="width: 1.2em; height: 1.2em;"></span>
         </button>
 
         <!-- Navbar Collapse -->
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
+            <!-- Menu Utama - Dirapatkan -->
+            <ul class="navbar-nav mx-auto" style="gap: 2px;">
                 <!-- Beranda -->
-                <li class="nav-item mx-1">
-                    <a class="nav-link px-3 rounded-pill" href="index.html">
-                        <i class="fas fa-home mr-1"></i> Beranda
+                <li class="nav-item">
+                    <a class="nav-link px-2 rounded-pill" href="index.html">
+                        <i class="fas fa-home mr-1"></i> <span class="d-none d-lg-inline">Beranda</span>
                     </a>
                 </li>
 
-                <!-- Dropdown: Data DTSEN dan BANSOS -->
-                <li class="nav-item dropdown mx-1">
-                    <a class="nav-link dropdown-toggle px-3 rounded-pill" href="#" id="dataDropdown" role="button" 
+                <!-- Dropdown: Data DTSEN dan BANSOS - DIPENDEK -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle px-2 rounded-pill" href="#" id="dataDropdown" role="button" 
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-database mr-1"></i> Data DTSEN
+                        <i class="fas fa-database mr-1"></i> <span class="d-none d-lg-inline">Data</span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-lg border-0 shadow-sm rounded-3 py-2" aria-labelledby="dataDropdown">
+                    <div class="dropdown-menu dropdown-menu-sm border-0 shadow-sm rounded-3 py-2" aria-labelledby="dataDropdown">
                         <a class="dropdown-item py-2" href="data.html">
-                            <i class="fas fa-table mr-2 text-primary" style="width: 20px;"></i> Data DTSEN
+                            <i class="fas fa-table mr-2 text-primary" style="width: 18px;"></i> Data DTSEN
                         </a>
                         <a class="dropdown-item py-2" href="bansos.html">
-                            <i class="fas fa-hand-holding-heart mr-2 text-success" style="width: 20px;"></i> Data Bansos
+                            <i class="fas fa-hand-holding-heart mr-2 text-success" style="width: 18px;"></i> Bansos
                         </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item py-2" href="Pelayanan.html">
-                            <i class="fas fa-file-signature mr-2 text-info" style="width: 20px;"></i> Data Pelayanan SKTM
+                            <i class="fas fa-file-signature mr-2 text-info" style="width: 18px;"></i> Pelayanan SKTM
                         </a>
                     </div>
                 </li>
 
                 <!-- Prioritas -->
-                <li class="nav-item mx-1">
-                    <a class="nav-link px-3 rounded-pill" href="prioritas.html">
-                        <i class="fas fa-exclamation-triangle mr-1 text-warning"></i> Prioritas
+                <li class="nav-item">
+                    <a class="nav-link px-2 rounded-pill" href="prioritas.html">
+                        <i class="fas fa-exclamation-triangle mr-1 text-warning"></i> <span class="d-none d-lg-inline">Prioritas</span>
                     </a>
                 </li>
 
-                <!-- Dropdown: Unduh Data -->
-                <li class="nav-item dropdown mx-1">
-                    <a class="nav-link dropdown-toggle px-3 rounded-pill" href="#" id="unduhDropdown" role="button" 
+                <!-- Dropdown: Unduh Data - DIPENDEK -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle px-2 rounded-pill" href="#" id="unduhDropdown" role="button" 
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-download mr-1"></i> Unduh
+                        <i class="fas fa-download mr-1"></i> <span class="d-none d-lg-inline">Unduh</span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-lg border-0 shadow-sm rounded-3 py-2" aria-labelledby="unduhDropdown">
+                    <div class="dropdown-menu dropdown-menu-sm border-0 shadow-sm rounded-3 py-2" aria-labelledby="unduhDropdown">
                         <a class="dropdown-item py-2" href="arsip.html">
-                            <i class="fas fa-archive mr-2 text-secondary" style="width: 20px;"></i> Arsip Data
+                            <i class="fas fa-archive mr-2 text-secondary" style="width: 18px;"></i> Arsip
                         </a>
                         <a class="dropdown-item py-2" href="unduh.html">
-                            <i class="fas fa-file-pdf mr-2 text-danger" style="width: 20px;"></i> Unduh Dokumen
+                            <i class="fas fa-file-pdf mr-2 text-danger" style="width: 18px;"></i> Dokumen
                         </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item py-2" href="laporan.html">
-                            <i class="fas fa-chart-bar mr-2 text-primary" style="width: 20px;"></i> Laporan Bulanan
+                            <i class="fas fa-chart-bar mr-2 text-primary" style="width: 18px;"></i> Laporan
                         </a>
                         <a class="dropdown-item py-2" href="evaluasi.html">
-                            <i class="fas fa-check-circle mr-2 text-success" style="width: 20px;"></i> Evaluasi BANSOS
+                            <i class="fas fa-check-circle mr-2 text-success" style="width: 18px;"></i> Evaluasi
                         </a>
                     </div>
                 </li>
 
-                <!-- Alur DTSEN -->
-                <li class="nav-item mx-1">
-                    <a class="nav-link px-3 rounded-pill" href="alur.html">
-                        <i class="fas fa-diagram-project mr-1"></i> Alur DTSEN
+                <!-- Alur DTSEN - DIPENDEK -->
+                <li class="nav-item">
+                    <a class="nav-link px-2 rounded-pill" href="alur.html">
+                        <i class="fas fa-diagram-project mr-1"></i> <span class="d-none d-lg-inline">Alur</span>
                     </a>
                 </li>
 
-                <!-- Ilmu DTSEN -->
-                <li class="nav-item mx-1">
-                    <a class="nav-link px-3 rounded-pill" href="ilmu.html">
-                        <i class="fas fa-graduation-cap mr-1"></i> Ilmu
+                <!-- Ilmu DTSEN - DIPENDEK -->
+                <li class="nav-item">
+                    <a class="nav-link px-2 rounded-pill" href="ilmu.html">
+                        <i class="fas fa-graduation-cap mr-1"></i> <span class="d-none d-lg-inline">Ilmu</span>
                     </a>
                 </li>
 
-                <!-- Dropdown: Aplikasi -->
-                <li class="nav-item dropdown mx-1">
-                    <a class="nav-link dropdown-toggle px-3 rounded-pill" href="#" id="aplikasiDropdown" role="button" 
+                <!-- Dropdown: Aplikasi - DIPINDAH KE BELAKANG -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle px-2 rounded-pill" href="#" id="aplikasiDropdown" role="button" 
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-apps mr-1"></i> Aplikasi
+                        <i class="fas fa-apps mr-1"></i> <span class="d-none d-lg-inline">Aplikasi</span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-lg border-0 shadow-sm rounded-3 py-2" aria-labelledby="aplikasiDropdown">
+                    <div class="dropdown-menu dropdown-menu-sm border-0 shadow-sm rounded-3 py-2" aria-labelledby="aplikasiDropdown">
                         <a class="dropdown-item py-2" href="aplikasi.html">
-                            <i class="fas fa-cubes mr-2 text-primary" style="width: 20px;"></i> Aplikasi Pelayanan
+                            <i class="fas fa-cubes mr-2 text-primary" style="width: 18px;"></i> Aplikasi Pelayanan
                         </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item py-2" href="verifikasi.html">
-                            <i class="fas fa-qrcode mr-2 text-info" style="width: 20px;"></i> Verifikasi Keaslian
+                            <i class="fas fa-qrcode mr-2 text-info" style="width: 18px;"></i> Verifikasi
                         </a>
                     </div>
                 </li>
 
-                <!-- Wilayah -->
-                <li class="nav-item mx-1">
-                    <a class="nav-link px-3 rounded-pill" href="wilayah.html">
-                        <i class="fas fa-map-marker-alt mr-1"></i> Wilayah
+                <!-- Wilayah - DIPENDEK -->
+                <li class="nav-item">
+                    <a class="nav-link px-2 rounded-pill" href="wilayah.html">
+                        <i class="fas fa-map-marker-alt mr-1"></i> <span class="d-none d-lg-inline">Wilayah</span>
                     </a>
                 </li>
 
-                <!-- Berita -->
-                <li class="nav-item mx-1">
-                    <a class="nav-link px-3 rounded-pill" href="berita.html">
-                        <i class="fas fa-newspaper mr-1"></i> Berita
+                <!-- Berita - DIPENDEK -->
+                <li class="nav-item">
+                    <a class="nav-link px-2 rounded-pill" href="berita.html">
+                        <i class="fas fa-newspaper mr-1"></i> <span class="d-none d-lg-inline">Berita</span>
                     </a>
                 </li>
 
-                <!-- Kontak -->
-                <li class="nav-item mx-1">
-                    <a class="nav-link px-3 rounded-pill" href="kontak.html">
-                        <i class="fas fa-envelope mr-1"></i> Kontak
+                <!-- Kontak - DIPENDEK -->
+                <li class="nav-item">
+                    <a class="nav-link px-2 rounded-pill" href="kontak.html">
+                        <i class="fas fa-envelope mr-1"></i> <span class="d-none d-lg-inline">Kontak</span>
                     </a>
                 </li>
             </ul>
             
-            <!-- Login/User Section - Aligned Right -->
-            <ul class="navbar-nav ml-auto">
+            <!-- Login/User Section - Minimalis -->
+            <ul class="navbar-nav ml-2">
                 <li class="nav-item" id="loginNav"></li>
             </ul>
         </div>
@@ -135,39 +136,52 @@
 </nav>
 
 <style>
-/* ===== ENHANCED NAVBAR STYLING ===== */
+/* ===== NAVBAR RAPAT & TIDAK LEBAR ===== */
 .navbar {
     background: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.03);
     transition: all 0.3s ease;
+    padding-top: 8px;
+    padding-bottom: 8px;
 }
 
 .navbar-brand {
     font-weight: 700;
     transition: all 0.2s;
+    padding: 0;
+}
+
+.navbar-brand span {
+    font-size: 0.9rem !important;
+    letter-spacing: -0.2px;
 }
 
 .navbar-brand:hover {
     transform: translateY(-1px);
 }
 
-/* Navbar Links */
+/* Navbar Links - LEBIH RAPAT */
+.navbar-nav {
+    gap: 0px !important;
+}
+
 .navbar-nav .nav-item .nav-link {
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 0.85rem !important;
     color: #2c3e50 !important;
     transition: all 0.2s ease;
-    border-radius: 50px;
-    padding: 0.5rem 1.2rem !important;
+    border-radius: 30px;
+    padding: 0.4rem 0.7rem !important;
     display: flex;
     align-items: center;
     justify-content: center;
+    white-space: nowrap;
 }
 
 .navbar-nav .nav-item .nav-link i {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     transition: transform 0.2s;
 }
 
@@ -176,47 +190,34 @@
     color: #0d6efd !important;
 }
 
-.navbar-nav .nav-item .nav-link:hover i {
-    transform: scale(1.1);
-}
-
 .navbar-nav .nav-item .nav-link.active {
     background: #0d6efd !important;
     color: white !important;
     font-weight: 600;
-    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.2);
 }
 
-.navbar-nav .nav-item .nav-link.active i {
-    color: white !important;
-}
-
-/* Dropdown Menu Styling */
+/* Dropdown Menu - LEBIH KECIL */
 .dropdown-menu {
     border: none;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    border-radius: 16px;
-    padding: 10px 0;
-    margin-top: 10px;
-    animation: fadeInDown 0.3s ease;
-    min-width: 240px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    border-radius: 14px;
+    padding: 8px 0;
+    margin-top: 6px;
+    animation: fadeInDown 0.2s ease;
+    min-width: 200px;
+    font-size: 0.85rem;
     border: 1px solid rgba(0,0,0,0.02);
 }
 
 @keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .dropdown-item {
-    padding: 0.65rem 1.5rem;
-    font-size: 0.95rem;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.85rem;
     color: #2c3e50;
     transition: all 0.2s;
     display: flex;
@@ -224,10 +225,11 @@
 }
 
 .dropdown-item i {
-    width: 22px;
+    width: 18px;
     text-align: center;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     transition: transform 0.2s;
+    margin-right: 10px;
 }
 
 .dropdown-item:hover {
@@ -235,141 +237,144 @@
     color: #0d6efd;
 }
 
-.dropdown-item:hover i {
-    transform: scale(1.15);
-}
-
-.dropdown-divider {
-    margin: 8px 0;
-    border-top: 1px solid rgba(0,0,0,0.05);
-}
-
-/* Mobile Toggle Button */
+/* Mobile Toggle Button - LEBIH KECIL */
 .navbar-toggler {
     border: none;
-    padding: 10px 12px;
-    border-radius: 12px;
+    padding: 6px 10px;
+    border-radius: 10px;
     background: rgba(13, 110, 253, 0.05);
 }
 
-.navbar-toggler:focus,
-.navbar-toggler:active {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1) !important;
-}
-
 .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 86, 179, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    width: 1.2em;
+    height: 1.2em;
 }
 
 /* ===== MOBILE OPTIMIZATION ===== */
-@media (max-width: 991.98px) {
-    .navbar-brand {
-        padding-left: 5px;
+@media (max-width: 1199.98px) {
+    .navbar-nav .nav-item .nav-link span {
+        display: none !important;
     }
     
+    .navbar-nav .nav-item .nav-link i {
+        margin-right: 0;
+        font-size: 1rem;
+    }
+    
+    .navbar-nav .nav-item .nav-link {
+        padding: 0.4rem 0.6rem !important;
+    }
+}
+
+@media (max-width: 991.98px) {
     .navbar-brand span {
-        font-size: 1rem !important;
+        display: none !important;
+    }
+    
+    .navbar-brand img {
+        height: 35px;
     }
     
     .navbar-collapse {
         background: white;
-        border-radius: 20px;
-        padding: 15px;
-        margin-top: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        max-height: 80vh;
+        border-radius: 16px;
+        padding: 12px;
+        margin-top: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        max-height: 85vh;
         overflow-y: auto;
     }
     
-    .navbar-nav .nav-item {
-        margin: 2px 0 !important;
+    .navbar-nav {
         width: 100%;
     }
     
+    .navbar-nav .nav-item {
+        width: 100%;
+        margin: 2px 0 !important;
+    }
+    
     .navbar-nav .nav-item .nav-link {
-        padding: 0.75rem 1rem !important;
+        padding: 0.6rem 1rem !important;
         justify-content: flex-start;
-        border-radius: 12px;
+        border-radius: 10px;
+        font-size: 0.9rem !important;
+    }
+    
+    .navbar-nav .nav-item .nav-link span {
+        display: inline !important;
+        margin-left: 8px;
     }
     
     .navbar-nav .nav-item .nav-link i {
-        width: 24px;
         margin-right: 12px;
+        width: 20px;
     }
     
     .dropdown-menu {
         background: #f8f9fa;
         box-shadow: none;
         margin-left: 15px;
-        margin-top: 5px;
-        border-radius: 12px;
-        padding: 8px 0;
-        border: 1px solid rgba(0,0,0,0.03);
-        animation: none;
+        margin-top: 2px;
+        border-radius: 10px;
         width: calc(100% - 15px);
+        position: static !important;
+        transform: none !important;
+        float: none;
     }
     
     .dropdown-item {
-        padding: 0.6rem 1.2rem;
+        padding: 0.5rem 1rem;
     }
     
-    .navbar-nav.ml-auto {
-        margin-top: 15px;
-        padding-top: 15px;
+    .navbar-nav.ml-2 {
+        margin-left: 0 !important;
+        margin-top: 10px;
+        padding-top: 10px;
         border-top: 1px solid rgba(0,0,0,0.05);
+        width: 100%;
+    }
+    
+    #loginNav .nav-link {
+        justify-content: center !important;
     }
 }
 
-/* ===== DROPDOWN ARROW CUSTOM ===== */
-.dropdown-toggle::after {
-    margin-left: 0.5em;
-    vertical-align: middle;
-    border-top: 0.3em solid;
-    border-right: 0.3em solid transparent;
-    border-left: 0.3em solid transparent;
-    transition: transform 0.2s;
-}
-
-.dropdown.show .dropdown-toggle::after {
-    transform: rotate(180deg);
-}
-
-/* ===== LOGIN BUTTON SPECIAL STYLE ===== */
+/* ===== LOGIN BUTTON MINIMALIS ===== */
 #loginNav .nav-link {
     background: linear-gradient(135deg, #0d6efd, #0b5ed7);
     color: white !important;
-    padding: 0.5rem 1.5rem !important;
-    border-radius: 50px;
+    padding: 0.4rem 1.2rem !important;
+    border-radius: 30px;
     font-weight: 600;
-    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+    font-size: 0.85rem !important;
+    box-shadow: 0 3px 8px rgba(13, 110, 253, 0.2);
 }
 
 #loginNav .nav-link i {
     color: white !important;
+    margin-right: 6px;
 }
 
-#loginNav .nav-link:hover {
-    background: linear-gradient(135deg, #0b5ed7, #0a58ca);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(13, 110, 253, 0.3);
-}
-
-/* ===== DROPDOWN USER MENU ===== */
 #loginNav .dropdown-menu {
-    min-width: 180px;
+    min-width: 160px;
     right: 0;
     left: auto;
 }
 
-#loginNav .dropdown-item.text-danger:hover {
-    background: rgba(220, 53, 69, 0.1);
-    color: #dc3545 !important;
+/* ===== DROPDOWN ARROW ===== */
+.dropdown-toggle::after {
+    margin-left: 0.3em;
+    vertical-align: middle;
+    border-top: 0.25em solid;
+    border-right: 0.25em solid transparent;
+    border-left: 0.25em solid transparent;
+    transition: transform 0.2s;
 }
 
-/* ===== SCROLLBAR STYLING ===== */
+/* ===== SCROLLBAR HALUS ===== */
 .navbar-collapse::-webkit-scrollbar {
-    width: 5px;
+    width: 4px;
 }
 
 .navbar-collapse::-webkit-scrollbar-track {
@@ -381,45 +386,27 @@
     background: #c1c1c1;
     border-radius: 10px;
 }
-
-.navbar-collapse::-webkit-scrollbar-thumb:hover {
-    background: #a1a1a1;
-}
 </style>
 
 <script>
 // ===== USER AUTHENTICATION FUNCTIONS =====
-// Note: Fungsi getUser() dan logout() harus didefinisikan di global scope
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Update login state setiap halaman dimuat
     updateLoginNav();
-    
-    // Set active class berdasarkan halaman yang sedang dibuka
     setActiveNavItem();
 });
 
 function getUser() {
-    // Coba ambil dari localStorage
     try {
         const userStr = localStorage.getItem('user');
-        if (userStr) {
-            return JSON.parse(userStr);
-        }
-    } catch (e) {
-        console.error('Error parsing user data');
-    }
+        if (userStr) return JSON.parse(userStr);
+    } catch (e) {}
     return null;
 }
 
 function logout() {
-    // Hapus data user
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    
-    // Redirect ke halaman login atau home
     window.location.href = 'login.html';
-    
     return false;
 }
 
@@ -432,7 +419,7 @@ function updateLoginNav() {
     if (!user) {
         loginNav.innerHTML = `
             <a href="login.html" class="nav-link d-flex align-items-center">
-                <i class="fas fa-sign-in-alt mr-2"></i> Login
+                <i class="fas fa-sign-in-alt mr-1"></i> <span class="d-none d-lg-inline">Login</span>
             </a>
         `;
     } else {
@@ -440,15 +427,15 @@ function updateLoginNav() {
             <div class="dropdown">
                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" 
                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-user-circle mr-2"></i> ${user.username || user.name || 'Admin'}
+                    <i class="fas fa-user-circle mr-1"></i> <span class="d-none d-lg-inline">${user.username || 'Admin'}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right border-0 shadow-sm rounded-3 py-2">
                     <a class="dropdown-item py-2" href="admin.html">
-                        <i class="fas fa-cog mr-2" style="width: 20px;"></i> Panel Admin
+                        <i class="fas fa-cog mr-2"></i> Panel Admin
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item py-2 text-danger" href="#" onclick="logout(); return false;">
-                        <i class="fas fa-sign-out-alt mr-2" style="width: 20px;"></i> Logout
+                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
                     </a>
                 </div>
             </div>
@@ -457,30 +444,18 @@ function updateLoginNav() {
 }
 
 function setActiveNavItem() {
-    // Ambil nama file halaman saat ini
     const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-    
-    // Hilangkan query params jika ada
     const currentPage = currentPath.split('?')[0];
     
-    // Daftar semua link di navbar
-    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-    
-    navLinks.forEach(link => {
+    document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
         const href = link.getAttribute('href');
-        if (href === currentPage) {
-            link.classList.add('active');
-        } else {
-            link.classList.remove('active');
-        }
+        if (href === currentPage) link.classList.add('active');
+        else link.classList.remove('active');
     });
     
-    // Special handling untuk dropdown parent
-    const dropdownItems = document.querySelectorAll('.dropdown-item');
-    dropdownItems.forEach(item => {
+    document.querySelectorAll('.dropdown-item').forEach(item => {
         const href = item.getAttribute('href');
         if (href === currentPage) {
-            // Tambah class active ke parent dropdown toggle
             const parentDropdown = item.closest('.dropdown');
             if (parentDropdown) {
                 const toggle = parentDropdown.querySelector('.dropdown-toggle');
@@ -490,8 +465,6 @@ function setActiveNavItem() {
     });
 }
 
-// Export ke global scope
 window.logout = logout;
 window.getUser = getUser;
-window.updateLoginNav = updateLoginNav;
 </script>
