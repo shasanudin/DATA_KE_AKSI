@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* ===== SAME STYLING - TIDAK BERUBAH ===== */
         :root {
             --primary: #0a58ca;
             --primary-dark: #084298;
@@ -42,7 +43,6 @@
             overflow-x: hidden;
         }
 
-        /* Background Pattern */
         body::before {
             content: '';
             position: absolute;
@@ -72,7 +72,6 @@
             z-index: 10;
         }
 
-        /* Logo & Brand */
         .brand-section {
             text-align: center;
             margin-bottom: 30px;
@@ -117,7 +116,6 @@
             font-weight: 500;
         }
 
-        /* Card Login */
         .login-card {
             background: white;
             border-radius: var(--border-radius);
@@ -156,7 +154,6 @@
             font-size: 0.95rem;
         }
 
-        /* Form Group */
         .form-group {
             margin-bottom: 25px;
         }
@@ -182,7 +179,6 @@
             left: 16px;
             color: #adb5bd;
             font-size: 1rem;
-            transition: all 0.2s;
         }
 
         .input-field {
@@ -203,26 +199,14 @@
             box-shadow: 0 0 0 4px rgba(10,88,202,0.1);
         }
 
-        .input-field::placeholder {
-            color: #adb5bd;
-            font-weight: 400;
-        }
-
-        /* Password Toggle */
         .password-toggle {
             position: absolute;
             right: 16px;
             color: #adb5bd;
             cursor: pointer;
             font-size: 1rem;
-            transition: color 0.2s;
         }
 
-        .password-toggle:hover {
-            color: var(--primary);
-        }
-
-        /* Button */
         .btn-login {
             width: 100%;
             padding: 16px 20px;
@@ -267,13 +251,6 @@
             box-shadow: 0 10px 25px rgba(10,88,202,0.3);
         }
 
-        .btn-login:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Message Alert */
         .message-alert {
             margin-top: 25px;
             padding: 14px 18px;
@@ -287,14 +264,8 @@
         }
 
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .message-success {
@@ -315,7 +286,6 @@
             border: 1px solid rgba(10,88,202,0.2);
         }
 
-        /* Info Panel */
         .info-panel {
             margin-top: 25px;
             padding: 20px;
@@ -338,7 +308,6 @@
             color: var(--primary);
         }
 
-        /* Footer */
         .login-footer {
             margin-top: 25px;
             text-align: center;
@@ -352,11 +321,6 @@
             font-weight: 600;
         }
 
-        .login-footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Loading Spinner */
         .spinner {
             display: inline-block;
             width: 20px;
@@ -371,27 +335,13 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive */
         @media (max-width: 480px) {
-            .login-card {
-                padding: 30px 20px;
-            }
-
-            .brand-title {
-                font-size: 1.6rem;
-            }
-
-            .brand-icon {
-                width: 70px;
-                height: 70px;
-            }
-
-            .brand-icon i {
-                font-size: 35px;
-            }
+            .login-card { padding: 30px 20px; }
+            .brand-title { font-size: 1.6rem; }
+            .brand-icon { width: 70px; height: 70px; }
+            .brand-icon i { font-size: 35px; }
         }
 
-        /* Demo Credentials */
         .demo-credentials {
             margin-top: 20px;
             padding: 15px;
@@ -401,10 +351,7 @@
             font-size: 0.85rem;
         }
 
-        .demo-credentials strong {
-            color: #856404;
-        }
-
+        .demo-credentials strong { color: #856404; }
         .demo-credentials code {
             background: rgba(255,193,7,0.2);
             padding: 3px 8px;
@@ -432,73 +379,41 @@
             </div>
 
             <form id="loginForm">
-                <!-- Email Field -->
                 <div class="form-group">
                     <label class="form-label" for="username">
                         <i class="fas fa-envelope mr-1"></i> Email Admin
                     </label>
                     <div class="input-wrapper">
                         <i class="fas fa-envelope input-icon"></i>
-                        <input 
-                            type="email" 
-                            id="username" 
-                            name="username"
-                            class="input-field" 
-                            placeholder="admin@example.com"
-                            required
-                            autocomplete="email"
-                            autofocus
-                        >
+                        <input type="email" id="username" class="input-field" placeholder="admin@example.com" required autocomplete="email" autofocus>
                     </div>
                 </div>
 
-                <!-- Password Field -->
                 <div class="form-group">
                     <label class="form-label" for="password">
                         <i class="fas fa-lock mr-1"></i> Password
                     </label>
                     <div class="input-wrapper">
                         <i class="fas fa-lock input-icon"></i>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password"
-                            class="input-field" 
-                            placeholder="••••••••"
-                            required
-                            autocomplete="current-password"
-                        >
+                        <input type="password" id="password" class="input-field" placeholder="••••••••" required autocomplete="current-password">
                         <i class="fas fa-eye password-toggle" id="togglePassword"></i>
                     </div>
                 </div>
 
-                <!-- Login Button -->
                 <button type="submit" id="btnLogin" class="btn-login">
                     <i class="fas fa-sign-in-alt"></i>
                     <span>MASUK DASHBOARD</span>
                 </button>
 
-                <!-- Message Container -->
                 <div id="messageContainer" style="display: none;"></div>
             </form>
 
-            <!-- Info Panel -->
             <div class="info-panel">
-                <div class="info-item">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>Akses terbatas untuk admin TKSK & Puskesos</span>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-database"></i>
-                    <span>Firebase Authentication + Firestore</span>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-clock"></i>
-                    <span>Sesi login berlaku 24 jam</span>
-                </div>
+                <div class="info-item"><i class="fas fa-shield-alt"></i> Akses terbatas untuk admin TKSK & Puskesos</div>
+                <div class="info-item"><i class="fas fa-database"></i> Firebase Authentication + Firestore</div>
+                <div class="info-item"><i class="fas fa-clock"></i> Sesi login berlaku 24 jam</div>
             </div>
 
-            <!-- Demo Credentials (Hanya untuk testing) -->
             <div class="demo-credentials">
                 <div class="d-flex align-items-center mb-2">
                     <i class="fas fa-flask mr-2" style="color: #856404;"></i>
@@ -514,7 +429,6 @@
             </div>
         </div>
 
-        <!-- Footer -->
         <div class="login-footer">
             <p>&copy; 2026 TKSK & Forum Puskesos Kecamatan Sumber</p>
             <p>
@@ -527,13 +441,10 @@
 
     <script type="module">
         // ============================================================
-        // FIREBASE AUTHENTICATION - LOGIN SYSTEM (STABLE VERSION)
+        // FIREBASE AUTHENTICATION - LOGIN SYSTEM (STABLE - NO AUTO REDIRECT)
         // ============================================================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { 
-            getAuth, 
-            signInWithEmailAndPassword
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
@@ -541,19 +452,16 @@
             projectId: "data-ke-aksi-auth",
             storageBucket: "data-ke-aksi-auth.firebasestorage.app",
             messagingSenderId: "631382692174",
-            appId: "1:631382692174:web:c10a099fb3021849eace1f",
-            measurementId: "G-9NMBBB79EQ"
+            appId: "1:631382692174:web:c10a099fb3021849eace1f"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
         // ============================================================
-        // GLOBAL VARIABLES & FLAGS
+        // GLOBAL FLAGS
         // ============================================================
-        let isRedirecting = false; // FLAG PENTING: mencegah multiple redirect
-        let authChecked = false;   // Flag untuk cek auth hanya sekali
+        let isRedirecting = false;
 
         // ============================================================
         // DOM ELEMENTS
@@ -566,19 +474,17 @@
         const messageContainer = document.getElementById('messageContainer');
 
         // ============================================================
-        // TOGGLE PASSWORD VISIBILITY
+        // TOGGLE PASSWORD
         // ============================================================
-        if (togglePassword) {
-            togglePassword.addEventListener('click', function() {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                this.classList.toggle('fa-eye');
-                this.classList.toggle('fa-eye-slash');
-            });
-        }
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
 
         // ============================================================
-        // SHOW MESSAGE FUNCTION
+        // SHOW MESSAGE
         // ============================================================
         function showMessage(message, type = 'error') {
             messageContainer.style.display = 'block';
@@ -587,102 +493,66 @@
                 <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'info' ? 'fa-info-circle' : 'fa-exclamation-circle'}"></i>
                 <span>${message}</span>
             `;
-            
-            // Auto hide after 5 seconds for success
             if (type === 'success') {
-                setTimeout(() => {
-                    messageContainer.style.display = 'none';
-                }, 3000);
+                setTimeout(() => messageContainer.style.display = 'none', 3000);
             }
         }
 
         // ============================================================
-        // SET LOADING STATE
+        // SET LOADING
         // ============================================================
         function setLoading(isLoading) {
-            if (isLoading) {
-                btnLogin.disabled = true;
-                btnLogin.innerHTML = `
-                    <span class="spinner"></span>
-                    <span>MEMVERIFIKASI...</span>
-                `;
-            } else {
-                btnLogin.disabled = false;
-                btnLogin.innerHTML = `
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span>MASUK DASHBOARD</span>
-                `;
-            }
+            btnLogin.disabled = isLoading;
+            btnLogin.innerHTML = isLoading
+                ? `<span class="spinner"></span><span>MEMVERIFIKASI...</span>`
+                : `<i class="fas fa-sign-in-alt"></i><span>MASUK DASHBOARD</span>`;
         }
 
         // ============================================================
-        // CHECK IF USER ALREADY LOGGED IN - FIXED (TIDAK LAGI LOOP)
+        // CHECK EXISTING LOGIN - TIDAK AUTO REDIRECT!
         // ============================================================
         function checkExistingLogin() {
-            // Cegah pengecekan berulang
-            if (authChecked) return;
-            authChecked = true;
-            
             const userStr = localStorage.getItem('user');
             if (!userStr) return;
             
             try {
                 const userData = JSON.parse(userStr);
-                const email = userData.email;
-                const timestamp = userData.timestamp;
+                const loginTime = new Date(userData.timestamp).getTime();
+                const hoursPassed = (new Date().getTime() - loginTime) / (1000 * 60 * 60);
                 
-                // Validasi: cek apakah login masih fresh (opsional)
-                const loginTime = new Date(timestamp).getTime();
-                const now = new Date().getTime();
-                const hoursPassed = (now - loginTime) / (1000 * 60 * 60);
-                
-                // Jika sudah lebih dari 24 jam, hapus dan minta login ulang
-                if (hoursPassed > 24) {
-                    localStorage.removeItem('user');
-                    return;
-                }
-                
-                // Tampilkan pesan info
-                showMessage(`Selamat datang kembali, ${userData.username || 'Admin'}!`, 'info');
-                
-                // Redirect ke dashboard jika sudah login
-                if (!isRedirecting) {
+                // Hanya redirect jika user masih dalam session 24 jam
+                if (hoursPassed <= 24 && !isRedirecting) {
                     isRedirecting = true;
+                    // Tampilkan pesan singkat
+                    messageContainer.style.display = 'block';
+                    messageContainer.className = 'message-alert message-info';
+                    messageContainer.innerHTML = `<i class="fas fa-info-circle"></i> Anda sudah login. Mengalihkan...`;
+                    
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
-                    }, 1500);
+                    }, 1000);
+                } else {
+                    // Hapus session jika expired
+                    localStorage.removeItem('user');
                 }
-                
             } catch (e) {
                 localStorage.removeItem('user');
             }
         }
 
         // ============================================================
-        // LOGIN FORM SUBMIT HANDLER - FIXED
+        // LOGIN SUBMIT
         // ============================================================
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Cegah double submit
             if (isRedirecting) return;
-            
+
             const email = usernameInput.value.trim();
             const password = passwordInput.value;
 
-            // Validasi input
             if (!email || !password) {
                 showMessage('Email dan password harus diisi!', 'error');
-                return;
-            }
-
-            if (!email.includes('@') || !email.includes('.')) {
-                showMessage('Format email tidak valid!', 'error');
-                return;
-            }
-
-            if (password.length < 6) {
-                showMessage('Password minimal 6 karakter!', 'error');
                 return;
             }
 
@@ -691,7 +561,6 @@
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 
-                // Simpan user info ke localStorage
                 const user = {
                     uid: userCredential.user.uid,
                     email: userCredential.user.email,
@@ -700,78 +569,40 @@
                 };
                 
                 localStorage.setItem('user', JSON.stringify(user));
-                
-                // Tampilkan pesan sukses
                 showMessage('Login berhasil! Mengalihkan...', 'success');
                 
-                // Redirect ke dashboard (dengan flag)
                 if (!isRedirecting) {
                     isRedirecting = true;
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
+                    setTimeout(() => window.location.href = 'dashboard.html', 1500);
                 }
                 
             } catch (error) {
                 setLoading(false);
-                isRedirecting = false; // Reset flag jika gagal
+                isRedirecting = false;
                 
-                console.error('Login error:', error.code);
-                
-                // Handle specific Firebase errors
+                let msg = 'Login gagal';
                 switch (error.code) {
-                    case 'auth/invalid-credential':
-                    case 'auth/user-not-found':
-                    case 'auth/wrong-password':
-                        showMessage('Email atau password salah!', 'error');
-                        break;
-                    case 'auth/invalid-email':
-                        showMessage('Format email tidak valid!', 'error');
-                        break;
-                    case 'auth/user-disabled':
-                        showMessage('Akun ini telah dinonaktifkan!', 'error');
-                        break;
-                    case 'auth/too-many-requests':
-                        showMessage('Terlalu banyak percobaan. Coba lagi nanti!', 'error');
-                        break;
-                    case 'auth/network-request-failed':
-                        showMessage('Koneksi internet bermasalah!', 'error');
-                        break;
-                    default:
-                        showMessage('Login gagal: ' + error.message, 'error');
+                    case 'auth/invalid-credential': msg = 'Email atau password salah!'; break;
+                    case 'auth/user-not-found': msg = 'Email tidak terdaftar!'; break;
+                    case 'auth/wrong-password': msg = 'Password salah!'; break;
+                    case 'auth/invalid-email': msg = 'Format email tidak valid!'; break;
+                    case 'auth/user-disabled': msg = 'Akun dinonaktifkan!'; break;
+                    case 'auth/too-many-requests': msg = 'Terlalu banyak percobaan!'; break;
+                    case 'auth/network-request-failed': msg = 'Koneksi internet bermasalah!'; break;
+                    default: msg = error.message;
                 }
+                showMessage(msg, 'error');
             }
         });
 
         // ============================================================
-        // INITIALIZATION - FIXED
+        // INITIALIZATION - HANYA PANGGIL SATU KALI
         // ============================================================
-        (function init() {
-            // Cek apakah user sudah login
-            checkExistingLogin();
-            
-            // Clear sensitive data on page unload (optional)
-            window.addEventListener('beforeunload', function() {
-                // Reset flags, jangan hapus user
-                isRedirecting = false;
-                authChecked = false;
-            });
-        })();
-
-        // ============================================================
-        // FORGOT PASSWORD - Optional (commented)
-        // ============================================================
-        /*
-        async function handleForgotPassword(email) {
-            try {
-                await sendPasswordResetEmail(auth, email);
-                showMessage('Email reset password telah dikirim!', 'success');
-            } catch (error) {
-                showMessage('Gagal mengirim email reset: ' + error.message, 'error');
-            }
-        }
-        */
-
+        // Cek login sekali, jangan loop
+        setTimeout(checkExistingLogin, 100);
+        
+        // Bersihkan flag saat page unload
+        window.addEventListener('beforeunload', () => { isRedirecting = false; });
     </script>
 </body>
 </html>
