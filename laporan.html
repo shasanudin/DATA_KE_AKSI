@@ -219,7 +219,7 @@
                 showLoading(true);
                 
                 // Ambil data dari koleksi 'dtsen_data'
-                const querySnapshot = await getDocs(collection(db, "dtsen_data"));
+                const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
                 
                 cachedData = [];
                 querySnapshot.forEach((doc) => {
