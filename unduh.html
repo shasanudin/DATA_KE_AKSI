@@ -268,6 +268,20 @@
             border-radius: 3px;
             font-weight: 600;
         }
+        
+        /* ============ VERIFIKASI BOX ============ */
+        .verifikasi-box {
+            border: 1px solid #000;
+            padding: 15px;
+            font-size: 11px;
+            background: #fcfcfc;
+            border-radius: 5px;
+        }
+        
+        /* ============ TANDA TANGAN AREA ============ */
+        .ttd-area {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -452,88 +466,19 @@
         <div id="kontenHal1" style="min-height: 200px;">
             <p style="text-align: center; color: #666;">Memuat data agregasi kecamatan...</p>
         </div>
-    </div>
 
-    <!-- ======= HALAMAN 2: PRIORITAS INTERVENSI DTSEN (KRITERIA BARU) ======= -->
-    <div style="page-break-before: always;" class="halaman-2">
-        <!-- KOP LANJUTAN DENGAN NOMOR SURAT YANG SAMA -->
-        <div class="kop-lanjutan">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
-                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan2" class="font-weight-bold">-</span></span>
-            </div>
-        </div>
-
-        <h4 class="judul-surat">PRIORITAS INTERVENSI DTSEN</h4>
-        <p style="font-size: 12px; text-align: center; margin-bottom: 20px;">
-            <em>Data Prioritas Berdasarkan Jumlah Desil 1 dan 2 (Sangat Miskin & Miskin)</em>
-        </p>
-        
-        <!-- KRITERIA PRIORITAS BARU -->
-        <div style="background: #e3f2fd; padding: 10px; margin-bottom: 20px; border-left: 4px solid #0d6efd; font-size: 11px;">
-            <strong>⚡ KRITERIA PRIORITAS BARU:</strong> 
-            <span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 3px; margin-left: 10px;">TINGGI >500 KK</span>
-            <span style="background: #ffc107; color: black; padding: 2px 8px; border-radius: 3px; margin-left: 5px;">SEDANG 300-500 KK</span>
-            <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; margin-left: 5px;">RENDAH <300 KK</span>
-        </div>
-        
-        <!-- KONTEN HALAMAN 2 - PRIORITAS INTERVENSI (SEMUA DESA) -->
-        <div id="kontenHal2" style="min-height: 250px;">
-            <p style="text-align: center; color: #666;">Memuat data prioritas intervensi...</p>
-        </div>
-    </div>
-
-    <!-- ======= HALAMAN 3: REKAP BANTUAN SOSIAL PER DESA ======= -->
-    <div style="page-break-before: always;" class="halaman-3">
-        <div class="kop-lanjutan">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
-                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan3" class="font-weight-bold">-</span></span>
-            </div>
-        </div>
-
-        <h4 class="judul-surat">REKAP BANTUAN SOSIAL PER DESA</h4>
-        <p style="font-size: 12px; text-align: center; margin-bottom: 20px;">
-            <em>Estimasi Distribusi Bantuan Sosial Berdasarkan Wilayah</em>
-        </p>
-        
-        <!-- KONTEN HALAMAN 3 - BANTUAN SOSIAL (SEMUA DESA) -->
-        <div id="kontenHal3" style="min-height: 250px;">
-            <p style="text-align: center; color: #666;">Memuat data bantuan sosial...</p>
-        </div>
-    </div>
-
-    <!-- ======= HALAMAN 4: LAYANAN SOSIAL + QR + TANDA TANGAN ======= -->
-    <div style="page-break-before: always;" class="halaman-4">
-        <div class="kop-lanjutan">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
-                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan4" class="font-weight-bold">-</span></span>
-            </div>
-        </div>
-
-        <h4 class="judul-surat">REKAPITULASI LAYANAN SOSIAL</h4>
-        <p style="font-size: 12px; text-align: center; margin-bottom: 20px;">
-            <em>Data Layanan Sosial, Pembaruan DTSEN, Pengaduan, dan SKTM</em>
-        </p>
-        
-        <!-- KONTEN HALAMAN 4 - LAYANAN SOSIAL (REAL-TIME DARI FIREBASE) -->
-        <div id="kontenHal4" style="min-height: 200px;">
-            <p style="text-align: center; color: #666;">Memuat data layanan sosial...</p>
-        </div>
-
-        <!-- BAGIAN PENUTUP SURAT -->
-        <div style="margin-top: 30px;">
+        <!-- ======= BAGIAN PENUTUP, TANDA TANGAN DAN QR CODE - PINDAH KE HALAMAN 1 ======= -->
+        <div style="margin-top: 40px;">
             <p style="font-size: 12px; text-align: justify;">
                 Demikian laporan ini kami sampaikan untuk menjadi bahan evaluasi dan tindak lanjut program bantuan sosial di Kecamatan Sumber. Atas perhatian dan kerjasamanya, kami ucapkan terima kasih.
             </p>
         </div>
 
-        <!-- TANDA TANGAN DAN QR CODE -->
+        <!-- TANDA TANGAN DAN QR CODE - DIPINDAHKAN KE HALAMAN 1 -->
         <div style="display: flex; margin-top: 40px;">
             <!-- KIRI: VERIFIKASI DATA -->
             <div style="width: 55%; padding-right: 20px;">
-                <div style="border: 1px solid #000; padding: 15px; font-size: 11px; background: #fcfcfc; border-radius: 5px;">
+                <div class="verifikasi-box">
                     <strong style="font-size: 11px;">⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻</strong><br>
                     <strong style="font-size: 12px;">VERIFIKASI DAN VALIDASI DATA:</strong><br>
                     ✓ Data bersumber dari Database DTSEN Kementerian Sosial RI<br>
@@ -573,11 +518,87 @@
             </div>
         </div>
 
-        <!-- FOOTER SURAT -->
+        <!-- FOOTER SURAT HALAMAN 1 -->
         <div class="footer-surat">
             <span>Dokumen ini diterbitkan secara elektronik dan sah tanpa tanda tangan basah</span><br>
             <span>⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻</span>
         </div>
+    </div>
+
+    <!-- ======= HALAMAN 2: PRIORITAS INTERVENSI DTSEN (KRITERIA BARU) ======= -->
+    <div style="page-break-before: always;" class="halaman-2">
+        <!-- KOP LANJUTAN DENGAN NOMOR SURAT YANG SAMA -->
+        <div class="kop-lanjutan">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
+                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan2" class="font-weight-bold">-</span></span>
+            </div>
+        </div>
+
+        <h4 class="judul-surat">PRIORITAS INTERVENSI DTSEN</h4>
+        <p style="font-size: 12px; text-align: center; margin-bottom: 20px;">
+            <em>Data Prioritas Berdasarkan Jumlah Desil 1 dan 2 (Sangat Miskin & Miskin)</em>
+        </p>
+        
+        <!-- KRITERIA PRIORITAS BARU -->
+        <div style="background: #e3f2fd; padding: 10px; margin-bottom: 20px; border-left: 4px solid #0d6efd; font-size: 11px;">
+            <strong>⚡ KRITERIA PRIORITAS BARU:</strong> 
+            <span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 3px; margin-left: 10px;">TINGGI >500 KK</span>
+            <span style="background: #ffc107; color: black; padding: 2px 8px; border-radius: 3px; margin-left: 5px;">SEDANG 300-500 KK</span>
+            <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; margin-left: 5px;">RENDAH <300 KK</span>
+        </div>
+        
+        <!-- KONTEN HALAMAN 2 - PRIORITAS INTERVENSI (SEMUA DESA) -->
+        <div id="kontenHal2" style="min-height: 250px;">
+            <p style="text-align: center; color: #666;">Memuat data prioritas intervensi...</p>
+        </div>
+        
+        <!-- TIDAK ADA TTD/QR DI HALAMAN 2 -->
+    </div>
+
+    <!-- ======= HALAMAN 3: REKAP BANTUAN SOSIAL PER DESA ======= -->
+    <div style="page-break-before: always;" class="halaman-3">
+        <div class="kop-lanjutan">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
+                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan3" class="font-weight-bold">-</span></span>
+            </div>
+        </div>
+
+        <h4 class="judul-surat">REKAP BANTUAN SOSIAL PER DESA</h4>
+        <p style="font-size: 12px; text-align: center; margin-bottom: 20px;">
+            <em>Estimasi Distribusi Bantuan Sosial Berdasarkan Wilayah</em>
+        </p>
+        
+        <!-- KONTEN HALAMAN 3 - BANTUAN SOSIAL (SEMUA DESA) -->
+        <div id="kontenHal3" style="min-height: 250px;">
+            <p style="text-align: center; color: #666;">Memuat data bantuan sosial...</p>
+        </div>
+        
+        <!-- TIDAK ADA TTD/QR DI HALAMAN 3 -->
+    </div>
+
+    <!-- ======= HALAMAN 4: LAYANAN SOSIAL (TANPA TTD & QR) ======= -->
+    <div style="page-break-before: always;" class="halaman-4">
+        <div class="kop-lanjutan">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
+                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan4" class="font-weight-bold">-</span></span>
+            </div>
+        </div>
+
+        <h4 class="judul-surat">REKAPITULASI LAYANAN SOSIAL</h4>
+        <p style="font-size: 12px; text-align: center; margin-bottom: 20px;">
+            <em>Data Layanan Sosial, Pembaruan DTSEN, Pengaduan, dan SKTM</em>
+        </p>
+        
+        <!-- KONTEN HALAMAN 4 - LAYANAN SOSIAL (REAL-TIME DARI FIREBASE) -->
+        <div id="kontenHal4" style="min-height: 200px;">
+            <p style="text-align: center; color: #666;">Memuat data layanan sosial...</p>
+        </div>
+        
+        <!-- TIDAK ADA PENUTUP, TTD, QR, FOOTER DI HALAMAN 4 -->
+        <!-- HALAMAN 4 HANYA BERISI TABEL LAYANAN SOSIAL -->
     </div>
 </div> <!-- Tutup paper -->
 
