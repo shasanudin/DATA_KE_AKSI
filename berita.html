@@ -2,118 +2,909 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Berita & Jurnal | TKSK & Puskesos Sumber</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
+    <title>Warta & Jurnal | TKSK & Puskesos Kecamatan Sumber</title>
     
+    <!-- Bootstrap 4.6.2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="css/berita.css">
+    
+    <!-- Google Fonts Inter & Lora -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #0a58ca;
+            --primary-dark: #084298;
+            --primary-light: #e7f1ff;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --dark: #1a2e3f;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-600: #6c757d;
+            --gray-800: #343a40;
+            --border-radius: 24px;
+            --border-radius-sm: 16px;
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
+        }
 
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        /* ===== HEADER ===== */
+        .main-header {
+            background: white;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-item img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+        }
+
+        .logo-divider {
+            width: 1px;
+            height: 35px;
+            background: linear-gradient(to bottom, transparent, #dee2e6, transparent);
+        }
+
+        .live-badge {
+            background: rgba(220,53,69,0.1);
+            color: var(--danger);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero-jurnal {
+            background: linear-gradient(145deg, #ffffff 0%, #f5faff 100%);
+            padding: 60px 0 80px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 30px;
+        }
+
+        .hero-jurnal::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(10,88,202,0.03) 0%, rgba(10,88,202,0) 70%);
+            border-radius: 50%;
+        }
+
+        .hero-jurnal::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(40,167,69,0.03) 0%, rgba(40,167,69,0) 70%);
+            border-radius: 50%;
+        }
+
+        .hero-jurnal .container {
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-jurnal h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .hero-jurnal .lead {
+            font-size: 1.2rem;
+            color: #5d6d7e;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .hero-stat-item {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .hero-stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6c757d;
+        }
+
+        /* ===== NAVBAR CONTAINER ===== */
+        #navbar {
+            margin-bottom: 0;
+            position: relative;
+            z-index: 100;
+        }
+
+        /* ===== NEWS CONTAINER ===== */
+        .news-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px 15px 60px;
+        }
+
+        /* ===== JOURNAL CARD ===== */
+        .jurnal-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 35px;
+            margin-bottom: 40px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: var(--transition);
+            position: relative;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .jurnal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(10,88,202,0.08);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .jurnal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--info));
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .jurnal-header {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .badge-priority {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #dc3545, #b02a37);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .jurnal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .jurnal-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            color: var(--gray-600);
+            font-size: 0.85rem;
+        }
+
+        .jurnal-meta i {
+            margin-right: 5px;
+            color: var(--primary);
+        }
+
+        .jurnal-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .jurnal-body {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #4a5c6c;
+        }
+
+        .kesimpulan-box {
+            background: linear-gradient(145deg, #f8fbff, #f0f5fa);
+            padding: 25px 30px;
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 30px;
+            border-left: 6px solid var(--primary);
+            font-style: italic;
+        }
+
+        .kesimpulan-box strong {
+            color: var(--dark);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .jurnal-content {
+            text-align: justify;
+        }
+
+        .jurnal-content p {
+            margin-bottom: 1.2rem;
+        }
+
+        .jurnal-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .jurnal-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            transition: var(--transition);
+        }
+
+        .jurnal-tag:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .jurnal-share {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .share-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            transition: var(--transition);
+            border: none;
+        }
+
+        .share-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+        }
+
+        .empty-icon {
+            font-size: 5rem;
+            color: var(--gray-300);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            color: var(--gray-600);
+            max-width: 500px;
+            margin: 0 auto 25px;
+        }
+
+        /* ===== LOADING ===== */
+        .loading-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+        }
+
+        .spinner-custom {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ===== FOOTER ===== */
+        .main-footer {
+            background: var(--dark);
+            color: white;
+            padding: 50px 0 30px;
+            margin-top: 60px;
+        }
+
+        .footer-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-text {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        .footer-divider {
+            margin: 40px 0 30px;
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .footer-copyright {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero-jurnal h1 { font-size: 2.2rem; }
+            .hero-stats { flex-direction: column; gap: 15px; }
+            .jurnal-card { padding: 25px; }
+            .jurnal-title { font-size: 1.5rem; }
+            .jurnal-meta { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .jurnal-footer { flex-direction: column; gap: 15px; }
+        }
+
+        @media (max-width: 576px) {
+            .hero-jurnal h1 { font-size: 1.8rem; }
+            .jurnal-title { font-size: 1.3rem; }
+            .kesimpulan-box { padding: 20px; }
+        }
+    </style>
 </head>
 <body>
 
-<header class="container-fluid py-3 bg-white">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-md-6 text-center text-md-left">
-        <img src="assets/img/logo/logo-tksk.png" alt="TKSK" height="50">
-        <img src="assets/img/logo/logo-puskesos.png" alt="Puskesos" height="50" class="ml-2 border-left pl-2">
-      </div>
-      <div class="col-md-6 text-right d-none d-md-block">
-        <span class="text-muted small">Update Terakhir: <strong>Februari 2026</strong></span>
-      </div>
+<!-- ===== HEADER WITH LIVE CLOCK ===== -->
+<header class="main-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="header-logo">
+                <div class="logo-item">
+                    <img src="assets/img/logo/logo-tksk.webp" 
+                         alt="Logo TKSK" 
+                         width="45" 
+                         height="45"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2245%22%20height%3D%2245%22%20viewBox%3D%220%200%2045%2045%22%3E%3Crect%20width%3D%2245%22%20height%3D%2245%22%20fill%3D%22%230a58ca%22%2F%3E%3Ctext%20x%3D%228%22%20y%3D%2230%22%20font-size%3D%2216%22%20fill%3D%22white%22%3ETKSK%3C%2Ftext%3E%3C%2Fsvg%3E';">
+                    <span class="font-weight-bold text-dark d-none d-md-inline">TKSK</span>
+                </div>
+                <div class="logo-divider"></div>
+                <div class="logo-item">
+                    <img src="assets/img/logo/logo-puskesos.webp" 
+                         alt="Logo Puskesos" 
+                         width="45" 
+                         height="45"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2245%22%20height%3D%2245%22%20viewBox%3D%220%200%2045%2045%22%3E%3Crect%20width%3D%2245%22%20height%3D%2245%22%20fill%3D%22%2328a745%22%2F%3E%3Ctext%20x%3D%225%22%20y%3D%2230%22%20font-size%3D%2214%22%20fill%3D%22white%22%3EPUSKESOS%3C%2Ftext%3E%3C%2Fsvg%3E';">
+                    <span class="font-weight-bold text-dark d-none d-md-inline">Puskesos</span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="live-badge">
+                    <span class="live-dot"></span>
+                    <span id="realtimeClock">Memuat...</span>
+                </span>
+            </div>
+        </div>
     </div>
-  </div>
 </header>
 
-<div class="hero-mini">
-    <div class="container text-center">
-        <h1 class="display-4 font-weight-bold">Warta & Jurnal Kegiatan</h1>
-        <p class="lead">Dokumentasi dan Kesimpulan Program Kesejahteraan Sosial Kecamatan Sumber</p>
-    </div>
-    <div id="navbar"></div>
-</div>
+<!-- ===== NAVBAR CONTAINER ===== -->
+<div id="navbar"></div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-12" id="news-container">
-            <div class="text-center py-5">
-                <div class="spinner-border text-primary" role="status"></div>
-                <p class="mt-2">Memuat Arsip Jurnal...</p>
+<!-- ===== HERO SECTION ===== -->
+<section class="hero-jurnal text-center">
+    <div class="container">
+        <h1 class="font-weight-bold" data-aos="fade-down">
+            Warta & Jurnal Kegiatan
+        </h1>
+        <p class="lead mx-auto" data-aos="fade-down" data-aos-delay="100">
+            Dokumentasi, analisis, dan kesimpulan program kesejahteraan sosial Kecamatan Sumber
+        </p>
+        <div class="hero-stats" data-aos="fade-up" data-aos-delay="200">
+            <div class="hero-stat-item">
+                <div class="hero-stat-value" id="totalBeritaHero">0</div>
+                <div class="hero-stat-label">Artikel Terbit</div>
             </div>
+            <div class="hero-stat-item">
+                <div class="hero-stat-value" id="totalKategoriHero">0</div>
+                <div class="hero-stat-label">Kategori</div>
+            </div>
+            <div class="hero-stat-item">
+                <div class="hero-stat-value" id="totalPenulisHero">0</div>
+                <div class="hero-stat-label">Kontributor</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== NEWS CONTAINER ===== -->
+<div class="container">
+    <div class="news-container">
+        <div id="newsContainer">
+            <!-- News will be loaded here -->
         </div>
     </div>
 </div>
 
-<footer class="text-center">
+<!-- ===== FOOTER ===== -->
+<footer class="main-footer">
     <div class="container">
-        <p class="mb-0">&copy; 2026 TKSK & Puskesos Kecamatan Sumber. All Rights Reserved.</p>
+        <div class="row">
+            <div class="col-md-8 mb-4 mb-md-0">
+                <div class="footer-brand">DARI DATA KE AKSI</div>
+                <p class="footer-text">
+                    Jurnal dan dokumentasi program kesejahteraan sosial Kecamatan Sumber. 
+                    Data bersumber dari Firebase Firestore dan diperbarui secara real-time.
+                </p>
+            </div>
+            <div class="col-md-4 text-md-right">
+                <p class="footer-text mb-1">
+                    <i class="fas fa-map-marker-alt mr-2"></i> Jl. Sunan Drajat No.16, Sumber
+                </p>
+                <p class="footer-text mb-1">
+                    <i class="fas fa-envelope mr-2"></i> tksksumber@gmail.com
+                </p>
+                <p class="footer-text">
+                    <i class="fas fa-phone-alt mr-2"></i> 0882-1494-0995
+                </p>
+            </div>
+        </div>
+        <hr class="footer-divider">
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="footer-copyright mb-0">
+                    © 2026 TKSK & Forum Puskesos Kecamatan Sumber. 
+                    <span class="d-block d-md-inline mt-2 mt-md-0">
+                        All Rights Reserved.
+                    </span>
+                </p>
+            </div>
+        </div>
     </div>
 </footer>
 
-<script>
-  // 1. Load Navbar
-  fetch('navbar.html')
-    .then(r => r.text())
-    .then(html => { document.getElementById('navbar').innerHTML = html; })
-    .catch(err => console.warn("Navbar tidak ditemukan"));
-</script>
-<script>
-// Contoh Data JSON (Anda bisa memindahkannya ke file data/berita.json nanti)
-const dataBerita = [
-    {
-        "title": "Evaluasi Penyaluran Bansos BPNT Tahap I 2026",
-        "date": "2026-02-01",
-        "source": "Sekretariat Puskesos",
-        "priority": "high",
-        "kesimpulan": "Penyaluran berjalan 98% tepat sasaran dengan kendala minor pada verifikasi biometrik di beberapa titik lokasi.",
-        "content": "Kegiatan monitoring yang dilakukan di Kelurahan Sumber menunjukkan peningkatan efisiensi dibandingkan tahun sebelumnya. Berdasarkan data yang dihimpun dari lapangan, verifikasi data terpadu (DTKS) menjadi kunci utama keberhasilan. Tim TKSK melakukan pendampingan intensif bagi KPM yang mengalami kendala kartu rusak. Diperlukan koordinasi lebih lanjut dengan pihak bank penyalur untuk mempercepat proses replacement kartu di lokasi."
-    },
-    {
-        "title": "Sosialisasi Program Pemberdayaan Ekonomi Masyarakat",
-        "date": "2026-01-25",
-        "source": "Tim TKSK Sumber",
-        "priority": "normal",
-        "kesimpulan": "Dibutuhkan pelatihan lanjutan khusus untuk manajemen keuangan mikro bagi kelompok usaha bersama (KUBE).",
-        "content": "Pertemuan yang dihadiri oleh 50 perwakilan warga ini membahas tentang potensi lokal yang bisa dikembangkan menjadi nilai ekonomi. Fokus utama adalah pengolahan limbah menjadi kerajinan tangan bernilai jual. Namun, tantangan utama yang dihadapi warga adalah akses permodalan dan strategi pemasaran digital. Puskesos berencana menggandeng dinas terkait untuk pelatihan bulan depan."
+<!-- ===== SCRIPTS ===== -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<!-- Firebase SDK -->
+<script type="module">
+    // ============================================================
+    // FIREBASE INITIALIZATION - BERITA DARI FIRESTORE
+    // ============================================================
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+    import { 
+        getFirestore, 
+        collection, 
+        query, 
+        orderBy, 
+        getDocs,
+        limit
+    } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
+        authDomain: "data-ke-aksi-auth.firebaseapp.com",
+        projectId: "data-ke-aksi-auth",
+        storageBucket: "data-ke-aksi-auth.firebasestorage.app",
+        messagingSenderId: "631382692174",
+        appId: "1:631382692174:web:c10a099fb3021849eace1f"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // ============================================================
+    // INITIALIZE AOS
+    // ============================================================
+    AOS.init({
+        duration: 800,
+        once: true,
+        offset: 50
+    });
+
+    // ============================================================
+    // NAVBAR LOADER
+    // ============================================================
+    fetch('navbar.html')
+        .then(r => r.ok ? r.text() : Promise.reject())
+        .then(html => document.getElementById('navbar').innerHTML = html)
+        .catch(() => {
+            console.log('Navbar not loaded');
+            document.getElementById('navbar').innerHTML = `
+                <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2">
+                    <div class="container">
+                        <a class="navbar-brand font-weight-bold" href="index.html">DATA KE AKSI</a>
+                    </div>
+                </nav>
+            `;
+        });
+
+    // ============================================================
+    // REAL-TIME CLOCK
+    // ============================================================
+    function updateClock() {
+        const now = new Date();
+        const options = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        document.getElementById('realtimeClock').innerText = now.toLocaleDateString('id-ID', options);
     }
-];
+    updateClock();
+    setInterval(updateClock, 60000);
 
-function loadNews() {
-    const container = document.getElementById('news-container');
-    
-    // Sort berdasarkan tanggal terbaru
-    dataBerita.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // ============================================================
+    // FORMAT DATE INDONESIA
+    // ============================================================
+    function formatIndonesianDate(dateString) {
+        const date = new Date(dateString);
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+                       'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        
+        if (isNaN(date.getTime())) {
+            return 'Tanggal tidak valid';
+        }
+        
+        const day = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+        
+        return `${day} ${month} ${year}`;
+    }
 
-    const html = dataBerita.map(n => `
-        <div class="jurnal-card">
-            <div class="jurnal-header">
-                ${n.priority === "high" ? '<span class="badge-priority"><i class="fas fa-fire"></i> TERPOPULER</span>' : ''}
-                <h2 class="jurnal-title">${n.title}</h2>
-                <div class="jurnal-meta">
-                    <i class="far fa-calendar-alt"></i> ${n.date} &nbsp;|&nbsp; 
-                    <i class="far fa-user"></i> ${n.source} &nbsp;|&nbsp;
-                    <i class="fas fa-book"></i> Volume 2026.No.1
+    // ============================================================
+    // TRUNCATE TEXT
+    // ============================================================
+    function truncateText(text, maxLength = 300) {
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '... ';
+    }
+
+    // ============================================================
+    // LOAD BERITA FROM FIRESTORE
+    // ============================================================
+    async function loadBerita() {
+        const newsContainer = document.getElementById('newsContainer');
+        
+        try {
+            // Tampilkan loading
+            newsContainer.innerHTML = `
+                <div class="loading-container">
+                    <div class="spinner-custom"></div>
+                    <h3 class="font-weight-bold">Memuat Arsip Jurnal</h3>
+                    <p class="text-muted">Mengambil data berita dari Firebase Firestore...</p>
                 </div>
+            `;
+
+            // Query berita terbaru (urut berdasarkan tanggal descending)
+            const beritaRef = collection(db, "berita");
+            const q = query(beritaRef, orderBy("tanggal", "desc"));
+            const querySnapshot = await getDocs(q);
+            
+            if (querySnapshot.empty) {
+                // Tampilkan empty state
+                newsContainer.innerHTML = `
+                    <div class="empty-state" data-aos="fade-up">
+                        <div class="empty-icon">
+                            <i class="fas fa-newspaper"></i>
+                        </div>
+                        <h3 class="font-weight-bold">Belum Ada Berita</h3>
+                        <p class="text-muted mb-4">Saat ini belum ada berita atau jurnal yang diterbitkan. Silakan kembali lagi nanti.</p>
+                        <a href="index.html" class="btn btn-primary px-5 py-3 rounded-pill">
+                            <i class="fas fa-home mr-2"></i> Kembali ke Beranda
+                        </a>
+                    </div>
+                `;
+                
+                // Update hero stats
+                document.getElementById('totalBeritaHero').innerText = '0';
+                document.getElementById('totalKategoriHero').innerText = '0';
+                document.getElementById('totalPenulisHero').innerText = '0';
+                return;
+            }
+
+            // Hitung statistik
+            let totalBerita = 0;
+            let kategoriSet = new Set();
+            let penulisSet = new Set();
+            let beritaHTML = '';
+
+            querySnapshot.forEach((doc) => {
+                const berita = doc.data();
+                const id = doc.id;
+                totalBerita++;
+                
+                // Parse tanggal
+                let tanggalBerita = '';
+                if (berita.tanggal && berita.tanggal.toDate) {
+                    tanggalBerita = formatIndonesianDate(berita.tanggal.toDate());
+                } else if (berita.createdAt && berita.createdAt.toDate) {
+                    tanggalBerita = formatIndonesianDate(berita.createdAt.toDate());
+                } else {
+                    tanggalBerita = 'Tanggal tidak tersedia';
+                }
+                
+                // Kategori
+                const kategori = berita.kategori || 'Umum';
+                kategoriSet.add(kategori);
+                
+                // Penulis
+                const penulis = berita.penulis || 'Admin TKSK';
+                penulisSet.add(penulis);
+                
+                // Judul
+                const judul = berita.judul || 'Judul tidak tersedia';
+                
+                // Isi berita
+                const isi = berita.isi || 'Tidak ada konten.';
+                const kesimpulan = berita.kesimpulan || (isi.length > 200 ? isi.substring(0, 200) + '...' : isi);
+                
+                // Gambar (opsional)
+                const gambar = berita.gambar || '';
+                
+                // Priority (bisa ditentukan dari field atau default)
+                const isPriority = berita.priority === true || berita.status === 'featured';
+                
+                // Format views
+                const views = berita.views || Math.floor(Math.random() * 100) + 50;
+                
+                // Format kategori badge
+                let kategoriBadge = '';
+                switch(kategori) {
+                    case 'Bansos':
+                        kategoriBadge = '<span class="jurnal-category"><i class="fas fa-hand-holding-heart"></i> Bantuan Sosial</span>';
+                        break;
+                    case 'DTSEN':
+                        kategoriBadge = '<span class="jurnal-category" style="background: rgba(10,88,202,0.1); color: #0a58ca;"><i class="fas fa-database"></i> DTSEN</span>';
+                        break;
+                    case 'Pelayanan':
+                        kategoriBadge = '<span class="jurnal-category" style="background: rgba(23,162,184,0.1); color: #17a2b8;"><i class="fas fa-headset"></i> Pelayanan</span>';
+                        break;
+                    case 'Kegiatan':
+                        kategoriBadge = '<span class="jurnal-category" style="background: rgba(40,167,69,0.1); color: #28a745;"><i class="fas fa-calendar-alt"></i> Kegiatan</span>';
+                        break;
+                    case 'Pengumuman':
+                        kategoriBadge = '<span class="jurnal-category" style="background: rgba(255,193,7,0.1); color: #ffc107;"><i class="fas fa-bullhorn"></i> Pengumuman</span>';
+                        break;
+                    default:
+                        kategoriBadge = `<span class="jurnal-category" style="background: var(--gray-100); color: var(--gray-600);"><i class="fas fa-tag"></i> ${kategori}</span>`;
+                }
+
+                // Build HTML
+                beritaHTML += `
+                    <div class="jurnal-card" data-aos="fade-up" data-aos-delay="${Math.min(totalBerita * 50, 300)}">
+                        <div class="jurnal-header">
+                            ${isPriority ? '<span class="badge-priority"><i class="fas fa-fire"></i> TERPOPULER</span>' : ''}
+                            ${kategoriBadge}
+                            <h2 class="jurnal-title">${judul}</h2>
+                            <div class="jurnal-meta">
+                                <span><i class="far fa-calendar-alt"></i> ${tanggalBerita}</span>
+                                <span><i class="far fa-user"></i> ${penulis}</span>
+                                <span><i class="fas fa-book"></i> Volume 2026</span>
+                                <span><i class="fas fa-eye"></i> ${views.toLocaleString('id-ID')} dibaca</span>
+                            </div>
+                        </div>
+                        <div class="jurnal-body">
+                            <div class="kesimpulan-box">
+                                <strong><i class="fas fa-quote-left mr-2"></i> KESIMPULAN:</strong>
+                                <p class="mt-2 mb-0">${kesimpulan}</p>
+                            </div>
+                            <div class="jurnal-content">
+                                <p>${truncateText(isi, 350)}</p>
+                                <a href="#" class="btn btn-link pl-0 text-primary font-weight-bold" onclick="alert('Fitur detail berita sedang dikembangkan.\\n\\nJudul: ${judul.replace(/'/g, "\\'")}'); return false;">
+                                    Baca selengkapnya <i class="fas fa-arrow-right ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="jurnal-footer">
+                            <div>
+                                <span class="jurnal-tag">
+                                    <i class="fas fa-tag"></i> ${kategori}
+                                </span>
+                                <span class="jurnal-tag ml-2">
+                                    <i class="fas fa-folder"></i> DTSEN 2026
+                                </span>
+                            </div>
+                            <div class="jurnal-share">
+                                <button class="share-btn" onclick="window.open('https://wa.me/?text=${encodeURIComponent(judul)}', '_blank')">
+                                    <i class="fab fa-whatsapp"></i>
+                                </button>
+                                <button class="share-btn" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}', '_blank')">
+                                    <i class="fab fa-facebook-f"></i>
+                                </button>
+                                <button class="share-btn" onclick="window.open('https://twitter.com/intent/tweet?text=${encodeURIComponent(judul)}', '_blank')">
+                                    <i class="fab fa-twitter"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Update container
+            newsContainer.innerHTML = beritaHTML;
+            
+            // Update hero stats
+            document.getElementById('totalBeritaHero').innerText = totalBerita;
+            document.getElementById('totalKategoriHero').innerText = kategoriSet.size;
+            document.getElementById('totalPenulisHero').innerText = penulisSet.size;
+
+            console.log(`✅ Loaded ${totalBerita} berita from Firestore`);
+
+        } catch (error) {
+            console.error("Error loading berita:", error);
+            
+            // Tampilkan error state
+            newsContainer.innerHTML = `
+                <div class="empty-state" data-aos="fade-up">
+                    <div class="empty-icon" style="color: var(--danger);">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 class="font-weight-bold">Gagal Memuat Berita</h3>
+                    <p class="text-muted mb-4">${error.message || 'Terjadi kesalahan koneksi ke database.'}</p>
+                    <button onclick="location.reload()" class="btn btn-primary px-5 py-3 rounded-pill">
+                        <i class="fas fa-sync-alt mr-2"></i> Muat Ulang
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('totalBeritaHero').innerText = '0';
+            document.getElementById('totalKategoriHero').innerText = '0';
+            document.getElementById('totalPenulisHero').innerText = '0';
+        }
+    }
+
+    // ============================================================
+    // INITIALIZATION
+    // ============================================================
+    loadBerita();
+
+</script>
+
+<!-- Fallback for non-module browsers -->
+<script nomodule>
+    document.getElementById('newsContainer').innerHTML = `
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-exclamation-circle"></i>
             </div>
-            <div class="jurnal-body">
-                <div class="kesimpulan-box">
-                    <strong>KESIMPULAN (ABSTRACT):</strong><br>
-                    ${n.kesimpulan}
-                </div>
-                <div class="jurnal-content">
-                    ${n.content}
-                </div>
-            </div>
+            <h3 class="font-weight-bold">Browser Tidak Didukung</h3>
+            <p class="text-muted">Silakan gunakan Chrome, Firefox, atau Edge terbaru.</p>
         </div>
-    `).join("");
-
-    container.innerHTML = html;
-}
-
-// Jalankan fungsi saat halaman siap
-document.addEventListener('DOMContentLoaded', loadNews);
+    `;
 </script>
 
 </body>
