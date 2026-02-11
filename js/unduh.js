@@ -1,6 +1,6 @@
 // unduh.js
 // Sistem Cetak Dokumen DTSEN - TKSK & Puskesos Kecamatan Sumber
-// Version: 2.2.0 - SHOW ALL DATA (NO LIMIT)
+// Version: 2.3.0 - SHOW ALL DATA + PRIORITAS BARU (500/300)
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { 
@@ -33,7 +33,7 @@ try {
 let wilayahData = [];
 let isLoading = false;
 let qrcode = null;
-let nomorSurat = ''; // SATU NOMOR SURAT UNTUK SEMUA
+let nomorSurat = '';
 
 // DOM Elements
 const modeSelect = document.getElementById('mode');
@@ -80,7 +80,6 @@ function formatDate(date = new Date()) {
 
 /**
  * Generate SATU nomor surat untuk semua halaman
- * Format: 460 / [random] / DTSEN.[bulan] / TKSK-SBR / [tahun]
  */
 function generateNomorSurat() {
     const date = new Date();
@@ -187,7 +186,7 @@ async function loadDataFromFirebase() {
 }
 
 /**
- * Generate sample data (fallback) - DIPERBANYAK DATANYA
+ * Generate sample data (fallback)
  */
 function generateSampleData() {
     const desaList = [
@@ -200,17 +199,33 @@ function generateSampleData() {
     ];
     
     return desaList.map((nama, index) => {
-        const d1 = Math.floor(Math.random() * 150) + 50;
-        const d2 = Math.floor(Math.random() * 180) + 70;
-        const d3 = Math.floor(Math.random() * 120) + 40;
-        const d4 = Math.floor(Math.random() * 100) + 30;
-        const d5_10 = Math.floor(Math.random() * 300) + 100;
+        // Generate data dengan variasi agar memenuhi kriteria baru
+        let d1, d2, totalD12;
+        
+        if (index < 5) {
+            // Prioritas Tinggi >500 KK
+            d1 = Math.floor(Math.random() * 200) + 350; // 350-550
+            d2 = Math.floor(Math.random() * 150) + 200; // 200-350
+        } else if (index < 12) {
+            // Prioritas Sedang 300-500 KK
+            d1 = Math.floor(Math.random() * 150) + 200; // 200-350
+            d2 = Math.floor(Math.random() * 100) + 100; // 100-200
+        } else {
+            // Prioritas Rendah <300 KK
+            d1 = Math.floor(Math.random() * 100) + 50;  // 50-150
+            d2 = Math.floor(Math.random() * 80) + 30;   // 30-110
+        }
+        
+        totalD12 = d1 + d2;
+        const d3 = Math.floor(Math.random() * 100) + 30;
+        const d4 = Math.floor(Math.random() * 80) + 20;
+        const d5_10 = Math.floor(Math.random() * 200) + 50;
         
         return {
             id: `sample-${index + 1}`,
             nama: nama,
             kecamatan: 'Sumber',
-            desil: [d1, d2, d3, d4, ...Array(6).fill(Math.floor(Math.random() * 50) + 20)],
+            desil: [d1, d2, d3, d4, ...Array(6).fill(Math.floor(Math.random() * 30) + 10)],
             total_kk: d1 + d2 + d3 + d4 + d5_10,
             d1, d2, d3, d4, d5_10
         };
@@ -236,7 +251,6 @@ function populateDesaSelect(data) {
 
 /**
  * Render halaman 1 - Agregasi Kecamatan
- * MENAMPILKAN SEMUA DESA (TANPA BATASAN 10)
  */
 function renderHalaman1(data) {
     if (!kontenHal1) return;
@@ -248,7 +262,6 @@ function renderHalaman1(data) {
     const totalD34 = data.reduce((sum, item) => sum + (item.d3 || 0) + (item.d4 || 0), 0);
     const totalD510 = data.reduce((sum, item) => sum + (item.d5_10 || 0), 0);
     
-    // Buat tabel dengan SEMUA DATA (TANPA LIMIT)
     let rows = '';
     data.forEach((item, index) => {
         rows += `
@@ -323,28 +336,49 @@ function renderHalaman1(data) {
 }
 
 /**
- * Render halaman 2 - Prioritas Intervensi DTSEN
- * MENAMPILKAN SEMUA DESA (TANPA BATASAN 10)
+ * ============================================================
+ * HALAMAN 2 - PRIORITAS INTERVENSI DTSEN
+ * KRITERIA BARU:
+ * - PRIORITAS TINGGI  : >500 KK (D1+D2)
+ * - PRIORITAS SEDANG  : 300-500 KK (D1+D2)
+ * - PRIORITAS RENDAH  : <300 KK (D1+D2)
+ * ============================================================
  */
 function renderHalaman2(data) {
     if (!kontenHal2) return;
     
     const totalD12Kecamatan = data.reduce((sum, item) => sum + item.d1 + item.d2, 0);
-    const prioritasTinggi = data.filter(item => (item.d1 + item.d2) > 400);
+    
+    // KLASIFIKASI PRIORITAS BERDASARKAN KRITERIA BARU
+    const prioritasTinggi = data.filter(item => (item.d1 + item.d2) > 500);
     const prioritasSedang = data.filter(item => {
         const d12 = item.d1 + item.d2;
-        return d12 >= 200 && d12 <= 400;
+        return d12 >= 300 && d12 <= 500;
     });
-    const prioritasRendah = data.filter(item => (item.d1 + item.d2) < 200);
+    const prioritasRendah = data.filter(item => (item.d1 + item.d2) < 300);
     
-    // Buat tabel dengan SEMUA DATA (TANPA LIMIT)
+    // Hitung total KK per kategori prioritas
+    const totalKKPrioritasTinggi = prioritasTinggi.reduce((sum, item) => sum + item.d1 + item.d2, 0);
+    const totalKKPrioritasSedang = prioritasSedang.reduce((sum, item) => sum + item.d1 + item.d2, 0);
+    const totalKKPrioritasRendah = prioritasRendah.reduce((sum, item) => sum + item.d1 + item.d2, 0);
+    
     let rows = '';
     data.forEach((item, index) => {
         const d12 = item.d1 + item.d2;
         let status = '';
-        if (d12 > 400) status = '<span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600;">PRIORITAS TINGGI</span>';
-        else if (d12 >= 200) status = '<span style="background: #ffc107; color: black; padding: 2px 8px; border-radius: 3px; font-weight: 600;">PRIORITAS SEDANG</span>';
-        else status = '<span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600;">PRIORITAS RENDAH</span>';
+        let badgeColor = '';
+        
+        // KRITERIA BARU UNTUK BADGE
+        if (d12 > 500) {
+            status = '<span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600;">PRIORITAS TINGGI</span>';
+            badgeColor = '#dc3545';
+        } else if (d12 >= 300) {
+            status = '<span style="background: #ffc107; color: black; padding: 2px 8px; border-radius: 3px; font-weight: 600;">PRIORITAS SEDANG</span>';
+            badgeColor = '#ffc107';
+        } else {
+            status = '<span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600;">PRIORITAS RENDAH</span>';
+            badgeColor = '#28a745';
+        }
         
         rows += `
             <tr>
@@ -363,6 +397,9 @@ function renderHalaman2(data) {
             <h5 style="font-size: 14px; font-weight: 700; margin: 10px 0;">PRIORITAS INTERVENSI DTSEN KECAMATAN SUMBER</h5>
             <p style="font-size: 11px; margin-bottom: 10px;">
                 <em>Menampilkan ranking ${data.length} desa/kelurahan berdasarkan jumlah Desil 1 + Desil 2 (Prioritas Tertinggi ke Terendah)</em>
+            </p>
+            <p style="font-size: 11px; font-weight: 600; color: #0056b3; margin-bottom: 15px; padding: 5px 10px; background: #e3f2fd; border-left: 4px solid #0d6efd;">
+                ⚡ KRITERIA PRIORITAS: TINGGI >500 KK | SEDANG 300-500 KK | RENDAH <300 KK
             </p>
             
             <table class="tabel-data">
@@ -392,23 +429,72 @@ function renderHalaman2(data) {
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
                         <td style="width: 50%; vertical-align: top; padding-right: 10px;">
-                            <div style="border: 1px solid #ddd; padding: 12px; border-radius: 5px;">
-                                <p style="font-weight: 700; margin-bottom: 8px;">📊 REKAPITULASI PRIORITAS:</p>
-                                <ul style="margin-left: -20px;">
-                                    <li><span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 3px;">PRIORITAS TINGGI</span> (>500 KK) : <strong>${prioritasTinggi.length} desa</strong></li>
-                                    <li><span style="background: #ffc107; color: black; padding: 2px 8px; border-radius: 3px;">PRIORITAS SEDANG</span> (300-400 KK) : <strong>${prioritasSedang.length} desa</strong></li>
-                                    <li><span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px;">PRIORITAS RENDAH</span> (<300 KK) : <strong>${prioritasRendah.length} desa</strong></li>
-                                </ul>
+                            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background: #fcfcfc;">
+                                <p style="font-weight: 700; margin-bottom: 12px; font-size: 12px;">📊 REKAPITULASI PRIORITAS (KRITERIA BARU):</p>
+                                <table style="width: 100%; font-size: 11px;">
+                                    <tr>
+                                        <td style="padding: 4px 0;">
+                                            <span style="background: #dc3545; color: white; padding: 3px 10px; border-radius: 3px; font-weight: 600;">PRIORITAS TINGGI</span>
+                                        </td>
+                                        <td style="padding: 4px 0; text-align: right;">
+                                            <strong style="font-size: 13px;">>500 KK</strong>
+                                        </td>
+                                        <td style="padding: 4px 0; text-align: right;">
+                                            <strong>${prioritasTinggi.length} desa</strong> 
+                                            (${formatNumber(totalKKPrioritasTinggi)} KK)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 4px 0;">
+                                            <span style="background: #ffc107; color: black; padding: 3px 10px; border-radius: 3px; font-weight: 600;">PRIORITAS SEDANG</span>
+                                        </td>
+                                        <td style="padding: 4px 0; text-align: right;">
+                                            <strong style="font-size: 13px;">300-500 KK</strong>
+                                        </td>
+                                        <td style="padding: 4px 0; text-align: right;">
+                                            <strong>${prioritasSedang.length} desa</strong>
+                                            (${formatNumber(totalKKPrioritasSedang)} KK)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 4px 0;">
+                                            <span style="background: #28a745; color: white; padding: 3px 10px; border-radius: 3px; font-weight: 600;">PRIORITAS RENDAH</span>
+                                        </td>
+                                        <td style="padding: 4px 0; text-align: right;">
+                                            <strong style="font-size: 13px;"><300 KK</strong>
+                                        </td>
+                                        <td style="padding: 4px 0; text-align: right;">
+                                            <strong>${prioritasRendah.length} desa</strong>
+                                            (${formatNumber(totalKKPrioritasRendah)} KK)
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                         </td>
                         <td style="width: 50%; vertical-align: top;">
-                            <div style="border: 1px solid #ddd; padding: 12px; border-radius: 5px;">
-                                <p style="font-weight: 700; margin-bottom: 8px;">🎯 REKOMENDASI INTERVENSI:</p>
-                                <ol style="margin-left: -15px;">
-                                    <li><strong>${prioritasTinggi.length} desa</strong> prioritas tinggi - Intervensi segera</li>
-                                    <li><strong>${prioritasSedang.length} desa</strong> prioritas sedang - Monitoring intensif</li>
-                                    <li><strong>${prioritasRendah.length} desa</strong> prioritas rendah - Pemantauan rutin</li>
-                                </ol>
+                            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background: #fcfcfc;">
+                                <p style="font-weight: 700; margin-bottom: 12px; font-size: 12px;">🎯 REKOMENDASI INTERVENSI:</p>
+                                <ul style="margin-left: -15px; margin-bottom: 0;">
+                                    <li style="margin-bottom: 8px; padding-left: 5px;">
+                                        <span style="display: inline-block; width: 12px; height: 12px; background: #dc3545; border-radius: 2px; margin-right: 8px;"></span>
+                                        <strong>${prioritasTinggi.length} desa prioritas tinggi</strong> - Intervensi segera (KK >500)
+                                    </li>
+                                    <li style="margin-bottom: 8px; padding-left: 5px;">
+                                        <span style="display: inline-block; width: 12px; height: 12px; background: #ffc107; border-radius: 2px; margin-right: 8px;"></span>
+                                        <strong>${prioritasSedang.length} desa prioritas sedang</strong> - Monitoring intensif (KK 300-500)
+                                    </li>
+                                    <li style="margin-bottom: 8px; padding-left: 5px;">
+                                        <span style="display: inline-block; width: 12px; height: 12px; background: #28a745; border-radius: 2px; margin-right: 8px;"></span>
+                                        <strong>${prioritasRendah.length} desa prioritas rendah</strong> - Pemantauan rutin (KK <300)
+                                    </li>
+                                </ul>
+                                <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #ccc;">
+                                    <p style="margin-bottom: 0; font-size: 10px; color: #666;">
+                                        <i class="fas fa-chart-line mr-1"></i> 
+                                        Prioritas intervensi ditentukan berdasarkan jumlah KK Desil 1 + Desil 2 per desa.
+                                        <br><strong>Kebijakan baru berlaku: Tinggi >500, Sedang 300-500, Rendah <300.</strong>
+                                    </p>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -422,7 +508,6 @@ function renderHalaman2(data) {
 
 /**
  * Render halaman 3 - Bantuan Sosial Per Desa
- * MENAMPILKAN SEMUA DESA (TANPA BATASAN 10)
  */
 function renderHalaman3(data) {
     if (!kontenHal3) return;
@@ -505,16 +590,12 @@ function renderHalaman3(data) {
 }
 
 /**
- * Render halaman 4 - Layanan Sosial (DTKS, SKTM, Pengaduan)
- * Mengambil data real-time dari Firebase Firestore koleksi "wilayah_desa"
- * Berdasarkan struktur data dari Pelayanan.html
+ * Render halaman 4 - Layanan Sosial
  */
 async function renderHalaman4(dataWilayah) {
     if (!kontenHal4) return;
     
     try {
-        // === 1. AMBIL DATA LAYANAN DARI FIREBASE ===
-        // Menggunakan koleksi yang sama dengan Pelayanan.html
         const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
         
         let totalLayananKec = {
@@ -523,32 +604,20 @@ async function renderHalaman4(dataWilayah) {
             sktm: 0
         };
         
-        // Array untuk menyimpan data per desa (untuk analisis tambahan)
         const layananPerDesa = [];
         
         querySnapshot.forEach((doc) => {
             const docData = doc.data();
+            const layanan = docData.layanan || { dtks: 0, pengaduan: 0, sktm: 0 };
             
-            // === STRUKTUR DATA SESUAI Pelayanan.html ===
-            // Data layanan disimpan di dalam properti "layanan"
-            // { dtks: number, pengaduan: number, sktm: number }
-            const layanan = docData.layanan || { 
-                dtks: 0, 
-                pengaduan: 0, 
-                sktm: 0 
-            };
-            
-            // Pastikan nilai adalah number
             const dtks = parseInt(layanan.dtks) || 0;
             const pengaduan = parseInt(layanan.pengaduan) || 0;
             const sktm = parseInt(layanan.sktm) || 0;
             
-            // Akumulasi total kecamatan
             totalLayananKec.dtks += dtks;
             totalLayananKec.pengaduan += pengaduan;
             totalLayananKec.sktm += sktm;
             
-            // Simpan data per desa
             layananPerDesa.push({
                 nama: docData.nama_wilayah || docData.nama || doc.id,
                 dtks: dtks,
@@ -558,27 +627,15 @@ async function renderHalaman4(dataWilayah) {
             });
         });
         
-        // Hitung total keseluruhan layanan
         const totalSemuaLayanan = totalLayananKec.dtks + totalLayananKec.pengaduan + totalLayananKec.sktm;
+        const rasioSKTM = totalLayananKec.dtks > 0 ? ((totalLayananKec.sktm / totalLayananKec.dtks) * 100).toFixed(1) : '0.0';
+        const rasioPengaduan = totalLayananKec.dtks > 0 ? ((totalLayananKec.pengaduan / totalLayananKec.dtks) * 100).toFixed(1) : '0.0';
         
-        // Hitung rasio dan persentase
-        const rasioSKTM = totalLayananKec.dtks > 0 
-            ? ((totalLayananKec.sktm / totalLayananKec.dtks) * 100).toFixed(1) 
-            : '0.0';
-        const rasioPengaduan = totalLayananKec.dtks > 0 
-            ? ((totalLayananKec.pengaduan / totalLayananKec.dtks) * 100).toFixed(1) 
-            : '0.0';
-        
-        // Urutkan desa berdasarkan total layanan (terbanyak ke terkecil)
         layananPerDesa.sort((a, b) => b.total - a.total);
-        
-        // Ambil 5 desa dengan layanan tertinggi
         const top5Desa = layananPerDesa.slice(0, 5);
         
-        // === 2. RENDER HTML HALAMAN 4 ===
         const html = `
             <div style="margin-top: 10px;">
-                <!-- HEADER INFORMASI -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h5 style="font-size: 14px; font-weight: 700; margin: 0;">REKAPITULASI LAYANAN SOSIAL KECAMATAN SUMBER</h5>
                     <span style="background: #17a2b8; color: white; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 600;">
@@ -586,7 +643,6 @@ async function renderHalaman4(dataWilayah) {
                     </span>
                 </div>
                 
-                <!-- TABEL REKAPITULASI UTAMA (SESUAI PELAYANAN.HTML) -->
                 <table style="width: 100%; margin-bottom: 25px; font-size: 12px; border: 1px solid #000; border-collapse: collapse;">
                     <thead>
                         <tr style="background: #f0f0f0;">
@@ -631,7 +687,6 @@ async function renderHalaman4(dataWilayah) {
                     </tbody>
                 </table>
 
-                <!-- STATISTIK CARD (3 KOLOM) -->
                 <div style="display: flex; gap: 15px; margin-bottom: 25px;">
                     <div style="flex: 1; border: 1px solid #ddd; border-radius: 10px; padding: 15px; text-align: center; border-bottom: 5px solid #007bff;">
                         <p style="font-size: 11px; color: #666; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">Rasio SKTM</p>
@@ -650,7 +705,6 @@ async function renderHalaman4(dataWilayah) {
                     </div>
                 </div>
 
-                <!-- TABEL 5 DESA DENGAN LAYANAN TERTINGGI -->
                 <div style="margin-top: 25px;">
                     <h6 style="font-size: 13px; font-weight: 700; margin-bottom: 10px;">📊 5 DESA DENGAN LAYANAN TERTINGGI</h6>
                     <table style="width: 100%; font-size: 11px; border-collapse: collapse;">
@@ -679,7 +733,6 @@ async function renderHalaman4(dataWilayah) {
                     </table>
                 </div>
 
-                <!-- ANALISIS DAN REKOMENDASI -->
                 <div style="display: flex; gap: 15px; margin-top: 25px;">
                     <div style="flex: 1; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #fcfcfc;">
                         <p style="font-weight: 700; margin-bottom: 10px; font-size: 12px;">📈 ANALISIS LAYANAN:</p>
@@ -704,18 +757,6 @@ async function renderHalaman4(dataWilayah) {
                         </ul>
                     </div>
                 </div>
-
-                <!-- CATATAN KAKI -->
-                <div style="margin-top: 25px; font-size: 9px; color: #666; border-top: 1px dashed #ccc; padding-top: 12px;">
-                    <p style="margin-bottom: 3px;">
-                        <i class="fas fa-info-circle mr-1"></i> 
-                        Sumber data: Firebase Firestore - Koleksi "wilayah_desa" (field: layanan.dtks, layanan.pengaduan, layanan.sktm)
-                    </p>
-                    <p style="margin-bottom: 0;">
-                        <i class="fas fa-database mr-1"></i> 
-                        ${layananPerDesa.length} desa/kelurahan terdata | Update terakhir: ${formatDate(new Date())}
-                    </p>
-                </div>
             </div>
         `;
 
@@ -724,31 +765,30 @@ async function renderHalaman4(dataWilayah) {
     } catch (error) {
         console.error('Error rendering halaman 4:', error);
         
-        // Fallback jika terjadi error
-        kontenHal4.innerHTML = `
-            <div style="text-align: center; padding: 40px; color: #666;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #dc3545; margin-bottom: 15px;"></i>
-                <h5 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">Gagal Memuat Data Layanan</h5>
-                <p style="font-size: 12px;">Tidak dapat mengambil data dari Firebase. Menggunakan data estimasi dari DTSEN.</p>
-            </div>
-        `;
-        
-        // Fallback: gunakan estimasi dari data DTSEN
         const totalD12 = dataWilayah.reduce((sum, item) => sum + item.d1 + item.d2, 0);
-        kontenHal4.innerHTML += `
+        kontenHal4.innerHTML = `
+            <div style="text-align: center; padding: 30px; color: #666;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #dc3545; margin-bottom: 15px;"></i>
+                <h5 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">Menggunakan Data Estimasi</h5>
+                <p style="font-size: 12px;">Data layanan real-time tidak tersedia. Menampilkan estimasi dari DTSEN.</p>
+            </div>
             <div style="margin-top: 20px;">
                 <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
-                    <tr>
-                        <td style="padding: 8px;"><strong>Estimasi DTKS</strong></td>
-                        <td style="padding: 8px; text-align: right;">${formatNumber(totalD12)} KK</td>
+                    <tr style="background: #f0f0f0;">
+                        <th style="padding: 10px; border: 1px solid #000; text-align: left;">Kategori Layanan</th>
+                        <th style="padding: 10px; border: 1px solid #000; text-align: right;">Estimasi</th>
                     </tr>
                     <tr>
-                        <td style="padding: 8px;"><strong>Estimasi SKTM</strong></td>
-                        <td style="padding: 8px; text-align: right;">${formatNumber(Math.floor(totalD12 * 0.4))} Penerbitan</td>
+                        <td style="padding: 8px; border: 1px solid #000;"><strong>DTKS</strong> (Data Terpadu Kesejahteraan Sosial)</td>
+                        <td style="padding: 8px; border: 1px solid #000; text-align: right; font-weight: 700;">${formatNumber(totalD12)} KK</td>
                     </tr>
                     <tr>
-                        <td style="padding: 8px;"><strong>Estimasi Pengaduan</strong></td>
-                        <td style="padding: 8px; text-align: right;">${formatNumber(Math.floor(totalD12 * 0.05))} Kasus</td>
+                        <td style="padding: 8px; border: 1px solid #000;"><strong>Pengaduan Masyarakat</strong></td>
+                        <td style="padding: 8px; border: 1px solid #000; text-align: right;">${formatNumber(Math.floor(totalD12 * 0.05))} Kasus</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #000;"><strong>SKTM</strong> (Surat Keterangan Tidak Mampu)</td>
+                        <td style="padding: 8px; border: 1px solid #000; text-align: right;">${formatNumber(Math.floor(totalD12 * 0.4))} Penerbitan</td>
                     </tr>
                 </table>
             </div>
@@ -775,7 +815,8 @@ function generateQRCode() {
         instansi: 'TKSK Puskesos Sumber',
         tanggal: formatDate(),
         totalWilayah: wilayahData.length,
-        totalKK: wilayahData.reduce((sum, item) => sum + item.total_kk, 0)
+        totalKK: wilayahData.reduce((sum, item) => sum + item.total_kk, 0),
+        kebijakan: 'Prioritas: >500, 300-500, <300'
     };
     
     try {
@@ -797,25 +838,21 @@ function generateQRCode() {
  * Update nomor surat - SATU NOMOR UNTUK SEMUA HALAMAN
  */
 function updateDocumentNumbers() {
-    // Generate SATU nomor surat
     nomorSurat = generateNomorSurat();
     
-    // Update nomor surat di HALAMAN 1
-    if (nomorSuratUtama) {
-        nomorSuratUtama.textContent = nomorSurat;
-    }
-    
-    // Update nomor surat yang sama di HALAMAN 2, 3, 4
+    if (nomorSuratUtama) nomorSuratUtama.textContent = nomorSurat;
     if (nomorSuratLanjutan2) nomorSuratLanjutan2.textContent = nomorSurat;
     if (nomorSuratLanjutan3) nomorSuratLanjutan3.textContent = nomorSurat;
     if (nomorSuratLanjutan4) nomorSuratLanjutan4.textContent = nomorSurat;
     
-    // Update lampiran
     const lampiranCount = document.getElementById('lampiranCount1');
     if (lampiranCount) lampiranCount.textContent = '4';
     
     const periodeData = document.getElementById('periodeData');
     if (periodeData) periodeData.textContent = new Date().getFullYear();
+    
+    const periodeDataTahun = document.getElementById('periodeDataTahun');
+    if (periodeDataTahun) periodeDataTahun.textContent = new Date().getFullYear();
 }
 
 /**
@@ -823,7 +860,7 @@ function updateDocumentNumbers() {
  */
 function updateInfoPanel(data) {
     if (dataCountInfo) {
-        dataCountInfo.textContent = `${data.length} wilayah terdata`;
+        dataCountInfo.innerHTML = `<i class="fas fa-map-marked-alt mr-1"></i> ${data.length} wilayah terdata`;
     }
     
     if (lastUpdateInfo) {
@@ -832,6 +869,11 @@ function updateInfoPanel(data) {
     
     if (tglSekarang) {
         tglSekarang.textContent = formatDate();
+    }
+    
+    const totalDesaInfo = document.getElementById('totalDesaInfo');
+    if (totalDesaInfo) {
+        totalDesaInfo.textContent = data.length;
     }
 }
 
@@ -856,12 +898,12 @@ async function generateDokumen() {
         wilayahData.sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
         
         // Render semua halaman - TAMPILKAN SEMUA DATA!
-        renderHalaman1(wilayahData); // TANPA LIMIT
-        renderHalaman2(wilayahData); // TANPA LIMIT
-        renderHalaman3(wilayahData); // TANPA LIMIT
-        renderHalaman4(wilayahData);
+        renderHalaman1(wilayahData);
+        renderHalaman2(wilayahData); // DENGAN KRITERIA PRIORITAS BARU
+        renderHalaman3(wilayahData);
+        await renderHalaman4(wilayahData);
         
-        // Generate SATU nomor surat untuk semua halaman
+        // Generate SATU nomor surat
         updateDocumentNumbers();
         
         // Generate QR Code
@@ -871,11 +913,11 @@ async function generateDokumen() {
         updateInfoPanel(wilayahData);
         populateDesaSelect(wilayahData);
         
-        showNotification(`Dokumen berhasil digenerate! Menampilkan ${wilayahData.length} desa/kelurahan`, 'success');
+        showNotification(`✅ Dokumen berhasil digenerate! Menampilkan ${wilayahData.length} desa/kelurahan (Prioritas: >500/300-500/<300)`, 'success');
         
     } catch (error) {
         console.error('Error generating document:', error);
-        showNotification('Gagal generate dokumen: ' + error.message, 'danger');
+        showNotification('❌ Gagal generate dokumen: ' + error.message, 'danger');
     } finally {
         setLoading(false);
     }
@@ -887,10 +929,10 @@ async function generateDokumen() {
 function cetakDokumen() {
     try {
         window.print();
-        showNotification('Dokumen sedang dicetak...', 'info');
+        showNotification('🖨️ Dokumen sedang dicetak...', 'info');
     } catch (error) {
         console.error('Error printing:', error);
-        showNotification('Gagal mencetak dokumen', 'danger');
+        showNotification('❌ Gagal mencetak dokumen', 'danger');
     }
 }
 
@@ -900,7 +942,6 @@ function cetakDokumen() {
  * Initialize event listeners
  */
 function initEventListeners() {
-    // Mode select change
     if (modeSelect) {
         modeSelect.addEventListener('change', function() {
             if (desaWrap) {
@@ -909,12 +950,10 @@ function initEventListeners() {
         });
     }
     
-    // Generate button - SATU TOMBOL UNTUK SEMUA!
     if (btnGenerate) {
         btnGenerate.addEventListener('click', generateDokumen);
     }
     
-    // Cetak button
     if (btnPrint) {
         btnPrint.addEventListener('click', cetakDokumen);
     }
@@ -927,24 +966,18 @@ function initEventListeners() {
  */
 async function init() {
     try {
-        // Load initial data
         setLoading(true);
-        wilayahData = await loadDataFromFirebase();
         
-        // Sort data
+        wilayahData = await loadDataFromFirebase();
         wilayahData.sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
         
-        // Update UI
         updateInfoPanel(wilayahData);
         populateDesaSelect(wilayahData);
         
-        // Generate initial dokumen - TAMPILKAN SEMUA DATA!
         await generateDokumen();
-        
-        // Setup event listeners
         initEventListeners();
         
-        console.log(`✅ Application initialized successfully with ${wilayahData.length} villages`);
+        console.log(`✅ Aplikasi siap dengan ${wilayahData.length} desa - Kriteria Prioritas: >500 (Tinggi), 300-500 (Sedang), <300 (Rendah)`);
         
     } catch (error) {
         console.error('❌ Initialization error:', error);
