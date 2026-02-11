@@ -590,12 +590,20 @@ function renderHalaman3(data) {
 }
 
 /**
- * Render halaman 4 - Layanan Sosial
+ * ============================================================
+ * HALAMAN 4 - REKAPITULASI LAYANAN SOSIAL
+ * PERUBAHAN: RASIO DIHITUNG BERDASARKAN TOTAL KK DTSEN (D1-D10)
+ * BUKAN BERDASARKAN DTKS
+ * ============================================================
  */
 async function renderHalaman4(dataWilayah) {
     if (!kontenHal4) return;
     
     try {
+        // Hitung TOTAL KK DTSEN (Desil 1-10) dari data wilayah
+        const totalKKDTSEN = dataWilayah.reduce((sum, item) => sum + item.total_kk, 0);
+        
+        // Ambil data layanan dari Firebase (tetap sama)
         const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
         
         let totalLayananKec = {
@@ -628,14 +636,60 @@ async function renderHalaman4(dataWilayah) {
         });
         
         const totalSemuaLayanan = totalLayananKec.dtks + totalLayananKec.pengaduan + totalLayananKec.sktm;
-        const rasioSKTM = totalLayananKec.dtks > 0 ? ((totalLayananKec.sktm / totalLayananKec.dtks) * 100).toFixed(1) : '0.0';
-        const rasioPengaduan = totalLayananKec.dtks > 0 ? ((totalLayananKec.pengaduan / totalLayananKec.dtks) * 100).toFixed(1) : '0.0';
         
-        layananPerDesa.sort((a, b) => b.total - a.total);
-        const top5Desa = layananPerDesa.slice(0, 5);
+        // ============ PERUBAHAN UTAMA ============
+        // RASIO sekarang dibandingkan dengan TOTAL KK DTSEN (Desil 1-10)
+        // BUKAN dibandingkan dengan DTKS
         
+        const rasioSKTM = totalKKDTSEN > 0 
+            ? ((totalLayananKec.sktm / totalKKDTSEN) * 100).toFixed(2) 
+            : '0.00';
+            
+        const rasioPengaduan = totalKKDTSEN > 0 
+            ? ((totalLayananKec.pengaduan / totalKKDTSEN) * 100).toFixed(2) 
+            : '0.00';
+        
+        // Cakupan Layanan: total layanan per KK DTSEN
+        const rasioCakupanLayanan = totalKKDTSEN > 0 
+            ? ((totalSemuaLayanan / totalKKDTSEN) * 100).toFixed(2) 
+            : '0.00';
+        
+        // ============ AKUMULASI DATA DTSEN PER DESA ============
+        // Gabungkan data DTSEN dengan data layanan untuk analisis yang lebih akurat
+        const dataGabungan = dataWilayah.map(wilayah => {
+            const layananDesa = layananPerDesa.find(l => l.nama === wilayah.nama) || {
+                dtks: 0,
+                pengaduan: 0,
+                sktm: 0,
+                total: 0
+            };
+            
+            return {
+                nama: wilayah.nama,
+                total_kk: wilayah.total_kk,
+                d12: wilayah.d1 + wilayah.d2,
+                dtks: layananDesa.dtks,
+                pengaduan: layananDesa.pengaduan,
+                sktm: layananDesa.sktm,
+                totalLayanan: layananDesa.total,
+                rasioSKTM: wilayah.total_kk > 0 ? ((layananDesa.sktm / wilayah.total_kk) * 100).toFixed(1) : '0.0',
+                rasioPengaduan: wilayah.total_kk > 0 ? ((layananDesa.pengaduan / wilayah.total_kk) * 100).toFixed(1) : '0.0'
+            };
+        });
+        
+        // Urutkan berdasarkan total layanan
+        dataGabungan.sort((a, b) => b.totalLayanan - a.totalLayanan);
+        const top5Desa = dataGabungan.slice(0, 5);
+        
+        // Hitung rata-rata layanan per desa
+        const rataRataLayananPerDesa = layananPerDesa.length > 0 
+            ? Math.round(totalSemuaLayanan / layananPerDesa.length) 
+            : 0;
+        
+        // ============ RENDER HTML HALAMAN 4 ============
         const html = `
             <div style="margin-top: 10px;">
+                <!-- HEADER INFORMASI -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h5 style="font-size: 14px; font-weight: 700; margin: 0;">REKAPITULASI LAYANAN SOSIAL KECAMATAN SUMBER</h5>
                     <span style="background: #17a2b8; color: white; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 600;">
@@ -643,6 +697,20 @@ async function renderHalaman4(dataWilayah) {
                     </span>
                 </div>
                 
+                <!-- INFORMASI TOTAL DTSEN -->
+                <div style="background: #e8f5e9; padding: 10px 15px; border-radius: 5px; margin-bottom: 20px; border-left: 5px solid #28a745; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-weight: 700; font-size: 13px;">📋 TOTAL KELUARGA DTSEN (DESIL 1-10):</span>
+                        <span style="font-size: 18px; font-weight: 800; color: #28a745; margin-left: 10px;">${formatNumber(totalKKDTSEN)} KK</span>
+                    </div>
+                    <div>
+                        <span style="background: #fff; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; border: 1px solid #28a745;">
+                            <i class="fas fa-calculator mr-1"></i> RASIO BERDASARKAN TOTAL DTSEN
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- TABEL REKAPITULASI UTAMA -->
                 <table style="width: 100%; margin-bottom: 25px; font-size: 12px; border: 1px solid #000; border-collapse: collapse;">
                     <thead>
                         <tr style="background: #f0f0f0;">
@@ -687,35 +755,81 @@ async function renderHalaman4(dataWilayah) {
                     </tbody>
                 </table>
 
+                <!-- STATISTIK CARD - RASIO BERDASARKAN TOTAL DTSEN -->
                 <div style="display: flex; gap: 15px; margin-bottom: 25px;">
-                    <div style="flex: 1; border: 1px solid #ddd; border-radius: 10px; padding: 15px; text-align: center; border-bottom: 5px solid #007bff;">
-                        <p style="font-size: 11px; color: #666; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">Rasio SKTM</p>
-                        <p style="font-size: 24px; font-weight: 700; color: #007bff; margin: 0;">${rasioSKTM}%</p>
-                        <p style="font-size: 10px; color: #666; margin-top: 5px;">dari total DTKS</p>
+                    <div style="flex: 1; border: 1px solid #ddd; border-radius: 10px; padding: 15px; text-align: center; border-bottom: 5px solid #007bff; background: #f8fbff;">
+                        <p style="font-size: 11px; color: #666; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
+                            <i class="fas fa-file-signature mr-1"></i> Rasio SKTM
+                        </p>
+                        <p style="font-size: 28px; font-weight: 800; color: #007bff; margin: 5px 0; line-height: 1.2;">
+                            ${rasioSKTM}%
+                        </p>
+                        <p style="font-size: 10px; color: #666; margin-top: 5px;">
+                            dari total <strong>${formatNumber(totalKKDTSEN)} KK DTSEN</strong>
+                        </p>
+                        <div style="font-size: 10px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #ccc;">
+                            ${formatNumber(totalLayananKec.sktm)} SKTM / ${formatNumber(totalKKDTSEN)} KK
+                        </div>
                     </div>
-                    <div style="flex: 1; border: 1px solid #ddd; border-radius: 10px; padding: 15px; text-align: center; border-bottom: 5px solid #ffc107;">
-                        <p style="font-size: 11px; color: #666; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">Rasio Pengaduan</p>
-                        <p style="font-size: 24px; font-weight: 700; color: #ffc107; margin: 0;">${rasioPengaduan}%</p>
-                        <p style="font-size: 10px; color: #666; margin-top: 5px;">dari total DTKS</p>
+                    <div style="flex: 1; border: 1px solid #ddd; border-radius: 10px; padding: 15px; text-align: center; border-bottom: 5px solid #ffc107; background: #fffbf0;">
+                        <p style="font-size: 11px; color: #666; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
+                            <i class="fas fa-comments mr-1"></i> Rasio Pengaduan
+                        </p>
+                        <p style="font-size: 28px; font-weight: 800; color: #ffc107; margin: 5px 0; line-height: 1.2;">
+                            ${rasioPengaduan}%
+                        </p>
+                        <p style="font-size: 10px; color: #666; margin-top: 5px;">
+                            dari total <strong>${formatNumber(totalKKDTSEN)} KK DTSEN</strong>
+                        </p>
+                        <div style="font-size: 10px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #ccc;">
+                            ${formatNumber(totalLayananKec.pengaduan)} Kasus / ${formatNumber(totalKKDTSEN)} KK
+                        </div>
                     </div>
-                    <div style="flex: 1; border: 1px solid #ddd; border-radius: 10px; padding: 15px; text-align: center; border-bottom: 5px solid #28a745;">
-                        <p style="font-size: 11px; color: #666; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">Cakupan Layanan</p>
-                        <p style="font-size: 24px; font-weight: 700; color: #28a745; margin: 0;">${totalLayananKec.dtks > 0 ? ((totalSemuaLayanan/totalLayananKec.dtks)*100).toFixed(1) : '0'}%</p>
-                        <p style="font-size: 10px; color: #666; margin-top: 5px;">layanan per KK DTKS</p>
+                    <div style="flex: 1; border: 1px solid #ddd; border-radius: 10px; padding: 15px; text-align: center; border-bottom: 5px solid #28a745; background: #f3faf3;">
+                        <p style="font-size: 11px; color: #666; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
+                            <i class="fas fa-hands-helping mr-1"></i> Cakupan Layanan
+                        </p>
+                        <p style="font-size: 28px; font-weight: 800; color: #28a745; margin: 5px 0; line-height: 1.2;">
+                            ${rasioCakupanLayanan}%
+                        </p>
+                        <p style="font-size: 10px; color: #666; margin-top: 5px;">
+                            dari total <strong>${formatNumber(totalKKDTSEN)} KK DTSEN</strong>
+                        </p>
+                        <div style="font-size: 10px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #ccc;">
+                            ${formatNumber(totalSemuaLayanan)} Layanan / ${formatNumber(totalKKDTSEN)} KK
+                        </div>
                     </div>
                 </div>
 
+                <!-- INFORMASI PERBANDINGAN DTKS vs DTSEN -->
+                <div style="background: #fff3cd; border: 1px solid #ffeeba; padding: 12px 15px; border-radius: 5px; margin-bottom: 20px; display: flex; align-items: center;">
+                    <i class="fas fa-info-circle mr-3" style="font-size: 20px; color: #856404;"></i>
+                    <div style="font-size: 11px; color: #856404;">
+                        <strong>ⓘ PERHITUNGAN RASIO:</strong> Seluruh rasio layanan (SKTM, Pengaduan, Cakupan) dihitung berdasarkan <strong>TOTAL KELUARGA DTSEN (Desil 1-10) sebesar ${formatNumber(totalKKDTSEN)} KK</strong>, bukan berdasarkan jumlah DTKS. Hal ini untuk memberikan gambaran proporsi layanan terhadap seluruh populasi terdata.
+                    </div>
+                </div>
+
+                <!-- TABEL 5 DESA DENGAN LAYANAN TERTINGGI + DATA DTSEN -->
                 <div style="margin-top: 25px;">
-                    <h6 style="font-size: 13px; font-weight: 700; margin-bottom: 10px;">📊 5 DESA DENGAN LAYANAN TERTINGGI</h6>
-                    <table style="width: 100%; font-size: 11px; border-collapse: collapse;">
+                    <h6 style="font-size: 13px; font-weight: 700; margin-bottom: 10px;">
+                        📊 5 DESA DENGAN LAYANAN TERTINGGI
+                        <span style="font-size: 10px; font-weight: 400; color: #666; margin-left: 10px;">(dilengkapi data DTSEN dan rasio)</span>
+                    </h6>
+                    <table style="width: 100%; font-size: 10.5px; border-collapse: collapse;">
                         <thead>
                             <tr style="background: #f8f9fa;">
-                                <th style="padding: 8px; border: 1px solid #ddd; text-align: center;">No</th>
-                                <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Desa/Kelurahan</th>
-                                <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">DTKS</th>
-                                <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Pengaduan</th>
-                                <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">SKTM</th>
-                                <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Total</th>
+                                <th rowspan="2" style="padding: 8px; border: 1px solid #ddd; text-align: center; vertical-align: middle;">No</th>
+                                <th rowspan="2" style="padding: 8px; border: 1px solid #ddd; text-align: left; vertical-align: middle;">Desa/Kelurahan</th>
+                                <th colspan="2" style="padding: 8px; border: 1px solid #ddd; text-align: center;">DATA DTSEN</th>
+                                <th colspan="3" style="padding: 8px; border: 1px solid #ddd; text-align: center;">DATA LAYANAN</th>
+                                <th rowspan="2" style="padding: 8px; border: 1px solid #ddd; text-align: center; vertical-align: middle;">Total Layanan</th>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: 600;">Total KK</td>
+                                <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: 600;">D1+D2</td>
+                                <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: 600;">DTKS</td>
+                                <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: 600;">SKTM</td>
+                                <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: 600;">Pengaduan</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -723,39 +837,75 @@ async function renderHalaman4(dataWilayah) {
                                 <tr>
                                     <td style="padding: 6px; border: 1px solid #ddd; text-align: center;">${index + 1}</td>
                                     <td style="padding: 6px; border: 1px solid #ddd; font-weight: 600;">${desa.nama}</td>
+                                    <td style="padding: 6px; border: 1px solid #ddd; text-align: right;">${formatNumber(desa.total_kk)}</td>
+                                    <td style="padding: 6px; border: 1px solid #ddd; text-align: right;">${formatNumber(desa.d12)}</td>
                                     <td style="padding: 6px; border: 1px solid #ddd; text-align: right;">${formatNumber(desa.dtks)}</td>
-                                    <td style="padding: 6px; border: 1px solid #ddd; text-align: right;">${formatNumber(desa.pengaduan)}</td>
                                     <td style="padding: 6px; border: 1px solid #ddd; text-align: right;">${formatNumber(desa.sktm)}</td>
-                                    <td style="padding: 6px; border: 1px solid #ddd; text-align: right; font-weight: 700;">${formatNumber(desa.total)}</td>
+                                    <td style="padding: 6px; border: 1px solid #ddd; text-align: right;">${formatNumber(desa.pengaduan)}</td>
+                                    <td style="padding: 6px; border: 1px solid #ddd; text-align: right; font-weight: 700; background: #e3f2fd;">${formatNumber(desa.totalLayanan)}</td>
                                 </tr>
                             `).join('')}
                         </tbody>
                     </table>
                 </div>
 
+                <!-- ANALISIS DAN REKOMENDASI BERDASARKAN DTSEN -->
                 <div style="display: flex; gap: 15px; margin-top: 25px;">
                     <div style="flex: 1; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #fcfcfc;">
-                        <p style="font-weight: 700; margin-bottom: 10px; font-size: 12px;">📈 ANALISIS LAYANAN:</p>
-                        <ul style="margin-left: -15px; font-size: 11px;">
-                            <li style="margin-bottom: 5px;">✓ Total DTKS: <strong>${formatNumber(totalLayananKec.dtks)} KK</strong></li>
-                            <li style="margin-bottom: 5px;">✓ Total Pengaduan: <strong>${formatNumber(totalLayananKec.pengaduan)} kasus</strong></li>
-                            <li style="margin-bottom: 5px;">✓ Total SKTM: <strong>${formatNumber(totalLayananKec.sktm)} penerbitan</strong></li>
-                            <li style="margin-bottom: 5px;">✓ Rata-rata layanan per desa: <strong>${formatNumber(Math.round(totalSemuaLayanan / (layananPerDesa.length || 1)))}</strong></li>
-                        </ul>
+                        <p style="font-weight: 700; margin-bottom: 12px; font-size: 12px;">📈 ANALISIS LAYANAN (vs DTSEN):</p>
+                        <table style="width: 100%; font-size: 11px;">
+                            <tr>
+                                <td style="padding: 4px 0;">✓ Total Keluarga DTSEN</td>
+                                <td style="padding: 4px 0; text-align: right;"><strong>${formatNumber(totalKKDTSEN)} KK</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0;">✓ Total DTKS</td>
+                                <td style="padding: 4px 0; text-align: right;"><strong>${formatNumber(totalLayananKec.dtks)} KK</strong> (${totalKKDTSEN > 0 ? ((totalLayananKec.dtks/totalKKDTSEN*100).toFixed(1)) : 0}%)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0;">✓ Total SKTM</td>
+                                <td style="padding: 4px 0; text-align: right;"><strong>${formatNumber(totalLayananKec.sktm)}</strong> (${rasioSKTM}%)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0;">✓ Total Pengaduan</td>
+                                <td style="padding: 4px 0; text-align: right;"><strong>${formatNumber(totalLayananKec.pengaduan)}</strong> (${rasioPengaduan}%)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0;">✓ Rata-rata layanan/desa</td>
+                                <td style="padding: 4px 0; text-align: right;"><strong>${formatNumber(rataRataLayananPerDesa)}</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0;">✓ Cakupan layanan</td>
+                                <td style="padding: 4px 0; text-align: right;"><strong>${rasioCakupanLayanan}%</strong></td>
+                            </tr>
+                        </table>
                     </div>
                     <div style="flex: 1; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #fcfcfc;">
-                        <p style="font-weight: 700; margin-bottom: 10px; font-size: 12px;">🎯 REKOMENDASI KEBIJAKAN:</p>
-                        <ul style="margin-left: -15px; font-size: 11px;">
-                            ${totalLayananKec.pengaduan > totalLayananKec.dtks * 0.1 
-                                ? '<li style="margin-bottom: 5px; color: #dc3545;">⚠️ Tingkat pengaduan tinggi, perlu evaluasi pelayanan</li>' 
-                                : '<li style="margin-bottom: 5px; color: #28a745;">✅ Tingkat pengaduan terkendali</li>'}
-                            ${totalLayananKec.sktm > totalLayananKec.dtks * 0.5 
-                                ? '<li style="margin-bottom: 5px; color: #dc3545;">⚠️ Penerbitan SKTM tinggi, verifikasi ketat</li>' 
-                                : '<li style="margin-bottom: 5px; color: #28a745;">✅ Penerbitan SKTM wajar</li>'}
-                            <li style="margin-bottom: 5px;">📌 Prioritaskan ${top5Desa[0]?.nama || 'desa dengan kebutuhan tertinggi'}</li>
-                            <li style="margin-bottom: 5px;">🔄 Update data DTSEN secara berkala</li>
+                        <p style="font-weight: 700; margin-bottom: 12px; font-size: 12px;">🎯 REKOMENDASI KEBIJAKAN:</p>
+                        <ul style="margin-left: -15px; font-size: 11px; margin-bottom: 0;">
+                            ${totalLayananKec.pengaduan > totalKKDTSEN * 0.05 
+                                ? '<li style="margin-bottom: 8px; color: #dc3545;">⚠️ <strong>Tingkat pengaduan tinggi</strong> (' + rasioPengaduan + '%) - Perlu evaluasi pelayanan</li>' 
+                                : '<li style="margin-bottom: 8px; color: #28a745;">✅ <strong>Tingkat pengaduan terkendali</strong> (' + rasioPengaduan + '%)</li>'}
+                            ${totalLayananKec.sktm > totalKKDTSEN * 0.3 
+                                ? '<li style="margin-bottom: 8px; color: #dc3545;">⚠️ <strong>Penerbitan SKTM tinggi</strong> (' + rasioSKTM + '%) - Perketat verifikasi</li>' 
+                                : '<li style="margin-bottom: 8px; color: #28a745;">✅ <strong>Penerbitan SKTM wajar</strong> (' + rasioSKTM + '%)</li>'}
+                            <li style="margin-bottom: 8px;">📌 <strong>Cakupan DTKS</strong> terhadap DTSEN: ${totalKKDTSEN > 0 ? ((totalLayananKec.dtks/totalKKDTSEN*100).toFixed(1)) : 0}%</li>
+                            <li style="margin-bottom: 8px;">🏆 <strong>Prioritas intervensi:</strong> ${top5Desa[0]?.nama || '-'}, ${top5Desa[1]?.nama || '-'}, ${top5Desa[2]?.nama || '-'}</li>
+                            <li style="margin-bottom: 8px;">🔄 Update data DTSEN dan layanan secara berkala</li>
                         </ul>
                     </div>
+                </div>
+
+                <!-- CATATAN KAKI -->
+                <div style="margin-top: 25px; font-size: 9px; color: #666; border-top: 1px dashed #ccc; padding-top: 12px;">
+                    <p style="margin-bottom: 3px;">
+                        <i class="fas fa-calculator mr-1"></i> 
+                        <strong>Metodologi:</strong> Seluruh rasio layanan (SKTM, Pengaduan, Cakupan) dihitung berdasarkan TOTAL KELUARGA DTSEN (Desil 1-10) se-Kecamatan Sumber.
+                    </p>
+                    <p style="margin-bottom: 0;">
+                        <i class="fas fa-database mr-1"></i> 
+                        Sumber: DTSEN Kecamatan Sumber (${formatNumber(totalKKDTSEN)} KK) & Database Layanan Sosial Firebase | Update: ${formatDate(new Date())}
+                    </p>
                 </div>
             </div>
         `;
@@ -765,37 +915,64 @@ async function renderHalaman4(dataWilayah) {
     } catch (error) {
         console.error('Error rendering halaman 4:', error);
         
-        const totalD12 = dataWilayah.reduce((sum, item) => sum + item.d1 + item.d2, 0);
+        // FALLBACK: Tetap gunakan TOTAL DTSEN untuk perhitungan rasio
+        const totalKKDTSEN = dataWilayah.reduce((sum, item) => sum + item.total_kk, 0);
+        
         kontenHal4.innerHTML = `
-            <div style="text-align: center; padding: 30px; color: #666;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #dc3545; margin-bottom: 15px;"></i>
-                <h5 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">Menggunakan Data Estimasi</h5>
-                <p style="font-size: 12px;">Data layanan real-time tidak tersedia. Menampilkan estimasi dari DTSEN.</p>
-            </div>
-            <div style="margin-top: 20px;">
-                <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
-                    <tr style="background: #f0f0f0;">
-                        <th style="padding: 10px; border: 1px solid #000; text-align: left;">Kategori Layanan</th>
-                        <th style="padding: 10px; border: 1px solid #000; text-align: right;">Estimasi</th>
-                    </tr>
-                    <tr>
-                        <td style="padding: 8px; border: 1px solid #000;"><strong>DTKS</strong> (Data Terpadu Kesejahteraan Sosial)</td>
-                        <td style="padding: 8px; border: 1px solid #000; text-align: right; font-weight: 700;">${formatNumber(totalD12)} KK</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 8px; border: 1px solid #000;"><strong>Pengaduan Masyarakat</strong></td>
-                        <td style="padding: 8px; border: 1px solid #000; text-align: right;">${formatNumber(Math.floor(totalD12 * 0.05))} Kasus</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 8px; border: 1px solid #000;"><strong>SKTM</strong> (Surat Keterangan Tidak Mampu)</td>
-                        <td style="padding: 8px; border: 1px solid #000; text-align: right;">${formatNumber(Math.floor(totalD12 * 0.4))} Penerbitan</td>
-                    </tr>
+            <div style="margin-top: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h5 style="font-size: 14px; font-weight: 700; margin: 0;">REKAPITULASI LAYANAN SOSIAL (ESTIMASI)</h5>
+                    <span style="background: #6c757d; color: white; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 600;">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> Mode Offline
+                    </span>
+                </div>
+                
+                <!-- INFORMASI TOTAL DTSEN -->
+                <div style="background: #e8f5e9; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 5px solid #28a745;">
+                    <span style="font-weight: 700; font-size: 13px;">📋 TOTAL KELUARGA DTSEN (DESIL 1-10):</span>
+                    <span style="font-size: 20px; font-weight: 800; color: #28a745; margin-left: 10px;">${formatNumber(totalKKDTSEN)} KK</span>
+                    <p style="margin-top: 8px; margin-bottom: 0; font-size: 11px; color: #555;">
+                        <i class="fas fa-info-circle mr-1"></i> Data layanan real-time tidak tersedia. Menampilkan estimasi berdasarkan proporsi DTSEN.
+                    </p>
+                </div>
+                
+                <table style="width: 100%; margin-bottom: 25px; font-size: 12px; border: 1px solid #000; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f0f0f0;">
+                            <th style="padding: 10px; border: 1px solid #000; text-align: left;">Kategori Layanan</th>
+                            <th style="padding: 10px; border: 1px solid #000; text-align: right;">Estimasi</th>
+                            <th style="padding: 10px; border: 1px solid #000; text-align: right;">Rasio (vs DTSEN)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #000;"><strong>DTKS</strong> (Data Terpadu Kesejahteraan Sosial)</td>
+                            <td style="padding: 10px; border: 1px solid #000; text-align: right; font-weight: 700;">${formatNumber(totalKKDTSEN)} KK</td>
+                            <td style="padding: 10px; border: 1px solid #000; text-align: right;">100%</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #000;"><strong>SKTM</strong> (Surat Keterangan Tidak Mampu)</td>
+                            <td style="padding: 10px; border: 1px solid #000; text-align: right;">${formatNumber(Math.floor(totalKKDTSEN * 0.3))} Penerbitan</td>
+                            <td style="padding: 10px; border: 1px solid #000; text-align: right;">30.0%</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #000;"><strong>Pengaduan Masyarakat</strong></td>
+                            <td style="padding: 10px; border: 1px solid #000; text-align: right;">${formatNumber(Math.floor(totalKKDTSEN * 0.03))} Kasus</td>
+                            <td style="padding: 10px; border: 1px solid #000; text-align: right;">3.0%</td>
+                        </tr>
+                    </tbody>
                 </table>
+                
+                <div style="background: #fff3cd; border: 1px solid #ffeeba; padding: 12px 15px; border-radius: 5px;">
+                    <i class="fas fa-info-circle mr-2" style="color: #856404;"></i>
+                    <span style="font-size: 11px; color: #856404;">
+                        <strong>Perhitungan Rasio:</strong> Semua rasio dihitung berdasarkan TOTAL KELUARGA DTSEN (${formatNumber(totalKKDTSEN)} KK) sesuai kebijakan baru.
+                    </span>
+                </div>
             </div>
         `;
     }
 }
-
 /**
  * Generate QR Code
  */
