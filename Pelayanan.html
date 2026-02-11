@@ -213,9 +213,33 @@
             background-color: rgba(23,162,184,0.02);
         }
 
-        .badge-dtks { background: rgba(0,123,255,0.1); color: #007bff; padding: 6px 14px; border-radius: 50px; font-weight: 600; font-size: 0.75rem; }
-        .badge-pengaduan { background: rgba(255,193,7,0.1); color: #ffc107; padding: 6px 14px; border-radius: 50px; font-weight: 600; font-size: 0.75rem; }
-        .badge-sktm { background: rgba(40,167,69,0.1); color: #28a745; padding: 6px 14px; border-radius: 50px; font-weight: 600; font-size: 0.75rem; }
+        .badge-dtks { 
+            background: rgba(0,123,255,0.1); 
+            color: #007bff; 
+            padding: 6px 14px; 
+            border-radius: 50px; 
+            font-weight: 600; 
+            font-size: 0.75rem; 
+            display: inline-block;
+        }
+        .badge-pengaduan { 
+            background: rgba(255,193,7,0.1); 
+            color: #ffc107; 
+            padding: 6px 14px; 
+            border-radius: 50px; 
+            font-weight: 600; 
+            font-size: 0.75rem;
+            display: inline-block;
+        }
+        .badge-sktm { 
+            background: rgba(40,167,69,0.1); 
+            color: #28a745; 
+            padding: 6px 14px; 
+            border-radius: 50px; 
+            font-weight: 600; 
+            font-size: 0.75rem;
+            display: inline-block;
+        }
 
         /* ===== CHART CARD ===== */
         .chart-card {
@@ -224,6 +248,7 @@
             padding: 25px;
             box-shadow: var(--card-shadow);
             border: 1px solid rgba(0,0,0,0.02);
+            height: 100%;
         }
 
         .chart-header {
@@ -245,7 +270,7 @@
 
         .chart-container {
             position: relative;
-            height: 320px;
+            height: 280px;
             width: 100%;
         }
 
@@ -257,20 +282,17 @@
             margin-right: 8px;
         }
 
-        /* ===== INFO CARD ===== */
-        .info-card {
+        /* ===== SIDEBAR CARD RINGKAS ===== */
+        .sidebar-card {
             background: white;
             border-radius: 16px;
             padding: 20px;
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
             box-shadow: var(--card-shadow);
             border: 1px solid rgba(0,0,0,0.02);
-            height: 100%;
+            margin-bottom: 20px;
         }
 
-        .info-icon {
+        .sidebar-icon {
             width: 48px;
             height: 48px;
             background: rgba(23,162,184,0.1);
@@ -280,14 +302,66 @@
             justify-content: center;
             color: var(--info);
             font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .contact-row {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f3f9;
+        }
+
+        .contact-row:last-child {
+            border-bottom: none;
+        }
+
+        .contact-icon {
+            width: 36px;
+            height: 36px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--info);
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        .btn-kontak {
+            background: var(--info);
+            color: white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            width: 100%;
+        }
+
+        .btn-kontak:hover {
+            background: var(--info-dark);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(23,162,184,0.3);
+        }
+
+        .btn-kontak i {
+            font-size: 0.9rem;
         }
 
         /* ===== FOOTER ===== */
         .pelayanan-footer {
             background: var(--dark);
             color: white;
-            padding: 50px 0 30px;
-            margin-top: 80px;
+            padding: 40px 0 20px;
+            margin-top: 60px;
         }
 
         /* ===== RESPONSIVE ===== */
@@ -297,7 +371,14 @@
             .stats-number { font-size: 1.8rem; }
             .table-header { flex-direction: column; align-items: flex-start; gap: 10px; }
             .chart-header { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .info-card { flex-direction: column; align-items: center; text-align: center; }
+            .chart-container { height: 250px; }
+        }
+
+        @media (max-width: 576px) {
+            .badge-dtks, .badge-pengaduan, .badge-sktm {
+                padding: 4px 10px;
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
@@ -400,7 +481,7 @@
                     <table class="table table-hover mb-0">
                         <thead>
                             <tr>
-                                <th class="pl-4" width="30%">Desa/Kelurahan</th>
+                                <th class="pl-4" width="35%">Desa/Kelurahan</th>
                                 <th class="text-center" width="20%">
                                     <span style="color: var(--primary);">DTKS</span>
                                 </th>
@@ -410,7 +491,7 @@
                                 <th class="text-center" width="20%">
                                     <span style="color: var(--success);">SKTM</span>
                                 </th>
-                                <th class="text-center" width="10%">Detail</th>
+                                <th class="text-center" width="5%">Info</th>
                             </tr>
                         </thead>
                         <tbody id="pelayananTable">
@@ -426,21 +507,21 @@
                 <div class="p-3 bg-light border-top d-flex justify-content-between align-items-center flex-wrap">
                     <small class="text-muted">
                         <i class="fas fa-info-circle mr-1"></i>
-                        Data bersumber dari Firebase Firestore - Koleksi <code>wilayah_desa</code> (field: layanan)
+                        Data: <code>wilayah_desa.layanan</code> | Update: <span id="updateTime">-</span>
                     </small>
-                    <span id="lastUpdate" class="badge badge-light px-3 py-2 mt-2 mt-sm-0">
-                        <i class="fas fa-clock mr-1"></i> Update: <span id="updateTime">-</span>
+                    <span class="badge badge-info px-3 py-2 mt-2 mt-sm-0">
+                        <i class="fas fa-check-circle mr-1"></i> Terkoneksi Firebase
                     </span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- CHART & INFORMASI -->
+    <!-- CHART & SIDEBAR KONTAK - 2 KOLOM SEIMBANG -->
     <div class="row g-4">
-        <!-- CHART DISTRIBUSI PELAYANAN -->
+        <!-- CHART DISTRIBUSI PELAYANAN - 8 KOLOM -->
         <div class="col-lg-8" data-aos="fade-up" data-aos-delay="500">
-            <div class="chart-card h-100">
+            <div class="chart-card">
                 <div class="chart-header">
                     <div class="chart-title">
                         <div style="width: 45px; height: 45px; background: rgba(23,162,184,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--info);">
@@ -448,10 +529,10 @@
                         </div>
                         <div>
                             <h5 class="mb-0">Distribusi Layanan Per Desa</h5>
-                            <small class="text-muted">Perbandingan jumlah layanan per wilayah</small>
+                            <small class="text-muted">10 desa dengan layanan tertinggi</small>
                         </div>
                     </div>
-                    <div class="d-flex gap-3">
+                    <div class="d-flex gap-3 flex-wrap">
                         <span><span class="legend-color" style="background: #007bff;"></span> DTKS</span>
                         <span><span class="legend-color" style="background: #ffc107;"></span> Pengaduan</span>
                         <span><span class="legend-color" style="background: #28a745;"></span> SKTM</span>
@@ -462,48 +543,102 @@
                 </div>
             </div>
         </div>
-
-        <!-- INFORMASI LAYANAN & KONTAK -->
+        
+        <!-- SIDEBAR KONTAK RINGKAS - 4 KOLOM -->
         <div class="col-lg-4" data-aos="fade-up" data-aos-delay="600">
-            <div class="info-card mb-4">
-                <div class="info-icon">
-                    <i class="fas fa-question-circle"></i>
+            <!-- CARD INFORMASI LAYANAN (RINGKAS) -->
+            <div class="sidebar-card d-flex align-items-center">
+                <div class="sidebar-icon mr-3">
+                    <i class="fas fa-info-circle"></i>
                 </div>
                 <div>
-                    <h6 class="font-weight-bold mb-2">Tentang Layanan</h6>
+                    <h6 class="font-weight-bold mb-1">Tentang Layanan</h6>
                     <p class="small text-muted mb-0">
-                        <strong>DTKS:</strong> Data Terpadu Kesejahteraan Sosial<br>
-                        <strong>Pengaduan:</strong> Laporan & keluhan masyarakat<br>
-                        <strong>SKTM:</strong> Surat Keterangan Tidak Mampu
+                        <span class="badge-dtks px-2 py-1 mr-1">DTKS</span> Usulan 
+                        <span class="badge-pengaduan px-2 py-1 mx-1">Pengaduan</span> Aduan 
+                        <span class="badge-sktm px-2 py-1 ml-1">SKTM</span> Terbit
                     </p>
                 </div>
             </div>
             
-            <div class="info-card mb-4">
-                <div class="info-icon" style="background: rgba(255,193,7,0.1); color: var(--warning);">
-                    <i class="fas fa-phone-alt"></i>
+            <!-- CARD KONTAK LAYANAN - DIAMBIL DARI KONTAK.HTML -->
+            <div class="sidebar-card">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="sidebar-icon mr-3">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div>
+                        <h6 class="font-weight-bold mb-0">Kontak Layanan</h6>
+                        <small class="text-muted">Respon 1x24 jam</small>
+                    </div>
                 </div>
-                <div>
-                    <h6 class="font-weight-bold mb-2">Kontak Layanan</h6>
-                    <p class="small text-muted mb-1">
-                        <i class="fas fa-phone mr-2"></i> Call Center: 171<br>
-                        <i class="fab fa-whatsapp mr-2"></i> WA: 0811-1171-171
-                    </p>
-                    <a href="kontak.html" class="small font-weight-bold text-info">
-                        Hubungi Kami <i class="fas fa-arrow-right ml-1"></i>
+                
+                <!-- Kontak WhatsApp -->
+                <div class="contact-row">
+                    <div class="contact-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <small class="text-muted d-block">WhatsApp Center</small>
+                        <span class="font-weight-bold">0882-1494-0995</span>
+                    </div>
+                    <a href="https://wa.me/6288214940995" target="_blank" class="btn btn-sm btn-outline-success ml-2">
+                        <i class="fab fa-whatsapp"></i>
                     </a>
                 </div>
+                
+                <!-- Kontak Email -->
+                <div class="contact-row">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <small class="text-muted d-block">Email</small>
+                        <span class="font-weight-bold">tksksumber@gmail.com</span>
+                    </div>
+                    <a href="mailto:tksksumber@gmail.com" class="btn btn-sm btn-outline-primary ml-2">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+                
+                <!-- Kontak Call Center Kemensos -->
+                <div class="contact-row">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <small class="text-muted d-block">Call Center Kemensos</small>
+                        <span class="font-weight-bold">171</span> / <span class="font-weight-bold">0811-1171-171</span>
+                    </div>
+                </div>
+                
+                <!-- Jam Operasional (Ringkas) -->
+                <div class="contact-row">
+                    <div class="contact-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <small class="text-muted d-block">Jam Operasional</small>
+                        <span class="font-weight-bold">Senin-Jumat, 08.00-15.00</span>
+                    </div>
+                </div>
+                
+                <!-- Tombol ke Halaman Kontak -->
+                <a href="kontak.html" class="btn-kontak mt-3">
+                    <i class="fas fa-arrow-right"></i> Halaman Kontak Lengkap
+                    <i class="fas fa-external-link-alt ml-1"></i>
+                </a>
             </div>
             
-            <div class="info-card">
-                <div class="info-icon" style="background: rgba(40,167,69,0.1); color: var(--success);">
-                    <i class="fas fa-clock"></i>
+            <!-- CARD STATISTIK TAMBAHAN (RINGKAS) -->
+            <div class="sidebar-card d-flex align-items-center">
+                <div class="sidebar-icon mr-3" style="background: rgba(108,117,125,0.1); color: #6c757d;">
+                    <i class="fas fa-database"></i>
                 </div>
                 <div>
-                    <h6 class="font-weight-bold mb-2">Jam Operasional</h6>
+                    <h6 class="font-weight-bold mb-1">Sumber Data</h6>
                     <p class="small text-muted mb-0">
-                        Senin - Kamis: 08.00 - 15.00<br>
-                        Jumat: 08.00 - 11.30
+                        Firebase Firestore | Update real-time
                     </p>
                 </div>
             </div>
@@ -517,33 +652,27 @@
         <div class="row">
             <div class="col-md-8 mb-4 mb-md-0">
                 <div class="d-flex align-items-center mb-3">
-                    <span style="font-size: 1.3rem; font-weight: 700; color: white;">Monitoring Pelayanan DTSEN</span>
+                    <span style="font-size: 1.2rem; font-weight: 700; color: white;">Monitoring Pelayanan DTSEN</span>
                 </div>
                 <p class="text-white-50 small">
                     Sistem Monitoring Real-time Layanan Sosial Kecamatan Sumber. 
-                    Data diambil dari Firebase Firestore dan diperbarui secara otomatis.
+                    Data DTKS, Pengaduan, dan SKTM bersumber dari Firebase.
                 </p>
             </div>
             <div class="col-md-4 text-md-right">
                 <p class="text-white-50 small mb-1">
-                    <i class="fas fa-envelope mr-2"></i> tksksumber@gmail.com
-                </p>
-                <p class="text-white-50 small mb-1">
-                    <i class="fas fa-phone-alt mr-2"></i> 0882-1494-0995
+                    <i class="fas fa-map-marker-alt mr-2"></i> Jl. Sunan Drajat No.16, Sumber
                 </p>
                 <p class="text-white-50 small">
-                    <i class="fas fa-map-marker-alt mr-2"></i> Jl. Sunan Drajat No.16, Sumber
+                    <i class="fas fa-envelope mr-2"></i> tksksumber@gmail.com
                 </p>
             </div>
         </div>
-        <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+        <hr class="my-3" style="border-color: rgba(255,255,255,0.1);">
         <div class="row">
             <div class="col-12 text-center">
                 <p class="text-white-50 small mb-0">
-                    © 2026 TKSK & Forum Puskesos Kecamatan Sumber. 
-                    <span class="d-block d-md-inline mt-2 mt-md-0">
-                        Data pelayanan sosial untuk masyarakat yang lebih baik.
-                    </span>
+                    © 2026 TKSK & Forum Puskesos Kecamatan Sumber
                 </p>
             </div>
         </div>
@@ -618,30 +747,42 @@
             let dataDTKS = [];
             let dataPengaduan = [];
             let dataSKTM = [];
+            
+            // Simpan data untuk diurutkan berdasarkan total layanan
+            let desaList = [];
 
             // Sort by nama desa
             const dataDesa = snapshot.docs
                 .map(doc => ({ id: doc.id, ...doc.data() }))
-                .filter(item => item.nama_wilayah || item.nama) // Hanya yang punya nama
+                .filter(item => item.nama_wilayah || item.nama)
                 .sort((a, b) => (a.nama_wilayah || a.nama || '').localeCompare(b.nama_wilayah || b.nama || ''));
 
             dataDesa.forEach((w) => {
                 const namaDesa = w.nama_wilayah || w.nama || w.id;
                 
                 // ===== AMBIL DATA PELAYANAN =====
-                // Format: { layanan: { dtks, pengaduan, sktm } }
                 const layanan = w.layanan || {};
                 
                 // Parse integer
                 const dtks = parseInt(layanan.dtks) || 0;
                 const pengaduan = parseInt(layanan.pengaduan) || 0;
                 const sktm = parseInt(layanan.sktm) || 0;
+                const total = dtks + pengaduan + sktm;
                 
                 // Akumulasi
                 totalDTKS += dtks;
                 totalPengaduan += pengaduan;
                 totalSKTM += sktm;
                 totalDesa++;
+                
+                // Simpan untuk sorting
+                desaList.push({
+                    nama: namaDesa,
+                    dtks: dtks,
+                    pengaduan: pengaduan,
+                    sktm: sktm,
+                    total: total
+                });
                 
                 // Row table
                 rows += `<tr>
@@ -662,41 +803,37 @@
                         </span>
                     </td>
                     <td class="text-center">
-                        <a href="#" class="text-info" onclick="alert('Total layanan ${namaDesa}: ${(dtks+pengaduan+sktm).toLocaleString('id-ID')}'); return false;">
+                        <a href="#" class="text-info" onclick="alert('Total layanan ${namaDesa}: ${total.toLocaleString('id-ID')}\\nDTKS: ${dtks.toLocaleString('id-ID')}\\nPengaduan: ${pengaduan.toLocaleString('id-ID')}\\nSKTM: ${sktm.toLocaleString('id-ID')}'); return false;">
                             <i class="fas fa-info-circle"></i>
                         </a>
                     </td>
                 </tr>`;
-
-                // Data untuk chart (ambil 10 desa pertama untuk legibility)
-                if (dataDesa.length <= 10 || labels.length < 10) {
-                    labels.push(namaDesa.length > 15 ? namaDesa.substring(0, 12) + '...' : namaDesa);
-                    dataDTKS.push(dtks);
-                    dataPengaduan.push(pengaduan);
-                    dataSKTM.push(sktm);
-                }
             });
 
+            // ===== AMBIL 10 DESA DENGAN TOTAL LAYANAN TERTINGGI UNTUK CHART =====
+            const top10Desa = [...desaList]
+                .sort((a, b) => b.total - a.total)
+                .slice(0, 10);
+            
+            labels = top10Desa.map(d => d.nama.length > 15 ? d.nama.substring(0, 12) + '...' : d.nama);
+            dataDTKS = top10Desa.map(d => d.dtks);
+            dataPengaduan = top10Desa.map(d => d.pengaduan);
+            dataSKTM = top10Desa.map(d => d.sktm);
+
             // ===== UPDATE UI =====
-            // Update header stats
             document.getElementById('totalDesaHeader').innerText = totalDesa;
             document.getElementById('totalLayananHeader').innerText = (totalDTKS + totalPengaduan + totalSKTM).toLocaleString('id-ID');
-            
-            // Update cards
             document.getElementById('totalDTKS').innerText = totalDTKS.toLocaleString('id-ID');
             document.getElementById('totalPengaduan').innerText = totalPengaduan.toLocaleString('id-ID');
             document.getElementById('totalSKTM').innerText = totalSKTM.toLocaleString('id-ID');
-            
-            // Update table
             document.getElementById('pelayananTable').innerHTML = rows;
             
             // Update timestamp
             const now = new Date();
-            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
             document.getElementById('updateTime').innerText = `${dateStr}, ${timeStr}`;
             document.getElementById('updateTimeHeader').innerText = timeStr;
-            document.getElementById('lastUpdate').innerHTML = `<i class="fas fa-clock mr-1"></i> Update: ${dateStr}, ${timeStr}`;
 
             // Render chart
             renderChart(labels, dataDTKS, dataPengaduan, dataSKTM);
@@ -706,7 +843,7 @@
             document.getElementById('pelayananTable').innerHTML = `
                 <tr><td colspan="5" class="text-center py-4 text-danger">
                     <i class="fas fa-exclamation-triangle mr-2"></i>
-                    Gagal memuat data pelayanan. Silakan refresh halaman.
+                    Gagal memuat data pelayanan.
                 </td></tr>`;
         });
     }
@@ -717,7 +854,6 @@
     function renderChart(labels, dtks, pengaduan, sktm) {
         const ctx = document.getElementById('pelayananChart').getContext('2d');
         
-        // Destroy existing chart
         if (pelayananChart) {
             pelayananChart.destroy();
         }
@@ -757,9 +893,7 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        display: false
-                    },
+                    legend: { display: false },
                     tooltip: {
                         mode: 'index',
                         intersect: false,
@@ -773,22 +907,12 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0,0,0,0.03)'
-                        },
-                        ticks: {
-                            callback: (value) => value.toLocaleString('id-ID')
-                        }
+                        grid: { color: 'rgba(0,0,0,0.03)' },
+                        ticks: { callback: (value) => value.toLocaleString('id-ID') }
                     },
                     x: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            maxRotation: 45,
-                            minRotation: 30,
-                            font: { size: 11 }
-                        }
+                        grid: { display: false },
+                        ticks: { maxRotation: 45, minRotation: 30, font: { size: 11 } }
                     }
                 }
             }
@@ -804,7 +928,7 @@
 
 <!-- Fallback for non-module browsers -->
 <script nomodule>
-    document.getElementById('pelayananTable').innerHTML = '<tr><td colspan="5" class="text-center py-4 text-warning">Browser Anda tidak mendukung fitur modern. Silakan gunakan Chrome, Firefox, atau Edge terbaru.</td></tr>';
+    document.getElementById('pelayananTable').innerHTML = '<tr><td colspan="5" class="text-center py-4 text-warning">Browser tidak mendukung fitur modern.</td></tr>';
 </script>
 
 </body>
