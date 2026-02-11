@@ -358,7 +358,7 @@
                 <span class="badge badge-light p-2">
                     <i class="fas fa-info-circle mr-1"></i> Radius: 35 | Blur: 25
                 </span>
-                <button id="btnResetZoom" class="btn btn-sm btn-outline-secondary ml-2" onclick="resetZoom()">
+                <button id="btnResetZoom" class="btn btn-sm btn-outline-secondary ml-2" onclick="window.resetZoom()">
                     <i class="fas fa-crosshairs"></i>
                 </button>
             </div>
@@ -445,7 +445,7 @@
 <!-- Firebase SDK -->
 <script type="module">
     // ============================================================
-    // FIREBASE INITIALIZATION - AMBIL DATA REAL DARI FIREBASE
+    // FIREBASE INITIALIZATION
     // ============================================================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
     import { 
@@ -481,9 +481,9 @@
     let heatLayer;
     let wilayahData = [];
     let currentDesil = 1;
-    let markerGroup = L.layerGroup().addTo(map);
+    let markerGroup = null; // Akan diinisialisasi setelah map siap
 
-    // Koordinat Kecamatan Sumber, Cirebon (contoh - sesuaikan dengan data real)
+    // Koordinat Kecamatan Sumber, Cirebon
     const DEFAULT_CENTER = [-6.87, 108.57];
     const DEFAULT_ZOOM = 12;
 
@@ -534,13 +534,12 @@
                 }
                 while (desilArray.length < 10) desilArray.push(0);
                 
-                // Hitung total KK
                 const totalKK = desilArray.reduce((a, b) => (a || 0) + (b || 0), 0);
                 
-                // KOORDINAT (contoh - sesuaikan dengan data real dari Firebase)
-                // Idealnya, simpan koordinat di Firebase. Untuk demo, generate random sekitar Sumber
-                const lat = -6.87 + (Math.random() - 0.5) * 0.05;
-                const lng = 108.57 + (Math.random() - 0.5) * 0.05;
+                // KOORDINAT - Gunakan koordinat yang sudah disimpan atau generate random
+                // TODO: Simpan koordinat real di Firebase
+                const lat = docData.lat || (-6.87 + (Math.random() - 0.5) * 0.08);
+                const lng = docData.lng || (108.57 + (Math.random() - 0.5) * 0.08);
                 
                 data.push({
                     id: doc.id,
@@ -589,8 +588,8 @@
                 desil: [d1, d2, d3, d4, ...Array(6).fill(Math.floor(Math.random() * 40) + 10)],
                 total_kk: d1 + d2 + d3 + d4 + d5_10,
                 d1, d2, d3, d4, d5_10,
-                lat: -6.87 + (Math.random() - 0.5) * 0.05,
-                lng: 108.57 + (Math.random() - 0.5) * 0.05,
+                lat: -6.87 + (Math.random() - 0.5) * 0.08,
+                lng: 108.57 + (Math.random() - 0.5) * 0.08,
                 prioritas: d1+d2 > 500 ? 'Tinggi' : d1+d2 > 300 ? 'Sedang' : 'Rendah'
             };
         });
@@ -607,6 +606,7 @@
             maxZoom: 19
         }).addTo(map);
         
+        // Inisialisasi markerGroup SETELAH map tersedia
         markerGroup = L.layerGroup().addTo(map);
     }
 
@@ -614,9 +614,17 @@
     // UPDATE HEATMAP & UI
     // ============================================================
     function updateHeatmap(desil) {
+        if (!map) {
+            console.error('Map not initialized');
+            return;
+        }
+        
         currentDesil = desil;
         
+        // Hapus heatmap lama jika ada
         if (heatLayer) map.removeLayer(heatLayer);
+        
+        // Hapus marker lama jika ada
         if (markerGroup) markerGroup.clearLayers();
         
         const heatData = [];
@@ -633,7 +641,7 @@
                 heatData.push([w.lat, w.lng, intensity]);
                 
                 // Tambah marker untuk desil dengan nilai > 200
-                if (nilai > 200) {
+                if (nilai > 200 && markerGroup) {
                     const marker = L.circleMarker([w.lat, w.lng], {
                         radius: 6,
                         fillColor: DESIL_INFO[desil-1].color,
@@ -645,26 +653,30 @@
                     
                     marker.bindPopup(`
                         <b>${w.nama}</b><br>
-                        Desa/Kelurahan<br>
-                        <span style="color: ${DESIL_INFO[desil-1].color};">Desil ${desil}: ${formatNumber(nilai)} KK</span><br>
+                        Kecamatan ${w.kecamatan}<br>
+                        <span style="color: ${DESIL_INFO[desil-1].color}; font-weight: bold;">
+                            Desil ${desil}: ${formatNumber(nilai)} KK
+                        </span><br>
                         Total KK: ${formatNumber(w.total_kk)} KK
                     `);
                 }
             }
         });
         
-        // Tambah heatmap
-        heatLayer = L.heatLayer(heatData, {
-            radius: 35,
-            blur: 25,
-            maxZoom: 15,
-            gradient: {
-                0.2: 'blue',
-                0.4: 'lime',
-                0.6: 'orange',
-                0.8: 'red'
-            }
-        }).addTo(map);
+        // Tambah heatmap baru
+        if (heatData.length > 0) {
+            heatLayer = L.heatLayer(heatData, {
+                radius: 35,
+                blur: 25,
+                maxZoom: 15,
+                gradient: {
+                    0.2: 'blue',
+                    0.4: 'lime',
+                    0.6: 'orange',
+                    0.8: 'red'
+                }
+            }).addTo(map);
+        }
         
         // Update UI
         document.getElementById('currentDesilLabel').innerHTML = `Desil ${desil}: ${DESIL_INFO[desil-1].label}`;
@@ -730,7 +742,7 @@
         document.getElementById('totalDesa').textContent = totalDesa;
         document.getElementById('totalKK').textContent = formatNumber(totalKK);
         document.getElementById('prioritasTinggi').textContent = prioritasTinggi;
-        document.getElementById('rataCakupan').textContent = rataCakupan + '%';
+        document.getElementById('rataCakupan').textContent = isNaN(rataCakupan) ? '0%' : rataCakupan + '%';
         document.getElementById('dataUpdateTime').innerHTML = `<i class="fas fa-clock mr-1"></i> Update: ${formatDate()}`;
     }
 
@@ -754,7 +766,9 @@
     // RESET ZOOM
     // ============================================================
     window.resetZoom = function() {
-        map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+        if (map) {
+            map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+        }
     };
 
     // ============================================================
@@ -769,20 +783,22 @@
     // ============================================================
     async function init() {
         try {
-            // Generate desil badges
+            // 1. Generate desil badges
             generateDesilBadges();
             
-            // Inisialisasi map
+            // 2. Inisialisasi map TERLEBIH DAHULU
             initMap();
             
-            // Load data dari Firebase
+            // 3. Load data dari Firebase
             wilayahData = await loadFirebaseData();
             
-            // Update statistik
+            // 4. Update statistik
             updateStatistics(wilayahData);
             
-            // Render heatmap default (Desil 1)
-            updateHeatmap(1);
+            // 5. Render heatmap default (Desil 1) - pastikan map sudah siap
+            setTimeout(() => {
+                updateHeatmap(1);
+            }, 100);
             
             console.log(`✅ Heatmap initialized with ${wilayahData.length} villages`);
             
