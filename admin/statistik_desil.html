@@ -2,99 +2,554 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistik Desil - DATA KE AKSI</title>
-    <link rel="stylesheet" href="input_data.css"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>Statistik Desil | DATA KE AKSI - TKSK Sumber</title>
+    
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
-        /* Perbaikan agar grafik tidak memanjang ke bawah */
-        .stats-card-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-            gap: 15px; 
-            margin-bottom: 25px; 
-            width: 100%; 
-            max-width: 1000px; 
+        /* ===== VARIABLES ===== */
+        :root {
+            --primary: #0a58ca;
+            --primary-dark: #084298;
+            --primary-light: #e7f1ff;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --dark: #1a2e3f;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-600: #6c757d;
+            --sidebar-width: 280px;
+            --border-radius: 20px;
+            --border-radius-sm: 14px;
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
         }
-        .stat-card { 
-            background: white; 
-            padding: 20px; 
-            border-radius: 12px; 
-            box-shadow: var(--shadow); 
-            text-align: center; 
-            border-top: 4px solid var(--primary-color); 
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .stat-card h4 { font-size: 0.8rem; color: #64748b; text-transform: uppercase; }
-        .stat-card p { font-size: 1.5rem; font-weight: bold; color: #1e293b; margin-top: 5px; }
-        
-        /* Container Grafik dengan Tinggi Tetap */
-        .chart-full { 
-            width: 100%; 
-            max-width: 1000px; 
-            height: 400px; /* Mengunci tinggi agar tidak melar */
-            background: white; 
-            padding: 25px; 
-            border-radius: 12px; 
-            box-shadow: var(--shadow); 
-            margin-bottom: 20px; 
-            position: relative; /* Penting untuk Chart.js responsive */
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        .chart-full h3 {
-            margin-bottom: 15px;
+
+        /* ===== SIDEBAR - SAMA DENGAN DASHBOARD ===== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            transition: var(--transition);
+            border-right: 1px solid var(--gray-200);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 30px 25px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 25px 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            border-radius: 14px;
+            color: var(--gray-600);
+            font-weight: 500;
+            transition: var(--transition);
+            text-decoration: none;
+            gap: 12px;
+        }
+
+        .sidebar-nav a i {
+            width: 22px;
+            text-align: center;
             font-size: 1.1rem;
-            color: #1e293b;
+            color: var(--gray-600);
+            transition: var(--transition);
+        }
+
+        .sidebar-nav a:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .sidebar-nav a:hover i {
+            color: var(--primary);
+        }
+
+        .sidebar-nav li.active a {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 8px 15px rgba(10,88,202,0.2);
+        }
+
+        .sidebar-nav li.active a i {
+            color: white;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 40px;
+            transition: var(--transition);
+        }
+
+        /* ===== HEADER SECTION ===== */
+        .content-header {
+            margin-bottom: 35px;
+        }
+
+        .content-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .content-header h1 i {
+            color: var(--primary);
+        }
+
+        .content-header p {
+            color: var(--gray-600);
+            font-size: 1rem;
+            margin-left: 44px;
+        }
+
+        /* ===== STATS CARD GRID - DESAIN PREMIUM ===== */
+        .stats-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+            max-width: 1200px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(10,88,202,0.08);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .stat-card:nth-child(2)::before {
+            background: #f59e0b;
+        }
+
+        .stat-card:nth-child(3)::before {
+            background: #10b981;
+        }
+
+        .stat-card-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-light);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h4 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+        }
+
+        .stat-card p {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1;
+            margin-top: 0;
+        }
+
+        .stat-card small {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            margin-top: 5px;
+        }
+
+        /* ===== CHART CONTAINER - TINGGI TETAP 400PX ===== */
+        .chart-full {
+            width: 100%;
+            max-width: 1200px;
+            height: 420px;
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--gray-200);
+            margin-bottom: 30px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .chart-full:hover {
+            box-shadow: 0 20px 40px rgba(10,88,202,0.08);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .chart-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0;
+        }
+
+        .chart-header h3 i {
+            color: var(--primary);
+        }
+
+        .chart-badge {
+            background: var(--gray-100);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: calc(100% - 50px) !important;
+        }
+
+        /* ===== INSIGHT CARD ===== */
+        .insight-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--gray-200);
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .insight-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-light);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-content h5 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .insight-content p {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .chart-full {
+                height: 380px;
+                padding: 20px;
+            }
+            .stat-card p {
+                font-size: 1.8rem;
+            }
+            .insight-card {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .chart-full {
+                height: 350px;
+                padding: 15px;
+            }
+            .content-header h1 {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-card-grid, .chart-full, .insight-card {
+            animation: fadeInUp 0.5s ease;
+        }
+
+        /* Custom scrollbar */
+        .main-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        .main-content::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+        .main-content::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 10px;
+        }
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-600);
         }
     </style>
 </head>
 <body class="dashboard-body">
 
+    <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar">
-        <div class="sidebar-header"><h3>DATA KE AKSI</h3></div>
+        <div class="sidebar-header">
+            <h3>DATA KE AKSI</h3>
+            <small style="font-size: 0.75rem; color: var(--gray-600); display: block; margin-top: 5px;">
+                <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> Kec. Sumber, Kab. Cirebon
+            </small>
+        </div>
         <nav class="sidebar-nav">
             <ul>
-                <li><a href="https://shasanudin.github.io/DATA_KE_AKSI/dashboard.html"><i class="fas fa-home"></i> Beranda</a></li>
-                <li class="active"><a href="#"><i class="fas fa-chart-pie"></i> Statistik Desil</a></li>
-                <li><a href="input_data.html"><i class="fas fa-edit"></i> Input Data</a></li>
+                <li>
+                    <a href="https://shasanudin.github.io/DATA_KE_AKSI/dashboard.html">
+                        <i class="fas fa-home"></i>
+                        Beranda
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="#">
+                        <i class="fas fa-chart-pie"></i>
+                        Statistik Desil
+                    </a>
+                </li>
+                <li>
+                    <a href="input_data.html">
+                        <i class="fas fa-edit"></i>
+                        Input Data
+                    </a>
+                </li>
+                <li style="margin-top: 30px; border-top: 1px solid var(--gray-200); padding-top: 20px;">
+                    <a href="#" id="btnLogout" style="color: var(--danger);">
+                        <i class="fas fa-sign-out-alt" style="color: var(--danger);"></i>
+                        Keluar
+                    </a>
+                </li>
             </ul>
         </nav>
     </aside>
 
+    <!-- ===== MAIN CONTENT ===== -->
     <main class="main-content">
         <section class="content-header">
-            <h1>Analisis Statistik Desil</h1>
-            <p>Visualisasi sebaran peringkat kesejahteraan masyarakat Kecamatan Sumber.</p>
+            <h1>
+                <i class="fas fa-chart-pie"></i>
+                Analisis Statistik Desil
+            </h1>
+            <p>
+                <i class="fas fa-arrow-right" style="color: var(--primary); font-size: 0.8rem;"></i>
+                Visualisasi sebaran peringkat kesejahteraan masyarakat Kecamatan Sumber.
+            </p>
         </section>
 
+        <!-- ===== STATS CARDS PREMIUM ===== -->
         <div class="stats-card-grid">
             <div class="stat-card">
+                <div class="stat-card-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
                 <h4>Total Desil 1 (Sangat Miskin)</h4>
                 <p id="totalD1">0</p>
+                <small>Keluarga dengan kerentanan tertinggi</small>
             </div>
-            <div class="stat-card" style="border-top-color: #f59e0b;">
+            <div class="stat-card">
+                <div class="stat-card-icon" style="background: rgba(245,158,11,0.1); color: #f59e0b;">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
                 <h4>Konsentrasi Tertinggi</h4>
                 <p id="topWilayah">-</p>
+                <small>Desa dengan D1 terbanyak</small>
             </div>
-            <div class="stat-card" style="border-top-color: #10b981;">
-                <h4>Rata-rata Desil 1-3</h4>
+            <div class="stat-card">
+                <div class="stat-card-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h4>Rata-rata D1-D3</h4>
                 <p id="avgMiskin">0%</p>
+                <small>Proporsi terhadap total KK</small>
             </div>
         </div>
 
+        <!-- ===== CHART 1: LINE CHART ===== -->
         <div class="chart-full">
-            <h3>Tren Distribusi Desil Seluruh Wilayah</h3>
+            <div class="chart-header">
+                <h3>
+                    <i class="fas fa-chart-line"></i>
+                    Tren Distribusi Desil Seluruh Wilayah
+                </h3>
+                <span class="chart-badge">
+                    <i class="fas fa-database"></i>
+                    D1 - D10
+                </span>
+            </div>
             <canvas id="mainDesilChart"></canvas>
         </div>
 
+        <!-- ===== CHART 2: RADAR CHART ===== -->
         <div class="chart-full">
-            <h3>Radar Profil Kesejahteraan</h3>
+            <div class="chart-header">
+                <h3>
+                    <i class="fas fa-radar"></i>
+                    Radar Profil Kesejahteraan
+                </h3>
+                <span class="chart-badge">
+                    <i class="fas fa-chart-pie"></i>
+                    5 Kelompok
+                </span>
+            </div>
             <canvas id="radarDesilChart"></canvas>
+        </div>
+
+        <!-- ===== INSIGHT CARD ===== -->
+        <div class="insight-card">
+            <div class="insight-icon">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+            <div class="insight-content">
+                <h5>Analisis & Rekomendasi</h5>
+                <p id="insightText">Memuat data statistik DTSEN Kecamatan Sumber...</p>
+            </div>
         </div>
     </main>
 
+    <!-- ===== SCRIPT FIREBASE - TIDAK DIUBAH ===== -->
     <script type="module">
+        // ============================================================
+        // FIREBASE INITIALIZATION - TIDAK DIUBAH
+        // ============================================================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
@@ -107,16 +562,24 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
 
+        // ============================================================
+        // GLOBAL VARIABLES
+        // ============================================================
         let mainChartInstance = null;
         let radarChartInstance = null;
 
+        // ============================================================
+        // LOAD STATISTICS - TIDAK DIUBAH
+        // ============================================================
         async function loadStatistics() {
             try {
                 const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
                 
                 if (querySnapshot.empty) {
                     console.warn("Data kosong.");
+                    document.getElementById('insightText').innerText = "Belum ada data DTSEN. Silakan input data terlebih dahulu.";
                     return;
                 }
 
@@ -133,7 +596,7 @@
                             aggregateDesil[i] += num;
                             if (i === 0 && num > highestD1) { 
                                 highestD1 = num; 
-                                wilayahHighestD1 = data.nama; 
+                                wilayahHighestD1 = data.nama || data.nama_wilayah || 'N/A';
                             }
                         });
                         totalKKGlobal += parseInt(data.total_kk) || 0;
@@ -141,76 +604,150 @@
                 });
 
                 // Update UI
-                document.getElementById('totalD1').innerText = aggregateDesil[0].toLocaleString();
+                document.getElementById('totalD1').innerText = aggregateDesil[0].toLocaleString('id-ID');
                 document.getElementById('topWilayah').innerText = wilayahHighestD1;
+                
                 const rentan = aggregateDesil[0] + aggregateDesil[1] + aggregateDesil[2];
                 const persen = totalKKGlobal > 0 ? ((rentan / totalKKGlobal) * 100).toFixed(1) : 0;
                 document.getElementById('avgMiskin').innerText = persen + "%";
+                
+                // Update insight text
+                document.getElementById('insightText').innerHTML = `
+                    Total <strong>${aggregateDesil[0].toLocaleString('id-ID')} KK</strong> dalam kategori Sangat Miskin (D1). 
+                    Wilayah <strong>${wilayahHighestD1}</strong> memiliki konsentrasi tertinggi. 
+                    Kelompok rentan (D1-D3) mencakup <strong>${persen}%</strong> dari total keluarga terdata.
+                `;
 
                 renderCharts(aggregateDesil);
             } catch (err) {
                 console.error("Gagal memuat statistik:", err);
+                document.getElementById('insightText').innerText = "Gagal memuat data. Periksa koneksi Firebase.";
             }
         }
 
+        // ============================================================
+        // RENDER CHARTS - TIDAK DIUBAH (HANYA DITAMBAH VALIDASI)
+        // ============================================================
         function renderCharts(dataDesil) {
-            // Hapus chart lama jika ada agar tidak tumpang tindih
+            // Hapus chart lama jika ada
             if (mainChartInstance) mainChartInstance.destroy();
             if (radarChartInstance) radarChartInstance.destroy();
 
             // 1. Line Chart
-            const ctxMain = document.getElementById('mainDesilChart').getContext('2d');
-            mainChartInstance = new Chart(ctxMain, {
-                type: 'line',
-                data: {
-                    labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10'],
-                    datasets: [{
-                        label: 'Jumlah KK',
-                        data: dataDesil,
-                        fill: true,
-                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                        borderColor: '#007bff',
-                        tension: 0.3,
-                        pointRadius: 4
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, // Penting agar mengikuti tinggi CSS
-                    plugins: { legend: { display: false } }
-                }
-            });
+            const ctxMain = document.getElementById('mainDesilChart')?.getContext('2d');
+            if (ctxMain) {
+                mainChartInstance = new Chart(ctxMain, {
+                    type: 'line',
+                    data: {
+                        labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10'],
+                        datasets: [{
+                            label: 'Jumlah KK',
+                            data: dataDesil,
+                            fill: true,
+                            backgroundColor: 'rgba(10, 88, 202, 0.1)',
+                            borderColor: '#0a58ca',
+                            borderWidth: 3,
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#0a58ca',
+                            pointBorderColor: 'white',
+                            pointBorderWidth: 2,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        plugins: { 
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => ` ${ctx.raw.toLocaleString('id-ID')} KK`
+                                }
+                            }
+                        },
+                        scales: {
+                            y: { 
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0,0,0,0.03)' },
+                                ticks: { callback: (v) => v.toLocaleString('id-ID') }
+                            },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
 
             // 2. Radar Chart
-            const ctxRadar = document.getElementById('radarDesilChart').getContext('2d');
-            radarChartInstance = new Chart(ctxRadar, {
-                type: 'radar',
-                data: {
-                    labels: ['Sangat Miskin', 'Miskin', 'Menengah Bawah', 'Menengah', 'Mampu'],
-                    datasets: [{
-                        label: 'Proporsi Wilayah',
-                        data: [
-                            dataDesil[0], 
-                            dataDesil[1] + dataDesil[2], 
-                            dataDesil[3] + dataDesil[4] + dataDesil[5],
-                            dataDesil[6] + dataDesil[7],
-                            dataDesil[8] + dataDesil[9]
-                        ],
-                        backgroundColor: 'rgba(245, 158, 11, 0.2)',
-                        borderColor: '#f59e0b',
-                        borderWidth: 2
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, // Mencegah radar meluber ke bawah
-                    scales: {
-                        r: { beginAtZero: true }
+            const ctxRadar = document.getElementById('radarDesilChart')?.getContext('2d');
+            if (ctxRadar) {
+                radarChartInstance = new Chart(ctxRadar, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Sangat Miskin', 'Miskin', 'Menengah Bawah', 'Menengah', 'Mampu'],
+                        datasets: [{
+                            label: 'Jumlah KK',
+                            data: [
+                                dataDesil[0], 
+                                dataDesil[1] + dataDesil[2], 
+                                dataDesil[3] + dataDesil[4] + dataDesil[5],
+                                dataDesil[6] + dataDesil[7],
+                                dataDesil[8] + dataDesil[9]
+                            ],
+                            backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                            borderColor: '#f59e0b',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#f59e0b',
+                            pointBorderColor: 'white',
+                            pointBorderWidth: 2,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => ` ${ctx.raw.toLocaleString('id-ID')} KK`
+                                }
+                            }
+                        },
+                        scales: {
+                            r: { 
+                                beginAtZero: true,
+                                ticks: { 
+                                    callback: (v) => v.toLocaleString('id-ID'),
+                                    backdropColor: 'transparent' 
+                                },
+                                grid: { color: 'rgba(0,0,0,0.03)' },
+                                pointLabels: { font: { size: 11 } }
+                            }
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
+        // ============================================================
+        // AUTH STATE & LOGOUT
+        // ============================================================
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+        
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "../index.html";
+            }
+        });
+
+        document.getElementById('btnLogout')?.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+        });
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
         loadStatistics();
     </script>
 </body>
