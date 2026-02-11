@@ -327,6 +327,24 @@
             margin-bottom: 1.2rem;
         }
 
+        .btn-read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: var(--transition);
+            padding: 8px 0;
+        }
+
+        .btn-read-more:hover {
+            color: var(--primary-dark);
+            gap: 12px;
+            text-decoration: none;
+        }
+
         .jurnal-footer {
             margin-top: 30px;
             padding-top: 20px;
@@ -371,12 +389,144 @@
             color: var(--gray-600);
             transition: var(--transition);
             border: none;
+            cursor: pointer;
         }
 
         .share-btn:hover {
             background: var(--primary);
             color: white;
             transform: translateY(-3px);
+        }
+
+        /* ===== MODAL DETAIL BERITA ===== */
+        .modal-berita {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-berita.active {
+            display: flex;
+        }
+
+        .modal-berita-content {
+            background: white;
+            border-radius: var(--border-radius);
+            max-width: 800px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+            animation: modalFadeIn 0.4s ease;
+            position: relative;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-berita-header {
+            padding: 25px 30px;
+            border-bottom: 2px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: sticky;
+            top: 0;
+            background: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            z-index: 10;
+        }
+
+        .modal-berita-title {
+            flex: 1;
+            padding-right: 30px;
+        }
+
+        .modal-berita-title h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .modal-berita-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            color: var(--gray-600);
+            font-size: 0.85rem;
+        }
+
+        .modal-close {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            flex-shrink: 0;
+        }
+
+        .modal-close:hover {
+            background: var(--danger);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal-berita-body {
+            padding: 30px;
+        }
+
+        .modal-berita-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 25px;
+        }
+
+        .modal-berita-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+
+        .modal-berita-text p {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-berita-footer {
+            padding: 20px 30px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            background: var(--gray-100);
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
         }
 
         /* ===== EMPTY STATE ===== */
@@ -470,12 +620,16 @@
             .jurnal-title { font-size: 1.5rem; }
             .jurnal-meta { flex-direction: column; align-items: flex-start; gap: 10px; }
             .jurnal-footer { flex-direction: column; gap: 15px; }
+            .modal-berita-header { flex-direction: column; }
+            .modal-berita-title h2 { font-size: 1.5rem; }
+            .modal-close { align-self: flex-end; margin-bottom: 15px; }
         }
 
         @media (max-width: 576px) {
             .hero-jurnal h1 { font-size: 1.8rem; }
             .jurnal-title { font-size: 1.3rem; }
             .kesimpulan-box { padding: 20px; }
+            .modal-berita-body { padding: 20px; }
         }
     </style>
 </head>
@@ -552,6 +706,37 @@
     </div>
 </div>
 
+<!-- ===== MODAL DETAIL BERITA ===== -->
+<div id="modalBerita" class="modal-berita">
+    <div class="modal-berita-content">
+        <div class="modal-berita-header">
+            <div class="modal-berita-title">
+                <h2 id="modalJudul">Judul Berita</h2>
+                <div class="modal-berita-meta">
+                    <span id="modalKategori"><i class="fas fa-tag"></i> Kategori</span>
+                    <span id="modalTanggal"><i class="far fa-calendar-alt"></i> Tanggal</span>
+                    <span id="modalPenulis"><i class="far fa-user"></i> Penulis</span>
+                    <span id="modalViews"><i class="fas fa-eye"></i> 0 dibaca</span>
+                </div>
+            </div>
+            <button class="modal-close" id="modalCloseBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-berita-body">
+            <img id="modalGambar" class="modal-berita-image" src="" alt="Gambar Berita" style="display: none;">
+            <div id="modalIsi" class="modal-berita-text">
+                <!-- Isi berita akan ditampilkan di sini -->
+            </div>
+        </div>
+        <div class="modal-berita-footer">
+            <button class="btn btn-outline-primary px-4 py-2 rounded-pill" onclick="window.print()">
+                <i class="fas fa-print mr-2"></i> Cetak
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- ===== FOOTER ===== -->
 <footer class="main-footer">
     <div class="container">
@@ -606,7 +791,9 @@
         query, 
         orderBy, 
         getDocs,
-        limit
+        doc,
+        updateDoc,
+        increment
     } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -669,18 +856,18 @@
     // ============================================================
     // FORMAT DATE INDONESIA
     // ============================================================
-    function formatIndonesianDate(dateString) {
-        const date = new Date(dateString);
+    function formatIndonesianDate(date) {
+        if (!date) return 'Tanggal tidak tersedia';
+        
+        const d = date.toDate ? date.toDate() : new Date(date);
         const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
                        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         
-        if (isNaN(date.getTime())) {
-            return 'Tanggal tidak valid';
-        }
+        if (isNaN(d.getTime())) return 'Tanggal tidak valid';
         
-        const day = date.getDate();
-        const month = months[date.getMonth()];
-        const year = date.getFullYear();
+        const day = d.getDate();
+        const month = months[d.getMonth()];
+        const year = d.getFullYear();
         
         return `${day} ${month} ${year}`;
     }
@@ -689,9 +876,72 @@
     // TRUNCATE TEXT
     // ============================================================
     function truncateText(text, maxLength = 300) {
+        if (!text) return '';
         if (text.length <= maxLength) return text;
         return text.substring(0, maxLength) + '... ';
     }
+
+    // ============================================================
+    // MODAL FUNCTIONS
+    // ============================================================
+    window.openModalBerita = function(beritaId, judul, kategori, tanggal, penulis, isi, gambar, views) {
+        // Set modal content
+        document.getElementById('modalJudul').innerText = judul || 'Judul tidak tersedia';
+        document.getElementById('modalKategori').innerHTML = `<i class="fas fa-tag"></i> ${kategori || 'Umum'}`;
+        document.getElementById('modalTanggal').innerHTML = `<i class="far fa-calendar-alt"></i> ${tanggal || 'Tanggal tidak tersedia'}`;
+        document.getElementById('modalPenulis').innerHTML = `<i class="far fa-user"></i> ${penulis || 'Admin TKSK'}`;
+        document.getElementById('modalViews').innerHTML = `<i class="fas fa-eye"></i> ${(views || 0).toLocaleString('id-ID')} dibaca`;
+        
+        // Set image
+        const modalGambar = document.getElementById('modalGambar');
+        if (gambar && gambar.trim() !== '') {
+            modalGambar.src = gambar;
+            modalGambar.style.display = 'block';
+        } else {
+            modalGambar.style.display = 'none';
+        }
+        
+        // Set content
+        document.getElementById('modalIsi').innerHTML = isi.split('\n').map(p => `<p>${p}</p>`).join('');
+        
+        // Open modal
+        document.getElementById('modalBerita').classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Update views counter in Firestore
+        try {
+            const docRef = doc(db, "berita", beritaId);
+            updateDoc(docRef, {
+                views: increment(1)
+            }).catch(err => console.log('Error updating views:', err));
+        } catch (err) {
+            console.log('Error updating views:', err);
+        }
+    };
+
+    // Close modal
+    function closeModal() {
+        document.getElementById('modalBerita').classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Event listeners for modal close
+    document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+    
+    // Click outside to close
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('modalBerita');
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Escape key to close
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
 
     // ============================================================
     // LOAD BERITA FROM FIRESTORE
@@ -748,14 +998,7 @@
                 totalBerita++;
                 
                 // Parse tanggal
-                let tanggalBerita = '';
-                if (berita.tanggal && berita.tanggal.toDate) {
-                    tanggalBerita = formatIndonesianDate(berita.tanggal.toDate());
-                } else if (berita.createdAt && berita.createdAt.toDate) {
-                    tanggalBerita = formatIndonesianDate(berita.createdAt.toDate());
-                } else {
-                    tanggalBerita = 'Tanggal tidak tersedia';
-                }
+                const tanggalBerita = formatIndonesianDate(berita.tanggal || berita.createdAt);
                 
                 // Kategori
                 const kategori = berita.kategori || 'Umum';
@@ -775,33 +1018,44 @@
                 // Gambar (opsional)
                 const gambar = berita.gambar || '';
                 
-                // Priority (bisa ditentukan dari field atau default)
+                // Priority
                 const isPriority = berita.priority === true || berita.status === 'featured';
                 
-                // Format views
-                const views = berita.views || Math.floor(Math.random() * 100) + 50;
+                // Views
+                const views = berita.views || 0;
                 
                 // Format kategori badge
                 let kategoriBadge = '';
+                let kategoriColor = '';
                 switch(kategori) {
                     case 'Bansos':
                         kategoriBadge = '<span class="jurnal-category"><i class="fas fa-hand-holding-heart"></i> Bantuan Sosial</span>';
+                        kategoriColor = '#0a58ca';
                         break;
                     case 'DTSEN':
                         kategoriBadge = '<span class="jurnal-category" style="background: rgba(10,88,202,0.1); color: #0a58ca;"><i class="fas fa-database"></i> DTSEN</span>';
+                        kategoriColor = '#0a58ca';
                         break;
                     case 'Pelayanan':
                         kategoriBadge = '<span class="jurnal-category" style="background: rgba(23,162,184,0.1); color: #17a2b8;"><i class="fas fa-headset"></i> Pelayanan</span>';
+                        kategoriColor = '#17a2b8';
                         break;
                     case 'Kegiatan':
                         kategoriBadge = '<span class="jurnal-category" style="background: rgba(40,167,69,0.1); color: #28a745;"><i class="fas fa-calendar-alt"></i> Kegiatan</span>';
+                        kategoriColor = '#28a745';
                         break;
                     case 'Pengumuman':
-                        kategoriBadge = '<span class="jurnal-category" style="background: rgba(255,193,7,0.1); color: #ffc107;"><i class="fas fa-bullhorn"></i> Pengumuman</span>';
+                        kategoriBadge = '<span class="jurnal-category" style="background: rgba(255,193,7,0.1); color: #856404;"><i class="fas fa-bullhorn"></i> Pengumuman</span>';
+                        kategoriColor = '#ffc107';
                         break;
                     default:
                         kategoriBadge = `<span class="jurnal-category" style="background: var(--gray-100); color: var(--gray-600);"><i class="fas fa-tag"></i> ${kategori}</span>`;
                 }
+
+                // Escape judul untuk JavaScript
+                const judulEscaped = judul.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                const isiEscaped = isi.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                const tanggalEscaped = tanggalBerita.replace(/'/g, "\\'");
 
                 // Build HTML
                 beritaHTML += `
@@ -824,7 +1078,7 @@
                             </div>
                             <div class="jurnal-content">
                                 <p>${truncateText(isi, 350)}</p>
-                                <a href="#" class="btn btn-link pl-0 text-primary font-weight-bold" onclick="alert('Fitur detail berita sedang dikembangkan.\\n\\nJudul: ${judul.replace(/'/g, "\\'")}'); return false;">
+                                <a href="#" class="btn-read-more" onclick="openModalBerita('${id}', '${judulEscaped}', '${kategori}', '${tanggalEscaped}', '${penulis}', \`${isiEscaped}\`, '${gambar}', ${views}); return false;">
                                     Baca selengkapnya <i class="fas fa-arrow-right ml-1"></i>
                                 </a>
                             </div>
@@ -839,13 +1093,13 @@
                                 </span>
                             </div>
                             <div class="jurnal-share">
-                                <button class="share-btn" onclick="window.open('https://wa.me/?text=${encodeURIComponent(judul)}', '_blank')">
+                                <button class="share-btn" onclick="window.open('https://wa.me/?text=${encodeURIComponent(judul)} - ${encodeURIComponent(window.location.href)}', '_blank')">
                                     <i class="fab fa-whatsapp"></i>
                                 </button>
                                 <button class="share-btn" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}', '_blank')">
                                     <i class="fab fa-facebook-f"></i>
                                 </button>
-                                <button class="share-btn" onclick="window.open('https://twitter.com/intent/tweet?text=${encodeURIComponent(judul)}', '_blank')">
+                                <button class="share-btn" onclick="window.open('https://twitter.com/intent/tweet?text=${encodeURIComponent(judul)}&url=${encodeURIComponent(window.location.href)}', '_blank')">
                                     <i class="fab fa-twitter"></i>
                                 </button>
                             </div>
