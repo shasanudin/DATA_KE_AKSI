@@ -3,15 +3,33 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Data DTSEN | TKSK & Puskesos Sumber</title>
+<title>Cetak Dokumen DTSEN | TKSK & Puskesos Sumber</title>
 
+<!-- CSS LIBRARIES -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <style>
-body{font-family:'Inter',sans-serif;background:#f4f7f6;}
-.paper{background:#fff;width:210mm;min-height:297mm;padding:15mm 20mm;margin:30px auto;box-shadow:0 0 20px rgba(0,0,0,.05);font-family:"Times New Roman", Times, serif;color:#000;}
+/* ============ GLOBAL STYLES ============ */
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f4f7f6;
+    padding-bottom: 50px;
+}
+
+/* ============ KERTAS A4 ============ */
+.paper {
+    background: #fff;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm 20mm;
+    margin: 30px auto;
+    box-shadow: 0 0 20px rgba(0,0,0,.05);
+    font-family: "Times New Roman", Times, serif;
+    color: #000;
+    position: relative;
+}
 
 /* ============ KOP SURAT STANDAR PEMERINTAH ============ */
 .kop-surat-container {
@@ -31,6 +49,8 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
 
 .logo-kop {
     width: 100%;
+    max-height: 85px;
+    object-fit: contain;
 }
 
 .teks-kop {
@@ -68,12 +88,7 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
     font-style: normal;
 }
 
-.kop-line {
-    border-bottom: 1px solid #000;
-    margin: 2px 0 10px;
-}
-
-/* ============ KOP UNTUK HALAMAN BERIKUTNYA ============ */
+/* ============ KOP HALAMAN LANJUTAN ============ */
 .kop-lanjutan {
     margin-bottom: 25px;
     border-bottom: 1px solid #666;
@@ -122,55 +137,28 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
     border: 1px solid #000;
 }
 
-/* Tanda Tangan */
+.tabel-data tfoot tr {
+    background: #f5f5f5;
+    font-weight: 700;
+}
+
+/* ============ TANDA TANGAN ============ */
 .nama-ttd {
     font-weight: 700;
     margin-top: 5px;
     text-decoration: underline;
+    font-size: 14px;
 }
 
-/* QR Code */
+/* ============ QR CODE ============ */
 .qr-box {
     border: 1px solid #ddd;
     padding: 10px;
     background: #fff;
     display: inline-block;
-    margin: 10px 0;
+    margin: 10px auto;
 }
 
-/* Footer Surat */
-.footer-surat {
-    font-size: 10px;
-    text-align: center;
-    margin-top: 30px;
-    color: #666;
-    border-top: 1px dashed #999;
-    padding-top: 10px;
-}
-
-/* ============ MEDIA PRINT ============ */
-@media print{
-  body *{visibility:hidden;}
-  .paper,.paper *{visibility:visible;}
-  .paper{
-    position:absolute;
-    left:0;
-    top:0;
-    width:100%!important;
-    margin:0!important;
-    padding:15mm 20mm!important;
-    box-shadow:none!important;
-  }
-  .no-print,#navbar,header,.container.my-5,button{
-    display:none!important;
-  }
-  @page{
-    size:A4;
-    margin:15mm 20mm;
-  }
-}
-
-/* Utility */
 .qr-placeholder {
     width: 100px;
     height: 100px;
@@ -181,95 +169,163 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
     justify-content: center;
     margin: 0 auto;
 }
+
+/* ============ FOOTER SURAT ============ */
+.footer-surat {
+    font-size: 10px;
+    text-align: center;
+    margin-top: 30px;
+    color: #666;
+    border-top: 1px dashed #999;
+    padding-top: 10px;
+}
+
+/* ============ INFO PANEL ============ */
+.info-badge {
+    font-size: 11px;
+    padding: 6px 12px;
+}
+
+/* ============ MEDIA PRINT ============ */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .paper, .paper * {
+        visibility: visible;
+    }
+    .paper {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 15mm 20mm !important;
+        box-shadow: none !important;
+    }
+    .no-print, #navbar, header, .container.my-5, button, .card, .btn {
+        display: none !important;
+    }
+    @page {
+        size: A4;
+        margin: 15mm 20mm;
+    }
+}
+
+/* ============ UTILITY ============ */
+.fw-bold {
+    font-weight: 700;
+}
+
+.badge {
+    font-size: 11px;
+    padding: 5px 10px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- HEADER - NO PRINT -->
 <header class="container py-3 bg-white no-print">
-<div class="row align-items-center">
-<div class="col-md-6">
-<img src="assets/img/logo/logo-tksk.png" height="45" onerror="this.style.display='none'">
-<img src="assets/img/logo/logo-puskesos.png" height="45" class="ml-2 border-left pl-2" onerror="this.style.display='none'">
-</div>
-<div class="col-md-6 text-right d-none d-md-block">
-<span class="badge badge-primary px-3 py-2">
-    <i class="fas fa-file-alt mr-1"></i> Satu Data Terpadu DTSEN
-</span>
-</div>
-</div>
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <img src="assets/img/logo/logo-tksk.png" height="45" alt="Logo TKSK" onerror="this.style.display='none'">
+            <img src="assets/img/logo/logo-puskesos.png" height="45" class="ml-2 border-left pl-2" alt="Logo Puskesos" onerror="this.style.display='none'">
+        </div>
+        <div class="col-md-6 text-right d-none d-md-block">
+            <span class="badge badge-primary px-3 py-2">
+                <i class="fas fa-file-alt mr-1"></i> Satu Data Terpadu DTSEN
+            </span>
+        </div>
+    </div>
 </header>
 
-<!-- NAVBAR -->
+<!-- NAVBAR CONTAINER - NO PRINT -->
 <div id="navbar" class="no-print"></div>
 
-<!-- PANEL GENERATE -->
+<!-- PANEL GENERATE - NO PRINT -->
 <div class="container my-5 no-print">
     <div class="row mb-3">
         <div class="col-12">
             <h3 class="font-weight-bold mb-2">
                 <i class="fas fa-file-pdf mr-2 text-primary"></i>
-                Cetak Dokumen DTSEN
+                Cetak Dokumen DTSEN Kecamatan Sumber
             </h3>
-            <p class="text-muted">Generate laporan dalam format surat resmi dengan kop standar pemerintahan</p>
+            <p class="text-muted">Generate laporan lengkap dengan kop surat resmi - <span class="text-primary font-weight-bold">MENAMPILKAN SEMUA DATA TANPA BATASAN</span></p>
         </div>
     </div>
     
-    <div class="card shadow-sm p-4 mb-4">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="small font-weight-bold text-uppercase">
-                            <i class="fas fa-file-export mr-1"></i> Mode Laporan
-                        </label>
-                        <select id="mode" class="form-control">
-                            <option value="agregat">Agregasi Data Kecamatan</option>
-                            <option value="prioritas">Prioritas Intervensi (Desil 1-2)</option>
-                            <option value="desa">Rekap Data Per Desa</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-6" id="desaWrap" style="display:none;">
-                        <label class="small font-weight-bold text-uppercase">
-                            <i class="fas fa-map-marker-alt mr-1"></i> Pilih Desa
-                        </label>
-                        <select id="desaSelect" class="form-control"></select>
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="small font-weight-bold text-uppercase text-muted mb-1">
+                                <i class="fas fa-file-export mr-1"></i> Mode Laporan
+                            </label>
+                            <select id="mode" class="form-control">
+                                <option value="agregat">📊 Agregasi Data Kecamatan (Semua Desa)</option>
+                                <option value="prioritas">🎯 Prioritas Intervensi Desil 1-2</option>
+                                <option value="desa">🏘️ Rekap Data Per Desa</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6" id="desaWrap" style="display:none;">
+                            <label class="small font-weight-bold text-uppercase text-muted mb-1">
+                                <i class="fas fa-map-marker-alt mr-1"></i> Pilih Desa/Kelurahan
+                            </label>
+                            <select id="desaSelect" class="form-control">
+                                <option value="">Memuat data...</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
+                <div class="col-md-4 text-right">
+                    <button id="btnGenerate" class="btn btn-primary btn-lg px-4 shadow-sm">
+                        <i class="fas fa-sync-alt mr-2"></i> Generate
+                    </button>
+                    <button id="btnPrint" class="btn btn-dark btn-lg px-4 ml-2 shadow-sm">
+                        <i class="fas fa-print mr-2"></i> Cetak
+                    </button>
+                </div>
             </div>
-
-            <div class="col-md-4 text-right">
-                <button id="btnGenerate" class="btn btn-primary btn-lg px-5">
-                    <i class="fas fa-sync-alt mr-2"></i> Generate Dokumen
-                </button>
-                <button id="btnPrint" class="btn btn-dark btn-lg px-4 ml-2">
-                    <i class="fas fa-print mr-2"></i> Cetak
-                </button>
+            
+            <!-- INFO PANEL REAL-TIME -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="bg-light p-3 rounded">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <span class="badge badge-success mr-2 mb-1">
+                                    <i class="fas fa-database mr-1"></i> Firebase Terkoneksi
+                                </span>
+                                <span class="badge badge-info mb-1">
+                                    <i class="fas fa-clock mr-1"></i> Update: <span id="lastUpdateInfo">-</span>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="badge badge-primary px-3 py-2" id="dataCountInfo" style="font-size: 12px;">
+                                    <i class="fas fa-map-marked-alt mr-1"></i> Memuat data...
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <!-- Info Panel -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="bg-light p-3 rounded">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="badge badge-success mr-2">
-                                <i class="fas fa-database mr-1"></i> Firebase Terkoneksi
-                            </span>
-                            <span class="badge badge-info">
-                                <i class="fas fa-clock mr-1"></i> Update: <span id="lastUpdateInfo">Memuat...</span>
-                            </span>
-                        </div>
-                        <div>
-                            <span class="badge badge-primary" id="dataCountInfo">
-                                0 wilayah terdata
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    </div>
+    
+    <!-- INFORMASI TAMBAHAN -->
+    <div class="alert alert-info d-flex align-items-center">
+        <i class="fas fa-info-circle fa-2x mr-3"></i>
+        <div>
+            <strong>SHOW ALL DATA - TANPA BATASAN!</strong><br>
+            Sistem menampilkan <span id="totalDesaInfo">SEMUA</span> desa/kelurahan se-Kecamatan Sumber tanpa limitasi 10 data. 
+            Data diambil langsung dari Firebase secara real-time.
         </div>
     </div>
 </div>
@@ -277,12 +333,12 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
 <!-- ============ DOKUMEN SURAT RESMI (AREA CETAK) ============ -->
 <div class="paper" id="cetakArea">
 
-    <!-- ======= HALAMAN 1: SURAT PENGANTAR & AGREGASI ======= -->
+    <!-- ======= HALAMAN 1: SURAT PENGANTAR & AGREGASI KECAMATAN ======= -->
     <div class="halaman-1">
         <!-- KOP SURAT STANDAR PEMERINTAH -->
         <div class="kop-surat-container">
             <div class="logo-box">
-                <img src="assets/img/logo/logo-tksk.png" class="logo-kop" onerror="this.style.display='none'">
+                <img src="assets/img/logo/logo-tksk.png" class="logo-kop" alt="Logo TKSK" onerror="this.style.display='none'">
             </div>
             <div class="teks-kop">
                 <p class="instansi-utama">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</p>
@@ -292,16 +348,16 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
                 <p class="alamat-kantor">Telp. (0231) 123456 | Email: tksk.sumber@cirebonkab.go.id</p>
             </div>
             <div class="logo-box text-right">
-                <img src="assets/img/logo/logo-puskesos.png" class="logo-kop" onerror="this.style.display='none'">
+                <img src="assets/img/logo/logo-puskesos.png" class="logo-kop" alt="Logo Puskesos" onerror="this.style.display='none'">
             </div>
         </div>
         
         <!-- NOMOR SURAT DAN LAMPIRAN - SATU NOMOR UNTUK SEMUA HALAMAN -->
-        <table width="100%" style="margin-bottom: 15px; font-size: 12px;">
+        <table width="100%" style="margin-bottom: 20px; font-size: 12px; border-collapse: collapse;">
             <tr>
-                <td width="15%">Nomor</td>
+                <td width="12%">Nomor</td>
                 <td width="2%">:</td>
-                <td width="83%"><span id="nomorSuratUtama">460 / 123 / DTSEN.001 / TKSK-SBR / 2026</span></td>
+                <td width="86%"><span id="nomorSuratUtama" class="font-weight-bold">-</span></td>
             </tr>
             <tr>
                 <td>Sifat</td>
@@ -316,42 +372,48 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
             <tr>
                 <td>Perihal</td>
                 <td>:</td>
-                <td><strong id="perihalSurat1">LAPORAN DATA TERPADU KESEJAHTERAAN SOSIAL</strong></td>
+                <td><strong>LAPORAN DATA TERPADU KESEJAHTERAAN SOSIAL DTSEN</strong></td>
             </tr>
         </table>
 
         <!-- TUJUAN SURAT -->
-        <p style="font-size: 12px; margin-bottom: 20px;">
+        <p style="font-size: 12px; margin-bottom: 20px; line-height: 1.6;">
             Yth.<br>
             1. Kepala Dinas Sosial Kabupaten Cirebon<br>
             2. Camat Sumber<br>
             di Tempat
         </p>
 
-        <!-- ISI SURAT -->
-        <div style="font-size: 12px; line-height: 1.5; text-align: justify;">
-            <p>Berdasarkan hasil pendataan dan verifikasi Data Terpadu Kesejahteraan Sosial (DTSEN) di wilayah Kecamatan Sumber, bersama ini kami sampaikan laporan agregasi data kesejahteraan sosial sebagai berikut:</p>
+        <!-- ISI SURAT PEMBUKA -->
+        <div style="font-size: 12px; line-height: 1.6; text-align: justify; margin-bottom: 20px;">
+            <p>Berdasarkan hasil pendataan dan verifikasi Data Terpadu Kesejahteraan Sosial (DTSEN) di wilayah Kecamatan Sumber, bersama ini kami sampaikan laporan agregasi data kesejahteraan sosial periode <strong><span id="periodeDataTahun"></span></strong> sebagai berikut:</p>
         </div>
 
-        <!-- KONTEN HALAMAN 1 (AGREGASI) -->
-        <div id="kontenHal1" style="min-height: 200px;"></div>
+        <!-- KONTEN HALAMAN 1 - AGREGASI KECAMATAN (SEMUA DESA) -->
+        <div id="kontenHal1" style="min-height: 200px;">
+            <p style="text-align: center; color: #666;">Memuat data agregasi kecamatan...</p>
+        </div>
     </div>
 
-    <!-- ======= HALAMAN 2: PRIORITAS INTERVENSI DTSEN (PAGE BREAK) ======= -->
+    <!-- ======= HALAMAN 2: PRIORITAS INTERVENSI DTSEN ======= -->
     <div style="page-break-before: always;" class="halaman-2">
         <!-- KOP LANJUTAN DENGAN NOMOR SURAT YANG SAMA -->
         <div class="kop-lanjutan">
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
-                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan2"></span></span>
+                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan2" class="font-weight-bold">-</span></span>
             </div>
         </div>
 
         <h4 class="judul-surat">PRIORITAS INTERVENSI DTSEN</h4>
-        <p style="font-size: 12px; text-align: center;">Data Prioritas Berdasarkan Desil 1 dan 2 (Sangat Miskin & Miskin)</p>
+        <p style="font-size: 12px; text-align: center; margin-bottom: 20px;">
+            <em>Data Prioritas Berdasarkan Jumlah Desil 1 dan 2 (Sangat Miskin & Miskin)</em>
+        </p>
         
-        <!-- KONTEN HALAMAN 2 - PRIORITAS INTERVENSI -->
-        <div id="kontenHal2" style="min-height: 250px;"></div>
+        <!-- KONTEN HALAMAN 2 - PRIORITAS INTERVENSI (SEMUA DESA) -->
+        <div id="kontenHal2" style="min-height: 250px;">
+            <p style="text-align: center; color: #666;">Memuat data prioritas intervensi...</p>
+        </div>
     </div>
 
     <!-- ======= HALAMAN 3: REKAP BANTUAN SOSIAL PER DESA ======= -->
@@ -359,31 +421,39 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
         <div class="kop-lanjutan">
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
-                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan3"></span></span>
+                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan3" class="font-weight-bold">-</span></span>
             </div>
         </div>
 
         <h4 class="judul-surat">REKAP BANTUAN SOSIAL PER DESA</h4>
-        <p style="font-size: 12px; text-align: center;">Distribusi Bantuan Sosial Berdasarkan Wilayah</p>
+        <p style="font-size: 12px; text-align: center; margin-bottom: 20px;">
+            <em>Estimasi Distribusi Bantuan Sosial Berdasarkan Wilayah</em>
+        </p>
         
-        <!-- KONTEN HALAMAN 3 - BANSOS -->
-        <div id="kontenHal3" style="min-height: 250px;"></div>
+        <!-- KONTEN HALAMAN 3 - BANTUAN SOSIAL (SEMUA DESA) -->
+        <div id="kontenHal3" style="min-height: 250px;">
+            <p style="text-align: center; color: #666;">Memuat data bantuan sosial...</p>
+        </div>
     </div>
 
-    <!-- ======= HALAMAN 4: REKAPITULASI LAYANAN SOSIAL + QR + TTD ======= -->
+    <!-- ======= HALAMAN 4: LAYANAN SOSIAL + QR + TANDA TANGAN ======= -->
     <div style="page-break-before: always;" class="halaman-4">
         <div class="kop-lanjutan">
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
-                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan4"></span></span>
+                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan4" class="font-weight-bold">-</span></span>
             </div>
         </div>
 
         <h4 class="judul-surat">REKAPITULASI LAYANAN SOSIAL</h4>
-        <p style="font-size: 12px; text-align: center;">Data Layanan dan Program Bantuan Sosial</p>
+        <p style="font-size: 12px; text-align: center; margin-bottom: 20px;">
+            <em>Data Layanan Sosial, DTKS, Pengaduan, dan SKTM</em>
+        </p>
         
-        <!-- KONTEN HALAMAN 4 - LAYANAN SOSIAL -->
-        <div id="kontenHal4" style="min-height: 200px;"></div>
+        <!-- KONTEN HALAMAN 4 - LAYANAN SOSIAL (REAL-TIME DARI FIREBASE) -->
+        <div id="kontenHal4" style="min-height: 200px;">
+            <p style="text-align: center; color: #666;">Memuat data layanan sosial...</p>
+        </div>
 
         <!-- BAGIAN PENUTUP SURAT -->
         <div style="margin-top: 30px;">
@@ -392,42 +462,44 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
             </p>
         </div>
 
-        <!-- TANDA TANGAN DAN QR CODE - URUTAN SESUAI PERMINTAAN -->
-        <div class="row mt-5">
-            <div class="col-7">
-                <div style="border: 1px solid #000; padding: 12px; font-size: 11px; background: #fcfcfc;">
-                    <strong style="font-size: 11px;">⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻</strong><br>
-                    <strong>VERIFIKASI DAN VALIDASI DATA:</strong><br>
+        <!-- TANDA TANGAN DAN QR CODE -->
+        <div style="display: flex; margin-top: 40px;">
+            <!-- KIRI: VERIFIKASI DATA -->
+            <div style="width: 55%; padding-right: 20px;">
+                <div style="border: 1px solid #000; padding: 15px; font-size: 11px; background: #fcfcfc; border-radius: 5px;">
+                    <strong style="font-size: 12px;">⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻</strong><br>
+                    <strong style="font-size: 12px;">VERIFIKASI DAN VALIDASI DATA:</strong><br>
                     ✓ Data bersumber dari Database DTSEN Kementerian Sosial RI<br>
                     ✓ Telah diverifikasi oleh Tenaga Kesejahteraan Sosial Kecamatan (TKSK)<br>
                     ✓ Berlaku untuk periode <span id="periodeData">2026</span><br>
                     <span style="color: #666;">* Dokumen ini ditandatangani secara elektronik</span>
                 </div>
             </div>
-
-            <div class="col-5 text-center">
-                <!-- 1. Tempat dan Tanggal -->
+            
+            <!-- KANAN: TANDA TANGAN DAN QR -->
+            <div style="width: 45%; text-align: center;">
+                <!-- Tempat dan Tanggal -->
                 <div style="margin-bottom: 15px;">
                     <p style="font-size: 12px; margin-bottom: 2px;">Ditetapkan di : Sumber</p>
-                    <p style="font-size: 12px; margin-bottom: 5px;">Pada tanggal : <span id="tglSekarang">_______________</span></p>
+                    <p style="font-size: 12px; margin-bottom: 5px;">Pada tanggal : <span id="tglSekarang" class="font-weight-bold">-</span></p>
                 </div>
                 
-                <!-- 2. Jabatan Penandatangan -->
+                <!-- Jabatan -->
                 <p style="font-size: 12px; margin-bottom: 5px;">Koordinator TKSK Kecamatan Sumber,</p>
                 
-                <!-- 3. QR CODE (TANPA TULISAN SCAN) -->
-                <div style="margin: 15px 0 10px 0;">
-                    <div id="qrcode" class="qr-box" style="margin: 0 auto; width: 100px; height: 100px;"></div>
+                <!-- QR CODE -->
+                <div style="margin: 15px auto 10px auto; width: 100px;">
+                    <div id="qrcode" class="qr-box" style="margin: 0 auto;"></div>
                 </div>
                 
-                <!-- 4. Nama Lengkap dan Gelar -->
-                <p class="nama-ttd" style="font-size: 14px; font-weight: 700; margin-bottom: 2px; text-decoration: underline;">
+                <!-- Nama Lengkap dan Gelar -->
+                <p class="nama-ttd" style="margin-bottom: 2px;">
                     SHIDIQ HASANUDIN, S.IP
                 </p>
                 
-                <!-- 5. ID Verifikasi -->
-                <p style="font-size: 10px; margin-top: 5px; color: #666;">
-                    ID Verifikasi: <span id="hashID">DTSEN-SBR-2026-001</span>
+                <!-- ID Verifikasi -->
+                <p style="font-size: 10px; margin-top: 10px; color: #666; word-break: break-all;">
+                    ID Verifikasi: <span id="hashID" class="font-weight-bold">-</span>
                 </p>
             </div>
         </div>
@@ -438,21 +510,61 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
             <span>⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻</span>
         </div>
     </div>
-
 </div> <!-- Tutup paper -->
 
-<!-- SCRIPT EXTERNAL -->
+<!-- LOADING OVERLAY - NO PRINT -->
+<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99999; justify-content: center; align-items: center;" class="no-print">
+    <div class="bg-white p-5 rounded-lg text-center shadow-lg">
+        <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
+        <h5 class="font-weight-bold">Memproses Data...</h5>
+        <p class="text-muted mb-0">Mengambil data dari Firebase</p>
+    </div>
+</div>
+
+<!-- ============ SCRIPT DEPENDENCIES ============ -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- NAVBAR LOADER -->
 <script>
-    // Navbar Loader
+    // Load navbar with error handling
     fetch('navbar.html')
-        .then(response => response.ok ? response.text() : '')
-        .then(html => {
-            if (html) document.getElementById('navbar').innerHTML = html;
+        .then(response => {
+            if (!response.ok) throw new Error('Navbar not found');
+            return response.text();
         })
-        .catch(e => console.log('Navbar not loaded'));
+        .then(html => {
+            document.getElementById('navbar').innerHTML = html;
+        })
+        .catch(e => {
+            console.log('Navbar tidak dimuat:', e.message);
+            document.getElementById('navbar').innerHTML = `
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary no-print">
+                    <div class="container">
+                        <span class="navbar-brand">DTSEN - TKSK Sumber</span>
+                    </div>
+                </nav>
+            `;
+        });
+    
+    // Set tahun periode otomatis
+    document.getElementById('periodeData') && (document.getElementById('periodeData').textContent = new Date().getFullYear());
+    document.getElementById('periodeDataTahun') && (document.getElementById('periodeDataTahun').textContent = new Date().getFullYear());
 </script>
+
+<!-- MAIN SCRIPT - unduh.js (MODULE) -->
 <script type="module" src="js/unduh.js"></script>
+
+<!-- FALLBACK SCRIPT -->
+<script>
+    // Fallback untuk menampilkan pesan jika unduh.js gagal dimuat
+    window.addEventListener('error', function(e) {
+        if (e.target && (e.target.src || e.target.href) && e.target.src.includes('unduh.js')) {
+            document.getElementById('kontenHal1').innerHTML = '<div class="alert alert-danger">Gagal memuat modul unduh.js. Refresh halaman atau cek koneksi.</div>';
+        }
+    }, true);
+</script>
 
 </body>
 </html>
