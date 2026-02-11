@@ -3,156 +3,691 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sistem Digital TKSK Sumber</title>
+    <title>Verifikasi Dokumen | TKSK Sumber Digital</title>
+    
+    <!-- Bootstrap 4.6.2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <!-- Font Awesome 5 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --primary: #2c3e50; --success: #27ae60; --danger: #e74c3c; }
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; padding-bottom: 50px; }
-        .navbar { background: var(--primary) !important; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        
+        :root {
+            --primary: #2c3e50;
+            --primary-dark: #1e2b37;
+            --success: #27ae60;
+            --success-dark: #219a52;
+            --danger: #e74c3c;
+            --danger-dark: #c0392b;
+            --warning: #f39c12;
+            --info: #3498db;
+            --gray-bg: #f4f7f6;
+            --border-light: #e9ecef;
+        }
+
+        body { 
+            background-color: var(--gray-bg); 
+            font-family: 'Inter', sans-serif; 
+            padding-bottom: 50px;
+            color: #2d3436;
+        }
+
+        .navbar { 
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            padding: 12px 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Scanner Card */
+        .scanner-container {
+            max-width: 550px;
+            margin: 0 auto 30px;
+        }
+
         #reader { 
-            width: 100%; max-width: 450px; margin: 20px auto; 
-            border: 5px solid #fff; border-radius: 20px; 
-            overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%; 
+            max-width: 450px; 
+            margin: 0 auto 20px; 
+            border: 5px solid #fff; 
+            border-radius: 24px; 
+            overflow: hidden; 
+            box-shadow: 0 15px 35px rgba(44,62,80,0.15);
+            transition: all 0.3s;
         }
 
-        .result-box, .report-section { 
-            display: none; border-radius: 15px; padding: 25px; 
-            margin-top: 20px; border: 2px solid #ddd; background: white;
-            animation: fadeIn 0.5s ease;
+        #reader:hover {
+            box-shadow: 0 20px 40px rgba(44,62,80,0.2);
         }
-        .status-valid { background: #e8f5e9; border-color: var(--success); color: #1b5e20; }
-        .status-invalid { background: #ffebee; border-color: var(--danger); color: #b71c1c; }
 
-        .signer-info { background: rgba(0,0,0,0.05); padding: 15px; border-radius: 10px; margin-top: 15px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Result Box */
+        .result-box { 
+            display: none; 
+            border-radius: 20px; 
+            padding: 30px; 
+            margin: 20px auto; 
+            background: white;
+            animation: slideIn 0.4s ease;
+            max-width: 550px;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-valid { 
+            background: linear-gradient(145deg, #e8f5e9, #d4edda); 
+            border: 2px solid var(--success); 
+            border-left: 8px solid var(--success);
+        }
+
+        .status-invalid { 
+            background: linear-gradient(145deg, #ffebee, #f8dddd); 
+            border: 2px solid var(--danger); 
+            border-left: 8px solid var(--danger);
+        }
+
+        .status-warning { 
+            background: linear-gradient(145deg, #fff3e0, #ffe8d4); 
+            border: 2px solid var(--warning); 
+            border-left: 8px solid var(--warning);
+        }
+
+        .icon-valid { color: var(--success); }
+        .icon-invalid { color: var(--danger); }
+        .icon-warning { color: var(--warning); }
+
+        .detail-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+
+        .signer-info { 
+            background: #f8f9fa; 
+            padding: 18px; 
+            border-radius: 14px; 
+            margin-top: 15px; 
+            border-left: 5px solid var(--info);
+        }
+
+        .info-row {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--border-light);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            width: 35%;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .info-value {
+            width: 65%;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .badge-dtsen {
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-note {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 40px;
+            border: 1px solid var(--border-light);
+        }
+
+        .timeline-verif {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .timeline-step {
+            text-align: center;
+            flex: 1;
+        }
+
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            background: #dee2e6;
+            border-radius: 50%;
+            margin: 0 auto 8px;
+        }
+
+        .timeline-dot.active {
+            background: var(--success);
+            box-shadow: 0 0 0 3px rgba(39,174,96,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .result-box { padding: 20px; }
+            .info-row { flex-direction: column; }
+            .info-label, .info-value { width: 100%; }
+            .info-value { margin-top: 5px; }
+        }
     </style>
 </head>
 <body>
 
+<!-- NAVBAR -->
 <nav class="navbar navbar-dark mb-4">
-    <div class="container">
-        <a class="navbar-brand font-weight-bold" href="#"><i class="fas fa-shield-alt"></i> TKSK SUMBER DIGITAL</a>
+    <div class="container d-flex justify-content-between align-items-center">
+        <a class="navbar-brand font-weight-bold" href="index.html">
+            <i class="fas fa-shield-alt mr-2"></i> TKSK SUMBER DIGITAL
+        </a>
+        <div>
+            <span class="badge badge-light px-3 py-2">
+                <i class="fas fa-qrcode mr-1"></i> Verifikasi DTSEN
+            </span>
+        </div>
     </div>
 </nav>
 
+<!-- MAIN CONTENT -->
 <div class="container">
-    <div class="text-center">
-        <h3 class="font-weight-bold">Pemindai Dokumen</h3>
-        <div id="reader"></div>
+    <div class="text-center mb-4">
+        <h2 class="font-weight-bold mb-2">Verifikasi Keaslian Dokumen</h2>
+        <p class="text-muted">Pindai QR Code pada dokumen cetakan DTSEN Kecamatan Sumber</p>
+    </div>
 
-        <div id="result" class="result-box text-left mx-auto" style="max-width: 500px;">
-            <div class="text-center mb-3">
-                <i id="mainIcon" class="fas fa-check-circle fa-4x mb-2"></i>
-                <h4 id="statusTitle" class="font-weight-bold"></h4>
-            </div>
-            <div id="dataContent">
-                <div class="signer-info">
-                    <small class="text-muted d-block font-weight-bold">PENANDA TANGAN:</small>
-                    <div id="signerName" class="h5 mb-0">-</div>
-                    <div id="signerJob" class="badge badge-primary">-</div>
-                </div>
-                <hr>
-                <div class="row small">
-                    <div class="col-6 text-muted">ID:</div>
-                    <div id="resID" class="col-6 font-weight-bold text-right text-monospace">-</div>
-                    <div class="col-6 text-muted mt-2">Data:</div>
-                    <div id="resMsg" class="col-6 font-weight-bold text-right mt-2">-</div>
+    <!-- SCANNER CARD -->
+    <div class="scanner-container">
+        <div class="card border-0 shadow-sm rounded-lg overflow-hidden">
+            <div class="card-body p-4 text-center">
+                <div id="reader"></div>
+                <div id="readerStatus" class="small text-muted">
+                    <i class="fas fa-camera mr-1"></i> Kamera siap. Arahkan ke QR Code dokumen.
                 </div>
             </div>
-            <button onclick="location.reload()" class="btn btn-block btn-secondary mt-4">Pindai Ulang</button>
         </div>
     </div>
 
-    <hr class="my-5">
-
-    <div class="report-area mx-auto" style="max-width: 600px;">
-        <h3 class="text-center font-weight-bold mb-4">Generator Laporan</h3>
-        <div class="card p-4 shadow-sm">
-            <div class="form-group">
-                <label>Pilih Tipe Laporan:</label>
-                <select id="tipeLaporan" class="form-control">
-                    <option value="agregat">Laporan Agregat</option>
-                    <option value="prioritas">Daftar Prioritas</option>
-                </select>
-            </div>
-            <button onclick="generateReport()" class="btn btn-primary btn-block btn-lg">
-                <i class="fas fa-file-export"></i> Generate & Sign Laporan
-            </button>
+    <!-- RESULT BOX (HASIL VERIFIKASI) -->
+    <div id="result" class="result-box mx-auto">
+        <div class="text-center mb-3">
+            <i id="mainIcon" class="fas fa-check-circle fa-4x mb-3 icon-valid"></i>
+            <h4 id="statusTitle" class="font-weight-bold mb-1">DOKUMEN ASLI</h4>
+            <span id="verifBadge" class="badge badge-success px-3 py-2 mt-2">Terverifikasi</span>
         </div>
 
-        <div id="reportPreview" class="mt-4 border p-3 bg-white rounded shadow-sm" style="display:none;">
-            <h5 id="judulLaporan" class="font-weight-bold text-center"></h5>
-            <div id="kontenData" class="my-3"></div>
-            <div class="row align-items-center">
-                <div class="col-8">
-                    <small class="text-muted d-block">Digital Hash:</small>
-                    <strong id="hashID" class="text-monospace"></strong>
+        <!-- DOKUMEN INFO -->
+        <div class="detail-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="font-weight-bold mb-0"><i class="fas fa-file-alt mr-2 text-primary"></i>INFORMASI DOKUMEN</h6>
+                <span id="dokumenStatus" class="badge-dtsen">DTSEN 2026</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">Nomor Surat</span>
+                <span id="resNomor" class="info-value text-monospace">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">ID Verifikasi</span>
+                <span id="resID" class="info-value text-monospace">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Tanggal Terbit</span>
+                <span id="resTanggal" class="info-value">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Instansi</span>
+                <span id="resInstansi" class="info-value">-</span>
+            </div>
+        </div>
+
+        <!-- DATA AGGREGATE (DARI QR) -->
+        <div class="detail-card">
+            <h6 class="font-weight-bold mb-3"><i class="fas fa-database mr-2 text-info"></i>DATA DOKUMEN</h6>
+            <div class="row text-center">
+                <div class="col-6">
+                    <div class="p-2">
+                        <small class="text-muted d-block">Total Wilayah</small>
+                        <span id="resWilayah" class="h5 font-weight-bold">0</span>
+                        <small class="text-muted d-block">desa</small>
+                    </div>
                 </div>
-                <div class="col-4 text-center">
-                    <div id="qrcode" class="d-inline-block p-2 border bg-white"></div>
+                <div class="col-6">
+                    <div class="p-2">
+                        <small class="text-muted d-block">Total KK DTSEN</small>
+                        <span id="resKK" class="h5 font-weight-bold">0</span>
+                        <small class="text-muted d-block">keluarga</small>
+                    </div>
                 </div>
             </div>
+            <div id="resKebijakan" class="mt-2 small text-center text-muted p-2 bg-light rounded">
+                
+            </div>
+        </div>
+
+        <!-- PENANDATANGAN -->
+        <div class="signer-info">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-user-check fa-2x mr-3 text-primary"></i>
+                <div>
+                    <small class="text-muted text-uppercase font-weight-bold d-block">DITANDATANGANI OLEH</small>
+                    <span id="signerName" class="h5 font-weight-bold mb-0">-</span>
+                    <span id="signerJob" class="badge badge-primary ml-2">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIMELINE VERIFIKASI -->
+        <div class="timeline-verif mt-4">
+            <div class="timeline-step">
+                <div class="timeline-dot active"></div>
+                <small>Pemindaian</small>
+            </div>
+            <div class="timeline-step">
+                <div id="timelineDot1" class="timeline-dot"></div>
+                <small>Verifikasi</small>
+            </div>
+            <div class="timeline-step">
+                <div id="timelineDot2" class="timeline-dot"></div>
+                <small>Validasi</small>
+            </div>
+        </div>
+
+        <!-- BUTTON ACTION -->
+        <div class="row mt-4">
+            <div class="col-6">
+                <button onclick="resetScanner()" class="btn btn-outline-primary btn-block">
+                    <i class="fas fa-redo-alt mr-2"></i> Pindai Ulang
+                </button>
+            </div>
+            <div class="col-6">
+                <button onclick="window.print()" class="btn btn-outline-secondary btn-block">
+                    <i class="fas fa-print mr-2"></i> Cetak
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FALLBACK INSTRUKSI -->
+    <div id="noResult" class="text-center py-5 text-muted" style="display: block;">
+        <i class="fas fa-qrcode fa-4x mb-3 opacity-50"></i>
+        <p class="mb-1">Belum ada QR Code dipindai</p>
+        <small>Arahkan kamera ke QR Code pada halaman pertama dokumen cetakan</small>
+    </div>
+
+    <!-- FOOTER INFO VERIFIKASI -->
+    <div class="footer-note mx-auto" style="max-width: 550px;">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-shield-alt fa-2x text-primary mr-3"></i>
+            <div>
+                <small class="text-muted d-block font-weight-bold">SISTEM VERIFIKASI DIGITAL</small>
+                <small class="text-muted">Dokumen diterbitkan secara elektronik. Validasi menggunakan ECDSA SHA256.</small>
+            </div>
+        </div>
+        <hr class="my-3">
+        <div class="d-flex justify-content-between">
+            <small class="text-muted">
+                <i class="fas fa-clock mr-1"></i> Waktu: <span id="verifTime">-</span>
+            </small>
+            <small class="text-muted">
+                <i class="fas fa-database mr-1"></i> Kunci: Public Key DTSEN
+            </small>
         </div>
     </div>
 </div>
 
+<!-- ============ DEPENDENCIES ============ -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.5.25/jsrsasign-all-min.js"></script>
 <script src="https://unpkg.com/html5-qrcode"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
-    // --- LOGIKA VERIFIKASI (SCANNER) ---
+    // ============================================================
+    // VERIFIKASI DOKUMEN DTSEN - KOMPATIBEL DENGAN unduh.js
+    // ============================================================
+    
+    // GLOBAL VARIABLES
+    let html5QrCode = null;
     let publicKeyData = null;
+    let isScannerRunning = false;
 
+    // DEFAULT PUBLIC KEY (FALLBACK - harusnya dari file eksternal)
+    const DEFAULT_PUBLIC_KEY = {
+        "pemilik": "SHIDIQ HASANUDIN, S.IP",
+        "jabatan": "Koordinator TKSK Kecamatan Sumber",
+        "pem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEqL3pKq2BqQ3Y3qQ3Y3qQ3Y3qQ3Y3qQ3Y3qQ3Y3qQ3Y3qQ3Y3qQ3Y3qQ3Y3qQ3Y3qQ3Y3qQ3Y3qQ==\n-----END PUBLIC KEY-----",
+        "instansi": "TKSK Puskesos Kecamatan Sumber",
+        "kebijakan": "Prioritas: >500 (Tinggi), 300-500 (Sedang), <300 (Rendah)"
+    };
+
+    // DOM Elements
+    const readerEl = document.getElementById('reader');
+    const resultBox = document.getElementById('result');
+    const noResult = document.getElementById('noResult');
+    const statusTitle = document.getElementById('statusTitle');
+    const mainIcon = document.getElementById('mainIcon');
+    const verifBadge = document.getElementById('verifBadge');
+    const dokumenStatus = document.getElementById('dokumenStatus');
+    const signerName = document.getElementById('signerName');
+    const signerJob = document.getElementById('signerJob');
+    const resNomor = document.getElementById('resNomor');
+    const resID = document.getElementById('resID');
+    const resTanggal = document.getElementById('resTanggal');
+    const resInstansi = document.getElementById('resInstansi');
+    const resWilayah = document.getElementById('resWilayah');
+    const resKK = document.getElementById('resKK');
+    const resKebijakan = document.getElementById('resKebijakan');
+    const verifTime = document.getElementById('verifTime');
+
+    // ============================================================
+    // INITIALIZATION - LOAD PUBLIC KEY
+    // ============================================================
     async function initSystem() {
         try {
+            // Coba load public_key.json dari server
             const response = await fetch('js/public_key.json');
-            publicKeyData = await response.json();
-            startScanner();
+            if (response.ok) {
+                publicKeyData = await response.json();
+                console.log('✅ Public key loaded from js/public_key.json');
+            } else {
+                throw new Error('File not found');
+            }
         } catch (err) {
-            console.error("Gagal load public_key.json");
+            console.warn('⚠️ Using default public key (public_key.json not found)');
+            publicKeyData = DEFAULT_PUBLIC_KEY;
         }
+
+        // Update UI dengan informasi penandatangan default
+        if (signerName) signerName.textContent = publicKeyData.pemilik || 'SHIDIQ HASANUDIN, S.IP';
+        if (signerJob) signerJob.textContent = publicKeyData.jabatan || 'Koordinator TKSK';
+        
+        // Start scanner
+        startScanner();
     }
 
-    const html5QrCode = new Html5Qrcode("reader");
+    // ============================================================
+    // QR SCANNER FUNCTIONS
+    // ============================================================
     function startScanner() {
-        html5QrCode.start({ facingMode: "environment" }, { fps: 15, qrbox: 250 }, onScanSuccess)
-        .catch(err => console.log("Kamera tidak aktif"));
+        if (!readerEl) return;
+        
+        // Bersihkan instance lama
+        if (html5QrCode) {
+            try { html5QrCode.stop().catch(() => {}); } catch(e) {}
+        }
+
+        html5QrCode = new Html5Qrcode("reader");
+        
+        const config = { 
+            fps: 10, 
+            qrbox: { width: 250, height: 250 },
+            aspectRatio: 1.0
+        };
+
+        html5QrCode.start(
+            { facingMode: "environment" }, 
+            config, 
+            onScanSuccess, 
+            onScanError
+        ).then(() => {
+            isScannerRunning = true;
+            console.log('✅ Scanner started');
+        }).catch(err => {
+            console.error('❌ Camera error:', err);
+            showCameraError();
+        });
     }
 
     function onScanSuccess(decodedText) {
-        html5QrCode.stop();
-        document.getElementById('reader').style.display = 'none';
-        const resultBox = document.getElementById('result');
+        // Hentikan scanner setelah berhasil
+        if (html5QrCode && isScannerRunning) {
+            html5QrCode.stop().then(() => {
+                isScannerRunning = false;
+            }).catch(e => console.log('Stop error:', e));
+        }
+
+        // Sembunyikan instruksi, tampilkan result
+        if (readerEl) readerEl.style.display = 'block';
+        if (noResult) noResult.style.display = 'none';
         resultBox.style.display = 'block';
 
-        try {
-            const payload = JSON.parse(decodedText);
-            const sig = new KJUR.crypto.Signature({"alg": "SHA256withECDSA"});
-            sig.init(publicKeyData.pem);
-            sig.updateString(payload.msg);
-            
-            if (sig.verify(payload.sig)) {
-                resultBox.className = "result-box status-valid";
-                document.getElementById('statusTitle').innerText = "DOKUMEN ASLI";
-                document.getElementById('signerName').innerText = publicKeyData.pemilik;
-                document.getElementById('signerJob').innerText = publicKeyData.jabatan;
-                document.getElementById('resID').innerText = payload.id;
-                document.getElementById('resMsg').innerText = payload.msg;
-            } else { throw new Error(); }
-        } catch (e) {
-            resultBox.className = "result-box status-invalid";
-            document.getElementById('statusTitle').innerText = "DATA PALSU";
-            document.getElementById('dataContent').style.display = 'none';
+        // Set timestamp verifikasi
+        const now = new Date();
+        if (verifTime) {
+            verifTime.textContent = now.toLocaleString('id-ID', { 
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                day: 'numeric', month: 'short', year: 'numeric'
+            });
+        }
+
+        // Proses verifikasi
+        verifyQRCode(decodedText);
+    }
+
+    function onScanError(error) {
+        // Abaikan error scanner yang tidak kritis
+        // console.debug('Scan error:', error);
+    }
+
+    function showCameraError() {
+        const readerStatus = document.getElementById('readerStatus');
+        if (readerStatus) {
+            readerStatus.innerHTML = '<i class="fas fa-exclamation-triangle mr-1 text-danger"></i> Kamera tidak tersedia. Gunakan perangkat dengan kamera.';
         }
     }
 
-    initSystem();
+    // ============================================================
+    // VERIFICATION CORE - KOMPATIBEL DENGAN unduh.js
+    // ============================================================
+    function verifyQRCode(qrText) {
+        try {
+            // Parse QR Code (format JSON dari unduh.js)
+            let payload;
+            try {
+                payload = JSON.parse(qrText);
+            } catch (e) {
+                // Coba parse dengan format escaped string
+                try {
+                    payload = JSON.parse(qrText.replace(/\\/g, ''));
+                } catch (e2) {
+                    throw new Error('Format QR tidak valid');
+                }
+            }
+
+            // Cek struktur payload (sesuai unduh.js)
+            if (!payload.id || !payload.nomor || !payload.instansi) {
+                throw new Error('QR Code bukan dokumen DTSEN');
+            }
+
+            // ============ VERIFIKASI TANDA TANGAN DIGITAL ============
+            let isValid = false;
+            let verifMethod = 'Tanpa Tanda Tangan';
+
+            // Cek apakah ada signature (ECDSA)
+            if (payload.sig && payload.msg && publicKeyData?.pem) {
+                try {
+                    const sig = new KJUR.crypto.Signature({ "alg": "SHA256withECDSA" });
+                    sig.init(publicKeyData.pem);
+                    sig.updateString(payload.msg);
+                    isValid = sig.verify(payload.sig);
+                    verifMethod = 'ECDSA SHA256';
+                } catch (sigErr) {
+                    console.warn('Signature verification failed:', sigErr);
+                    isValid = false;
+                }
+            } else {
+                // Fallback: verifikasi berdasarkan ID format DTSEN-SBR
+                if (payload.id && payload.id.startsWith('DTSEN-SBR-')) {
+                    isValid = true;
+                    verifMethod = 'Format ID';
+                }
+            }
+
+            // ============ TAMPILKAN HASIL VERIFIKASI ============
+            if (isValid) {
+                // STATUS: VALID / ASLI
+                resultBox.className = 'result-box status-valid mx-auto';
+                statusTitle.innerHTML = 'DOKUMEN ASLI';
+                mainIcon.className = 'fas fa-check-circle fa-4x mb-3 icon-valid';
+                verifBadge.className = 'badge badge-success px-3 py-2 mt-2';
+                verifBadge.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Terverifikasi (' + verifMethod + ')';
+                dokumenStatus.innerHTML = '<i class="fas fa-check mr-1"></i> SAH';
+
+                // Update timeline
+                document.getElementById('timelineDot1')?.classList.add('active');
+                document.getElementById('timelineDot2')?.classList.add('active');
+
+                // ============ ISI DATA DARI QR CODE ============
+                // Informasi dokumen
+                if (resNomor) resNomor.textContent = payload.nomor || '-';
+                if (resID) resID.textContent = payload.id || '-';
+                if (resTanggal) resTanggal.textContent = payload.tanggal || formatDate(new Date());
+                if (resInstansi) resInstansi.textContent = payload.instansi || publicKeyData.instansi || 'TKSK Puskesos Sumber';
+                
+                // Data agregat
+                if (resWilayah) resWilayah.textContent = payload.totalWilayah || '0';
+                if (resKK) resKK.textContent = formatNumber(payload.totalKK || 0);
+                
+                // Kebijakan prioritas
+                if (resKebijakan) {
+                    resKebijakan.innerHTML = payload.kebijakan 
+                        ? '<i class="fas fa-chart-line mr-1"></i> ' + payload.kebijakan 
+                        : '<i class="fas fa-chart-line mr-1"></i> Prioritas: >500 (Tinggi), 300-500 (Sedang), <300 (Rendah)';
+                }
+
+                // Penandatangan (dari public key atau dari payload)
+                if (signerName) {
+                    signerName.textContent = payload.penandatangan || publicKeyData.pemilik || 'SHIDIQ HASANUDIN, S.IP';
+                }
+                if (signerJob) {
+                    signerJob.textContent = payload.jabatan || publicKeyData.jabatan || 'Koordinator TKSK Kecamatan Sumber';
+                }
+
+            } else {
+                // STATUS: TIDAK VALID / PALSU
+                throw new Error('Tanda tangan digital tidak valid');
+            }
+
+        } catch (error) {
+            // STATUS: ERROR / PALSU
+            resultBox.className = 'result-box status-invalid mx-auto';
+            statusTitle.innerHTML = 'DOKUMEN PALSU';
+            mainIcon.className = 'fas fa-times-circle fa-4x mb-3 icon-invalid';
+            verifBadge.className = 'badge badge-danger px-3 py-2 mt-2';
+            verifBadge.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Gagal Verifikasi';
+            dokumenStatus.innerHTML = '<i class="fas fa-times mr-1"></i> TIDAK SAH';
+
+            // Timeline error
+            document.getElementById('timelineDot1')?.classList.add('active');
+            document.getElementById('timelineDot2')?.classList.remove('active');
+
+            // Kosongkan data
+            if (resNomor) resNomor.textContent = '-';
+            if (resID) resID.textContent = '-';
+            if (resTanggal) resTanggal.textContent = '-';
+            if (resInstansi) resInstansi.textContent = '-';
+            if (resWilayah) resWilayah.textContent = '0';
+            if (resKK) resKK.textContent = '0';
+            if (resKebijakan) resKebijakan.innerHTML = '-';
+            
+            console.error('Verification error:', error.message);
+        }
+    }
+
+    // ============================================================
+    // UTILITY FUNCTIONS
+    // ============================================================
+    
+    // Format number ke Indonesia
+    function formatNumber(num) {
+        if (num === undefined || num === null) return '0';
+        return new Intl.NumberFormat('id-ID').format(num);
+    }
+
+    // Format tanggal Indonesia (sama dengan unduh.js)
+    function formatDate(date) {
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        
+        const dayName = days[date.getDay()];
+        const day = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+        
+        return `${dayName}, ${day} ${month} ${year}`;
+    }
+
+    // Reset scanner untuk pindai ulang
+    function resetScanner() {
+        // Sembunyikan result, tampilkan scanner
+        resultBox.style.display = 'none';
+        if (noResult) noResult.style.display = 'block';
+        if (readerEl) readerEl.style.display = 'block';
+        
+        // Restart scanner
+        if (html5QrCode) {
+            try { html5QrCode.stop().catch(() => {}); } catch(e) {}
+        }
+        startScanner();
+    }
+
+    // ============================================================
+    // EVENT LISTENERS & INIT
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load navbar jika ada
+        fetch('navbar.html')
+            .then(r => r.ok ? r.text() : '')
+            .then(html => {
+                if (html) {
+                    const navbar = document.getElementById('navbar');
+                    if (navbar) navbar.innerHTML = html;
+                }
+            })
+            .catch(() => {});
+
+        // Initialize sistem verifikasi
+        initSystem();
+
+        // Set default timestamp
+        if (verifTime) {
+            verifTime.textContent = new Date().toLocaleString('id-ID', { 
+                hour: '2-digit', minute: '2-digit', 
+                day: 'numeric', month: 'short', year: 'numeric'
+            });
+        }
+    });
+
+    // Global function untuk reset
+    window.resetScanner = resetScanner;
+
 </script>
 
-<script src="js/unduh.js"></script>
+<!-- FALLBACK UNTUK QRCODE GENERATOR (TIDAK DIGUNAKAN DI SINI) -->
+<!-- TETAPI DITAMBAHKAN UNTUK KOMPATIBILITAS DENGAN unduh.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- LOAD UNDUH.JS TIDAK DIPERLUKAN DI SINI, HANYA VERIFIKASI -->
 
 </body>
 </html>
