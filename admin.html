@@ -527,13 +527,12 @@
 
     <script type="module">
         // ============================================================
-        // FIREBASE AUTHENTICATION - LOGIN SYSTEM
+        // FIREBASE AUTHENTICATION - LOGIN SYSTEM (STABLE VERSION)
         // ============================================================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
             getAuth, 
-            signInWithEmailAndPassword,
-            sendPasswordResetEmail 
+            signInWithEmailAndPassword
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -551,6 +550,12 @@
         const auth = getAuth(app);
 
         // ============================================================
+        // GLOBAL VARIABLES & FLAGS
+        // ============================================================
+        let isRedirecting = false; // FLAG PENTING: mencegah multiple redirect
+        let authChecked = false;   // Flag untuk cek auth hanya sekali
+
+        // ============================================================
         // DOM ELEMENTS
         // ============================================================
         const loginForm = document.getElementById('loginForm');
@@ -563,12 +568,14 @@
         // ============================================================
         // TOGGLE PASSWORD VISIBILITY
         // ============================================================
-        togglePassword.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
-        });
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
 
         // ============================================================
         // SHOW MESSAGE FUNCTION
@@ -609,10 +616,56 @@
         }
 
         // ============================================================
-        // LOGIN FORM SUBMIT HANDLER
+        // CHECK IF USER ALREADY LOGGED IN - FIXED (TIDAK LAGI LOOP)
+        // ============================================================
+        function checkExistingLogin() {
+            // Cegah pengecekan berulang
+            if (authChecked) return;
+            authChecked = true;
+            
+            const userStr = localStorage.getItem('user');
+            if (!userStr) return;
+            
+            try {
+                const userData = JSON.parse(userStr);
+                const email = userData.email;
+                const timestamp = userData.timestamp;
+                
+                // Validasi: cek apakah login masih fresh (opsional)
+                const loginTime = new Date(timestamp).getTime();
+                const now = new Date().getTime();
+                const hoursPassed = (now - loginTime) / (1000 * 60 * 60);
+                
+                // Jika sudah lebih dari 24 jam, hapus dan minta login ulang
+                if (hoursPassed > 24) {
+                    localStorage.removeItem('user');
+                    return;
+                }
+                
+                // Tampilkan pesan info
+                showMessage(`Selamat datang kembali, ${userData.username || 'Admin'}!`, 'info');
+                
+                // Redirect ke dashboard jika sudah login
+                if (!isRedirecting) {
+                    isRedirecting = true;
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                }
+                
+            } catch (e) {
+                localStorage.removeItem('user');
+            }
+        }
+
+        // ============================================================
+        // LOGIN FORM SUBMIT HANDLER - FIXED
         // ============================================================
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Cegah double submit
+            if (isRedirecting) return;
             
             const email = usernameInput.value.trim();
             const password = passwordInput.value;
@@ -638,7 +691,7 @@
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 
-                // Simpan user info ke localStorage untuk navbar
+                // Simpan user info ke localStorage
                 const user = {
                     uid: userCredential.user.uid,
                     email: userCredential.user.email,
@@ -651,13 +704,17 @@
                 // Tampilkan pesan sukses
                 showMessage('Login berhasil! Mengalihkan...', 'success');
                 
-                // Redirect ke dashboard
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
+                // Redirect ke dashboard (dengan flag)
+                if (!isRedirecting) {
+                    isRedirecting = true;
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                }
                 
             } catch (error) {
                 setLoading(false);
+                isRedirecting = false; // Reset flag jika gagal
                 
                 console.error('Login error:', error.code);
                 
@@ -687,23 +744,18 @@
         });
 
         // ============================================================
-        // CHECK IF USER ALREADY LOGGED IN
+        // INITIALIZATION - FIXED
         // ============================================================
-        (function checkAuthStatus() {
-            const user = localStorage.getItem('user');
-            if (user) {
-                try {
-                    const userData = JSON.parse(user);
-                    // Tampilkan pesan info
-                    showMessage(`Selamat datang kembali, ${userData.username}!`, 'info');
-                    // Redirect ke dashboard
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 2000);
-                } catch (e) {
-                    localStorage.removeItem('user');
-                }
-            }
+        (function init() {
+            // Cek apakah user sudah login
+            checkExistingLogin();
+            
+            // Clear sensitive data on page unload (optional)
+            window.addEventListener('beforeunload', function() {
+                // Reset flags, jangan hapus user
+                isRedirecting = false;
+                authChecked = false;
+            });
         })();
 
         // ============================================================
