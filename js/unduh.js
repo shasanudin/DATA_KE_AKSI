@@ -1,6 +1,6 @@
 // unduh.js
 // Sistem Cetak Dokumen DTSEN - TKSK & Puskesos Kecamatan Sumber
-// Version: 2.1.0 - SINGLE DOCUMENT NUMBER FOR ALL PAGES
+// Version: 2.2.0 - SHOW ALL DATA (NO LIMIT)
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { 
@@ -187,12 +187,16 @@ async function loadDataFromFirebase() {
 }
 
 /**
- * Generate sample data (fallback)
+ * Generate sample data (fallback) - DIPERBANYAK DATANYA
  */
 function generateSampleData() {
     const desaList = [
         'Sumbergedang', 'Sumberduren', 'Sumbersari', 'Sumberrejo', 'Sumberagung',
-        'Sumberpucung', 'Sumberejo Kidul', 'Sumberwono', 'Sumberpatut', 'Sumberkembar'
+        'Sumberpucung', 'Sumberejo Kidul', 'Sumberwono', 'Sumberpatut', 'Sumberkembar',
+        'Sumberjaya', 'Sumbermulya', 'Sumberbendo', 'Sumbertengah', 'Sumberkarang',
+        'Sumberasih', 'Sumberbaru', 'Sumbercangkring', 'Sumberdadi', 'Sumberejo',
+        'Sumbergondo', 'Sumberharjo', 'Sumberijo', 'Sumberkerto', 'Sumbermadu',
+        'Sumbernanas', 'Sumberombo', 'Sumberpandan', 'Sumberranti', 'Sumbertaman'
     ];
     
     return desaList.map((nama, index) => {
@@ -228,10 +232,11 @@ function populateDesaSelect(data) {
     });
 }
 
-// ============ RENDER FUNCTIONS ============
+// ============ RENDER FUNCTIONS - TAMPILKAN SEMUA DATA ============
 
 /**
  * Render halaman 1 - Agregasi Kecamatan
+ * MENAMPILKAN SEMUA DESA (TANPA BATASAN 10)
  */
 function renderHalaman1(data) {
     if (!kontenHal1) return;
@@ -242,6 +247,21 @@ function renderHalaman1(data) {
     const totalD12 = totalD1 + totalD2;
     const totalD34 = data.reduce((sum, item) => sum + (item.d3 || 0) + (item.d4 || 0), 0);
     const totalD510 = data.reduce((sum, item) => sum + (item.d5_10 || 0), 0);
+    
+    // Buat tabel dengan SEMUA DATA (TANPA LIMIT)
+    let rows = '';
+    data.forEach((item, index) => {
+        rows += `
+            <tr>
+                <td style="text-align: center;">${index + 1}</td>
+                <td>${item.nama}</td>
+                <td style="text-align: right;">${formatNumber(item.d1)}</td>
+                <td style="text-align: right;">${formatNumber(item.d2)}</td>
+                <td style="text-align: right;">${formatNumber((item.d3 || 0) + (item.d4 || 0))}</td>
+                <td style="text-align: right;">${formatNumber(item.d5_10 || 0)}</td>
+            </tr>
+        `;
+    });
     
     const html = `
         <div style="margin-top: 20px;">
@@ -261,6 +281,7 @@ function renderHalaman1(data) {
             </table>
             
             <h5 style="font-size: 14px; font-weight: 700; margin: 20px 0 10px;">TABEL 1. AGREGASI DATA KESEJAHTERAAN SOSIAL</h5>
+            <p style="font-size: 11px; margin-bottom: 10px;"><em>Menampilkan ${data.length} desa/kelurahan se-Kecamatan Sumber</em></p>
             
             <table class="tabel-data">
                 <thead>
@@ -274,16 +295,7 @@ function renderHalaman1(data) {
                     </tr>
                 </thead>
                 <tbody>
-                    ${data.slice(0, 10).map((item, index) => `
-                        <tr>
-                            <td style="text-align: center;">${index + 1}</td>
-                            <td>${item.nama}</td>
-                            <td style="text-align: right;">${formatNumber(item.d1)}</td>
-                            <td style="text-align: right;">${formatNumber(item.d2)}</td>
-                            <td style="text-align: right;">${formatNumber((item.d3 || 0) + (item.d4 || 0))}</td>
-                            <td style="text-align: right;">${formatNumber(item.d5_10 || 0)}</td>
-                        </tr>
-                    `).join('')}
+                    ${rows}
                 </tbody>
                 <tfoot style="font-weight: 700; background: #f5f5f5;">
                     <tr>
@@ -311,7 +323,8 @@ function renderHalaman1(data) {
 }
 
 /**
- * Render halaman 2 - Prioritas Intervensi
+ * Render halaman 2 - Prioritas Intervensi DTSEN
+ * MENAMPILKAN SEMUA DESA (TANPA BATASAN 10)
  */
 function renderHalaman2(data) {
     if (!kontenHal2) return;
@@ -322,49 +335,84 @@ function renderHalaman2(data) {
         const d12 = item.d1 + item.d2;
         return d12 >= 200 && d12 <= 400;
     });
+    const prioritasRendah = data.filter(item => (item.d1 + item.d2) < 200);
+    
+    // Buat tabel dengan SEMUA DATA (TANPA LIMIT)
+    let rows = '';
+    data.forEach((item, index) => {
+        const d12 = item.d1 + item.d2;
+        let status = '';
+        if (d12 > 400) status = '<span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600;">PRIORITAS TINGGI</span>';
+        else if (d12 >= 200) status = '<span style="background: #ffc107; color: black; padding: 2px 8px; border-radius: 3px; font-weight: 600;">PRIORITAS SEDANG</span>';
+        else status = '<span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600;">PRIORITAS RENDAH</span>';
+        
+        rows += `
+            <tr>
+                <td style="text-align: center; font-weight: ${index < 3 ? '700' : '400'}; ${index < 3 ? 'background: #fff3cd;' : ''}">${index + 1}</td>
+                <td style="font-weight: ${index < 3 ? '700' : '400'};">${item.nama}</td>
+                <td style="text-align: right;">${formatNumber(item.d1)}</td>
+                <td style="text-align: right;">${formatNumber(item.d2)}</td>
+                <td style="text-align: right; font-weight: 700; background: ${index < 3 ? '#fff3cd' : 'transparent'};">${formatNumber(d12)}</td>
+                <td style="text-align: center;">${status}</td>
+            </tr>
+        `;
+    });
     
     const html = `
         <div>
+            <h5 style="font-size: 14px; font-weight: 700; margin: 10px 0;">PRIORITAS INTERVENSI DTSEN KECAMATAN SUMBER</h5>
+            <p style="font-size: 11px; margin-bottom: 10px;">
+                <em>Menampilkan ranking ${data.length} desa/kelurahan berdasarkan jumlah Desil 1 + Desil 2 (Prioritas Tertinggi ke Terendah)</em>
+            </p>
+            
             <table class="tabel-data">
                 <thead>
                     <tr>
                         <th width="5%">Rank</th>
-                        <th width="40%">Desa/Kelurahan</th>
+                        <th width="35%">Desa/Kelurahan</th>
                         <th width="15%">Desil 1</th>
                         <th width="15%">Desil 2</th>
                         <th width="15%">Total D1+D2</th>
-                        <th width="10%">Prioritas</th>
+                        <th width="15%">Kategori Prioritas</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${data.slice(0, 10).map((item, index) => {
-                        const d12 = item.d1 + item.d2;
-                        const persentase = ((d12 / totalD12Kecamatan) * 100).toFixed(1);
-                        let status = '';
-                        if (d12 > 400) status = '<span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 3px;">TINGGI</span>';
-                        else if (d12 >= 200) status = '<span style="background: #ffc107; color: black; padding: 2px 8px; border-radius: 3px;">SEDANG</span>';
-                        else status = '<span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px;">RENDAH</span>';
-                        
-                        return `
-                            <tr>
-                                <td style="text-align: center;">${index + 1}</td>
-                                <td>${item.nama}</td>
-                                <td style="text-align: right;">${formatNumber(item.d1)}</td>
-                                <td style="text-align: right;">${formatNumber(item.d2)}</td>
-                                <td style="text-align: right; font-weight: 700;">${formatNumber(d12)}</td>
-                                <td style="text-align: center;">${status}</td>
-                            </tr>
-                        `;
-                    }).join('')}
+                    ${rows}
                 </tbody>
+                <tfoot style="font-weight: 700; background: #f5f5f5;">
+                    <tr>
+                        <td colspan="4" style="text-align: right;">TOTAL D1+D2 SELURUH DESA</td>
+                        <td style="text-align: right;">${formatNumber(totalD12Kecamatan)} KK</td>
+                        <td style="text-align: center;">-</td>
+                    </tr>
+                </tfoot>
             </table>
             
-            <div style="margin-top: 20px; font-size: 11px;">
-                <p><strong>Rekomendasi Intervensi:</strong></p>
-                <ul>
-                    <li>Prioritas Tinggi (>400 KK) : <strong>${prioritasTinggi.length} desa</strong> - Perlu intervensi segera</li>
-                    <li>Prioritas Sedang (200-400 KK) : <strong>${prioritasSedang.length} desa</strong> - Perlu monitoring</li>
-                </ul>
+            <div style="margin-top: 25px; font-size: 11px;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="width: 50%; vertical-align: top; padding-right: 10px;">
+                            <div style="border: 1px solid #ddd; padding: 12px; border-radius: 5px;">
+                                <p style="font-weight: 700; margin-bottom: 8px;">📊 REKAPITULASI PRIORITAS:</p>
+                                <ul style="margin-left: -20px;">
+                                    <li><span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 3px;">PRIORITAS TINGGI</span> (>400 KK) : <strong>${prioritasTinggi.length} desa</strong></li>
+                                    <li><span style="background: #ffc107; color: black; padding: 2px 8px; border-radius: 3px;">PRIORITAS SEDANG</span> (200-400 KK) : <strong>${prioritasSedang.length} desa</strong></li>
+                                    <li><span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px;">PRIORITAS RENDAH</span> (<200 KK) : <strong>${prioritasRendah.length} desa</strong></li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td style="width: 50%; vertical-align: top;">
+                            <div style="border: 1px solid #ddd; padding: 12px; border-radius: 5px;">
+                                <p style="font-weight: 700; margin-bottom: 8px;">🎯 REKOMENDASI INTERVENSI:</p>
+                                <ol style="margin-left: -15px;">
+                                    <li><strong>${prioritasTinggi.length} desa</strong> prioritas tinggi - Intervensi segera</li>
+                                    <li><strong>${prioritasSedang.length} desa</strong> prioritas sedang - Monitoring intensif</li>
+                                    <li><strong>${prioritasRendah.length} desa</strong> prioritas rendah - Pemantauan rutin</li>
+                                </ol>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     `;
@@ -373,49 +421,83 @@ function renderHalaman2(data) {
 }
 
 /**
- * Render halaman 3 - Bantuan Sosial
+ * Render halaman 3 - Bantuan Sosial Per Desa
+ * MENAMPILKAN SEMUA DESA (TANPA BATASAN 10)
  */
 function renderHalaman3(data) {
     if (!kontenHal3) return;
     
+    let totalPKH = 0;
+    let totalBPNT = 0;
+    let totalBLT = 0;
+    let totalAll = 0;
+    
+    let rows = '';
+    data.forEach((item, index) => {
+        const pkh = Math.floor(item.d1 * 0.8 + item.d2 * 0.3);
+        const bpnt = Math.floor(item.d1 * 0.7 + item.d2 * 0.4);
+        const blt = Math.floor(item.d1 * 0.5 + item.d2 * 0.2);
+        const total = pkh + bpnt + blt;
+        
+        totalPKH += pkh;
+        totalBPNT += bpnt;
+        totalBLT += blt;
+        totalAll += total;
+        
+        rows += `
+            <tr>
+                <td style="text-align: center;">${index + 1}</td>
+                <td>${item.nama}</td>
+                <td style="text-align: right;">${formatNumber(pkh)}</td>
+                <td style="text-align: right;">${formatNumber(bpnt)}</td>
+                <td style="text-align: right;">${formatNumber(blt)}</td>
+                <td style="text-align: right; font-weight: 700;">${formatNumber(total)}</td>
+            </tr>
+        `;
+    });
+    
     const html = `
         <div>
+            <h5 style="font-size: 14px; font-weight: 700; margin: 10px 0;">REKAP BANTUAN SOSIAL PER DESA</h5>
+            <p style="font-size: 11px; margin-bottom: 10px;">
+                <em>Estimasi penerima manfaat berdasarkan data DTSEN Desil 1-2 (${data.length} desa/kelurahan)</em>
+            </p>
+            
             <table class="tabel-data">
                 <thead>
                     <tr>
                         <th width="5%">No</th>
-                        <th width="35%">Desa/Kelurahan</th>
+                        <th width="30%">Desa/Kelurahan</th>
                         <th width="15%">PKH</th>
                         <th width="15%">BPNT</th>
                         <th width="15%">BLT</th>
-                        <th width="15%">Total</th>
+                        <th width="20%">Total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${data.slice(0, 10).map((item, index) => {
-                        const pkh = Math.floor(item.d1 * 0.8 + item.d2 * 0.3);
-                        const bpnt = Math.floor(item.d1 * 0.7 + item.d2 * 0.4);
-                        const blt = Math.floor(item.d1 * 0.5 + item.d2 * 0.2);
-                        const total = pkh + bpnt + blt;
-                        
-                        return `
-                            <tr>
-                                <td style="text-align: center;">${index + 1}</td>
-                                <td>${item.nama}</td>
-                                <td style="text-align: right;">${formatNumber(pkh)}</td>
-                                <td style="text-align: right;">${formatNumber(bpnt)}</td>
-                                <td style="text-align: right;">${formatNumber(blt)}</td>
-                                <td style="text-align: right; font-weight: 700;">${formatNumber(total)}</td>
-                            </tr>
-                        `;
-                    }).join('')}
+                    ${rows}
                 </tbody>
+                <tfoot style="font-weight: 700; background: #f5f5f5;">
+                    <tr>
+                        <td colspan="2" style="text-align: right;">TOTAL KESELURUHAN</td>
+                        <td style="text-align: right;">${formatNumber(totalPKH)}</td>
+                        <td style="text-align: right;">${formatNumber(totalBPNT)}</td>
+                        <td style="text-align: right;">${formatNumber(totalBLT)}</td>
+                        <td style="text-align: right;">${formatNumber(totalAll)}</td>
+                    </tr>
+                </tfoot>
             </table>
             
-            <p style="font-size: 11px; margin-top: 15px;">
-                <em>* Estimasi penerima berdasarkan data DTSEN Desil 1-2</em><br>
-                <em>** Data dapat berubah sesuai verifikasi lapangan</em>
-            </p>
+            <div style="margin-top: 20px; font-size: 11px;">
+                <div style="background: #f0f7ff; padding: 12px; border-left: 4px solid #4361ee;">
+                    <p style="margin-bottom: 5px;"><strong>Informasi Program Bantuan Sosial:</strong></p>
+                    <ul style="margin-bottom: 0;">
+                        <li>PKH (Program Keluarga Harapan) - Bantuan tunai bersyarat</li>
+                        <li>BPNT (Bantuan Pangan Non Tunai) - Bantuan sembako</li>
+                        <li>BLT (Bantuan Langsung Tunai) - Bantuan tunai tanpa syarat</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     `;
     
@@ -436,59 +518,71 @@ function renderHalaman4(data) {
     
     const html = `
         <div>
-            <table style="width: 100%; margin-bottom: 20px; font-size: 12px;">
-                <tr>
-                    <td width="50%"><strong>Total Penerima Manfaat</strong></td>
-                    <td width="50%">${formatNumber(totalLayanan)} Keluarga</td>
+            <h5 style="font-size: 14px; font-weight: 700; margin: 10px 0;">REKAPITULASI LAYANAN SOSIAL</h5>
+            <p style="font-size: 11px; margin-bottom: 15px;">
+                <em>Cakupan layanan untuk keluarga prioritas (Desil 1-2) se-Kecamatan Sumber</em>
+            </p>
+            
+            <table style="width: 100%; margin-bottom: 20px; font-size: 12px; border: 1px solid #000; border-collapse: collapse;">
+                <tr style="background: #f0f0f0;">
+                    <td style="padding: 10px; border: 1px solid #000;" width="60%"><strong>Total Keluarga Prioritas (D1-D2)</strong></td>
+                    <td style="padding: 10px; border: 1px solid #000; text-align: right;"><strong>${formatNumber(totalD12)} KK</strong></td>
                 </tr>
                 <tr>
-                    <td>Layanan Kesehatan</td>
-                    <td>${formatNumber(layananKesehatan)} Keluarga</td>
+                    <td style="padding: 8px; border: 1px solid #000;">Total Penerima Manfaat Layanan</td>
+                    <td style="padding: 8px; border: 1px solid #000; text-align: right;">${formatNumber(totalLayanan)} KK</td>
                 </tr>
                 <tr>
-                    <td>Layanan Pendidikan</td>
-                    <td>${formatNumber(layananPendidikan)} Keluarga</td>
+                    <td style="padding: 8px; border: 1px solid #000;">Layanan Kesehatan</td>
+                    <td style="padding: 8px; border: 1px solid #000; text-align: right;">${formatNumber(layananKesehatan)} KK</td>
                 </tr>
                 <tr>
-                    <td>Layanan Sosial</td>
-                    <td>${formatNumber(layananSosial)} Keluarga</td>
+                    <td style="padding: 8px; border: 1px solid #000;">Layanan Pendidikan</td>
+                    <td style="padding: 8px; border: 1px solid #000; text-align: right;">${formatNumber(layananPendidikan)} KK</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #000;">Layanan Sosial</td>
+                    <td style="padding: 8px; border: 1px solid #000; text-align: right;">${formatNumber(layananSosial)} KK</td>
                 </tr>
             </table>
             
             <table class="tabel-data">
                 <thead>
                     <tr>
-                        <th>Jenis Layanan</th>
-                        <th>Jumlah</th>
-                        <th>Persentase</th>
+                        <th width="50%">Jenis Layanan</th>
+                        <th width="25%">Jumlah</th>
+                        <th width="25%">Persentase</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Jaminan Kesehatan</td>
+                        <td>Jaminan Kesehatan (PBI JK)</td>
                         <td style="text-align: right;">${formatNumber(layananKesehatan)}</td>
                         <td style="text-align: right;">40%</td>
                     </tr>
                     <tr>
-                        <td>Bantuan Pendidikan</td>
+                        <td>Bantuan Pendidikan (KIP/PIP)</td>
                         <td style="text-align: right;">${formatNumber(layananPendidikan)}</td>
                         <td style="text-align: right;">30%</td>
                     </tr>
                     <tr>
-                        <td>Bantuan Sosial</td>
+                        <td>Bantuan Sosial (PKH/BPNT/BLT)</td>
                         <td style="text-align: right;">${formatNumber(layananSosial)}</td>
                         <td style="text-align: right;">30%</td>
                     </tr>
                 </tbody>
             </table>
             
-            <div style="margin-top: 20px; font-size: 11px;">
-                <p><strong>Indikator Keberhasilan Program:</strong></p>
-                <ol>
-                    <li>Cakupan layanan kesehatan mencapai 40% dari total prioritas</li>
-                    <li>Akses pendidikan untuk anak usia sekolah dari keluarga prioritas</li>
-                    <li>Pemenuhan kebutuhan dasar melalui program bantuan sosial</li>
-                </ol>
+            <div style="margin-top: 25px; font-size: 11px;">
+                <div style="background: #f8f9fa; padding: 12px; border-radius: 5px;">
+                    <p style="font-weight: 700; margin-bottom: 8px;">📋 INDIKATOR KEBERHASILAN PROGRAM:</p>
+                    <ol style="margin-left: -15px;">
+                        <li>Cakupan layanan kesehatan mencapai 40% dari total keluarga prioritas</li>
+                        <li>Akses pendidikan untuk anak usia sekolah dari keluarga D1-D2</li>
+                        <li>Pemenuhan kebutuhan dasar melalui program bantuan sosial</li>
+                        <li>Monitoring dan evaluasi berkala setiap triwulan</li>
+                    </ol>
+                </div>
             </div>
         </div>
     `;
@@ -595,10 +689,10 @@ async function generateDokumen() {
         // Sort data by D1+D2 descending
         wilayahData.sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
         
-        // Render semua halaman
-        renderHalaman1(wilayahData);
-        renderHalaman2(wilayahData);
-        renderHalaman3(wilayahData);
+        // Render semua halaman - TAMPILKAN SEMUA DATA!
+        renderHalaman1(wilayahData); // TANPA LIMIT
+        renderHalaman2(wilayahData); // TANPA LIMIT
+        renderHalaman3(wilayahData); // TANPA LIMIT
         renderHalaman4(wilayahData);
         
         // Generate SATU nomor surat untuk semua halaman
@@ -611,7 +705,7 @@ async function generateDokumen() {
         updateInfoPanel(wilayahData);
         populateDesaSelect(wilayahData);
         
-        showNotification('Dokumen berhasil digenerate!', 'success');
+        showNotification(`Dokumen berhasil digenerate! Menampilkan ${wilayahData.length} desa/kelurahan`, 'success');
         
     } catch (error) {
         console.error('Error generating document:', error);
@@ -678,13 +772,13 @@ async function init() {
         updateInfoPanel(wilayahData);
         populateDesaSelect(wilayahData);
         
-        // Generate initial dokumen
+        // Generate initial dokumen - TAMPILKAN SEMUA DATA!
         await generateDokumen();
         
         // Setup event listeners
         initEventListeners();
         
-        console.log('✅ Application initialized successfully');
+        console.log(`✅ Application initialized successfully with ${wilayahData.length} villages`);
         
     } catch (error) {
         console.error('❌ Initialization error:', error);
