@@ -755,7 +755,7 @@
                     </table>
                 </div>
 
-                <!-- HALAMAN 6: PENUTUP DAN TTD -->
+                <!-- Ganti HALAMAN 6: PENUTUP DAN TTD dengan kode berikut: -->
                 <div class="page">
                     <div class="kop-surat">
                         <h4>LAPORAN ANALISIS DTSEN</h4>
@@ -787,13 +787,23 @@
                             </div>
                             
                             <div class="col-6">
-                                <p class="text-center">Menyusun,<br>TKSK Kecamatan Sumber</p>
-                                <div class="text-center mb-3">
+                                <p class="text-center mb-1">Menyusun,<br>TKSK Kecamatan Sumber</p>
+                                
+                                <!-- QR Code di tengah -->
+                                <div class="text-center mb-2">
                                     <div id="qrcodeTTD"></div>
                                 </div>
-                                <p class="text-center font-weight-bold">SHIDIQ HASANUDIN, S.IP</p>
-                                <p class="text-center">ID TKSK: TK-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}</p>
-                                <p class="text-center text-muted">Sumber, ${now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                                
+                                <!-- Nama dan ID Verif -->
+                                <p class="text-center font-weight-bold mb-0">SHIDIQ HASANUDIN, S.IP</p>
+                                <p class="text-center small text-muted mb-2">
+                                    ID-Verif: <span id="verifID">TK-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}</span>
+                                </p>
+                                
+                                <!-- Tanggal -->
+                                <p class="text-center small text-muted">
+                                    Sumber, ${now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -982,147 +992,86 @@
             }
         }
 
-        // Versi sederhana dengan hash-based verification
+// Fungsi untuk generate QR Code dengan format sederhana
 async function generateQRCode() {
     const now = new Date();
     const totalD1D2 = cachedData.reduce((sum, item) => {
         return sum + (Number(item.desil[0]) || 0) + (Number(item.desil[1]) || 0);
     }, 0);
     
-    // Data inti
-    const docData = {
+    // Generate unique verification ID (8 karakter)
+    const verifId = generateVerifId();
+    
+    // Set verif ID ke elemen
+    document.getElementById('verifID').textContent = `TK-${verifId}`;
+    
+    // Data minimal untuk QR Code
+    const qrData = {
         doc: 'DTSEN-SBR',
         date: now.toISOString().split('T')[0],
         wilayah: cachedData.length,
         prioritas: totalD1D2,
-        signatory: 'SHIDIQ HASANUDIN',
-        timestamp: now.getTime()
+        verifId: verifId,
+        ttd: 'SHIDIQ HASANUDIN, S.IP'
     };
     
-    // Generate hash SHA-256 untuk verifikasi
-    const encoder = new TextEncoder();
-    const dataBuffer = encoder.encode(JSON.stringify(docData));
-    const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    // Format string untuk QR (sangat pendek)
+    const qrText = `DTSEN|${qrData.date}|${qrData.verifId}|P${qrData.prioritas}`;
     
-    // Data untuk QR
-    const qrData = {
-        ...docData,
-        hash: hashHex.substring(0, 16) // Ambil 16 karakter pertama untuk pendek
-    };
-    
-    // Encode ke URL-safe Base64
-    const qrText = btoa(JSON.stringify(qrData))
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
-    
-    renderSimpleQRCode(qrText, docData, totalD1D2, hashHex);
+    renderQRCode(qrText, qrData);
 }
 
-function renderSimpleQRCode(qrText, docData, totalD1D2, hash) {
+// Fungsi untuk generate verification ID (8 karakter hex)
+function generateVerifId() {
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).substr(2, 5);
+    return (timestamp + random).substr(0, 8);
+}
+
+// Fungsi untuk render QR Code dengan layout sederhana
+function renderQRCode(qrText, qrData) {
     const qrElement = document.getElementById('qrcodeTTD');
     if (!qrElement) return;
     
     qrElement.innerHTML = '';
     
+    // Container untuk QR
     const container = document.createElement('div');
     container.className = 'text-center';
     
-    // QR Container
+    // QR Code container
     const qrContainer = document.createElement('div');
-    qrContainer.id = 'qrContainer';
-    
-    // Info
-    const infoDiv = document.createElement('div');
-    infoDiv.className = 'mt-2 small border-top pt-2';
-    infoDiv.innerHTML = `
-        <div class="font-weight-bold text-primary">${docData.doc}</div>
-        <div><i class="fas fa-calendar-alt mr-1"></i>${docData.date}</div>
-        <div><i class="fas fa-map-marker-alt mr-1"></i>${docData.wilayah} Wilayah</div>
-        <div class="text-danger">
-            <i class="fas fa-exclamation-triangle mr-1"></i>
-            ${totalD1D2.toLocaleString('id-ID')} KK Prioritas
-        </div>
-        <div class="text-muted mt-1">
-            <small>
-                <i class="fas fa-fingerprint mr-1"></i>
-                ID: ${hash.substring(0, 8)}
-            </small>
-        </div>
-    `;
+    qrContainer.style.width = '100px';
+    qrContainer.style.height = '100px';
+    qrContainer.style.margin = '0 auto 5px';
     
     container.appendChild(qrContainer);
-    container.appendChild(infoDiv);
     qrElement.appendChild(container);
     
-    // Generate QR
+    // Generate QR Code
     try {
         new QRCode(qrContainer, {
             text: qrText,
             width: 100,
             height: 100,
-            colorDark: '#2c3e50',
+            colorDark: '#000000',
             colorLight: '#ffffff',
             correctLevel: QRCode.CorrectLevel.M
         });
         
-        // Tambahkan event untuk verifikasi
-        qrContainer.onclick = async function() {
-            const verificationResult = await verifyByHash(qrText);
-            alert(`Verifikasi: ${verificationResult.valid ? '✅ VALID' : '❌ TIDAK VALID'}\n${verificationResult.message}`);
-        };
+        console.log('QR Code generated:', qrText);
         
     } catch (error) {
+        console.error('QR Code generation failed:', error);
+        // Fallback: tampilkan box dengan informasi
         qrContainer.innerHTML = `
-            <div class="border p-3 bg-light">
-                <div class="text-center">
-                    <i class="fas fa-qrcode fa-2x text-muted mb-2"></i>
-                    <div class="small">
-                        <strong class="d-block">${docData.doc}</strong>
-                        <span class="text-danger">${totalD1D2.toLocaleString('id-ID')}</span> KK
-                    </div>
-                </div>
+            <div class="border p-2 bg-light text-center">
+                <i class="fas fa-qrcode fa-2x text-muted"></i>
+                <div class="small mt-1">${qrData.verifId}</div>
             </div>
         `;
     }
 }
-
-        // Generated QR Code
-async function verifyByHash(qrText) {
-    try {
-        // Decode QR text
-        const decodedString = atob(qrText.replace(/-/g, '+').replace(/_/g, '/'));
-        const qrData = JSON.parse(decodedString);
-        
-        // Recreate hash
-        const { hash, ...originalData } = qrData;
-        const encoder = new TextEncoder();
-        const dataBuffer = encoder.encode(JSON.stringify(originalData));
-        const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const calculatedHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        
-        // Compare hashes
-        const isValid = calculatedHash.startsWith(hash);
-        
-        return {
-            valid: isValid,
-            message: isValid ? 
-                `Dokumen ${originalData.doc} valid\nTanggal: ${originalData.date}` : 
-                'Hash tidak sesuai - dokumen mungkin diubah',
-            data: originalData
-        };
-        
-    } catch (error) {
-        return {
-            valid: false,
-            message: 'Gagal memverifikasi: ' + error.message
-        };
-    }
-}
-
         // Fungsi untuk export PDF
         function exportPDF() {
             const element = document.getElementById('laporanContainer');
