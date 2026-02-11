@@ -1,6 +1,7 @@
 // unduh.js
 // Sistem Cetak Dokumen DTSEN - TKSK & Puskesos Kecamatan Sumber
-// Version: 2.3.0 - SHOW ALL DATA + PRIORITAS BARU (500/300)
+// Version: 2.4.0 - QR CODE & TTD DI HALAMAN 1
+// Fitur: SHOW ALL DATA + PRIORITAS >500/300-500/<300 + RASIO DTSEN
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { 
@@ -52,6 +53,12 @@ const nomorSuratUtama = document.getElementById('nomorSuratUtama');
 const nomorSuratLanjutan2 = document.getElementById('nomorSuratLanjutan2');
 const nomorSuratLanjutan3 = document.getElementById('nomorSuratLanjutan3');
 const nomorSuratLanjutan4 = document.getElementById('nomorSuratLanjutan4');
+const hashID = document.getElementById('hashID');
+const qrContainer = document.getElementById('qrcode');
+const periodeData = document.getElementById('periodeData');
+const periodeDataTahun = document.getElementById('periodeDataTahun');
+const lampiranCount = document.getElementById('lampiranCount1');
+const totalDesaInfo = document.getElementById('totalDesaInfo');
 
 // ============ UTILITY FUNCTIONS ============
 
@@ -80,6 +87,7 @@ function formatDate(date = new Date()) {
 
 /**
  * Generate SATU nomor surat untuk semua halaman
+ * Format: 460 / [random] / DTSEN.[bulan] / TKSK-SBR / [tahun]
  */
 function generateNomorSurat() {
     const date = new Date();
@@ -108,6 +116,12 @@ function generateVerificationId() {
  */
 function setLoading(loading) {
     isLoading = loading;
+    
+    // Toggle loading overlay
+    if (window.toggleLoading) {
+        window.toggleLoading(loading);
+    }
+    
     if (btnGenerate) {
         btnGenerate.disabled = loading;
         btnGenerate.innerHTML = loading 
@@ -199,7 +213,6 @@ function generateSampleData() {
     ];
     
     return desaList.map((nama, index) => {
-        // Generate data dengan variasi agar memenuhi kriteria baru
         let d1, d2, totalD12;
         
         if (index < 5) {
@@ -366,18 +379,14 @@ function renderHalaman2(data) {
     data.forEach((item, index) => {
         const d12 = item.d1 + item.d2;
         let status = '';
-        let badgeColor = '';
         
         // KRITERIA BARU UNTUK BADGE
         if (d12 > 500) {
             status = '<span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600;">PRIORITAS TINGGI</span>';
-            badgeColor = '#dc3545';
         } else if (d12 >= 300) {
             status = '<span style="background: #ffc107; color: black; padding: 2px 8px; border-radius: 3px; font-weight: 600;">PRIORITAS SEDANG</span>';
-            badgeColor = '#ffc107';
         } else {
             status = '<span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600;">PRIORITAS RENDAH</span>';
-            badgeColor = '#28a745';
         }
         
         rows += `
@@ -592,8 +601,8 @@ function renderHalaman3(data) {
 /**
  * ============================================================
  * HALAMAN 4 - REKAPITULASI LAYANAN SOSIAL
- * PERUBAHAN: RASIO DIHITUNG BERDASARKAN TOTAL KK DTSEN (D1-D10)
- * BUKAN BERDASARKAN DTKS
+ * PERUBAHAN: TANPA TTD & QR (SUDAH DIPINDAH KE HALAMAN 1)
+ * RASIO DIHITUNG BERDASARKAN TOTAL KK DTSEN (D1-D10)
  * ============================================================
  */
 async function renderHalaman4(dataWilayah) {
@@ -603,7 +612,7 @@ async function renderHalaman4(dataWilayah) {
         // Hitung TOTAL KK DTSEN (Desil 1-10) dari data wilayah
         const totalKKDTSEN = dataWilayah.reduce((sum, item) => sum + item.total_kk, 0);
         
-        // Ambil data layanan dari Firebase (tetap sama)
+        // Ambil data layanan dari Firebase
         const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
         
         let totalLayananKec = {
@@ -637,10 +646,7 @@ async function renderHalaman4(dataWilayah) {
         
         const totalSemuaLayanan = totalLayananKec.dtks + totalLayananKec.pengaduan + totalLayananKec.sktm;
         
-        // ============ PERUBAHAN UTAMA ============
-        // RASIO sekarang dibandingkan dengan TOTAL KK DTSEN (Desil 1-10)
-        // BUKAN dibandingkan dengan DTKS
-        
+        // RASIO berdasarkan TOTAL KK DTSEN (Desil 1-10)
         const rasioSKTM = totalKKDTSEN > 0 
             ? ((totalLayananKec.sktm / totalKKDTSEN) * 100).toFixed(2) 
             : '0.00';
@@ -649,13 +655,11 @@ async function renderHalaman4(dataWilayah) {
             ? ((totalLayananKec.pengaduan / totalKKDTSEN) * 100).toFixed(2) 
             : '0.00';
         
-        // Cakupan Layanan: total layanan per KK DTSEN
         const rasioCakupanLayanan = totalKKDTSEN > 0 
             ? ((totalSemuaLayanan / totalKKDTSEN) * 100).toFixed(2) 
             : '0.00';
         
-        // ============ AKUMULASI DATA DTSEN PER DESA ============
-        // Gabungkan data DTSEN dengan data layanan untuk analisis yang lebih akurat
+        // Gabungkan data DTSEN dengan data layanan
         const dataGabungan = dataWilayah.map(wilayah => {
             const layananDesa = layananPerDesa.find(l => l.nama === wilayah.nama) || {
                 dtks: 0,
@@ -671,22 +675,18 @@ async function renderHalaman4(dataWilayah) {
                 dtks: layananDesa.dtks,
                 pengaduan: layananDesa.pengaduan,
                 sktm: layananDesa.sktm,
-                totalLayanan: layananDesa.total,
-                rasioSKTM: wilayah.total_kk > 0 ? ((layananDesa.sktm / wilayah.total_kk) * 100).toFixed(1) : '0.0',
-                rasioPengaduan: wilayah.total_kk > 0 ? ((layananDesa.pengaduan / wilayah.total_kk) * 100).toFixed(1) : '0.0'
+                totalLayanan: layananDesa.total
             };
         });
         
-        // Urutkan berdasarkan total layanan
         dataGabungan.sort((a, b) => b.totalLayanan - a.totalLayanan);
         const top5Desa = dataGabungan.slice(0, 5);
         
-        // Hitung rata-rata layanan per desa
         const rataRataLayananPerDesa = layananPerDesa.length > 0 
             ? Math.round(totalSemuaLayanan / layananPerDesa.length) 
             : 0;
         
-        // ============ RENDER HTML HALAMAN 4 ============
+        // ============ RENDER HTML HALAMAN 4 (TANPA TTD & QR) ============
         const html = `
             <div style="margin-top: 10px;">
                 <!-- HEADER INFORMASI -->
@@ -801,19 +801,11 @@ async function renderHalaman4(dataWilayah) {
                     </div>
                 </div>
 
-                <!-- INFORMASI PERBANDINGAN DTKS vs DTSEN -->
-                <div style="background: #fff3cd; border: 1px solid #ffeeba; padding: 12px 15px; border-radius: 5px; margin-bottom: 20px; display: flex; align-items: center;">
-                    <i class="fas fa-info-circle mr-3" style="font-size: 20px; color: #856404;"></i>
-                    <div style="font-size: 11px; color: #856404;">
-                        <strong>ⓘ PERHITUNGAN RASIO:</strong> Seluruh rasio layanan (SKTM, Pengaduan, Cakupan) dihitung berdasarkan <strong>TOTAL KELUARGA DTSEN (Desil 1-10) sebesar ${formatNumber(totalKKDTSEN)} KK</strong>, bukan berdasarkan jumlah DTKS. Hal ini untuk memberikan gambaran proporsi layanan terhadap seluruh populasi terdata.
-                    </div>
-                </div>
-
-                <!-- TABEL 5 DESA DENGAN LAYANAN TERTINGGI + DATA DTSEN -->
+                <!-- TABEL 5 DESA DENGAN LAYANAN TERTINGGI -->
                 <div style="margin-top: 25px;">
                     <h6 style="font-size: 13px; font-weight: 700; margin-bottom: 10px;">
                         📊 5 DESA DENGAN LAYANAN TERTINGGI
-                        <span style="font-size: 10px; font-weight: 400; color: #666; margin-left: 10px;">(dilengkapi data DTSEN dan rasio)</span>
+                        <span style="font-size: 10px; font-weight: 400; color: #666; margin-left: 10px;">(dilengkapi data DTSEN)</span>
                     </h6>
                     <table style="width: 100%; font-size: 10.5px; border-collapse: collapse;">
                         <thead>
@@ -859,7 +851,7 @@ async function renderHalaman4(dataWilayah) {
                                 <td style="padding: 4px 0; text-align: right;"><strong>${formatNumber(totalKKDTSEN)} KK</strong></td>
                             </tr>
                             <tr>
-                                <td style="padding: 4px 0;">✓ Total DTKS</td>
+                                <td style="padding: 4px 0;">✓ Total Pembaruan DTSEN</td>
                                 <td style="padding: 4px 0; text-align: right;"><strong>${formatNumber(totalLayananKec.dtks)} KK</strong> (${totalKKDTSEN > 0 ? ((totalLayananKec.dtks/totalKKDTSEN*100).toFixed(1)) : 0}%)</td>
                             </tr>
                             <tr>
@@ -889,19 +881,15 @@ async function renderHalaman4(dataWilayah) {
                             ${totalLayananKec.sktm > totalKKDTSEN * 0.3 
                                 ? '<li style="margin-bottom: 8px; color: #dc3545;">⚠️ <strong>Penerbitan SKTM tinggi</strong> (' + rasioSKTM + '%) - Perketat verifikasi</li>' 
                                 : '<li style="margin-bottom: 8px; color: #28a745;">✅ <strong>Penerbitan SKTM wajar</strong> (' + rasioSKTM + '%)</li>'}
-                            <li style="margin-bottom: 8px;">📌 <strong>Cakupan DTKS</strong> terhadap DTSEN: ${totalKKDTSEN > 0 ? ((totalLayananKec.dtks/totalKKDTSEN*100).toFixed(1)) : 0}%</li>
+                            <li style="margin-bottom: 8px;">📌 <strong>Cakupan Pembaruan DTSEN</strong>: ${totalKKDTSEN > 0 ? ((totalLayananKec.dtks/totalKKDTSEN*100).toFixed(1)) : 0}%</li>
                             <li style="margin-bottom: 8px;">🏆 <strong>Prioritas intervensi:</strong> ${top5Desa[0]?.nama || '-'}, ${top5Desa[1]?.nama || '-'}, ${top5Desa[2]?.nama || '-'}</li>
                             <li style="margin-bottom: 8px;">🔄 Update data DTSEN dan layanan secara berkala</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- CATATAN KAKI -->
+                <!-- CATATAN KAKI - TANPA FOOTER SURAT (SUDAH DI HALAMAN 1) -->
                 <div style="margin-top: 25px; font-size: 9px; color: #666; border-top: 1px dashed #ccc; padding-top: 12px;">
-                    <p style="margin-bottom: 3px;">
-                        <i class="fas fa-calculator mr-1"></i> 
-                        <strong>Metodologi:</strong> Seluruh rasio layanan (SKTM, Pengaduan, Cakupan) dihitung berdasarkan TOTAL KELUARGA DTSEN (Desil 1-10) se-Kecamatan Sumber.
-                    </p>
                     <p style="margin-bottom: 0;">
                         <i class="fas fa-database mr-1"></i> 
                         Sumber: DTSEN Kecamatan Sumber (${formatNumber(totalKKDTSEN)} KK) & Database Layanan Sosial Firebase | Update: ${formatDate(new Date())}
@@ -946,7 +934,7 @@ async function renderHalaman4(dataWilayah) {
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #000;"><strong>Pembaharuan DTSEN</strong> (Data Tunggal Sosial Ekonomi Nasional)</td>
+                            <td style="padding: 10px; border: 1px solid #000;"><strong>Pembaruan DTSEN</strong> (Data Terpadu Kesejahteraan Sosial)</td>
                             <td style="padding: 10px; border: 1px solid #000; text-align: right; font-weight: 700;">${formatNumber(totalKKDTSEN)} KK</td>
                             <td style="padding: 10px; border: 1px solid #000; text-align: right;">100%</td>
                         </tr>
@@ -973,41 +961,58 @@ async function renderHalaman4(dataWilayah) {
         `;
     }
 }
+
 /**
- * Generate QR Code
+ * Generate QR Code - DIPANGGIL DI HALAMAN 1
  */
 function generateQRCode() {
-    const verificationId = generateVerificationId();
-    const hashID = document.getElementById('hashID');
-    if (hashID) hashID.textContent = verificationId;
-    
-    const qrContainer = document.getElementById('qrcode');
-    if (!qrContainer) return;
-    
-    qrContainer.innerHTML = '';
-    
-    const qrData = {
-        id: verificationId,
-        nomor: nomorSurat,
-        instansi: 'TKSK Puskesos Sumber',
-        tanggal: formatDate(),
-        totalWilayah: wilayahData.length,
-        totalKK: wilayahData.reduce((sum, item) => sum + item.total_kk, 0),
-        kebijakan: 'Prioritas: >500, 300-500, <300'
-    };
+    if (!qrContainer) {
+        console.warn('QR Container tidak ditemukan');
+        return;
+    }
     
     try {
-        qrcode = new QRCode(qrContainer, {
-            text: JSON.stringify(qrData),
-            width: 100,
-            height: 100,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
+        const verificationId = generateVerificationId();
+        
+        // Update ID Verifikasi
+        if (hashID) {
+            hashID.textContent = verificationId;
+        }
+        
+        // Bersihkan container QR
+        qrContainer.innerHTML = '';
+        
+        // Data untuk QR Code
+        const qrData = {
+            id: verificationId,
+            nomor: nomorSurat,
+            instansi: 'TKSK Puskesos Sumber',
+            tanggal: formatDate(),
+            totalWilayah: wilayahData.length,
+            totalKK: wilayahData.reduce((sum, item) => sum + item.total_kk, 0),
+            kebijakan: 'Prioritas: >500, 300-500, <300',
+            rasio: 'Berdasarkan Total DTSEN'
+        };
+        
+        // Generate QR Code
+        if (typeof QRCode !== 'undefined') {
+            qrcode = new QRCode(qrContainer, {
+                text: JSON.stringify(qrData, null, 0),
+                width: 100,
+                height: 100,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            console.log('✅ QR Code generated successfully');
+        } else {
+            throw new Error('QRCode library not loaded');
+        }
     } catch (error) {
-        console.error('Error generating QR code:', error);
-        qrContainer.innerHTML = '<div class="qr-placeholder">QR Code</div>';
+        console.error('❌ Error generating QR code:', error);
+        if (qrContainer) {
+            qrContainer.innerHTML = '<div class="qr-placeholder">QR Code</div>';
+        }
     }
 }
 
@@ -1015,21 +1020,28 @@ function generateQRCode() {
  * Update nomor surat - SATU NOMOR UNTUK SEMUA HALAMAN
  */
 function updateDocumentNumbers() {
+    // Generate nomor surat
     nomorSurat = generateNomorSurat();
     
-    if (nomorSuratUtama) nomorSuratUtama.textContent = nomorSurat;
+    // Update di Halaman 1
+    if (nomorSuratUtama) {
+        nomorSuratUtama.textContent = nomorSurat;
+    }
+    
+    // Update di Halaman 2,3,4 (kop lanjutan)
     if (nomorSuratLanjutan2) nomorSuratLanjutan2.textContent = nomorSurat;
     if (nomorSuratLanjutan3) nomorSuratLanjutan3.textContent = nomorSurat;
     if (nomorSuratLanjutan4) nomorSuratLanjutan4.textContent = nomorSurat;
     
-    const lampiranCount = document.getElementById('lampiranCount1');
-    if (lampiranCount) lampiranCount.textContent = '4';
+    // Update lampiran
+    if (lampiranCount) {
+        lampiranCount.textContent = '4';
+    }
     
-    const periodeData = document.getElementById('periodeData');
-    if (periodeData) periodeData.textContent = new Date().getFullYear();
-    
-    const periodeDataTahun = document.getElementById('periodeDataTahun');
-    if (periodeDataTahun) periodeDataTahun.textContent = new Date().getFullYear();
+    // Update periode
+    const tahun = new Date().getFullYear();
+    if (periodeData) periodeData.textContent = tahun;
+    if (periodeDataTahun) periodeDataTahun.textContent = tahun;
 }
 
 /**
@@ -1048,7 +1060,6 @@ function updateInfoPanel(data) {
         tglSekarang.textContent = formatDate();
     }
     
-    const totalDesaInfo = document.getElementById('totalDesaInfo');
     if (totalDesaInfo) {
         totalDesaInfo.textContent = data.length;
     }
@@ -1058,12 +1069,13 @@ function updateInfoPanel(data) {
 
 /**
  * Generate seluruh dokumen
+ * QR CODE DAN TTD DIHASILKAN DI HALAMAN 1
  */
 async function generateDokumen() {
     try {
         setLoading(true);
         
-        // Load data
+        // Load data dari Firebase
         wilayahData = await loadDataFromFirebase();
         
         if (wilayahData.length === 0) {
@@ -1074,27 +1086,27 @@ async function generateDokumen() {
         // Sort data by D1+D2 descending
         wilayahData.sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
         
-        // Render semua halaman - TAMPILKAN SEMUA DATA!
-        renderHalaman1(wilayahData);
-        renderHalaman2(wilayahData); // DENGAN KRITERIA PRIORITAS BARU
-        renderHalaman3(wilayahData);
-        await renderHalaman4(wilayahData);
+        // Render semua halaman
+        renderHalaman1(wilayahData);     // Halaman 1: Agregasi + TTD + QR
+        renderHalaman2(wilayahData);     // Halaman 2: Prioritas Intervensi
+        renderHalaman3(wilayahData);     // Halaman 3: Bantuan Sosial
+        await renderHalaman4(wilayahData); // Halaman 4: Layanan Sosial (tanpa TTD/QR)
         
-        // Generate SATU nomor surat
+        // Generate SATU nomor surat untuk semua halaman
         updateDocumentNumbers();
         
-        // Generate QR Code
+        // Generate QR CODE di HALAMAN 1
         generateQRCode();
         
         // Update info panel
         updateInfoPanel(wilayahData);
         populateDesaSelect(wilayahData);
         
-        showNotification(`✅ Dokumen berhasil digenerate! Menampilkan ${wilayahData.length} desa/kelurahan (Prioritas: >500/300-500/<300)`, 'success');
+        showNotification(`✅ Dokumen berhasil digenerate! Menampilkan ${wilayahData.length} desa/kelurahan`, 'success');
         
     } catch (error) {
-        console.error('Error generating document:', error);
-        showNotification('❌ Gagal generate dokumen: ' + error.message, 'danger');
+        console.error('❌ Error generating document:', error);
+        showNotification('Gagal generate dokumen: ' + error.message, 'danger');
     } finally {
         setLoading(false);
     }
@@ -1145,16 +1157,27 @@ async function init() {
     try {
         setLoading(true);
         
+        console.log('🚀 Initializing DTSEN Document Generator v2.4.0');
+        console.log('📌 Fitur: QR Code & TTD di Halaman 1');
+        
+        // Load data awal
         wilayahData = await loadDataFromFirebase();
         wilayahData.sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
         
+        // Update UI
         updateInfoPanel(wilayahData);
         populateDesaSelect(wilayahData);
         
+        // Generate dokumen awal
         await generateDokumen();
+        
+        // Setup event listeners
         initEventListeners();
         
-        console.log(`✅ Aplikasi siap dengan ${wilayahData.length} desa - Kriteria Prioritas: >500 (Tinggi), 300-500 (Sedang), <300 (Rendah)`);
+        console.log(`✅ Aplikasi siap dengan ${wilayahData.length} desa`);
+        console.log(`📋 Kriteria Prioritas: >500 (Tinggi), 300-500 (Sedang), <300 (Rendah)`);
+        console.log(`📊 Rasio Layanan: Berdasarkan Total DTSEN (Desil 1-10)`);
+        console.log(`📍 QR Code & Tanda Tangan: Halaman 1`);
         
     } catch (error) {
         console.error('❌ Initialization error:', error);
