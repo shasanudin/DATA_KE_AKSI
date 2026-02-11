@@ -3,123 +3,453 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Layanan Publik Digital | Kab. Cirebon</title>
+    <title>Layanan Publik Digital | Kab. Cirebon & Kemensos</title>
     
+    <!-- Bootstrap 4.6.2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 5 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
-
     <style>
+        :root {
+            --primary: #0984e3;
+            --primary-dark: #0873c4;
+            --success: #2ecc71;
+            --success-dark: #27ae60;
+            --warning: #f39c12;
+            --dark: #2d3436;
+            --gray-bg: #f4f7f6;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f4f7f6;
-            color: #2d3436;
+            background-color: var(--gray-bg);
+            color: var(--dark);
+            line-height: 1.6;
         }
+
+        /* Header dengan gradient */
         .header-section {
             background: linear-gradient(135deg, #0984e3, #6c5ce7);
             color: white;
             padding: 60px 0;
             border-radius: 0 0 30px 30px;
             margin-bottom: 40px;
+            box-shadow: 0 10px 25px rgba(9,132,227,0.2);
         }
+
+        /* Navbar container */
+        #navbar {
+            margin-bottom: 20px;
+        }
+
+        /* Service Cards */
         .service-card {
             border: none;
-            border-radius: 20px;
-            transition: all 0.3s ease;
+            border-radius: 24px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            height: 100%;
+            background: white;
         }
+
         .service-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.1);
         }
+
+        .card-body {
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Icon Box */
+        .icon-box {
+            width: 90px;
+            height: 90px;
+            background: #e1f5fe;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover .icon-box {
+            background: var(--primary);
+            color: white;
+        }
+
+        .icon-box-success {
+            background: #e8f5e9;
+            color: var(--success);
+        }
+        .service-card:hover .icon-box-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .icon-box-warning {
+            background: #fff3e0;
+            color: #f39c12;
+        }
+        .service-card:hover .icon-box-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        /* Button */
         .btn-launch {
             border-radius: 50px;
             padding: 12px 30px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
-        .icon-box {
-            width: 80px;
-            height: 80px;
-            background: #e1f5fe;
+
+        .btn-launch:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Badge Resmi */
+        .badge-resmi {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            color: var(--dark);
+            font-size: 0.7rem;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            backdrop-filter: blur(5px);
+        }
+
+        .badge-kemensos {
+            background: rgba(9,132,227,0.1);
+            color: var(--primary);
+            border: 1px solid rgba(9,132,227,0.2);
+        }
+
+        .badge-pemkab {
+            background: rgba(46,204,113,0.1);
+            color: var(--success-dark);
+            border: 1px solid rgba(46,204,113,0.2);
+        }
+
+        /* Footer */
+        .footer-note {
+            background: white;
             border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: #0984e3;
-            margin-bottom: 20px;
+            padding: 25px;
+            margin-top: 40px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+
+        hr {
+            border-top: 1px solid rgba(0,0,0,0.05);
+            margin: 30px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-section { padding: 40px 0; }
+            .header-section h1 { font-size: 1.8rem; }
+            .card-body { padding: 1.5rem; }
+            .icon-box { width: 70px; height: 70px; font-size: 2rem; }
         }
     </style>
 </head>
 <body>
 
+<!-- HEADER SECTION -->
 <div class="header-section text-center">
     <div class="container">
-        <h1 class="font-weight-bold">Layanan Digital Masyarakat</h1>
-        <p class="lead">Akses mudah pelayanan sosial dan administrasi Kabupaten Cirebon dalam satu pintu.</p>
+        <h1 class="font-weight-bold mb-3">Layanan Digital Masyarakat</h1>
+        <p class="lead mb-0" style="max-width: 700px; margin: 0 auto; opacity: 0.95;">
+            Portal terpadu layanan sosial, administrasi, dan pengecekan bansos 
+            <br>Kabupaten Cirebon & Kementerian Sosial RI
+        </p>
     </div>
 </div>
 
+<!-- NAVBAR CONTAINER -->
 <div id="navbar"></div>
 
-<div class="container">
+<!-- MAIN CONTENT -->
+<div class="container py-4">
+
+    <!-- DESKRIPSI HALAMAN -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-light border-0 bg-white shadow-sm rounded-lg p-4 d-flex align-items-center">
+                <i class="fas fa-info-circle fa-3x text-primary mr-4"></i>
+                <div>
+                    <h5 class="font-weight-bold mb-1">Akses Langsung ke Layanan Resmi</h5>
+                    <p class="text-muted mb-0">Klik tombol "Buka Aplikasi" untuk diarahkan ke halaman resmi masing-masing layanan. Seluruh tautan adalah portal pemerintah yang terverifikasi.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ROW 1: Layanan Kab. Cirebon (2 Kolom) -->
     <div class="row justify-content-center">
-        <div class="col-md-5 mb-4">
-            <div class="card service-card h-100 p-4">
-                <div class="card-body d-flex flex-column align-items-center text-center">
+        
+        <!-- 1. SIPEPEG - Kab. Cirebon -->
+        <div class="col-lg-5 col-md-6 mb-4">
+            <div class="card service-card position-relative">
+                <span class="badge-resmi badge-pemkab">
+                    <i class="fas fa-check-circle mr-1"></i> Resmi - Pemkab Cirebon
+                </span>
+                <div class="card-body">
                     <div class="icon-box">
                         <i class="fas fa-hand-holding-heart"></i>
                     </div>
-                    <h3 class="font-weight-bold">SIPEPEG</h3>
-                    <p class="text-muted">Sistem Pelayanan Program Penanggulangan Kemiskinan dan Jaminan Kesehatan.</p>
-                    <div class="mt-auto w-100">
-                        <hr>
-                        <a href="https://sipepeg.cirebonkab.go.id/" target="_blank" class="btn btn-primary btn-block btn-launch shadow">
-                            Buka Aplikasi <i class="fas fa-external-link-alt ml-2"></i>
+                    <h3 class="font-weight-bold mb-2">SIPEPEG</h3>
+                    <p class="text-muted px-2" style="flex-grow: 1;">
+                        <strong>Sistem Pelayanan Program Penanggulangan Kemiskinan</strong> dan Jaminan Kesehatan. 
+                        Layanan terpadu DTKS, PBI-JK, dan bantuan sosial Kab. Cirebon.
+                    </p>
+                    <div class="w-100 mt-4">
+                        <a href="https://sipepeg.cirebonkab.go.id/" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="btn btn-primary btn-block btn-launch shadow">
+                            <i class="fas fa-external-link-alt mr-2"></i> Buka SIPEPEG
                         </a>
+                        <small class="text-muted d-block mt-2">
+                            <i class="fas fa-shield-alt mr-1"></i> sipepeg.cirebonkab.go.id
+                        </small>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-5 mb-4">
-            <div class="card service-card h-100 p-4">
-                <div class="card-body d-flex flex-column align-items-center text-center">
-                    <div class="icon-box" style="background: #e8f5e9; color: #2ecc71;">
+        <!-- 2. SIMPELPAS - Kab. Cirebon -->
+        <div class="col-lg-5 col-md-6 mb-4">
+            <div class="card service-card position-relative">
+                <span class="badge-resmi badge-pemkab">
+                    <i class="fas fa-check-circle mr-1"></i> Resmi - Pemkab Cirebon
+                </span>
+                <div class="card-body">
+                    <div class="icon-box icon-box-success">
                         <i class="fas fa-file-invoice"></i>
                     </div>
-                    <h3 class="font-weight-bold">SIMPELPAS</h3>
-                    <p class="text-muted">Sistem Informasi Manajemen Pelayanan Pasien dan Administrasi Sosial.</p>
-                    <div class="mt-auto w-100">
-                        <hr>
-                        <a href="https://simpelpas.cirebonkab.go.id/" target="_blank" class="btn btn-success btn-block btn-launch shadow">
-                            Buka Aplikasi <i class="fas fa-external-link-alt ml-2"></i>
+                    <h3 class="font-weight-bold mb-2">SIMPELPAS</h3>
+                    <p class="text-muted px-2" style="flex-grow: 1;">
+                        <strong>Sistem Informasi Manajemen Pelayanan Pasien</strong> dan Administrasi Sosial. 
+                        Terintegrasi dengan layanan kesehatan dan jaminan sosial daerah.
+                    </p>
+                    <div class="w-100 mt-4">
+                        <a href="https://simpelpas.cirebonkab.go.id/" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="btn btn-success btn-block btn-launch shadow">
+                            <i class="fas fa-external-link-alt mr-2"></i> Buka SIMPELPAS
                         </a>
+                        <small class="text-muted d-block mt-2">
+                            <i class="fas fa-shield-alt mr-1"></i> simpelpas.cirebonkab.go.id
+                        </small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mt-5">
-        <div class="col-12 text-center text-muted">
-            <p><small><i class="fas fa-shield-alt mr-2"></i> Halaman ini adalah portal penghubung resmi ke layanan terkait.</small></p>
+    <!-- ROW 2: Layanan Kementerian Sosial (1 Kolom Tengah) -->
+    <div class="row justify-content-center mt-2">
+        
+        <!-- 3. CEK BANSOS - KEMENSOS RI -->
+        <div class="col-lg-6 col-md-8 mb-4">
+            <div class="card service-card position-relative border border-warning border-opacity-10">
+                <span class="badge-resmi badge-kemensos">
+                    <i class="fas fa-certificate mr-1"></i> Resmi - Kemensos RI
+                </span>
+                <div class="card-body">
+                    <div class="icon-box icon-box-warning">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="font-weight-bold mb-2" style="color: #f39c12;">Cek Bansos</h3>
+                    <p class="text-muted px-2" style="flex-grow: 1;">
+                        <strong>Portal Resmi Kementerian Sosial RI</strong> untuk mengecek status penerima 
+                        <span class="font-weight-bold">PKH, BPNT, BLT Kesra,</span> dan program bansos lainnya. 
+                        Cukup masukkan NIK KTP.
+                    </p>
+                    
+                    <!-- Fitur Unggulan Cek Bansos -->
+                    <div class="d-flex justify-content-center mb-3">
+                        <span class="badge badge-light mr-2 p-2">
+                            <i class="fas fa-check text-success mr-1"></i> PKH
+                        </span>
+                        <span class="badge badge-light mr-2 p-2">
+                            <i class="fas fa-check text-success mr-1"></i> BPNT
+                        </span>
+                        <span class="badge badge-light mr-2 p-2">
+                            <i class="fas fa-check text-success mr-1"></i> BLT
+                        </span>
+                        <span class="badge badge-light p-2">
+                            <i class="fas fa-check text-success mr-1"></i> PBI-JK
+                        </span>
+                    </div>
+
+                    <div class="w-100 mt-3">
+                        <a href="https://cekbansos.kemensos.go.id/" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="btn btn-warning btn-block btn-launch shadow font-weight-bold" 
+                           style="color: #2d3436; background: #f39c12; border-color: #f39c12;">
+                            <i class="fas fa-external-link-alt mr-2"></i> Cek Status Bansos
+                        </a>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt mr-1"></i> cekbansos.kemensos.go.id
+                            </small>
+                            <span class="badge badge-light">
+                                <i class="fas fa-database mr-1"></i> DTSEN 2026
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- INFORMASI TAMBAHAN: Kontak & Layanan Pengaduan -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="footer-note">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h6 class="font-weight-bold mb-2">
+                            <i class="fas fa-headset mr-2 text-primary"></i> Butuh Bantuan?
+                        </h6>
+                        <p class="small text-muted mb-md-0 mb-3">
+                            <span class="mr-4"><i class="fas fa-phone-alt mr-1"></i> Kemensos: 171</span>
+                            <span class="mr-4"><i class="fab fa-whatsapp mr-1"></i> WA: 0811-1171-171</span>
+                            <span><i class="fas fa-globe mr-1"></i> Lapor: lapor.go.id</span>
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-right">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt mr-1"></i> Portal terintegrasi 
+                            <br>Update: Februari 2026
+                        </small>
+                    </div>
+                </div>
+                <hr class="my-3">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle mr-1"></i> 
+                        SIPEPEG & SIMPELPAS adalah layanan resmi Pemerintah Kabupaten Cirebon. 
+                        Cek Bansos adalah layanan resmi Kementerian Sosial RI.
+                    </small>
+                    <a href="index.html" class="btn btn-sm btn-outline-secondary rounded-pill px-4 ml-2">
+                        <i class="fas fa-arrow-left mr-1"></i> Beranda
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
+<!-- FOOTER (Optional) -->
+<footer class="container text-center mt-5 pt-3 text-muted border-top py-4">
+    <small>
+        © 2026 TKSK & Forum Puskesos Kecamatan Sumber. 
+        <br class="d-md-none">
+        <span class="text-primary">DARI DATA KE AKSI</span>
+    </small>
+</footer>
+
+<!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-  // 1. Load Navbar
-  fetch('navbar.html')
-    .then(r => r.text())
-    .then(html => { document.getElementById('navbar').innerHTML = html; })
-    .catch(err => console.warn("Navbar tidak ditemukan"));
+    // ============ LOAD NAVBAR ============
+    fetch('navbar.html')
+        .then(response => {
+            if (!response.ok) throw new Error('Navbar not found');
+            return response.text();
+        })
+        .then(html => {
+            document.getElementById('navbar').innerHTML = html;
+            
+            // Set active state untuk menu Aplikasi
+            setTimeout(() => {
+                const currentPage = 'aplikasi.html';
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    if (link.getAttribute('href') === currentPage) {
+                        link.classList.add('active');
+                    }
+                });
+            }, 100);
+        })
+        .catch(err => {
+            console.warn('Navbar tidak dimuat:', err);
+            // Navbar fallback sederhana
+            document.getElementById('navbar').innerHTML = `
+                <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+                    <div class="container">
+                        <a class="navbar-brand" href="index.html">
+                            <img src="assets/img/logo/logo-tksk.png" height="40" onerror="this.style.display='none'">
+                        </a>
+                        <span class="navbar-text ml-auto">Sistem DTSEN - TKSK Sumber</span>
+                    </div>
+                </nav>
+            `;
+        });
+
+    // ============ DETEKSI KONEKSI ============
+    function checkConnection() {
+        if (!navigator.onLine) {
+            const cards = document.querySelectorAll('.btn-launch');
+            cards.forEach(btn => {
+                btn.classList.add('disabled');
+                btn.innerHTML = '<i class="fas fa-wifi-slash mr-2"></i> Offline';
+            });
+        }
+    }
+
+    window.addEventListener('online', () => window.location.reload());
+    window.addEventListener('offline', checkConnection);
+    checkConnection();
+
+    // ============ SCROLL HEADER EFFECT ============
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('.header-section');
+        if (header) {
+            if (window.scrollY > 50) {
+                header.style.padding = '40px 0';
+            } else {
+                header.style.padding = '60px 0';
+            }
+        }
+    });
+</script>
+
+<!-- Fallback untuk tautan -->
+<script>
+    // Memastikan tautan terbuka di tab baru dengan aman
+    document.querySelectorAll('a[target="_blank"]').forEach(link => {
+        link.setAttribute('rel', 'noopener noreferrer');
+    });
 </script>
 
 </body>
