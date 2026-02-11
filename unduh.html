@@ -38,7 +38,6 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
     flex-grow: 1;
 }
 
-/* Nama Instansi Utama */
 .instansi-utama {
     font-size: 14px;
     font-weight: 600;
@@ -47,7 +46,6 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
     text-transform: uppercase;
 }
 
-/* Nama Lembaga */
 .nama-lembaga {
     font-size: 18px;
     font-weight: 700;
@@ -56,7 +54,6 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
     color: #000;
 }
 
-/* Nama Program/Slogan */
 .nama-program {
     font-size: 26px;
     font-weight: 800;
@@ -65,25 +62,15 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
     color: #000;
 }
 
-/* Alamat Kantor */
 .alamat-kantor {
     font-size: 11px;
     margin: 2px 0;
     font-style: normal;
 }
 
-/* Garis Kop */
 .kop-line {
     border-bottom: 1px solid #000;
     margin: 2px 0 10px;
-}
-
-/* Nomor Surat */
-.nomor-surat {
-    font-size: 12px;
-    text-align: center;
-    margin-bottom: 20px;
-    font-weight: 500;
 }
 
 /* ============ KOP UNTUK HALAMAN BERIKUTNYA ============ */
@@ -100,6 +87,11 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
     color: #333;
 }
 
+.nomor-surat-lanjutan {
+    font-size: 11px;
+    color: #333;
+}
+
 /* ============ STYLE SURAT ============ */
 .judul-surat {
     font-size: 16px;
@@ -108,12 +100,6 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
     text-decoration: underline;
     margin: 20px 0;
     text-transform: uppercase;
-}
-
-.sub-judul {
-    font-size: 14px;
-    font-weight: 600;
-    margin: 15px 0 10px;
 }
 
 .tabel-data {
@@ -137,31 +123,10 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
 }
 
 /* Tanda Tangan */
-.tanda-tangan-container {
-    margin-top: 40px;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.tanda-tangan-box {
-    width: 250px;
-    text-align: center;
-}
-
-.tempat-tanggal {
-    font-size: 12px;
-    margin-bottom: 80px;
-    text-align: right;
-}
-
 .nama-ttd {
     font-weight: 700;
     margin-top: 5px;
     text-decoration: underline;
-}
-
-.nip-ttd {
-    font-size: 11px;
 }
 
 /* QR Code */
@@ -238,7 +203,7 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
 <!-- NAVBAR -->
 <div id="navbar" class="no-print"></div>
 
-<!-- PANEL GENERATE - HANYA SATU TOMBOL! -->
+<!-- PANEL GENERATE -->
 <div class="container my-5 no-print">
     <div class="row mb-3">
         <div class="col-12">
@@ -275,7 +240,6 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
             </div>
 
             <div class="col-md-4 text-right">
-                <!-- SATU TOMBOL GENERATE UNTUK SEMUA -->
                 <button id="btnGenerate" class="btn btn-primary btn-lg px-5">
                     <i class="fas fa-sync-alt mr-2"></i> Generate Dokumen
                 </button>
@@ -332,12 +296,12 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
             </div>
         </div>
         
-        <!-- NOMOR SURAT DAN LAMPIRAN -->
+        <!-- NOMOR SURAT DAN LAMPIRAN - SATU NOMOR UNTUK SEMUA HALAMAN -->
         <table width="100%" style="margin-bottom: 15px; font-size: 12px;">
             <tr>
                 <td width="15%">Nomor</td>
                 <td width="2%">:</td>
-                <td width="83%">460 / <span id="hashNomor1">DTSEN.001</span> / TKSK-SBR / 2026</td>
+                <td width="83%"><span id="nomorSuratUtama">460 / 123 / DTSEN.001 / TKSK-SBR / 2026</span></td>
             </tr>
             <tr>
                 <td>Sifat</td>
@@ -347,7 +311,7 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
             <tr>
                 <td>Lampiran</td>
                 <td>:</td>
-                <td><span id="lampiranCount1">3</span> (tiga) berkas</td>
+                <td><span id="lampiranCount1">4</span> (empat) berkas</td>
             </tr>
             <tr>
                 <td>Perihal</td>
@@ -370,29 +334,24 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
         </div>
 
         <!-- KONTEN HALAMAN 1 (AGREGASI) -->
-        <div id="kontenHal1" style="min-height: 200px;">
-            <!-- Dinamis diisi JavaScript -->
-        </div>
+        <div id="kontenHal1" style="min-height: 200px;"></div>
     </div>
 
     <!-- ======= HALAMAN 2: PRIORITAS DESA (PAGE BREAK) ======= -->
     <div style="page-break-before: always;" class="halaman-2">
-        <!-- KOP SURAT HALAMAN LANJUTAN (SEDERHANA) -->
+        <!-- KOP LANJUTAN DENGAN NOMOR SURAT YANG SAMA -->
         <div class="kop-lanjutan">
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
-                <span style="font-size: 11px;">Nomor: 460 / <span id="hashNomor2">DTSEN.002</span> / TKSK-SBR / 2026</span>
+                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan2"></span></span>
             </div>
         </div>
 
-        <!-- JUDUL SUB LAPORAN -->
         <h4 class="judul-surat">PRIORITAS INTERVENSI DTSEN</h4>
         <p style="font-size: 12px; text-align: center;">Data Prioritas Berdasarkan Desil 1 dan 2 (Sangat Miskin & Miskin)</p>
         
-        <!-- KONTEN HALAMAN 2 -->
         <div id="kontenHal2" style="min-height: 250px;"></div>
         
-        <!-- KETERANGAN -->
         <div style="margin-top: 20px; font-size: 11px;">
             <p><strong>Catatan:</strong> Prioritas intervensi ditetapkan berdasarkan jumlah penduduk dalam kategori Desil 1 dan 2. Wilayah dengan jumlah >400 KK masuk kategori prioritas tinggi.</p>
         </div>
@@ -400,11 +359,10 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
 
     <!-- ======= HALAMAN 3: BANSOS PER DESA ======= -->
     <div style="page-break-before: always;" class="halaman-3">
-        <!-- KOP LANJUTAN -->
         <div class="kop-lanjutan">
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
-                <span style="font-size: 11px;">Nomor: 460 / <span id="hashNomor3">DTSEN.003</span> / TKSK-SBR / 2026</span>
+                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan3"></span></span>
             </div>
         </div>
 
@@ -416,11 +374,10 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
 
     <!-- ======= HALAMAN 4: LAYANAN + QR + TTD ======= -->
     <div style="page-break-before: always;" class="halaman-4">
-        <!-- KOP LANJUTAN -->
         <div class="kop-lanjutan">
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
-                <span style="font-size: 11px;">Nomor: 460 / <span id="hashNomor4">DTSEN.004</span> / TKSK-SBR / 2026</span>
+                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan4"></span></span>
             </div>
         </div>
 
@@ -436,7 +393,7 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
             </p>
         </div>
 
-        <!-- TANDA TANGAN DAN QR CODE -->
+        <!-- TANDA TANGAN DAN QR CODE - URUTAN SESUAI PERMINTAAN -->
         <div class="row mt-5">
             <div class="col-7">
                 <div style="border: 1px solid #000; padding: 12px; font-size: 11px; background: #fcfcfc;">
@@ -450,21 +407,27 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
             </div>
 
             <div class="col-5 text-center">
-                <!-- TEMPAT DAN TANGGAL -->
-                <p style="font-size: 12px; margin-bottom: 5px;">Ditetapkan di : Sumber</p>
-                <p style="font-size: 12px; margin-bottom: 20px;">Pada tanggal : <span id="tglSekarang">_______________</span></p>
-                
-                <!-- QR CODE -->
+                <!-- 1. Tempat dan Tanggal -->
                 <div style="margin-bottom: 15px;">
-                    <div id="qrcode" class="qr-box"></div>
-                    <p style="font-size: 9px; margin-top: 5px;">Scan untuk verifikasi dokumen</p>
+                    <p style="font-size: 12px; margin-bottom: 2px;">Ditetapkan di : Sumber</p>
+                    <p style="font-size: 12px; margin-bottom: 5px;">Pada tanggal : <span id="tglSekarang">_______________</span></p>
                 </div>
                 
-                <!-- NAMA PENANDATANGAN -->
+                <!-- 2. Jabatan Penandatangan -->
                 <p style="font-size: 12px; margin-bottom: 5px;">Koordinator TKSK Kecamatan Sumber,</p>
-                <div style="margin-top: 50px;"></div>
-                <p class="nama-ttd" style="font-size: 14px;">SHIDIQ HASANUDIN, S.IP</p>
-                <p style="font-size: 10px; margin-top: 10px; color: #666;">
+                
+                <!-- 3. QR CODE (TANPA TULISAN SCAN) -->
+                <div style="margin: 15px 0 10px 0;">
+                    <div id="qrcode" class="qr-box" style="margin: 0 auto; width: 100px; height: 100px;"></div>
+                </div>
+                
+                <!-- 4. Nama Lengkap dan Gelar -->
+                <p class="nama-ttd" style="font-size: 14px; font-weight: 700; margin-bottom: 2px; text-decoration: underline;">
+                    SHIDIQ HASANUDIN, S.IP
+                </p>
+                
+                <!-- 5. ID Verifikasi -->
+                <p style="font-size: 10px; margin-top: 5px; color: #666;">
                     ID Verifikasi: <span id="hashID">DTSEN-SBR-2026-001</span>
                 </p>
             </div>
@@ -481,6 +444,10 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
 
 <!-- SCRIPT EXTERNAL -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+     // 1. Navbar Loader
+  fetch('navbar.html').then(r => r.text()).then(h => document.getElementById('navbar').innerHTML = h).catch(e => {});
+</script>
 <script type="module" src="js/unduh.js"></script>
 
 </body>
