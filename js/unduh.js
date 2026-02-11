@@ -721,7 +721,7 @@ async function renderHalaman4(dataWilayah) {
                     <tbody>
                         <tr>
                             <td style="padding: 10px; border: 1px solid #000;">
-                                <strong style="font-size: 13px;">DTKS</strong>
+                                <strong style="font-size: 13px;">Pembaruan DTSEN</strong>
                                 <span style="color: #666; font-size: 10px; margin-left: 8px;">(Data Terpadu Kesejahteraan Sosial)</span>
                             </td>
                             <td style="padding: 10px; border: 1px solid #000; text-align: right; font-weight: 700; color: #007bff;">
@@ -827,7 +827,7 @@ async function renderHalaman4(dataWilayah) {
                             <tr style="background: #f8f9fa;">
                                 <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: 600;">Total KK</td>
                                 <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: 600;">D1+D2</td>
-                                <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: 600;">DTKS</td>
+                                <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: 600;">Pembaruan DTSEN</td>
                                 <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: 600;">SKTM</td>
                                 <td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: 600;">Pengaduan</td>
                             </tr>
@@ -946,7 +946,7 @@ async function renderHalaman4(dataWilayah) {
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding: 10px; border: 1px solid #000;"><strong>DTKS</strong> (Data Terpadu Kesejahteraan Sosial)</td>
+                            <td style="padding: 10px; border: 1px solid #000;"><strong>Pembaharuan DTSEN</strong> (Data Tunggal Sosial Ekonomi Nasional)</td>
                             <td style="padding: 10px; border: 1px solid #000; text-align: right; font-weight: 700;">${formatNumber(totalKKDTSEN)} KK</td>
                             <td style="padding: 10px; border: 1px solid #000; text-align: right;">100%</td>
                         </tr>
