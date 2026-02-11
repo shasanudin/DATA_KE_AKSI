@@ -337,7 +337,7 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
         <div id="kontenHal1" style="min-height: 200px;"></div>
     </div>
 
-    <!-- ======= HALAMAN 2: PRIORITAS DESA (PAGE BREAK) ======= -->
+    <!-- ======= HALAMAN 2: PRIORITAS INTERVENSI DTSEN (PAGE BREAK) ======= -->
     <div style="page-break-before: always;" class="halaman-2">
         <!-- KOP LANJUTAN DENGAN NOMOR SURAT YANG SAMA -->
         <div class="kop-lanjutan">
@@ -350,14 +350,11 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
         <h4 class="judul-surat">PRIORITAS INTERVENSI DTSEN</h4>
         <p style="font-size: 12px; text-align: center;">Data Prioritas Berdasarkan Desil 1 dan 2 (Sangat Miskin & Miskin)</p>
         
+        <!-- KONTEN HALAMAN 2 - PRIORITAS INTERVENSI -->
         <div id="kontenHal2" style="min-height: 250px;"></div>
-        
-        <div style="margin-top: 20px; font-size: 11px;">
-            <p><strong>Catatan:</strong> Prioritas intervensi ditetapkan berdasarkan jumlah penduduk dalam kategori Desil 1 dan 2. Wilayah dengan jumlah >400 KK masuk kategori prioritas tinggi.</p>
-        </div>
     </div>
 
-    <!-- ======= HALAMAN 3: BANSOS PER DESA ======= -->
+    <!-- ======= HALAMAN 3: REKAP BANTUAN SOSIAL PER DESA ======= -->
     <div style="page-break-before: always;" class="halaman-3">
         <div class="kop-lanjutan">
             <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -369,10 +366,11 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
         <h4 class="judul-surat">REKAP BANTUAN SOSIAL PER DESA</h4>
         <p style="font-size: 12px; text-align: center;">Distribusi Bantuan Sosial Berdasarkan Wilayah</p>
         
+        <!-- KONTEN HALAMAN 3 - BANSOS -->
         <div id="kontenHal3" style="min-height: 250px;"></div>
     </div>
 
-    <!-- ======= HALAMAN 4: LAYANAN + QR + TTD ======= -->
+    <!-- ======= HALAMAN 4: REKAPITULASI LAYANAN SOSIAL + QR + TTD ======= -->
     <div style="page-break-before: always;" class="halaman-4">
         <div class="kop-lanjutan">
             <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -384,6 +382,7 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
         <h4 class="judul-surat">REKAPITULASI LAYANAN SOSIAL</h4>
         <p style="font-size: 12px; text-align: center;">Data Layanan dan Program Bantuan Sosial</p>
         
+        <!-- KONTEN HALAMAN 4 - LAYANAN SOSIAL -->
         <div id="kontenHal4" style="min-height: 200px;"></div>
 
         <!-- BAGIAN PENUTUP SURAT -->
@@ -445,8 +444,13 @@ body{font-family:'Inter',sans-serif;background:#f4f7f6;}
 <!-- SCRIPT EXTERNAL -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-     // 1. Navbar Loader
-  fetch('navbar.html').then(r => r.text()).then(h => document.getElementById('navbar').innerHTML = h).catch(e => {});
+    // Navbar Loader
+    fetch('navbar.html')
+        .then(response => response.ok ? response.text() : '')
+        .then(html => {
+            if (html) document.getElementById('navbar').innerHTML = html;
+        })
+        .catch(e => console.log('Navbar not loaded'));
 </script>
 <script type="module" src="js/unduh.js"></script>
 
