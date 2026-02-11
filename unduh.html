@@ -1,1587 +1,458 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>LPJ Strategis DTSEN | TKSK & Puskesos Kecamatan Sumber</title>
-    
-    <!-- Bootstrap 4 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- QR Code -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
-    <!-- PDF Export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
-    <style>
-        /* ===== VARIABLES ===== */
-        :root {
-            --primary: #0a58ca;
-            --primary-dark: #084298;
-            --primary-light: #e7f1ff;
-            --secondary: #6c757d;
-            --success: #28a745;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --info: #17a2b8;
-            --dark: #1a2e3f;
-            --dark-light: #2c3e50;
-            --gray-100: #f8f9fa;
-            --gray-200: #e9ecef;
-            --gray-300: #dee2e6;
-            --gray-600: #6c757d;
-            --gray-800: #343a40;
-            --border-radius: 16px;
-            --box-shadow: 0 15px 40px rgba(0,0,0,0.03);
-            --transition: all 0.3s ease;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f5f7fa;
-            color: #2c3e50;
-            line-height: 1.7;
-        }
-
-        h1, h2, h3, h4 {
-            font-family: 'Lora', serif;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        /* ===== LPJ CONTAINER ===== */
-        .lpj-container {
-            max-width: 1100px;
-            margin: 30px auto;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 50px 45px;
-            position: relative;
-        }
-
-        /* ===== HEADER LPJ - BUKAN SURAT ===== */
-        .lpj-header {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 40px;
-            border-bottom: 2px dashed var(--gray-300);
-            padding-bottom: 30px;
-        }
-
-        .lpj-brand {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .lpj-logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .lpj-logo img {
-            height: 55px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .lpj-title-main {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--dark);
-            margin-bottom: 5px;
-            letter-spacing: -0.5px;
-        }
-
-        .lpj-subtitle {
-            font-size: 16px;
-            color: var(--gray-600);
-            font-weight: 500;
-        }
-
-        .lpj-id {
-            background: var(--primary-light);
-            padding: 12px 25px;
-            border-radius: 50px;
-            text-align: center;
-            border: 1px solid rgba(10,88,202,0.2);
-        }
-
-        .lpj-id strong {
-            color: var(--primary);
-            font-size: 14px;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .lpj-id span {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--dark);
-            font-family: monospace;
-        }
-
-        .lpj-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--gray-100);
-            padding: 15px 25px;
-            border-radius: 12px;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        /* ===== STATISTIK PREMIUM ===== */
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .stat-card {
-            background: white;
-            border: 1px solid var(--gray-200);
-            border-radius: 16px;
-            padding: 25px 20px;
-            transition: var(--transition);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.01);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 6px;
-            background: linear-gradient(90deg, var(--primary), var(--info));
-        }
-
-        .stat-card-2::before { background: linear-gradient(90deg, #dc3545, #fd7e14); }
-        .stat-card-3::before { background: linear-gradient(90deg, #ffc107, #fd7e14); }
-        .stat-card-4::before { background: linear-gradient(90deg, #28a745, #20c997); }
-
-        .stat-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--gray-600);
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .stat-value {
-            font-size: 36px;
-            font-weight: 800;
-            color: var(--dark);
-            line-height: 1;
-            margin-bottom: 5px;
-        }
-
-        .stat-desc {
-            font-size: 13px;
-            color: var(--gray-600);
-        }
-
-        /* ===== NARASI BOX ===== */
-        .narasi-box {
-            background: linear-gradient(145deg, #f8fcff, #f0f7ff);
-            border-radius: 20px;
-            padding: 30px 35px;
-            margin: 30px 0;
-            border-left: 8px solid var(--primary);
-            position: relative;
-        }
-
-        .narasi-box::after {
-            content: '\201C';
-            position: absolute;
-            top: -20px;
-            left: 20px;
-            font-size: 120px;
-            color: rgba(10,88,202,0.1);
-            font-family: Georgia, serif;
-        }
-
-        .narasi-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .narasi-text {
-            font-size: 16px;
-            line-height: 1.8;
-            color: var(--dark-light);
-            margin-bottom: 0;
-        }
-
-        /* ===== PRIORITAS CARD ===== */
-        .prioritas-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            margin: 25px 0;
-        }
-
-        .prioritas-card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            border: 1px solid var(--gray-200);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.02);
-            transition: var(--transition);
-        }
-
-        .prioritas-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(10,88,202,0.08);
-        }
-
-        .prioritas-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-
-        .prioritas-high .prioritas-icon { background: rgba(220,53,69,0.1); color: #dc3545; }
-        .prioritas-medium .prioritas-icon { background: rgba(255,193,7,0.1); color: #ffc107; }
-        .prioritas-low .prioritas-icon { background: rgba(40,167,69,0.1); color: #28a745; }
-
-        .prioritas-title {
-            font-size: 18px;
-            font-weight: 800;
-            margin-bottom: 10px;
-        }
-
-        .prioritas-desc {
-            color: var(--gray-600);
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-
-        .prioritas-badge {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .badge-high { background: #dc3545; color: white; }
-        .badge-medium { background: #ffc107; color: black; }
-        .badge-low { background: #28a745; color: white; }
-
-        /* ===== PROGRAM CARD ===== */
-        .program-section {
-            margin: 40px 0;
-        }
-
-        .program-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
-        }
-
-        .program-card {
-            background: white;
-            border: 1px solid var(--gray-200);
-            border-radius: 16px;
-            padding: 25px;
-            transition: var(--transition);
-        }
-
-        .program-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .program-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--primary-light);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            font-size: 22px;
-        }
-
-        .program-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .program-sub {
-            font-size: 13px;
-            color: var(--gray-600);
-        }
-
-        .program-desc {
-            color: var(--dark-light);
-            font-size: 14px;
-            margin-bottom: 15px;
-            line-height: 1.7;
-        }
-
-        .program-budget {
-            background: var(--gray-100);
-            padding: 12px 15px;
-            border-radius: 10px;
-            font-size: 13px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .budget-source {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 700;
-            background: #d1e7dd;
-            color: #0f5132;
-        }
-
-        /* ===== CSR SECTION ===== */
-        .csr-section {
-            background: linear-gradient(145deg, #f6f9fc, #edf2f7);
-            border-radius: 20px;
-            padding: 35px;
-            margin: 40px 0;
-            border: 1px solid rgba(10,88,202,0.1);
-        }
-
-        .csr-header {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .csr-icon {
-            width: 70px;
-            height: 70px;
-            background: white;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            font-size: 32px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
-        }
-
-        .csr-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--dark);
-        }
-
-        .csr-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .csr-item {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid var(--gray-200);
-            transition: var(--transition);
-        }
-
-        .csr-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            border-color: var(--primary);
-        }
-
-        .csr-partner {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--dark);
-        }
-
-        .csr-program {
-            font-size: 13px;
-            color: var(--gray-600);
-            margin-bottom: 15px;
-        }
-
-        .csr-tag {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 700;
-            background: #cff4fc;
-            color: #055160;
-        }
-
-        /* ===== ROADMAP ===== */
-        .roadmap {
-            margin: 40px 0;
-        }
-
-        .roadmap-timeline {
-            position: relative;
-            padding: 20px 0;
-        }
-
-        .roadmap-item {
-            display: flex;
-            gap: 25px;
-            margin-bottom: 25px;
-            position: relative;
-            padding-left: 30px;
-        }
-
-        .roadmap-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 10px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--primary);
-        }
-
-        .roadmap-item::after {
-            content: '';
-            position: absolute;
-            left: 5px;
-            top: 25px;
-            width: 2px;
-            height: calc(100% + 15px);
-            background: var(--gray-300);
-        }
-
-        .roadmap-item:last-child::after {
-            display: none;
-        }
-
-        .roadmap-date {
-            min-width: 100px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .roadmap-content {
-            flex: 1;
-        }
-
-        .roadmap-title {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .roadmap-desc {
-            color: var(--gray-600);
-            font-size: 14px;
-        }
-
-        /* ===== TABEL DATA ===== */
-        .table-responsive {
-            margin: 25px 0;
-            border-radius: 16px;
-            border: 1px solid var(--gray-200);
-            overflow: hidden;
-        }
-
-        .table-lpj {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        .table-lpj th {
-            background: var(--gray-100);
-            padding: 14px 12px;
-            font-weight: 700;
-            color: var(--dark);
-            border-bottom: 2px solid var(--gray-300);
-            text-align: left;
-        }
-
-        .table-lpj td {
-            padding: 12px;
-            border-bottom: 1px solid var(--gray-200);
-            vertical-align: middle;
-        }
-
-        .table-lpj tr:last-child td {
-            border-bottom: none;
-        }
-
-        .table-lpj tr:hover {
-            background: var(--primary-light);
-        }
-
-        /* ===== TANDA TANGAN ===== */
-        .signature-section {
-            margin-top: 60px;
-            padding-top: 30px;
-            border-top: 2px solid var(--gray-300);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .signature-left {
-            flex: 1;
-        }
-
-        .signature-right {
-            text-align: center;
-            max-width: 300px;
-        }
-
-        .qrcode-wrapper {
-            display: inline-block;
-            padding: 10px;
-            background: white;
-            border: 1px solid var(--gray-200);
-            border-radius: 12px;
-            margin-bottom: 15px;
-        }
-
-        .signature-name {
-            font-weight: 800;
-            font-size: 18px;
-            color: var(--dark);
-            margin-top: 10px;
-        }
-
-        .signature-title {
-            color: var(--gray-600);
-            font-size: 13px;
-        }
-
-        /* ===== FOOTER ===== */
-        .lpj-footer {
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px dashed var(--gray-300);
-            font-size: 11px;
-            color: var(--gray-600);
-            text-align: center;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 992px) {
-            .stat-grid, .prioritas-grid, .program-grid, .csr-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .lpj-container { padding: 30px 20px; }
-            .stat-grid, .prioritas-grid, .program-grid, .csr-grid {
-                grid-template-columns: 1fr;
-            }
-            .lpj-brand { flex-direction: column; gap: 20px; }
-            .signature-section { flex-direction: column; align-items: center; gap: 30px; }
-        }
-
-        /* ===== LOADING ===== */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            flex-direction: column;
-        }
-
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid var(--gray-200);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .no-print {
-            display: block;
-        }
-
-        @media print {
-            .no-print { display: none !important; }
-            .lpj-container { box-shadow: none; }
-            body { background: white; }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data DTSEN | TKSK & Puskesos Sumber</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<style>
+body{font-family:'Inter',sans-serif;background:#f4f7f6;}
+.paper{background:#fff;width:210mm;min-height:297mm;padding:15mm 20mm;margin:30px auto;box-shadow:0 0 20px rgba(0,0,0,.05);font-family:"Times New Roman", Times, serif;color:#000;}
+
+/* ============ KOP SURAT STANDAR PEMERINTAH ============ */
+.kop-surat-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.logo-box {
+    width: 85px;
+    flex-shrink: 0;
+}
+
+.logo-kop {
+    width: 100%;
+}
+
+.teks-kop {
+    text-align: center;
+    flex-grow: 1;
+}
+
+.instansi-utama {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.nama-lembaga {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 2px 0;
+    text-transform: uppercase;
+    color: #000;
+}
+
+.nama-program {
+    font-size: 26px;
+    font-weight: 800;
+    margin: 4px 0;
+    letter-spacing: 1px;
+    color: #000;
+}
+
+.alamat-kantor {
+    font-size: 11px;
+    margin: 2px 0;
+    font-style: normal;
+}
+
+.kop-line {
+    border-bottom: 1px solid #000;
+    margin: 2px 0 10px;
+}
+
+/* ============ KOP UNTUK HALAMAN BERIKUTNYA ============ */
+.kop-lanjutan {
+    margin-bottom: 25px;
+    border-bottom: 1px solid #666;
+    padding-bottom: 8px;
+}
+
+.kop-lanjutan .instansi-singkat {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #333;
+}
+
+.nomor-surat-lanjutan {
+    font-size: 11px;
+    color: #333;
+}
+
+/* ============ STYLE SURAT ============ */
+.judul-surat {
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: underline;
+    margin: 20px 0;
+    text-transform: uppercase;
+}
+
+.tabel-data {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 11px;
+}
+
+.tabel-data th {
+    background: #f0f0f0;
+    font-weight: 600;
+    padding: 8px 5px;
+    border: 1px solid #000;
+    text-align: center;
+}
+
+.tabel-data td {
+    padding: 6px 5px;
+    border: 1px solid #000;
+}
+
+/* Tanda Tangan */
+.nama-ttd {
+    font-weight: 700;
+    margin-top: 5px;
+    text-decoration: underline;
+}
+
+/* QR Code */
+.qr-box {
+    border: 1px solid #ddd;
+    padding: 10px;
+    background: #fff;
+    display: inline-block;
+    margin: 10px 0;
+}
+
+/* Footer Surat */
+.footer-surat {
+    font-size: 10px;
+    text-align: center;
+    margin-top: 30px;
+    color: #666;
+    border-top: 1px dashed #999;
+    padding-top: 10px;
+}
+
+/* ============ MEDIA PRINT ============ */
+@media print{
+  body *{visibility:hidden;}
+  .paper,.paper *{visibility:visible;}
+  .paper{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%!important;
+    margin:0!important;
+    padding:15mm 20mm!important;
+    box-shadow:none!important;
+  }
+  .no-print,#navbar,header,.container.my-5,button{
+    display:none!important;
+  }
+  @page{
+    size:A4;
+    margin:15mm 20mm;
+  }
+}
+
+/* Utility */
+.qr-placeholder {
+    width: 100px;
+    height: 100px;
+    background: #f9f9f9;
+    border: 1px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+</style>
 </head>
 <body>
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner"></div>
-        <p style="margin-top: 20px; font-weight: 600; color: var(--primary);">Menyusun LPJ Strategis DTSEN...</p>
-        <p style="color: var(--gray-600); font-size: 14px;">Mengintegrasikan data prioritas & kemitraan CSR</p>
-    </div>
 
-    <!-- Control Panel -->
-    <div class="container-fluid bg-light py-3 no-print">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h4 class="font-weight-bold"><i class="fas fa-file-alt text-primary"></i> LPJ Strategis DTSEN 2026</h4>
-                    <p class="mb-0 text-muted">Kecamatan Sumber · Pendekatan Prioritas & Kemitraan Berkelanjutan</p>
-                </div>
-                <div class="col-md-6 text-right">
-                    <button class="btn btn-primary" onclick="generateLPJ()">
-                        <i class="fas fa-sync-alt"></i> Generate LPJ
-                    </button>
-                    <button class="btn btn-success ml-2" onclick="exportPDF()">
-                        <i class="fas fa-file-pdf"></i> Export PDF
-                    </button>
-                    <button class="btn btn-secondary ml-2" onclick="window.print()">
-                        <i class="fas fa-print"></i> Print
-                    </button>
-                    <a href="index.html" class="btn btn-outline-dark ml-2">
-                        <i class="fas fa-arrow-left"></i> Dashboard
-                    </a>
-                </div>
-            </div>
-            <div class="row mt-3" id="dataStats"></div>
+<!-- HEADER -->
+<header class="container py-3 bg-white no-print">
+<div class="row align-items-center">
+<div class="col-md-6">
+<img src="assets/img/logo/logo-tksk.png" height="45" onerror="this.style.display='none'">
+<img src="assets/img/logo/logo-puskesos.png" height="45" class="ml-2 border-left pl-2" onerror="this.style.display='none'">
+</div>
+<div class="col-md-6 text-right d-none d-md-block">
+<span class="badge badge-primary px-3 py-2">
+    <i class="fas fa-file-alt mr-1"></i> Satu Data Terpadu DTSEN
+</span>
+</div>
+</div>
+</header>
+
+<!-- NAVBAR -->
+<div id="navbar" class="no-print"></div>
+
+<!-- PANEL GENERATE -->
+<div class="container my-5 no-print">
+    <div class="row mb-3">
+        <div class="col-12">
+            <h3 class="font-weight-bold mb-2">
+                <i class="fas fa-file-pdf mr-2 text-primary"></i>
+                Cetak Dokumen DTSEN
+            </h3>
+            <p class="text-muted">Generate laporan dalam format surat resmi dengan kop standar pemerintahan</p>
         </div>
     </div>
+    
+    <div class="card shadow-sm p-4 mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="small font-weight-bold text-uppercase">
+                            <i class="fas fa-file-export mr-1"></i> Mode Laporan
+                        </label>
+                        <select id="mode" class="form-control">
+                            <option value="agregat">Agregasi Data Kecamatan</option>
+                            <option value="prioritas">Prioritas Intervensi (Desil 1-2)</option>
+                            <option value="desa">Rekap Data Per Desa</option>
+                        </select>
+                    </div>
 
-    <!-- LPJ CONTAINER -->
-    <div id="lpjContainer"></div>
-
-    <!-- Firebase SDK -->
-    <script type="module">
-        // ============================================================
-        // FIREBASE INITIALIZATION
-        // ============================================================
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-        import { 
-            getFirestore, 
-            collection, 
-            getDocs,
-            query,
-            orderBy
-        } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
-            authDomain: "data-ke-aksi-auth.firebaseapp.com",
-            projectId: "data-ke-aksi-auth",
-            storageBucket: "data-ke-aksi-auth.firebasestorage.app",
-            messagingSenderId: "631382692174",
-            appId: "1:631382692174:web:c10a099fb3021849eace1f"
-        };
-
-        // Initialize Firebase
-        let db;
-        try {
-            const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            console.log('✅ Firebase initialized');
-        } catch (error) {
-            console.error('❌ Firebase init error:', error);
-        }
-
-        // ============================================================
-        // GLOBAL VARIABLES
-        // ============================================================
-        let wilayahData = [];
-        let laporanID = '';
-        let rekomendasiCSR = [];
-
-        // ============================================================
-        // UTILITY FUNCTIONS
-        // ============================================================
-        function formatNumber(num) {
-            if (num === undefined || num === null) return '0';
-            return new Intl.NumberFormat('id-ID').format(num);
-        }
-
-        function formatDate(date = new Date()) {
-            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
-                          'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-        }
-
-        function generateLaporanID() {
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const random = Math.floor(Math.random() * 900 + 100);
-            return `LPJ-STRATEGIS/${year}${month}/${random}`;
-        }
-
-        function generateVerificationId() {
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const day = date.getDate().toString().padStart(2, '0');
-            const random = Math.random().toString(36).substring(2, 8).toUpperCase();
-            return `DTSEN-SBR-${year}${month}${day}-${random}`;
-        }
-
-        function showLoading(show) {
-            const overlay = document.getElementById('loadingOverlay');
-            if (overlay) overlay.style.display = show ? 'flex' : 'none';
-        }
-
-        // ============================================================
-        // LOAD DATA DARI FIREBASE
-        // ============================================================
-        async function loadDataFromFirebase() {
-            try {
-                showLoading(true);
-                
-                const q = query(collection(db, "wilayah_desa"), orderBy("nama", "asc"));
-                const querySnapshot = await getDocs(q);
-                const data = [];
-                
-                querySnapshot.forEach((doc) => {
-                    const docData = doc.data();
-                    let desilArray = docData.desil || [];
-                    
-                    if (!Array.isArray(desilArray)) {
-                        if (desilArray && typeof desilArray === 'object') {
-                            desilArray = Object.values(desilArray);
-                        } else {
-                            desilArray = Array(10).fill(0);
-                        }
-                    }
-                    
-                    while (desilArray.length < 10) desilArray.push(0);
-                    
-                    data.push({
-                        id: doc.id,
-                        nama: docData.nama_wilayah || docData.nama || doc.id,
-                        kecamatan: 'Sumber',
-                        desil: desilArray.map(v => parseInt(v) || 0),
-                        total_kk: desilArray.reduce((a, b) => (a || 0) + (b || 0), 0),
-                        d1: desilArray[0] || 0,
-                        d2: desilArray[1] || 0,
-                        d3: desilArray[2] || 0,
-                        d4: desilArray[3] || 0,
-                        d5_10: desilArray.slice(4).reduce((a, b) => (a || 0) + (b || 0), 0),
-                        layanan: docData.layanan || { dtks: 0, sktm: 0, pengaduan: 0 },
-                        bansos: docData.bansos || { pkh: 0, bpnt: 0, pbi: 0 }
-                    });
-                });
-                
-                wilayahData = data.filter(item => item.nama && item.total_kk > 0);
-                wilayahData.sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
-                
-                updateDataStats();
-                return wilayahData;
-                
-            } catch (error) {
-                console.error('❌ Error loading from Firebase:', error);
-                wilayahData = generateSampleData();
-                updateDataStats();
-                return wilayahData;
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // Sample data fallback
-        function generateSampleData() {
-            const desaList = [
-                'Sumbergedang', 'Sumberduren', 'Sumbersari', 'Sumberrejo', 'Sumberagung',
-                'Sumberpucung', 'Sumberejo Kidul', 'Sumberwono', 'Sumberpatut', 'Sumberkembar',
-                'Sumberjaya', 'Sumbermulya', 'Sumberbendo', 'Sumbertengah', 'Sumberkarang'
-            ];
-            
-            return desaList.map((nama, index) => {
-                let d1, d2;
-                if (index < 4) {
-                    d1 = Math.floor(Math.random() * 180) + 400; // >500
-                    d2 = Math.floor(Math.random() * 150) + 250;
-                } else if (index < 9) {
-                    d1 = Math.floor(Math.random() * 150) + 200; // 300-500
-                    d2 = Math.floor(Math.random() * 100) + 150;
-                } else {
-                    d1 = Math.floor(Math.random() * 100) + 50;  // <300
-                    d2 = Math.floor(Math.random() * 80) + 50;
-                }
-                
-                return {
-                    id: `sample-${index + 1}`,
-                    nama: nama,
-                    kecamatan: 'Sumber',
-                    desil: [d1, d2, Math.floor(Math.random()*80)+40, Math.floor(Math.random()*60)+30, ...Array(6).fill(Math.floor(Math.random()*40)+20)],
-                    total_kk: d1 + d2 + Math.floor(Math.random()*400) + 300,
-                    d1, d2, d3: Math.floor(Math.random()*80)+40, d4: Math.floor(Math.random()*60)+30,
-                    d5_10: Math.floor(Math.random()*300) + 200,
-                    layanan: { dtks: Math.floor(Math.random()*200)+100, sktm: Math.floor(Math.random()*150)+50, pengaduan: Math.floor(Math.random()*80)+20 },
-                    bansos: { pkh: Math.floor(Math.random()*300)+200, bpnt: Math.floor(Math.random()*400)+250, pbi: Math.floor(Math.random()*500)+300 }
-                };
-            }).sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
-        }
-
-        // ============================================================
-        // UPDATE STATISTIK
-        // ============================================================
-        function updateDataStats() {
-            const statsContainer = document.getElementById('dataStats');
-            if (!statsContainer) return;
-            
-            if (wilayahData.length === 0) {
-                statsContainer.innerHTML = '<div class="col-12"><div class="alert alert-warning">Tidak ada data ditemukan</div></div>';
-                return;
-            }
-            
-            const totalKK = wilayahData.reduce((sum, i) => sum + i.total_kk, 0);
-            const totalD12 = wilayahData.reduce((sum, i) => sum + i.d1 + i.d2, 0);
-            const prioritasTinggi = wilayahData.filter(i => i.d1 + i.d2 > 500).length;
-            
-            statsContainer.innerHTML = `
-                <div class="col-md-3">
-                    <div class="alert alert-info mb-0 py-3">
-                        <small>Total Desa</small>
-                        <h3 class="mb-0 font-weight-bold">${wilayahData.length}</h3>
+                    <div class="col-md-6" id="desaWrap" style="display:none;">
+                        <label class="small font-weight-bold text-uppercase">
+                            <i class="fas fa-map-marker-alt mr-1"></i> Pilih Desa
+                        </label>
+                        <select id="desaSelect" class="form-control"></select>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="alert alert-primary mb-0 py-3">
-                        <small>KK Terdata</small>
-                        <h3 class="mb-0 font-weight-bold">${formatNumber(totalKK)}</h3>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="alert alert-warning mb-0 py-3">
-                        <small>Prioritas Tinggi</small>
-                        <h3 class="mb-0 font-weight-bold">${prioritasTinggi}</h3>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="alert alert-success mb-0 py-3">
-                        <small>KK Prioritas</small>
-                        <h3 class="mb-0 font-weight-bold">${formatNumber(totalD12)}</h3>
-                    </div>
-                </div>
-            `;
-        }
+            </div>
 
-        // ============================================================
-        // GENERATE QR CODE
-        // ============================================================
-        function generateQRCode(containerId, verificationId) {
-            const qrContainer = document.getElementById(containerId);
-            if (!qrContainer) return;
-            
-            qrContainer.innerHTML = '';
-            
-            const totalKK = wilayahData.reduce((sum, i) => sum + i.total_kk, 0);
-            const totalD12 = wilayahData.reduce((sum, i) => sum + i.d1 + i.d2, 0);
-            const prioritasTinggi = wilayahData.filter(i => i.d1 + i.d2 > 500).length;
-            
-            const qrData = {
-                id: verificationId,
-                laporan: laporanID,
-                tanggal: formatDate(),
-                desa: wilayahData.length,
-                total_kk: totalKK,
-                prioritas_kk: totalD12,
-                prioritas_desa: prioritasTinggi,
-                instansi: 'TKSK Puskesos Sumber',
-                penandatangan: 'SHIDIQ HASANUDIN, S.IP'
-            };
-            
-            try {
-                new QRCode(qrContainer, {
-                    text: JSON.stringify(qrData),
-                    width: 110,
-                    height: 110,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.H
-                });
-            } catch (error) {
-                console.error('QR Code error:', error);
-            }
-        }
-
-        // ============================================================
-        // GENERATE REKOMENDASI CSR
-        // ============================================================
-        function generateRekomendasiCSR() {
-            const totalKK = wilayahData.reduce((sum, i) => sum + i.total_kk, 0);
-            const totalD12 = wilayahData.reduce((sum, i) => sum + i.d1 + i.d2, 0);
-            const prioritasTinggi = wilayahData.filter(i => i.d1 + i.d2 > 500).length;
-            const prioritasSedang = wilayahData.filter(i => {
-                const d12 = i.d1 + i.d2;
-                return d12 >= 300 && d12 <= 500;
-            }).length;
-            
-            // Top 3 prioritas
-            const top3 = wilayahData.slice(0, 3).map(d => d.nama);
-            
-            // Rekomendasi CSR dinamis berdasarkan data
-            return {
-                csrPartners: [
-                    {
-                        partner: "PT PLN (Persero) UP3 Cirebon",
-                        program: "Program Listrik Hemat & Bantuan Sambungan Listrik Gratis",
-                        target: `${prioritasTinggi} desa prioritas tinggi`,
-                        bentuk: "Bantuan 500 sambungan listrik + pelatihan hemat energi",
-                        tag: "Infrastruktur"
-                    },
-                    {
-                        partner: "Bank BJB Cabang Sumber",
-                        program: "KUR Super Mikro & Literasi Keuangan",
-                        target: `${formatNumber(Math.floor(totalD12 * 0.15))} KK prioritas`,
-                        bentuk: "Pendampingan usaha mikro dan akses pembiayaan 0% bunga 6 bulan",
-                        tag: "Pemberdayaan"
-                    },
-                    {
-                        partner: "PT Indofood Sukses Makmur",
-                        program: "Program Pangan Bergizi untuk Balita",
-                        target: `500 balita di ${top3[0]}, ${top3[1]}, ${top3[2]}`,
-                        bentuk: "Bantuan paket makanan tambahan 3 bulan",
-                        tag: "Kesehatan"
-                    },
-                    {
-                        partner: "Rumah Zakat Indonesia",
-                        program: "Desa Berdaya DTSEN",
-                        target: `${prioritasSedang} desa prioritas sedang`,
-                        bentuk: "Pelatihan kewirausahaan dan modal bergulir",
-                        tag: "Pemberdayaan"
-                    },
-                    {
-                        partner: "PT Astra Honda Motor",
-                        program: "Kampung Bersih Astra",
-                        target: `5 desa prioritas`,
-                        bentuk: "Pengelolaan sampah terpadu dan bank sampah",
-                        tag: "Lingkungan"
-                    },
-                    {
-                        partner: "Yayasan Bangun Sejahtera Mitra",
-                        program: "Beasiswa Anak Prestasi",
-                        target: `100 anak dari keluarga prioritas`,
-                        bentuk: "Bantuan biaya pendidikan SD-SMA",
-                        tag: "Pendidikan"
-                    }
-                ],
-                impact: {
-                    penerimaManfaat: Math.floor(totalD12 * 0.35),
-                    estimasiNilai: Math.floor(totalD12 * 0.5 * 2.5),
-                    programPrioritas: 6,
-                    potensiMitra: 12
-                }
-            };
-        }
-
-        // ============================================================
-        // BUILD LPJ STRATEGIS
-        // ============================================================
-        function buildLPJHTML() {
-            if (wilayahData.length === 0) return '<div class="alert alert-danger">Tidak ada data</div>';
-            
-            laporanID = generateLaporanID();
-            const verificationId = generateVerificationId();
-            const csrData = generateRekomendasiCSR();
-            
-            // Hitung agregat
-            const totalKK = wilayahData.reduce((sum, i) => sum + i.total_kk, 0);
-            const totalD1 = wilayahData.reduce((sum, i) => sum + i.d1, 0);
-            const totalD2 = wilayahData.reduce((sum, i) => sum + i.d2, 0);
-            const totalD12 = totalD1 + totalD2;
-            const totalD34 = wilayahData.reduce((sum, i) => sum + i.d3 + i.d4, 0);
-            const totalD510 = wilayahData.reduce((sum, i) => sum + i.d5_10, 0);
-            
-            // Statistik prioritas
-            const prioritasTinggi = wilayahData.filter(i => i.d1 + i.d2 > 500).length;
-            const prioritasSedang = wilayahData.filter(i => {
-                const d12 = i.d1 + i.d2;
-                return d12 >= 300 && d12 <= 500;
-            }).length;
-            const prioritasRendah = wilayahData.filter(i => i.d1 + i.d2 < 300).length;
-            
-            const totalKKPrioritasTinggi = wilayahData
-                .filter(i => i.d1 + i.d2 > 500)
-                .reduce((sum, i) => sum + i.d1 + i.d2, 0);
-            
-            const totalKKPrioritasSedang = wilayahData
-                .filter(i => {
-                    const d12 = i.d1 + i.d2;
-                    return d12 >= 300 && d12 <= 500;
-                })
-                .reduce((sum, i) => sum + i.d1 + i.d2, 0);
-            
-            // Top 5 prioritas
-            const top5 = wilayahData.slice(0, 5);
-            const top3 = wilayahData.slice(0, 3);
-            
-            // Data bansos
-            const totalPKH = wilayahData.reduce((sum, i) => sum + (i.bansos?.pkh || 0), 0);
-            const totalBPNT = wilayahData.reduce((sum, i) => sum + (i.bansos?.bpnt || 0), 0);
-            const totalPBI = wilayahData.reduce((sum, i) => sum + (i.bansos?.pbi || 0), 0);
-            
-            // Data layanan
-            const totalSKTM = wilayahData.reduce((sum, i) => sum + (i.layanan?.sktm || 0), 0);
-            const totalPengaduan = wilayahData.reduce((sum, i) => sum + (i.layanan?.pengaduan || 0), 0);
-            const totalDTKS = wilayahData.reduce((sum, i) => sum + (i.layanan?.dtks || 0), 0);
-            
-            // Tabel prioritas (Top 10)
-            let tabelPrioritas = '';
-            wilayahData.slice(0, 10).forEach((item, index) => {
-                const d12 = item.d1 + item.d2;
-                const persen = totalD12 > 0 ? ((d12 / totalD12) * 100).toFixed(1) : '0';
-                tabelPrioritas += `<tr>
-                    <td style="text-align: center;">${index + 1}</td>
-                    <td><strong>${item.nama}</strong></td>
-                    <td style="text-align: right;">${formatNumber(item.d1)}</td>
-                    <td style="text-align: right;">${formatNumber(item.d2)}</td>
-                    <td style="text-align: right; font-weight: 700;">${formatNumber(d12)}</td>
-                    <td style="text-align: right;">${persen}%</td>
-                    <td style="text-align: center;">
-                        <span style="background: ${d12 > 500 ? '#dc3545' : d12 >= 300 ? '#ffc107' : '#28a745'}; color: ${d12 > 500 ? 'white' : d12 >= 300 ? 'black' : 'white'}; padding: 4px 12px; border-radius: 50px; font-size: 11px; font-weight: 700;">
-                            ${d12 > 500 ? 'TINGGI' : d12 >= 300 ? 'SEDANG' : 'RENDAH'}
-                        </span>
-                    </td>
-                </tr>`;
-            });
-            
-            // Tabel bansos (Top 10)
-            let tabelBansos = '';
-            wilayahData.slice(0, 10).forEach((item, index) => {
-                const totalBansos = (item.bansos?.pkh || 0) + (item.bansos?.bpnt || 0) + (item.bansos?.pbi || 0);
-                tabelBansos += `<tr>
-                    <td style="text-align: center;">${index + 1}</td>
-                    <td><strong>${item.nama}</strong></td>
-                    <td style="text-align: right;">${formatNumber(item.bansos?.pkh || 0)}</td>
-                    <td style="text-align: right;">${formatNumber(item.bansos?.bpnt || 0)}</td>
-                    <td style="text-align: right;">${formatNumber(item.bansos?.pbi || 0)}</td>
-                    <td style="text-align: right; font-weight: 700;">${formatNumber(totalBansos)}</td>
-                </tr>`;
-            });
-
-            return `
-                <div class="lpj-container">
-                    <!-- ===== HEADER LPJ ===== -->
-                    <div class="lpj-header">
-                        <div class="lpj-brand">
-                            <div class="lpj-logo">
-                                <img src="assets/img/logo/logo-tksk.png" alt="TKSK" onerror="this.style.display='none'">
-                                <img src="assets/img/logo/logo-puskesos.png" alt="Puskesos" onerror="this.style.display='none'" class="ml-3">
-                                <div style="margin-left: 15px;">
-                                    <div class="lpj-title-main">LPJ STRATEGIS DTSEN 2026</div>
-                                    <div class="lpj-subtitle">Laporan Pertanggungjawaban & Rencana Aksi Berbasis Data</div>
-                                </div>
-                            </div>
-                            <div class="lpj-id">
-                                <strong><i class="fas fa-fingerprint mr-1"></i> ID LAPORAN</strong>
-                                <span>${laporanID}</span>
-                            </div>
+            <div class="col-md-4 text-right">
+                <button id="btnGenerate" class="btn btn-primary btn-lg px-5">
+                    <i class="fas fa-sync-alt mr-2"></i> Generate Dokumen
+                </button>
+                <button id="btnPrint" class="btn btn-dark btn-lg px-4 ml-2">
+                    <i class="fas fa-print mr-2"></i> Cetak
+                </button>
+            </div>
+        </div>
+        
+        <!-- Info Panel -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="bg-light p-3 rounded">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge badge-success mr-2">
+                                <i class="fas fa-database mr-1"></i> Firebase Terkoneksi
+                            </span>
+                            <span class="badge badge-info">
+                                <i class="fas fa-clock mr-1"></i> Update: <span id="lastUpdateInfo">Memuat...</span>
+                            </span>
                         </div>
-                        
-                        <div class="lpj-meta">
-                            <div><i class="fas fa-calendar mr-2"></i> Periode: ${formatDate()}</div>
-                            <div><i class="fas fa-database mr-2"></i> Data: ${wilayahData.length} Desa · ${formatNumber(totalKK)} KK</div>
-                            <div><i class="fas fa-sync-alt mr-2"></i> Update: Real-time Firebase</div>
-                        </div>
-                    </div>
-
-                    <!-- ===== NARASI PEMBUKA ===== -->
-                    <div class="narasi-box">
-                        <div class="narasi-title">
-                            <i class="fas fa-quote-left"></i> NARASI STRATEGIS: DARI DATA KE AKSI
-                        </div>
-                        <p class="narasi-text">
-                            Data DTSEN Kecamatan Sumber mengungkapkan fakta yang tidak bisa diabaikan: <strong>${formatNumber(totalD12)} KK (${((totalD12/totalKK)*100).toFixed(1)}%)</strong> dari ${formatNumber(totalKK)} KK terdata berada dalam kategori prioritas intervensi (D1+D2). 
-                            Konsentrasi tertinggi berada di <strong>${top3[0]?.nama || 'wilayah prioritas'}</strong> dengan total D1+D2 mencapai <strong>${formatNumber(top3[0]?.d1 + top3[0]?.d2 || 0)} KK</strong>. 
-                            Fakta ini menegaskan bahwa pendekatan konvensional yang hanya mengandalkan APBD tidak lagi memadai. 
-                            Diperlukan terobosan melalui kemitraan strategis dengan dunia usaha (CSR) serta optimalisasi program pemberdayaan yang tidak membebani anggaran pemerintah.
-                        </p>
-                    </div>
-
-                    <!-- ===== STATISTIK UTAMA ===== -->
-                    <div class="stat-grid">
-                        <div class="stat-card">
-                            <div class="stat-label">Total Keluarga</div>
-                            <div class="stat-value">${formatNumber(totalKK)}</div>
-                            <div class="stat-desc"><i class="fas fa-home mr-1"></i> KK terdata DTSEN</div>
-                        </div>
-                        <div class="stat-card stat-card-2">
-                            <div class="stat-label">Prioritas Tinggi</div>
-                            <div class="stat-value">${prioritasTinggi}</div>
-                            <div class="stat-desc"><i class="fas fa-exclamation-triangle mr-1"></i> Desa dengan D1+D2 >500 KK</div>
-                        </div>
-                        <div class="stat-card stat-card-3">
-                            <div class="stat-label">KK Prioritas</div>
-                            <div class="stat-value">${formatNumber(totalD12)}</div>
-                            <div class="stat-desc"><i class="fas fa-chart-line mr-1"></i> D1 (Sangat Miskin) + D2 (Miskin)</div>
-                        </div>
-                        <div class="stat-card stat-card-4">
-                            <div class="stat-label">Potensi Kemitraan</div>
-                            <div class="stat-value">${csrData.impact.potensiMitra}+</div>
-                            <div class="stat-desc"><i class="fas fa-handshake mr-1"></i> Mitra CSR potensial</div>
-                        </div>
-                    </div>
-
-                    <!-- ===== PRIORITAS INTERVENSI ===== -->
-                    <h3 style="font-size: 20px; font-weight: 800; margin: 40px 0 20px; color: var(--dark);">
-                        <i class="fas fa-flag mr-2" style="color: var(--primary);"></i> PRIORITAS INTERVENSI BERBASIS DATA
-                    </h3>
-                    
-                    <div class="prioritas-grid">
-                        <div class="prioritas-card prioritas-high">
-                            <div class="prioritas-icon">
-                                <i class="fas fa-exclamation-triangle"></i>
-                            </div>
-                            <div class="prioritas-title">Prioritas Tinggi</div>
-                            <div class="prioritas-desc">
-                                <strong>${prioritasTinggi} desa</strong> dengan D1+D2 >500 KK
-                            </div>
-                            <div class="prioritas-badge badge-high">Intervensi Segera</div>
-                            <div style="margin-top: 15px; font-size: 13px;">
-                                Total KK: <strong>${formatNumber(totalKKPrioritasTinggi)} KK</strong><br>
-                                <span class="text-muted">Kontribusi: ${((totalKKPrioritasTinggi/totalD12)*100).toFixed(1)}% dari total prioritas</span>
-                            </div>
-                        </div>
-                        <div class="prioritas-card prioritas-medium">
-                            <div class="prioritas-icon">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            <div class="prioritas-title">Prioritas Sedang</div>
-                            <div class="prioritas-desc">
-                                <strong>${prioritasSedang} desa</strong> dengan D1+D2 300-500 KK
-                            </div>
-                            <div class="prioritas-badge badge-medium">Monitoring Intensif</div>
-                            <div style="margin-top: 15px; font-size: 13px;">
-                                Total KK: <strong>${formatNumber(totalKKPrioritasSedang)} KK</strong>
-                            </div>
-                        </div>
-                        <div class="prioritas-card prioritas-low">
-                            <div class="prioritas-icon">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <div class="prioritas-title">Prioritas Rendah</div>
-                            <div class="prioritas-desc">
-                                <strong>${prioritasRendah} desa</strong> dengan D1+D2 <300 KK
-                            </div>
-                            <div class="prioritas-badge badge-low">Pemantauan Rutin</div>
-                        </div>
-                    </div>
-
-                    <!-- ===== TABEL 10 DESA PRIORITAS ===== -->
-                    <div style="margin: 40px 0 30px;">
-                        <h4 style="font-size: 18px; font-weight: 800; margin-bottom: 20px;">
-                            <i class="fas fa-list-ol mr-2" style="color: var(--primary);"></i> 10 DESA PRIORITAS TERTINGGI
-                        </h4>
-                        <div class="table-responsive">
-                            <table class="table-lpj">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Desa/Kelurahan</th>
-                                        <th>D1</th>
-                                        <th>D2</th>
-                                        <th>Total D1+D2</th>
-                                        <th>% Prioritas</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${tabelPrioritas}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="text-muted mt-2" style="font-size: 12px;">
-                            <i class="fas fa-info-circle"></i> 10 desa ini menyumbang ${((wilayahData.slice(0,10).reduce((sum,i) => sum + i.d1 + i.d2, 0)/totalD12)*100).toFixed(1)}% dari total KK prioritas kecamatan.
-                        </div>
-                    </div>
-
-                    <!-- ===== PROGRAM INTERVENSI INOVATIF ===== -->
-                    <div class="program-section">
-                        <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 25px; color: var(--dark);">
-                            <i class="fas fa-rocket mr-2" style="color: var(--primary);"></i> PROGRAM INTERVENSI INOVATIF
-                        </h3>
-                        <p style="color: var(--gray-600); margin-bottom: 30px; font-size: 15px;">
-                            Program-program berikut dirancang berdasarkan analisis data DTSEN, tidak membebani APBD, 
-                            dan dapat diimplementasikan melalui kemitraan CSR serta pendekatan pemberdayaan masyarakat.
-                        </p>
-                        
-                        <div class="program-grid">
-                            <div class="program-card">
-                                <div class="program-header">
-                                    <div class="program-icon">
-                                        <i class="fas fa-bolt"></i>
-                                    </div>
-                                    <div>
-                                        <div class="program-title">Listrik Pintar untuk 1.000 KK</div>
-                                        <div class="program-sub">PT PLN (Persero) UP3 Cirebon</div>
-                                    </div>
-                                </div>
-                                <div class="program-desc">
-                                    Pemasangan sambungan listrik gratis bagi 1.000 KK prioritas + sosialisasi hemat energi. 
-                                    Program ini telah disampaikan kepada PLN dan dalam tahap kajian teknis.
-                                </div>
-                                <div class="program-budget">
-                                    <span><i class="fas fa-users"></i> Target: 1.000 KK</span>
-                                    <span class="budget-source">CSR PLN</span>
-                                </div>
-                            </div>
-                            
-                            <div class="program-card">
-                                <div class="program-header">
-                                    <div class="program-icon">
-                                        <i class="fas fa-seedling"></i>
-                                    </div>
-                                    <div>
-                                        <div class="program-title">Kampung Hidroponik Berdaya</div>
-                                        <div class="program-sub">Rumah Zakat & Baznas</div>
-                                    </div>
-                                </div>
-                                <div class="program-desc">
-                                    Pengembangan 5 desa prioritas sebagai sentra sayur hidroponik. 
-                                    Pendampingan teknis, bantuan bibit, dan pemasaran hasil panen.
-                                </div>
-                                <div class="program-budget">
-                                    <span><i class="fas fa-map-marker-alt"></i> Target: 5 desa</span>
-                                    <span class="budget-source">CSR + Zakat</span>
-                                </div>
-                            </div>
-                            
-                            <div class="program-card">
-                                <div class="program-header">
-                                    <div class="program-icon">
-                                        <i class="fas fa-piggy-bank"></i>
-                                    </div>
-                                    <div>
-                                        <div class="program-title">KUR Super Mikro 0% Bunga</div>
-                                        <div class="program-sub">Bank BJB Cabang Sumber</div>
-                                    </div>
-                                </div>
-                                <div class="program-desc">
-                                    Fasilitas kredit usaha rakyat tanpa bunga 6 bulan pertama untuk 500 usaha mikro 
-                                    di desa prioritas. Pendampingan literasi keuangan dan manajemen usaha.
-                                </div>
-                                <div class="program-budget">
-                                    <span><i class="fas fa-coins"></i> Plafon: Rp 5 Juta/UMKM</span>
-                                    <span class="budget-source">CSR Perbankan</span>
-                                </div>
-                            </div>
-                            
-                            <div class="program-card">
-                                <div class="program-header">
-                                    <div class="program-icon">
-                                        <i class="fas fa-graduation-cap"></i>
-                                    </div>
-                                    <div>
-                                        <div class="program-title">Beasiswa Anak Bangsa</div>
-                                        <div class="program-sub">Yayasan Bangun Sejahtera Mitra</div>
-                                    </div>
-                                </div>
-                                <div class="program-desc">
-                                    Bantuan biaya pendidikan untuk 200 anak dari keluarga prioritas, 
-                                    mulai jenjang SD hingga SMA. Termasuk bantuan seragam dan alat tulis.
-                                </div>
-                                <div class="program-budget">
-                                    <span><i class="fas fa-child"></i> Target: 200 anak</span>
-                                    <span class="budget-source">CSR Pendidikan</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ===== KEMITRAAN CSR STRATEGIS ===== -->
-                    <div class="csr-section">
-                        <div class="csr-header">
-                            <div class="csr-icon">
-                                <i class="fas fa-handshake"></i>
-                            </div>
-                            <div>
-                                <div class="csr-title">KEMITRAAN CSR STRATEGIS 2026</div>
-                                <p style="color: var(--gray-600); margin-bottom: 0; font-size: 14px;">
-                                    Kolaborasi non-APBD · Tidak mengikat · Berkelanjutan
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="csr-grid">
-                            ${csrData.csrPartners.map((csr, index) => `
-                                <div class="csr-item">
-                                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
-                                        <span class="csr-partner">${csr.partner}</span>
-                                        <span class="csr-tag">${csr.tag}</span>
-                                    </div>
-                                    <div class="csr-program">${csr.program}</div>
-                                    <div style="font-size: 12px; margin-bottom: 8px;">
-                                        <i class="fas fa-bullseye mr-1"></i> Target: ${csr.target}
-                                    </div>
-                                    <div style="font-size: 12px; color: var(--gray-600);">
-                                        <i class="fas fa-gift mr-1"></i> ${csr.bentuk}
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                        
-                        <div style="margin-top: 25px; padding: 15px; background: white; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <i class="fas fa-chart-simple" style="color: var(--primary);"></i>
-                                <span style="font-weight: 700; margin-left: 10px;">Dampak Estimasi:</span>
-                                <span style="margin-left: 15px;">🧑‍🤝‍🧑 ${formatNumber(csrData.impact.penerimaManfaat)} penerima manfaat</span>
-                                <span style="margin-left: 15px;">💰 Rp ${formatNumber(csrData.impact.estimasiNilai)} juta</span>
-                                <span style="margin-left: 15px;">🎯 ${csrData.impact.programPrioritas} program prioritas</span>
-                            </div>
-                            <span class="budget-source" style="background: #cff4fc; color: #055160;">
-                                <i class="fas fa-leaf"></i> Tanpa Beban APBD
+                        <div>
+                            <span class="badge badge-primary" id="dataCountInfo">
+                                0 wilayah terdata
                             </span>
                         </div>
                     </div>
-
-                    <!-- ===== RENCANA TINDAK LANJUT & ROADMAP ===== -->
-                    <h3 style="font-size: 20px; font-weight: 800; margin: 40px 0 20px; color: var(--dark);">
-                        <i class="fas fa-road mr-2" style="color: var(--primary);"></i> RENCANA TINDAK LANJUT 2026
-                    </h3>
-                    
-                    <div class="roadmap">
-                        <div class="roadmap-timeline">
-                            <div class="roadmap-item">
-                                <div class="roadmap-date">Maret 2026</div>
-                                <div class="roadmap-content">
-                                    <div class="roadmap-title">Forum Kemitraan CSR Kecamatan Sumber</div>
-                                    <div class="roadmap-desc">
-                                        Pertemuan dengan 20+ perusahaan potensial (PLN, Bank BJB, Indofood, Astra, dll) 
-                                        untuk mempresentasikan proposal program dan menjajaki komitmen awal.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="roadmap-item">
-                                <div class="roadmap-date">April-Mei 2026</div>
-                                <div class="roadmap-content">
-                                    <div class="roadmap-title">Pendataan Calon Penerima Manfaat</div>
-                                    <div class="roadmap-desc">
-                                        Verifikasi lapangan oleh TKSK dan Puskesos untuk 1.500 KK prioritas 
-                                        sebagai calon penerima program listrik gratis, KUR, dan beasiswa.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="roadmap-item">
-                                <div class="roadmap-date">Juni 2026</div>
-                                <div class="roadmap-content">
-                                    <div class="roadmap-title">Peluncuran Program Percontohan</div>
-                                    <div class="roadmap-desc">
-                                        Kick-off 3 program prioritas: (1) Sambungan listrik gratis di ${top3[0]?.nama || 'desa prioritas'}, 
-                                        (2) KUR Super Mikro di ${top3[1]?.nama || 'desa prioritas'}, 
-                                        (3) Beasiswa anak bangsa di ${top3[2]?.nama || 'desa prioritas'}.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="roadmap-item">
-                                <div class="roadmap-date">Juli-Des 2026</div>
-                                <div class="roadmap-content">
-                                    <div class="roadmap-title">Monitoring, Evaluasi & Replikasi</div>
-                                    <div class="roadmap-desc">
-                                        Pendampingan intensif oleh TKSK, evaluasi dampak setiap 3 bulan, 
-                                        dan replikasi program ke desa-desa prioritas lainnya.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ===== TABEL BANSOS EKSISTING ===== -->
-                    <div style="margin: 40px 0 30px;">
-                        <h4 style="font-size: 18px; font-weight: 800; margin-bottom: 20px;">
-                            <i class="fas fa-hand-holding-heart mr-2" style="color: var(--primary);"></i> REALISASI BANSOS EKSISTING (APBD/APBN)
-                        </h4>
-                        <div class="table-responsive">
-                            <table class="table-lpj">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Desa/Kelurahan</th>
-                                        <th>PKH</th>
-                                        <th>BPNT</th>
-                                        <th>PBI</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${tabelBansos}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div style="margin-top: 20px; padding: 15px; background: var(--gray-100); border-radius: 12px; display: flex; justify-content: space-between;">
-                            <span><strong>Total Realisasi APBD/APBN:</strong></span>
-                            <span style="font-weight: 700;">PKH: ${formatNumber(totalPKH)} · BPNT: ${formatNumber(totalBPNT)} · PBI: ${formatNumber(totalPBI)}</span>
-                            <span style="color: var(--primary); font-weight: 800;">Total: ${formatNumber(totalPKH + totalBPNT + totalPBI)} penerima</span>
-                        </div>
-                    </div>
-
-                    <!-- ===== PENUTUP & TANDA TANGAN ===== -->
-                    <div style="margin-top: 60px;">
-                        <h4 style="font-size: 18px; font-weight: 800; margin-bottom: 25px; color: var(--dark);">
-                            <i class="fas fa-check-circle mr-2" style="color: var(--primary);"></i> KESIMPULAN DAN REKOMENDASI
-                        </h4>
-                        
-                        <div style="background: white; border: 1px solid var(--gray-200); border-radius: 16px; padding: 30px; margin-bottom: 30px;">
-                            <p style="margin-bottom: 15px; font-size: 15px; line-height: 1.8;">
-                                Berdasarkan analisis data DTSEN Kecamatan Sumber, ditemukan bahwa <strong>${formatNumber(totalD12)} KK (${((totalD12/totalKK)*100).toFixed(1)}%)</strong> 
-                                dari total ${formatNumber(totalKK)} KK memerlukan intervensi prioritas. Dengan keterbatasan APBD, pendekatan kemitraan CSR menjadi keniscayaan.
-                            </p>
-                            <p style="margin-bottom: 15px; font-size: 15px; line-height: 1.8;">
-                                <strong>6 program inovatif</strong> telah dirancang bersama calon mitra CSR dengan estimasi dampak menjangkau 
-                                <strong>${formatNumber(csrData.impact.penerimaManfaat)} penerima manfaat</strong> dan nilai bantuan setara 
-                                <strong>Rp ${formatNumber(csrData.impact.estimasiNilai)} juta</strong> tanpa membebani APBD.
-                            </p>
-                            <p style="font-size: 15px; line-height: 1.8; margin-bottom: 0;">
-                                <strong>Rekomendasi:</strong> (1) Segera bentuk tim fasilitasi kemitraan CSR, (2) Finalisasi proposal program, 
-                                (3) Jadwalkan forum kemitraan pada Maret 2026, (4) Tetapkan desa percontohan, dan (5) Lakukan monitoring berkala.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- ===== TANDA TANGAN DIGITAL ===== -->
-                    <div class="signature-section">
-                        <div class="signature-left">
-                            <div style="border: 1px solid var(--gray-300); padding: 20px; border-radius: 12px; background: var(--gray-100); max-width: 400px;">
-                                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                                    <i class="fas fa-shield-alt" style="font-size: 28px; color: var(--primary);"></i>
-                                    <span style="font-weight: 800; font-size: 14px;">VERIFIKASI DOKUMEN</span>
-                                </div>
-                                <p style="font-size: 12px; margin-bottom: 8px;">
-                                    <i class="fas fa-check-circle text-success mr-2"></i> Data bersumber dari DTSEN Kemensos RI
-                                </p>
-                                <p style="font-size: 12px; margin-bottom: 8px;">
-                                    <i class="fas fa-check-circle text-success mr-2"></i> Kriteria prioritas: >500 (Tinggi), 300-500 (Sedang), <300 (Rendah)
-                                </p>
-                                <p style="font-size: 12px; margin-bottom: 0;">
-                                    <i class="fas fa-check-circle text-success mr-2"></i> Berlaku periode: ${new Date().getFullYear()}
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="signature-right">
-                            <div id="qrcodeLPJ" class="qrcode-wrapper"></div>
-                            <div class="signature-name">SHIDIQ HASANUDIN, S.IP</div>
-                            <div class="signature-title">Koordinator TKSK Kecamatan Sumber</div>
-                            <div style="font-size: 11px; color: var(--gray-600); margin-top: 15px; background: var(--gray-100); padding: 8px 15px; border-radius: 50px; display: inline-block;">
-                                <i class="fas fa-fingerprint mr-1"></i> ID: ${verificationId}
-                            </div>
-                            <div style="font-size: 11px; color: var(--gray-600); margin-top: 10px;">
-                                Ditetapkan di Sumber, ${formatDate()}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ===== FOOTER ===== -->
-                    <div class="lpj-footer">
-                        <span>Dokumen ini disusun secara elektronik berbasis data real-time Firebase Firestore</span><br>
-                        <span>⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻</span><br>
-                        <span>LPJ Strategis DTSEN - TKSK & Puskesos Kecamatan Sumber · ${formatDate()}</span>
-                    </div>
                 </div>
-            `;
-        }
+            </div>
+        </div>
+    </div>
+</div>
 
-        // ============================================================
-        // GENERATE LPJ
-        // ============================================================
-        function generateLPJ() {
-            if (wilayahData.length === 0) {
-                alert('Tidak ada data untuk di-generate');
-                return;
-            }
-            
-            const lpjContainer = document.getElementById('lpjContainer');
-            lpjContainer.innerHTML = buildLPJHTML();
-            
-            setTimeout(() => {
-                const verificationId = generateVerificationId();
-                generateQRCode('qrcodeLPJ', verificationId);
+<!-- ============ DOKUMEN SURAT RESMI (AREA CETAK) ============ -->
+<div class="paper" id="cetakArea">
+
+    <!-- ======= HALAMAN 1: SURAT PENGANTAR & AGREGASI ======= -->
+    <div class="halaman-1">
+        <!-- KOP SURAT STANDAR PEMERINTAH -->
+        <div class="kop-surat-container">
+            <div class="logo-box">
+                <img src="assets/img/logo/logo-tksk.png" class="logo-kop" onerror="this.style.display='none'">
+            </div>
+            <div class="teks-kop">
+                <p class="instansi-utama">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</p>
+                <h5 class="nama-lembaga">FORUM PUSKESOS KECAMATAN SUMBER</h5>
+                <h2 class="nama-program">DARI DATA KE AKSI</h2>
+                <p class="alamat-kantor">Sekretariat: Jl. Sunan Drajat No.16 Kecamatan Sumber, Kabupaten Cirebon 45611</p>
+                <p class="alamat-kantor">Telp. (0231) 123456 | Email: tksk.sumber@cirebonkab.go.id</p>
+            </div>
+            <div class="logo-box text-right">
+                <img src="assets/img/logo/logo-puskesos.png" class="logo-kop" onerror="this.style.display='none'">
+            </div>
+        </div>
+        
+        <!-- NOMOR SURAT DAN LAMPIRAN - SATU NOMOR UNTUK SEMUA HALAMAN -->
+        <table width="100%" style="margin-bottom: 15px; font-size: 12px;">
+            <tr>
+                <td width="15%">Nomor</td>
+                <td width="2%">:</td>
+                <td width="83%"><span id="nomorSuratUtama">460 / 123 / DTSEN.001 / TKSK-SBR / 2026</span></td>
+            </tr>
+            <tr>
+                <td>Sifat</td>
+                <td>:</td>
+                <td>Penting / Segera</td>
+            </tr>
+            <tr>
+                <td>Lampiran</td>
+                <td>:</td>
+                <td><span id="lampiranCount1">4</span> (empat) berkas</td>
+            </tr>
+            <tr>
+                <td>Perihal</td>
+                <td>:</td>
+                <td><strong id="perihalSurat1">LAPORAN DATA TERPADU KESEJAHTERAAN SOSIAL</strong></td>
+            </tr>
+        </table>
+
+        <!-- TUJUAN SURAT -->
+        <p style="font-size: 12px; margin-bottom: 20px;">
+            Yth.<br>
+            1. Kepala Dinas Sosial Kabupaten Cirebon<br>
+            2. Camat Sumber<br>
+            di Tempat
+        </p>
+
+        <!-- ISI SURAT -->
+        <div style="font-size: 12px; line-height: 1.5; text-align: justify;">
+            <p>Berdasarkan hasil pendataan dan verifikasi Data Terpadu Kesejahteraan Sosial (DTSEN) di wilayah Kecamatan Sumber, bersama ini kami sampaikan laporan agregasi data kesejahteraan sosial sebagai berikut:</p>
+        </div>
+
+        <!-- KONTEN HALAMAN 1 (AGREGASI) -->
+        <div id="kontenHal1" style="min-height: 200px;"></div>
+    </div>
+
+    <!-- ======= HALAMAN 2: PRIORITAS INTERVENSI DTSEN (PAGE BREAK) ======= -->
+    <div style="page-break-before: always;" class="halaman-2">
+        <!-- KOP LANJUTAN DENGAN NOMOR SURAT YANG SAMA -->
+        <div class="kop-lanjutan">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
+                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan2"></span></span>
+            </div>
+        </div>
+
+        <h4 class="judul-surat">PRIORITAS INTERVENSI DTSEN</h4>
+        <p style="font-size: 12px; text-align: center;">Data Prioritas Berdasarkan Desil 1 dan 2 (Sangat Miskin & Miskin)</p>
+        
+        <!-- KONTEN HALAMAN 2 - PRIORITAS INTERVENSI -->
+        <div id="kontenHal2" style="min-height: 250px;"></div>
+    </div>
+
+    <!-- ======= HALAMAN 3: REKAP BANTUAN SOSIAL PER DESA ======= -->
+    <div style="page-break-before: always;" class="halaman-3">
+        <div class="kop-lanjutan">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
+                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan3"></span></span>
+            </div>
+        </div>
+
+        <h4 class="judul-surat">REKAP BANTUAN SOSIAL PER DESA</h4>
+        <p style="font-size: 12px; text-align: center;">Distribusi Bantuan Sosial Berdasarkan Wilayah</p>
+        
+        <!-- KONTEN HALAMAN 3 - BANSOS -->
+        <div id="kontenHal3" style="min-height: 250px;"></div>
+    </div>
+
+    <!-- ======= HALAMAN 4: REKAPITULASI LAYANAN SOSIAL + QR + TTD ======= -->
+    <div style="page-break-before: always;" class="halaman-4">
+        <div class="kop-lanjutan">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span class="instansi-singkat">TKSK - PUSKESOS KEC. SUMBER</span>
+                <span class="nomor-surat-lanjutan">Nomor: <span id="nomorSuratLanjutan4"></span></span>
+            </div>
+        </div>
+
+        <h4 class="judul-surat">REKAPITULASI LAYANAN SOSIAL</h4>
+        <p style="font-size: 12px; text-align: center;">Data Layanan dan Program Bantuan Sosial</p>
+        
+        <!-- KONTEN HALAMAN 4 - LAYANAN SOSIAL -->
+        <div id="kontenHal4" style="min-height: 200px;"></div>
+
+        <!-- BAGIAN PENUTUP SURAT -->
+        <div style="margin-top: 30px;">
+            <p style="font-size: 12px; text-align: justify;">
+                Demikian laporan ini kami sampaikan untuk menjadi bahan evaluasi dan tindak lanjut program bantuan sosial di Kecamatan Sumber. Atas perhatian dan kerjasamanya, kami ucapkan terima kasih.
+            </p>
+        </div>
+
+        <!-- TANDA TANGAN DAN QR CODE - URUTAN SESUAI PERMINTAAN -->
+        <div class="row mt-5">
+            <div class="col-7">
+                <div style="border: 1px solid #000; padding: 12px; font-size: 11px; background: #fcfcfc;">
+                    <strong style="font-size: 11px;">⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻</strong><br>
+                    <strong>VERIFIKASI DAN VALIDASI DATA:</strong><br>
+                    ✓ Data bersumber dari Database DTSEN Kementerian Sosial RI<br>
+                    ✓ Telah diverifikasi oleh Tenaga Kesejahteraan Sosial Kecamatan (TKSK)<br>
+                    ✓ Berlaku untuk periode <span id="periodeData">2026</span><br>
+                    <span style="color: #666;">* Dokumen ini ditandatangani secara elektronik</span>
+                </div>
+            </div>
+
+            <div class="col-5 text-center">
+                <!-- 1. Tempat dan Tanggal -->
+                <div style="margin-bottom: 15px;">
+                    <p style="font-size: 12px; margin-bottom: 2px;">Ditetapkan di : Sumber</p>
+                    <p style="font-size: 12px; margin-bottom: 5px;">Pada tanggal : <span id="tglSekarang">_______________</span></p>
+                </div>
                 
-                // Update ID di HTML
-                const idElement = document.querySelector('.lpj-id span');
-                if (idElement) idElement.textContent = laporanID;
-            }, 100);
-            
-            console.log('✅ LPJ Strategis generated');
-        }
+                <!-- 2. Jabatan Penandatangan -->
+                <p style="font-size: 12px; margin-bottom: 5px;">Koordinator TKSK Kecamatan Sumber,</p>
+                
+                <!-- 3. QR CODE (TANPA TULISAN SCAN) -->
+                <div style="margin: 15px 0 10px 0;">
+                    <div id="qrcode" class="qr-box" style="margin: 0 auto; width: 100px; height: 100px;"></div>
+                </div>
+                
+                <!-- 4. Nama Lengkap dan Gelar -->
+                <p class="nama-ttd" style="font-size: 14px; font-weight: 700; margin-bottom: 2px; text-decoration: underline;">
+                    SHIDIQ HASANUDIN, S.IP
+                </p>
+                
+                <!-- 5. ID Verifikasi -->
+                <p style="font-size: 10px; margin-top: 5px; color: #666;">
+                    ID Verifikasi: <span id="hashID">DTSEN-SBR-2026-001</span>
+                </p>
+            </div>
+        </div>
 
-        // ============================================================
-        // EXPORT PDF
-        // ============================================================
-        function exportPDF() {
-            const element = document.getElementById('lpjContainer');
-            const opt = {
-                margin: [15, 15, 15, 15],
-                filename: `LPJ_Strategis_DTSEN_${new Date().toISOString().split('T')[0]}.pdf`,
-                image: { type: 'jpeg', quality: 0.95 },
-                html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
+        <!-- FOOTER SURAT -->
+        <div class="footer-surat">
+            <span>Dokumen ini diterbitkan secara elektronik dan sah tanpa tanda tangan basah</span><br>
+            <span>⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻</span>
+        </div>
+    </div>
 
-            setTimeout(() => {
-                html2pdf().set(opt).from(element).save();
-            }, 500);
-        }
+</div> <!-- Tutup paper -->
 
-        // ============================================================
-        // INITIALIZATION
-        // ============================================================
-        window.generateLPJ = generateLPJ;
-        window.exportPDF = exportPDF;
-        window.loadDataFromFirebase = loadDataFromFirebase;
+<!-- SCRIPT EXTERNAL -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+    // Navbar Loader
+    fetch('navbar.html')
+        .then(response => response.ok ? response.text() : '')
+        .then(html => {
+            if (html) document.getElementById('navbar').innerHTML = html;
+        })
+        .catch(e => console.log('Navbar not loaded'));
+</script>
+<script type="module" src="js/unduh.js"></script>
 
-        document.addEventListener('DOMContentLoaded', async function() {
-            await loadDataFromFirebase();
-            generateLPJ();
-            
-            setInterval(async () => {
-                await loadDataFromFirebase();
-                generateLPJ();
-            }, 5 * 60 * 1000);
-        });
-
-    </script>
 </body>
 </html>
