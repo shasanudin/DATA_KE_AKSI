@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>Input Berita | DATA KE AKSI - TKSK Sumber</title>
+    
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* ===== VARIABLES ===== */
+        :root {
+            --primary: #0a58ca;
+            --primary-dark: #084298;
+            --primary-light: #e7f1ff;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --dark: #1a2e3f;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-600: #6c757d;
+            --sidebar-width: 280px;
+            --border-radius: 20px;
+            --border-radius-sm: 14px;
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== SIDEBAR - SAMA DENGAN DASHBOARD ===== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            transition: var(--transition);
+            border-right: 1px solid var(--gray-200);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 30px 25px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-header small {
+            color: var(--gray-600);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sidebar-header small i {
+            color: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 25px 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            border-radius: 14px;
+            color: var(--gray-600);
+            font-weight: 500;
+            transition: var(--transition);
+            text-decoration: none;
+            gap: 12px;
+        }
+
+        .sidebar-nav a i {
+            width: 22px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--gray-600);
+            transition: var(--transition);
+        }
+
+        .sidebar-nav a:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .sidebar-nav a:hover i {
+            color: var(--primary);
+        }
+
+        .sidebar-nav li.active a {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 8px 15px rgba(10,88,202,0.2);
+        }
+
+        .sidebar-nav li.active a i {
+            color: white;
+        }
+
+        .logout-item {
+            margin-top: 30px;
+            border-top: 1px solid var(--gray-200);
+            padding-top: 20px;
+        }
+
+        .logout-item a {
+            color: var(--danger);
+        }
+
+        .logout-item a i {
+            color: var(--danger);
+        }
+
+        .logout-item a:hover {
+            background: rgba(220,53,69,0.1);
+            color: var(--danger);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 40px;
+            transition: var(--transition);
+        }
+
+        /* ===== HEADER SECTION ===== */
+        .content-header {
+            margin-bottom: 35px;
+        }
+
+        .content-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .content-header h1 i {
+            color: var(--info);
+        }
+
+        .content-header p {
+            color: var(--gray-600);
+            font-size: 1rem;
+            margin-left: 44px;
+        }
+
+        /* ===== FORM CONTAINER ===== */
+        .form-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 35px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--gray-200);
+            max-width: 800px;
+            margin: 0 auto;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== FORM SECTION ===== */
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-section-title i {
+            color: var(--info);
+        }
+
+        /* ===== FORM GROUP ===== */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group label i {
+            color: var(--info);
+            width: 18px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--dark);
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-control:focus {
+            border-color: var(--info);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(23,162,184,0.1);
+        }
+
+        .form-control::placeholder {
+            color: #adb5bd;
+            font-weight: 400;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            background-size: 16px;
+            padding-right: 50px;
+        }
+
+        textarea.form-control {
+            min-height: 180px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        /* ===== FORM ROW ===== */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 576px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+
+        /* ===== PREVIEW CARD ===== */
+        .preview-card {
+            background: var(--gray-100);
+            border-radius: var(--border-radius-sm);
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px dashed var(--gray-300);
+            display: none;
+        }
+
+        .preview-card.active {
+            display: block;
+        }
+
+        .preview-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid var(--info);
+        }
+
+        .preview-content h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .preview-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+            color: var(--gray-600);
+        }
+
+        .preview-meta i {
+            margin-right: 5px;
+        }
+
+        .preview-body {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--gray-600);
+        }
+
+        /* ===== BUTTON ===== */
+        .btn-submit-container {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 2px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--info), #117a8b);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 20px rgba(23,162,184,0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(23,162,184,0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--gray-300);
+            color: var(--gray-600);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-600);
+        }
+
+        /* ===== MESSAGE ===== */
+        .message-alert {
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .message-success {
+            background: rgba(40,167,69,0.1);
+            color: var(--success);
+            border: 1px solid rgba(40,167,69,0.2);
+        }
+
+        .message-error {
+            background: rgba(220,53,69,0.1);
+            color: var(--danger);
+            border: 1px solid rgba(220,53,69,0.2);
+        }
+
+        .message-info {
+            background: rgba(23,162,184,0.1);
+            color: var(--info);
+            border: 1px solid rgba(23,162,184,0.2);
+        }
+
+        /* ===== LOADING SPINNER ===== */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+            .form-container {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-header h1 {
+                font-size: 1.6rem;
+            }
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>DATA KE AKSI</h3>
+            <small>
+                <i class="fas fa-map-marker-alt"></i>
+                Kec. Sumber, Kab. Cirebon
+            </small>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="dashboard.html">
+                        <i class="fas fa-home"></i>
+                        Beranda
+                    </a>
+                </li>
+                <li>
+                    <a href="input_data.html">
+                        <i class="fas fa-database"></i>
+                        Input Data DTSEN
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="#">
+                        <i class="fas fa-newspaper"></i>
+                        Input Berita
+                    </a>
+                </li>
+                <li>
+                    <a href="statistik_desil.html">
+                        <i class="fas fa-chart-bar"></i>
+                        Statistik Desil
+                    </a>
+                </li>
+                <li class="logout-item">
+                    <a href="#" id="btnLogout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Keluar
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+        <section class="content-header">
+            <h1>
+                <i class="fas fa-newspaper"></i>
+                Input Berita Baru
+            </h1>
+            <p>
+                <i class="fas fa-arrow-right" style="color: var(--info);"></i>
+                Publikasikan informasi, pengumuman, dan kegiatan TKSK & Puskesos Kecamatan Sumber.
+            </p>
+        </section>
+
+        <!-- ===== FORM CONTAINER ===== -->
+        <div class="form-container">
+            <form id="formBerita">
+                <!-- SECTION 1: INFORMASI BERITA -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fas fa-info-circle"></i>
+                        1. Informasi Berita
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-heading"></i>
+                            Judul Berita <span style="color: var(--danger);">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="judul" 
+                            class="form-control" 
+                            placeholder="Contoh: Penyaluran Bansos Tahap 1 2026" 
+                            required
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-tag"></i>
+                                Kategori <span style="color: var(--danger);">*</span>
+                            </label>
+                            <select id="kategori" class="form-control" required>
+                                <option value="" disabled selected>-- Pilih Kategori --</option>
+                                <option value="Bansos">📦 Bantuan Sosial</option>
+                                <option value="DTSEN">📊 Pembaruan DTSEN</option>
+                                <option value="Pelayanan">🤝 Pelayanan Masyarakat</option>
+                                <option value="Kegiatan">🎯 Kegiatan TKSK</option>
+                                <option value="Pengumuman">📢 Pengumuman</option>
+                                <option value="Lainnya">📌 Lainnya</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-user"></i>
+                                Penulis
+                            </label>
+                            <input 
+                                type="text" 
+                                id="penulis" 
+                                class="form-control" 
+                                value="Admin TKSK" 
+                                required
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: ISI BERITA -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fas fa-file-alt"></i>
+                        2. Isi Berita
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-align-left"></i>
+                            Konten Berita <span style="color: var(--danger);">*</span>
+                        </label>
+                        <textarea 
+                            id="isi" 
+                            class="form-control" 
+                            placeholder="Tuliskan isi berita secara lengkap dan jelas..."
+                            required
+                        ></textarea>
+                        <small style="display: block; margin-top: 8px; color: var(--gray-600);">
+                            <i class="fas fa-info-circle"></i> Minimal 50 karakter
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-image"></i>
+                            URL Gambar (Opsional)
+                        </label>
+                        <input 
+                            type="url" 
+                            id="gambar" 
+                            class="form-control" 
+                            placeholder="https://contoh.com/gambar-berita.jpg"
+                        >
+                        <small style="display: block; margin-top: 8px; color: var(--gray-600);">
+                            <i class="fas fa-link"></i> Gunakan URL gambar eksternal atau biarkan kosong
+                        </small>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: PREVIEW BERITA -->
+                <div id="previewBerita" class="preview-card">
+                    <div class="preview-title">
+                        <i class="fas fa-eye"></i>
+                        PRATINJAU BERITA
+                    </div>
+                    <div class="preview-content">
+                        <h4 id="previewJudul">-</h4>
+                        <div class="preview-meta">
+                            <span><i class="fas fa-tag"></i> <span id="previewKategori">-</span></span>
+                            <span><i class="fas fa-user"></i> <span id="previewPenulis">-</span></span>
+                            <span><i class="fas fa-clock"></i> <span id="previewTanggal">-</span></span>
+                        </div>
+                        <div id="previewIsi" class="preview-body">
+                            -
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUBMIT BUTTON -->
+                <div class="btn-submit-container">
+                    <div id="messageContainer" style="width: 100%; max-width: 400px;"></div>
+                    <button type="submit" class="btn-primary" id="btnSimpan">
+                        <i class="fas fa-paper-plane"></i>
+                        TERBITKAN BERITA
+                    </button>
+                    <button type="button" class="btn-outline" id="btnPreview">
+                        <i class="fas fa-eye"></i>
+                        Pratinjau
+                    </button>
+                    <small style="color: var(--gray-600); font-size: 0.75rem; margin-top: 10px;">
+                        <i class="fas fa-shield-alt"></i> Berita akan tersimpan di koleksi "berita" Firestore
+                    </small>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- ===== FIREBASE SDK ===== -->
+    <script type="module">
+        // ============================================================
+        // FIREBASE INITIALIZATION
+        // ============================================================
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged, 
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
+            authDomain: "data-ke-aksi-auth.firebaseapp.com",
+            projectId: "data-ke-aksi-auth",
+            storageBucket: "data-ke-aksi-auth.firebasestorage.app",
+            messagingSenderId: "631382692174",
+            appId: "1:631382692174:web:c10a099fb3021849eace1f"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // ============================================================
+        // DOM ELEMENTS
+        // ============================================================
+        const form = document.getElementById('formBerita');
+        const btnSimpan = document.getElementById('btnSimpan');
+        const btnPreview = document.getElementById('btnPreview');
+        const btnLogout = document.getElementById('btnLogout');
+        const messageContainer = document.getElementById('messageContainer');
+        const previewCard = document.getElementById('previewBerita');
+        
+        // Input fields
+        const judulInput = document.getElementById('judul');
+        const kategoriSelect = document.getElementById('kategori');
+        const isiTextarea = document.getElementById('isi');
+        const penulisInput = document.getElementById('penulis');
+        const gambarInput = document.getElementById('gambar');
+
+        // Preview elements
+        const previewJudul = document.getElementById('previewJudul');
+        const previewKategori = document.getElementById('previewKategori');
+        const previewPenulis = document.getElementById('previewPenulis');
+        const previewTanggal = document.getElementById('previewTanggal');
+        const previewIsi = document.getElementById('previewIsi');
+
+        // ============================================================
+        // CHECK AUTHENTICATION
+        // ============================================================
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // Redirect to login if not authenticated
+                window.location.href = 'login.html';
+            } else {
+                // Set penulis default dari email user
+                const username = user.email?.split('@')[0] || 'Admin TKSK';
+                penulisInput.value = username;
+            }
+        });
+
+        // ============================================================
+        // LOGOUT HANDLER
+        // ============================================================
+        btnLogout.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await signOut(auth);
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        });
+
+        // ============================================================
+        // SHOW MESSAGE FUNCTION
+        // ============================================================
+        function showMessage(message, type = 'success') {
+            messageContainer.innerHTML = `
+                <div class="message-alert message-${type}">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'info' ? 'fa-info-circle' : 'fa-exclamation-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            // Auto hide after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageContainer.innerHTML = '';
+                }, 5000);
+            }
+        }
+
+        // ============================================================
+        // SET LOADING STATE
+        // ============================================================
+        function setLoading(isLoading) {
+            if (isLoading) {
+                btnSimpan.disabled = true;
+                btnSimpan.innerHTML = '<span class="spinner"></span> MENYIMPAN...';
+            } else {
+                btnSimpan.disabled = false;
+                btnSimpan.innerHTML = '<i class="fas fa-paper-plane"></i> TERBITKAN BERITA';
+            }
+        }
+
+        // ============================================================
+        // VALIDATE FORM
+        // ============================================================
+        function validateForm() {
+            if (!judulInput.value.trim()) {
+                showMessage('Judul berita harus diisi!', 'error');
+                return false;
+            }
+            
+            if (!kategoriSelect.value) {
+                showMessage('Pilih kategori berita!', 'error');
+                return false;
+            }
+            
+            if (!isiTextarea.value.trim()) {
+                showMessage('Isi berita harus diisi!', 'error');
+                return false;
+            }
+            
+            if (isiTextarea.value.trim().length < 50) {
+                showMessage('Isi berita minimal 50 karakter!', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // ============================================================
+        // UPDATE PREVIEW
+        // ============================================================
+        function updatePreview() {
+            const judul = judulInput.value.trim() || '-';
+            const kategori = kategoriSelect.options[kategoriSelect.selectedIndex]?.text.split(' ')[1] || '-';
+            const penulis = penulisInput.value.trim() || 'Admin TKSK';
+            const isi = isiTextarea.value.trim() || '-';
+            
+            previewJudul.textContent = judul;
+            previewKategori.textContent = kategori;
+            previewPenulis.textContent = penulis;
+            
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('id-ID', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+            previewTanggal.textContent = formattedDate;
+            
+            // Truncate preview if too long
+            previewIsi.textContent = isi.length > 200 ? isi.substring(0, 200) + '...' : isi;
+        }
+
+        // ============================================================
+        // PREVIEW BUTTON
+        // ============================================================
+        btnPreview.addEventListener('click', () => {
+            updatePreview();
+            previewCard.classList.add('active');
+        });
+
+        // Auto update preview when typing (debounced)
+        let previewTimeout;
+        function debouncedPreview() {
+            clearTimeout(previewTimeout);
+            previewTimeout = setTimeout(() => {
+                updatePreview();
+            }, 1000);
+        }
+
+        judulInput.addEventListener('input', debouncedPreview);
+        kategoriSelect.addEventListener('change', updatePreview);
+        isiTextarea.addEventListener('input', debouncedPreview);
+        penulisInput.addEventListener('input', updatePreview);
+
+        // ============================================================
+        // SUBMIT FORM
+        // ============================================================
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Validasi form
+            if (!validateForm()) return;
+            
+            // Cek authentication
+            if (!auth.currentUser) {
+                showMessage('Sesi login habis. Silakan login ulang.', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                // Data berita
+                const beritaData = {
+                    judul: judulInput.value.trim(),
+                    kategori: kategoriSelect.value,
+                    isi: isiTextarea.value.trim(),
+                    penulis: penulisInput.value.trim() || 'Admin TKSK',
+                    gambar: gambarInput.value.trim() || '',
+                    tanggal: serverTimestamp(),
+                    status: 'published',
+                    views: 0,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                };
+
+                // Simpan ke Firestore
+                const docRef = await addDoc(collection(db, "berita"), beritaData);
+                
+                // Success message
+                showMessage(`Berita berhasil diterbitkan! ID: ${docRef.id}`, 'success');
+                
+                // Reset form
+                form.reset();
+                previewCard.classList.remove('active');
+                
+                // Reset penulis
+                if (auth.currentUser) {
+                    const username = auth.currentUser.email?.split('@')[0] || 'Admin TKSK';
+                    penulisInput.value = username;
+                }
+                
+            } catch (error) {
+                console.error('Error saving berita:', error);
+                
+                // Handle specific error codes
+                let errorMessage = 'Gagal menyimpan berita. ';
+                
+                if (error.code === 'permission-denied') {
+                    errorMessage += 'Izin ditolak. Hubungi admin untuk mengatur Firestore Rules.';
+                } else if (error.code === 'unavailable') {
+                    errorMessage += 'Layanan tidak tersedia. Periksa koneksi internet.';
+                } else if (error.code === 'deadline-exceeded') {
+                    errorMessage += 'Waktu habis. Coba lagi.';
+                } else {
+                    errorMessage += error.message;
+                }
+                
+                showMessage(errorMessage, 'error');
+                
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // ============================================================
+        // INITIAL PREVIEW
+        // ============================================================
+        // Set default values for preview
+        penulisInput.value = 'Admin TKSK';
+        
+    </script>
+</body>
+</html>
