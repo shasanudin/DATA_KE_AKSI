@@ -3,178 +3,640 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Data DTSEN | TKSK & Puskesos Sumber</title>
+    <title>Data DTSEN | Analisis Kesejahteraan - Kecamatan Sumber</title>
+    
+    <!-- Bootstrap 4.6.2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <style>
         :root {
-            --primary: #007bff;
-            --secondary: #0056b3;
+            --primary: #0a58ca;
+            --primary-dark: #084298;
+            --primary-light: #e7f1ff;
             --danger: #dc3545;
             --warning: #ffc107;
             --success: #28a745;
+            --info: #17a2b8;
+            --dark: #1a2e3f;
+            --gray-bg: #f8fafc;
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            --border-radius: 20px;
         }
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #f4f7f6; 
-            color: #333; 
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #2c3e50;
+            line-height: 1.7;
         }
 
-        .data-hero {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 50px 0;
-            margin-bottom: 30px;
-            border-radius: 0 0 30px 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .card-custom {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
+        /* ===== HEADER ===== */
+        .top-header {
             background: white;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .card-custom:hover { transform: translateY(-5px); }
 
-        .stat-value { font-weight: 700; font-size: 1.5rem; margin-bottom: 0; }
-        .stat-label { font-size: 0.8rem; color: #6c757d; text-transform: uppercase; letter-spacing: 1px; }
-
-        .table-container {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        .table thead th {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
-            text-transform: uppercase;
+
+        .logo-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-item img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .logo-divider {
+            width: 1px;
+            height: 30px;
+            background: linear-gradient(to bottom, transparent, #dee2e6, transparent);
+        }
+
+        .live-badge {
+            background: rgba(13, 110, 253, 0.1);
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 50px;
             font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .section-title { font-weight: 700; position: relative; padding-bottom: 10px; margin-bottom: 20px; }
-        .section-title::after {
+        /* ===== HERO SECTION ===== */
+        .data-hero {
+            background: linear-gradient(135deg, #ffffff 0%, #f5faff 100%);
+            padding: 50px 0 80px;
+            margin-bottom: 0;
+            border-radius: 0 0 30px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-hero::before {
             content: '';
             position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 40px;
-            height: 4px;
-            background: var(--primary);
-            border-radius: 2px;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(10,88,202,0.03) 0%, rgba(10,88,202,0) 70%);
+            border-radius: 50%;
         }
 
-        select.form-control { border-radius: 10px; border: 2px solid #e0e0e0; height: 45px; font-weight: 600; }
-        footer { background: #212529; color: #aaa; }
+        .data-hero .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .data-hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .data-hero .lead {
+            font-size: 1.1rem;
+            color: #5d6d7e;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .hero-stats-mini {
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+            background: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            margin-top: 20px;
+        }
+
+        /* ===== STATS CARD ===== */
+        .stats-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s;
+            height: 100%;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(10,88,202,0.08);
+        }
+
+        .stats-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-light);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .stats-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .stats-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        /* ===== TABEL KECAMATAN ===== */
+        .table-container {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: none;
+            padding: 15px 20px;
+        }
+
+        .table tbody td {
+            padding: 15px 20px;
+            vertical-align: middle;
+            border-color: #f1f3f9;
+            font-weight: 500;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8fbff;
+        }
+
+        .desil-badge {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        /* ===== WILAYAH CARD ===== */
+        .wilayah-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .wilayah-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .wilayah-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .custom-select {
+            border-radius: 50px;
+            padding: 10px 25px;
+            border: 2px solid #e9ecef;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark);
+            background-color: white;
+            cursor: pointer;
+            min-width: 250px;
+            transition: all 0.2s;
+        }
+
+        .custom-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(10,88,202,0.1);
+        }
+
+        /* ===== DESIL CARD ===== */
+        .desil-card {
+            background: white;
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid #e9ecef;
+            transition: all 0.2s;
+            height: 100%;
+        }
+
+        .desil-card:hover {
+            border-color: var(--primary);
+            background: #f8fbff;
+        }
+
+        .desil-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--primary-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .desil-info {
+            flex: 1;
+        }
+
+        .desil-info small {
+            color: #6c757d;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .desil-info h4 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .desil-percent {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* ===== CHART CARD ===== */
+        .chart-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 280px;
+            width: 100%;
+        }
+
+        /* ===== FOOTER ===== */
+        .main-footer {
+            background: var(--dark);
+            color: white;
+            padding: 50px 0 30px;
+            margin-top: 80px;
+        }
+
+        .footer-text {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        .footer-copyright {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .data-hero h1 { font-size: 2rem; }
+            .stats-number { font-size: 1.8rem; }
+            .wilayah-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .custom-select { width: 100%; }
+            .desil-card { padding: 15px; }
+            .desil-info h4 { font-size: 1.4rem; }
+        }
     </style>
 </head>
 <body>
 
-<header class="container py-3 bg-white">
-    <div class="row align-items-center">
-        <div class="col-md-6 text-center text-md-left">
-            <img src="assets/img/logo/logo-tksk.png" alt="TKSK" height="45">
-            <img src="assets/img/logo/logo-puskesos.png" alt="Puskesos" height="45" class="ml-2 border-left pl-2">
-        </div>
-        <div class="col-md-6 text-right d-none d-md-block">
-            <span class="badge badge-primary px-3 py-2">Satu Data Terpadu</span>
+<!-- ===== TOP HEADER ===== -->
+<header class="top-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="header-logo">
+                <div class="logo-item">
+                    <img src="assets/img/logo/logo-tksk.webp" 
+                         alt="Logo TKSK" 
+                         width="40" 
+                         height="40"
+                         loading="lazy"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%3E%3Crect%20width%3D%2240%22%20height%3D%2240%22%20fill%3D%22%230a58ca%22%2F%3E%3Ctext%20x%3D%228%22%20y%3D%2225%22%20font-size%3D%2214%22%20fill%3D%22white%22%3ETKSK%3C%2Ftext%3E%3C%2Fsvg%3E';">
+                    <span class="font-weight-bold text-dark d-none d-md-inline">TKSK</span>
+                </div>
+                <div class="logo-divider"></div>
+                <div class="logo-item">
+                    <img src="assets/img/logo/logo-puskesos.webp" 
+                         alt="Logo Puskesos" 
+                         width="40" 
+                         height="40"
+                         loading="lazy"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%3E%3Crect%20width%3D%2240%22%20height%3D%2240%22%20fill%3D%22%2328a745%22%2F%3E%3Ctext%20x%3D%225%22%20y%3D%2225%22%20font-size%3D%2212%22%20fill%3D%22white%22%3EPUSKESOS%3C%2Ftext%3E%3C%2Fsvg%3E';">
+                    <span class="font-weight-bold text-dark d-none d-md-inline">Puskesos</span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="live-badge">
+                    <i class="fas fa-database mr-1"></i>
+                    <span id="realtimeClock">Memuat...</span>
+                </span>
+            </div>
         </div>
     </div>
 </header>
 
+<!-- ===== NAVBAR CONTAINER ===== -->
 <div id="navbar"></div>
 
+<!-- ===== HERO SECTION ===== -->
 <section class="data-hero text-center">
     <div class="container">
-        <h1 class="font-weight-bold">Analisis Data DTSEN</h1>
-        <p class="lead opacity-75">Visualisasi sebaran kesejahteraan masyarakat Kecamatan Sumber</p>
+        <h1 class="font-weight-bold" data-aos="fade-up">
+            <span class="text-primary">Analisis Data</span> DTSEN
+        </h1>
+        <p class="lead mx-auto" data-aos="fade-up" data-aos-delay="100">
+            Visualisasi sebaran kesejahteraan masyarakat Kecamatan Sumber berdasarkan Desil 1-10
+        </p>
+        <div class="hero-stats-mini" data-aos="fade-up" data-aos-delay="200">
+            <div>
+                <small class="text-muted">Total Desa</small>
+                <strong id="totalDesaHero">0</strong>
+            </div>
+            <div class="text-muted">•</div>
+            <div>
+                <small class="text-muted">Total KK DTSEN</small>
+                <strong id="totalKKHero">0</strong>
+            </div>
+            <div class="text-muted">•</div>
+            <div>
+                <small class="text-muted">Update</small>
+                <strong id="updateDataHero">-</strong>
+            </div>
+        </div>
     </div>
 </section>
 
-<main class="container">
+<!-- ===== MAIN CONTENT ===== -->
+<main class="container py-4">
     <div class="row">
-        <div class="col-lg-5 mb-4">
-            <h5 class="section-title">Ringkasan Kecamatan</h5>
+        <!-- LEFT COLUMN: TABEL KECAMATAN -->
+        <div class="col-lg-5 mb-4" data-aos="fade-right" data-aos-delay="200">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h5 class="font-weight-bold mb-0" style="font-size: 1.2rem;">
+                    <i class="fas fa-map-marked-alt mr-2 text-primary"></i>
+                    Ringkasan Kecamatan
+                </h5>
+                <span class="badge badge-light px-3 py-2">
+                    <i class="fas fa-chart-pie mr-1"></i> Desil 1-10
+                </span>
+            </div>
+            
             <div class="table-container">
                 <table class="table table-hover mb-0">
                     <thead>
                         <tr>
-                            <th>Klasifikasi Ekonomi</th>
-                            <th class="text-right">Total KK</th>
+                            <th width="70%">Klasifikasi Ekonomi</th>
+                            <th width="30%" class="text-right">Total KK</th>
                         </tr>
                     </thead>
                     <tbody id="tabelDesilKecamatan">
-                        </tbody>
+                        <tr><td colspan="2" class="text-center py-4">Memuat data DTSEN...</td></tr>
+                    </tbody>
                 </table>
             </div>
-            <div class="mt-3">
-                <small class="text-muted"><i class="fas fa-history mr-1"></i> Pembaruan terakhir: <strong id="updateData">-</strong></small>
+            
+            <div class="mt-3 d-flex align-items-center justify-content-between">
+                <small class="text-muted">
+                    <i class="fas fa-history mr-1"></i> Pembaruan terakhir: 
+                    <strong id="updateData">-</strong>
+                </small>
+                <span class="badge badge-success px-3 py-2">
+                    <i class="fas fa-check-circle mr-1"></i> Real-time
+                </span>
+            </div>
+            
+            <!-- INFORMASI DESIL -->
+            <div class="mt-4 p-3 bg-light rounded">
+                <h6 class="font-weight-bold mb-2">
+                    <i class="fas fa-info-circle mr-2 text-primary"></i>
+                    Keterangan Desil:
+                </h6>
+                <div class="d-flex flex-wrap gap-2 small">
+                    <span class="mr-3"><span class="desil-badge" style="background: #dc3545;"></span> D1: Sangat Miskin</span>
+                    <span class="mr-3"><span class="desil-badge" style="background: #ffc107;"></span> D2: Miskin</span>
+                    <span class="mr-3"><span class="desil-badge" style="background: #0a58ca;"></span> D3: Hampir Miskin</span>
+                    <span class="mr-3"><span class="desil-badge" style="background: #6610f2;"></span> D4: Rentan</span>
+                    <span class="mr-3"><span class="desil-badge" style="background: #fd7e14;"></span> D5: Menengah Bawah</span>
+                    <span><span class="desil-badge" style="background: #28a745;"></span> D6-10: Sejahtera</span>
+                </div>
             </div>
         </div>
-
-        <div class="col-lg-7 mb-4">
-            <h5 class="section-title">Eksplorasi Per Wilayah</h5>
-            <div class="card card-custom p-4 mb-4">
-                <div class="form-group mb-0">
-                    <label class="small font-weight-bold text-muted">PILIH DESA / KELURAHAN</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-transparent border-right-0"><i class="fas fa-map-marker-alt text-primary"></i></span>
-                        </div>
-                        <select id="wilayahSelect" class="form-control border-left-0">
-                            <option>Memuat data...</option>
+        
+        <!-- RIGHT COLUMN: ANALISIS PER WILAYAH -->
+        <div class="col-lg-7 mb-4" data-aos="fade-left" data-aos-delay="300">
+            <!-- WILAYAH SELECTOR -->
+            <div class="wilayah-card mb-4">
+                <div class="wilayah-header">
+                    <div class="wilayah-title">
+                        <i class="fas fa-map-marker-alt text-primary"></i>
+                        <span>Eksplorasi Per Wilayah</span>
+                    </div>
+                    <div class="form-group mb-0">
+                        <select id="wilayahSelect" class="custom-select">
+                            <option value="" disabled selected>Memuat data wilayah...</option>
                         </select>
                     </div>
                 </div>
+                
+                <!-- STATS DESIL PER WILAYAH -->
+                <div class="row mt-4">
+                    <div class="col-6 col-md-4 mb-3">
+                        <div class="desil-card">
+                            <div class="desil-icon" style="background: rgba(220,53,69,0.1); color: #dc3545;">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="desil-info">
+                                <small>Total KK</small>
+                                <h4 id="totalKK" class="text-dark">—</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 mb-3">
+                        <div class="desil-card">
+                            <div class="desil-icon" style="background: rgba(220,53,69,0.1); color: #dc3545;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="desil-info">
+                                <small>Desil 1</small>
+                                <h4 id="desil1" class="text-danger">—</h4>
+                                <span id="desil1Percent" class="desil-percent">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 mb-3">
+                        <div class="desil-card">
+                            <div class="desil-icon" style="background: rgba(255,193,7,0.1); color: #ffc107;">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="desil-info">
+                                <small>Desil 2</small>
+                                <h4 id="desil2" class="text-warning">—</h4>
+                                <span id="desil2Percent" class="desil-percent">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="row text-center mb-4">
-                <div class="col-6 col-md-4 mb-3">
-                    <div class="card card-custom p-3 border-left border-primary" style="border-left-width: 5px !important;">
-                        <p class="stat-label mb-1">Total KK</p>
-                        <h3 id="totalKK" class="stat-value text-primary">—</h3>
+            
+            <!-- CHART DISTRIBUSI DESIL -->
+            <div class="chart-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="font-weight-bold mb-0">
+                        <i class="fas fa-chart-bar mr-2 text-primary"></i>
+                        Proporsi Kesejahteraan <span id="selectedWilayahName">-</span>
+                    </h5>
+                    <div class="d-flex align-items-center">
+                        <span class="badge badge-light px-3 py-2">
+                            <i class="fas fa-percent mr-1"></i> Persentase
+                        </span>
                     </div>
                 </div>
-                <div class="col-6 col-md-4 mb-3">
-                    <div class="card card-custom p-3 border-left border-danger" style="border-left-width: 5px !important;">
-                        <p class="stat-label mb-1">Desil 1</p>
-                        <h3 id="desil1" class="stat-value text-danger">—</h3>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 mb-3">
-                    <div class="card card-custom p-3 border-left border-warning" style="border-left-width: 5px !important;">
-                        <p class="stat-label mb-1">Desil 2</p>
-                        <h3 id="desil2" class="stat-value text-warning">—</h3>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card card-custom p-4">
-                <h6 class="font-weight-bold mb-3"><i class="fas fa-chart-bar mr-2 text-primary"></i>Proporsi Kesejahteraan (%)</h6>
-                <div style="height: 300px; position: relative;">
+                <div class="chart-container">
                     <canvas id="desilChart"></canvas>
+                </div>
+                <div class="mt-3 text-muted small text-center">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Grafik proporsi KK per kelompok desil terhadap total KK di wilayah terpilih
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- INFORMASI TAMBAHAN - PRIORITAS DTSEN -->
+    <div class="row mt-5" data-aos="fade-up" data-aos-delay="400">
+        <div class="col-12">
+            <div class="alert alert-primary d-flex align-items-center" style="background: var(--primary-light); border: none; border-radius: 16px;">
+                <i class="fas fa-chart-simple fa-2x mr-4 text-primary"></i>
+                <div>
+                    <strong class="text-primary">Tentang Data DTSEN:</strong>
+                    <p class="mb-0 text-dark">Data yang ditampilkan merupakan hasil verifikasi lapangan oleh TKSK dan Puskesos Kecamatan Sumber. 
+                    Desil 1-4 menjadi prioritas utama program bantuan sosial, dengan kriteria <span class="badge badge-danger px-2">TINGGI >500 KK</span> 
+                    dan <span class="badge badge-warning px-2">SEDANG 300-500 KK</span> untuk D1+D2.</p>
                 </div>
             </div>
         </div>
     </div>
 </main>
 
-<footer class="py-5 mt-5">
-    <div class="container text-center">
-        <p class="mb-1 text-white fw-bold">Dinas Sosial - TKSK Sumber</p>
-        <p class="small mb-0">© 2026 Forum Puskesos Kecamatan Sumber.</p>
+<!-- ===== FOOTER ===== -->
+<footer class="main-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mb-4 mb-md-0">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="assets/img/logo/logo-tksk.webp" alt="TKSK" height="35" class="mr-3" onerror="this.style.display='none';">
+                    <span style="font-size: 1.3rem; font-weight: 700; color: white;">DARI DATA KE AKSI</span>
+                </div>
+                <p class="footer-text">
+                    Sistem Analisis Data Terpadu Sosial Ekonomi Nasional (DTSEN) Kecamatan Sumber, Kabupaten Cirebon.
+                    Berkolaborasi dengan Tenaga Kesejahteraan Sosial Kecamatan (TKSK) dan Forum Puskesos.
+                </p>
+            </div>
+            <div class="col-md-4 text-md-right">
+                <p class="footer-text mb-1">
+                    <i class="fas fa-map-marker-alt mr-2"></i> Jl. Sunan Drajat No.16, Sumber
+                </p>
+                <p class="footer-text mb-1">
+                    <i class="fas fa-envelope mr-2"></i> tksksumber@gmail.com
+                </p>
+                <p class="footer-text">
+                    <i class="fas fa-phone-alt mr-2"></i> 0882-1494-0995
+                </p>
+            </div>
+        </div>
+        <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="footer-copyright mb-0">
+                    © 2026 TKSK & Forum Puskesos Kecamatan Sumber. 
+                    <span class="d-block d-md-inline mt-2 mt-md-0">
+                        Dibangun untuk analisis kesejahteraan masyarakat.
+                    </span>
+                </p>
+            </div>
+        </div>
     </div>
 </footer>
 
+<!-- ===== SCRIPTS ===== -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
+<!-- Firebase Module -->
 <script type="module">
+    // ============================================================
+    // FIREBASE INITIALIZATION - KHUSUS DATA DTSEN
+    // ============================================================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
@@ -189,103 +651,319 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    let chart;
-    let cachedData = [];
+    
+    // ============================================================
+    // GLOBAL VARIABLES
+    // ============================================================
+    let chart = null;
+    let wilayahData = [];
+    let agregatDesil = Array(10).fill(0);
+    let totalKKKecamatan = 0;
+    let totalDesa = 0;
 
-    // Muat Navbar
-    fetch('navbar.html').then(r => r.text()).then(html => { document.getElementById('navbar').innerHTML = html; }).catch(() => {});
+    // ============================================================
+    // INITIALIZE AOS
+    // ============================================================
+    AOS.init({
+        duration: 800,
+        once: true,
+        offset: 50
+    });
 
-    async function initFirebaseData() {
+    // ============================================================
+    // NAVBAR LOADER
+    // ============================================================
+    fetch('navbar.html')
+        .then(r => r.ok ? r.text() : Promise.reject())
+        .then(html => document.getElementById('navbar').innerHTML = html)
+        .catch(() => {
+            console.log('Navbar not loaded');
+            document.getElementById('navbar').innerHTML = '<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm"><div class="container"><span class="navbar-text">Menu navigasi tidak tersedia</span></div></nav>';
+        });
+
+    // ============================================================
+    // REAL-TIME CLOCK
+    // ============================================================
+    function updateClock() {
+        const now = new Date();
+        const options = { 
+            day: 'numeric', 
+            month: 'short', 
+            year: 'numeric',
+            hour: '2-digit', 
+            minute: '2-digit'
+        };
+        document.getElementById('realtimeClock').innerText = now.toLocaleDateString('id-ID', options);
+    }
+    updateClock();
+    setInterval(updateClock, 60000);
+
+    // ============================================================
+    // LOAD DATA DTSEN DARI FIREBASE
+    // ============================================================
+    async function loadDataDTSEN() {
         try {
             const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
+            
             const select = document.getElementById('wilayahSelect');
             const tabelKec = document.getElementById('tabelDesilKecamatan');
             
-            cachedData = [];
-            let agregat = Array(10).fill(0);
+            wilayahData = [];
+            agregatDesil = Array(10).fill(0);
+            totalKKKecamatan = 0;
+            totalDesa = 0;
 
             querySnapshot.forEach((doc) => {
-                const w = doc.data();
-                cachedData.push(w);
-                if (w.desil) {
-                    w.desil.forEach((val, i) => { agregat[i] += parseInt(val) || 0; });
+                const item = doc.data();
+                const id = doc.id;
+                
+                // Format desil array
+                let desilArray = item.desil || [];
+                if (!Array.isArray(desilArray)) {
+                    desilArray = Object.values(desilArray);
                 }
+                while (desilArray.length < 10) desilArray.push(0);
+                desilArray = desilArray.map(v => parseInt(v) || 0);
+                
+                // Hitung total KK wilayah
+                const totalKKWilayah = desilArray.reduce((a, b) => a + b, 0);
+                
+                // Simpan data
+                wilayahData.push({
+                    id: id,
+                    nama: item.nama_wilayah || item.nama || id,
+                    desil: desilArray,
+                    total_kk: totalKKWilayah
+                });
+                
+                // Agregasi kecamatan
+                desilArray.forEach((val, i) => {
+                    agregatDesil[i] += val;
+                });
+                
+                totalKKKecamatan += totalKKWilayah;
+                totalDesa++;
             });
 
-            document.getElementById('updateData').innerText = new Date().toLocaleDateString('id-ID');
+            // Update timestamp
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+            document.getElementById('updateData').innerText = dateStr;
+            document.getElementById('updateDataHero').innerText = dateStr;
+            
+            // Update hero stats
+            document.getElementById('totalDesaHero').innerText = totalDesa;
+            document.getElementById('totalKKHero').innerText = totalKKKecamatan.toLocaleString('id-ID');
 
-            // --- TABEL AGREGAT KECAMATAN ---
-            const labels = ["Sangat Miskin (D1)", "Miskin (D2)", "Hampir Miskin (D3)", "Rentan (D4)", "Menengah Bawah (D5)"];
-            let rowHtml = "";
-            for(let i=0; i<5; i++) {
-                rowHtml += `<tr><td>${labels[i]}</td><td class="text-right font-weight-bold">${agregat[i].toLocaleString('id-ID')}</td></tr>`;
+            // Render tabel kecamatan
+            renderTabelKecamatan();
+            
+            // Populate dropdown
+            renderDropdown();
+            
+            // Render wilayah pertama
+            if (wilayahData.length > 0) {
+                renderWilayah(0);
             }
-            // Gabungkan D6-D10 di Tabel
-            let gabungD610Kec = agregat.slice(5).reduce((a, b) => a + b, 0);
-            rowHtml += `<tr class="table-success text-success font-weight-bold"><td>Masyarakat Sejahtera (D6-10)</td><td class="text-right">${gabungD610Kec.toLocaleString('id-ID')}</td></tr>`;
-            tabelKec.innerHTML = rowHtml;
-
-            // --- DROPDOWN ---
-            select.innerHTML = "";
-            cachedData.sort((a, b) => a.nama.localeCompare(b.nama)).forEach((w, i) => {
-                const opt = document.createElement('option');
-                opt.value = i;
-                opt.textContent = w.nama;
-                select.appendChild(opt);
-            });
-
-            select.addEventListener('change', e => renderWilayah(e.target.value));
-            if(cachedData.length > 0) renderWilayah(0);
 
         } catch (error) {
             console.error("Firebase Error:", error);
+            alert("Gagal memuat data DTSEN. Silakan refresh halaman.");
         }
     }
 
-    function renderWilayah(idx) {
-        const w = cachedData[idx];
-        const d = w.desil.map(val => parseInt(val) || 0);
-        const totalKK = parseInt(w.total_kk) || 0;
-        const hitungPersen = (nilai) => totalKK > 0 ? ((nilai / totalKK) * 100).toFixed(1) : 0;
-
-        document.getElementById('totalKK').innerText = totalKK.toLocaleString('id-ID');
-        document.getElementById('desil1').innerText = hitungPersen(d[0]) + '%';
-        document.getElementById('desil2').innerText = hitungPersen(d[1]) + '%';
+    // ============================================================
+    // RENDER TABEL KECAMATAN
+    // ============================================================
+    function renderTabelKecamatan() {
+        const tabelKec = document.getElementById('tabelDesilKecamatan');
         
-        // Gabungkan D6-D10 untuk Grafik
-        const jumlah610 = d.slice(5).reduce((a, b) => a + b, 0);
+        const labels = [
+            { name: "Sangat Miskin (D1)", color: "#dc3545" },
+            { name: "Miskin (D2)", color: "#ffc107" },
+            { name: "Hampir Miskin (D3)", color: "#0a58ca" },
+            { name: "Rentan (D4)", color: "#6610f2" },
+            { name: "Menengah Bawah (D5)", color: "#fd7e14" }
+        ];
+        
+        let html = "";
+        
+        // D1 - D5
+        for (let i = 0; i < 5; i++) {
+            html += `<tr>
+                <td>
+                    <span class="desil-badge" style="background: ${labels[i].color};"></span>
+                    ${labels[i].name}
+                </td>
+                <td class="text-right font-weight-bold">${agregatDesil[i].toLocaleString('id-ID')}</td>
+            </tr>`;
+        }
+        
+        // D6-10 (gabung)
+        const d6_10 = agregatDesil.slice(5).reduce((a, b) => a + b, 0);
+        html += `<tr class="table-success">
+            <td>
+                <span class="desil-badge" style="background: #28a745;"></span>
+                <span class="font-weight-bold text-success">Masyarakat Sejahtera (D6-10)</span>
+            </td>
+            <td class="text-right font-weight-bold text-success">${d6_10.toLocaleString('id-ID')}</td>
+        </tr>`;
+        
+        // Total
+        html += `<tr class="table-primary font-weight-bold">
+            <td>TOTAL KECAMATAN</td>
+            <td class="text-right">${totalKKKecamatan.toLocaleString('id-ID')} KK</td>
+        </tr>`;
+        
+        tabelKec.innerHTML = html;
+    }
+
+    // ============================================================
+    // RENDER DROPDOWN WILAYAH
+    // ============================================================
+    function renderDropdown() {
+        const select = document.getElementById('wilayahSelect');
+        select.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
+        
+        // Sort by name
+        wilayahData.sort((a, b) => a.nama.localeCompare(b.nama));
+        
+        wilayahData.forEach((w, index) => {
+            const opt = document.createElement('option');
+            opt.value = index;
+            opt.textContent = `${w.nama} (${w.total_kk.toLocaleString('id-ID')} KK)`;
+            select.appendChild(opt);
+        });
+        
+        // Add event listener
+        select.addEventListener('change', function(e) {
+            if (e.target.value) {
+                renderWilayah(parseInt(e.target.value));
+            }
+        });
+    }
+
+    // ============================================================
+    // RENDER WILAYAH TERTENTU
+    // ============================================================
+    function renderWilayah(index) {
+        if (!wilayahData[index]) return;
+        
+        const w = wilayahData[index];
+        const d = w.desil;
+        const totalKK = w.total_kk;
+        
+        // Update nama wilayah di chart
+        document.getElementById('selectedWilayahName').innerText = `- ${w.nama}`;
+        
+        // Update stat cards
+        document.getElementById('totalKK').innerText = totalKK.toLocaleString('id-ID');
+        document.getElementById('desil1').innerText = d[0].toLocaleString('id-ID');
+        document.getElementById('desil2').innerText = d[1].toLocaleString('id-ID');
+        
+        // Update persentase
+        const p1 = totalKK > 0 ? ((d[0] / totalKK) * 100).toFixed(1) : 0;
+        const p2 = totalKK > 0 ? ((d[1] / totalKK) * 100).toFixed(1) : 0;
+        document.getElementById('desil1Percent').innerText = `${p1}%`;
+        document.getElementById('desil2Percent').innerText = `${p2}%`;
+        
+        // Render chart
+        renderChart(w);
+    }
+
+    // ============================================================
+    // RENDER CHART
+    // ============================================================
+    function renderChart(wilayah) {
+        const d = wilayah.desil;
+        const totalKK = wilayah.total_kk;
+        
+        // Hitung persentase
+        const p1 = totalKK > 0 ? (d[0] / totalKK * 100).toFixed(1) : 0;
+        const p2 = totalKK > 0 ? (d[1] / totalKK * 100).toFixed(1) : 0;
+        const p3 = totalKK > 0 ? (d[2] / totalKK * 100).toFixed(1) : 0;
+        const p4 = totalKK > 0 ? (d[3] / totalKK * 100).toFixed(1) : 0;
+        const p5 = totalKK > 0 ? (d[4] / totalKK * 100).toFixed(1) : 0;
+        const p6_10 = totalKK > 0 ? (d.slice(5).reduce((a, b) => a + b, 0) / totalKK * 100).toFixed(1) : 0;
 
         const ctx = document.getElementById('desilChart').getContext('2d');
-        if (chart) chart.destroy();
+        
+        // Destroy existing chart
+        if (chart) {
+            chart.destroy();
+        }
 
         chart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6-10'],
                 datasets: [{
-                    data: [
-                        hitungPersen(d[0]), hitungPersen(d[1]), hitungPersen(d[2]), 
-                        hitungPersen(d[3]), hitungPersen(d[4]), hitungPersen(jumlah610)
+                    label: 'Proporsi KK (%)',
+                    data: [p1, p2, p3, p4, p5, p6_10],
+                    backgroundColor: [
+                        '#dc3545', // D1
+                        '#ffc107', // D2
+                        '#0a58ca', // D3
+                        '#6610f2', // D4
+                        '#fd7e14', // D5
+                        '#28a745'  // D6-10
                     ],
-                    backgroundColor: ['#dc3545', '#ffc107', '#007bff', '#6610f2', '#fd7e14', '#28a745'],
-                    borderRadius: 5
+                    borderWidth: 0,
+                    borderRadius: 6,
+                    barPercentage: 0.7,
+                    categoryPercentage: 0.9
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                scales: { 
-                    y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } 
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => {
+                                const value = context.raw;
+                                const total = wilayah.total_kk;
+                                const jumlah = total * value / 100;
+                                return `${context.raw}% (${Math.round(jumlah).toLocaleString('id-ID')} KK)`;
+                            }
+                        }
+                    }
                 },
-                plugins: { 
-                    legend: { display: false },
-                    tooltip: { callbacks: { label: (ctx) => `Proporsi: ${ctx.raw}%` } }
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(0,0,0,0.03)'
+                        },
+                        ticks: {
+                            callback: (value) => value + '%'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
                 }
             }
         });
     }
 
-    initFirebaseData();
+    // ============================================================
+    // START DASHBOARD
+    // ============================================================
+    loadDataDTSEN();
+
 </script>
+
+<!-- Fallback for non-module browsers -->
+<script nomodule>
+    document.getElementById('tabelDesilKecamatan').innerHTML = '<tr><td colspan="2" class="text-center py-4 text-warning">Browser tidak mendukung fitur modern. Silakan gunakan Chrome/Firefox/Edge terbaru.</td></tr>';
+</script>
+
 </body>
 </html>
