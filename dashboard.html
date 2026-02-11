@@ -2,228 +2,1159 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - DATA KE AKSI</title>
-    <link rel="stylesheet" href="css/dashboard.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>Dashboard Admin | DATA KE AKSI - TKSK Sumber</title>
+    
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body class="dashboard-body">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        :root {
+            --primary: #0a58ca;
+            --primary-dark: #084298;
+            --primary-light: #e7f1ff;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --dark: #1a2e3f;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-600: #6c757d;
+            --sidebar-width: 280px;
+            --sidebar-collapsed: 80px;
+            --border-radius: 20px;
+            --card-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== SIDEBAR - DESAIN PREMIUM ===== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            transition: var(--transition);
+            border-right: 1px solid var(--gray-200);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 30px 25px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-header small {
+            color: var(--gray-600);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sidebar-header small i {
+            color: var(--primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 25px 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            border-radius: 14px;
+            color: var(--gray-600);
+            font-weight: 500;
+            transition: var(--transition);
+            text-decoration: none;
+            gap: 12px;
+        }
+
+        .sidebar-nav a i {
+            width: 22px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--gray-600);
+            transition: var(--transition);
+        }
+
+        .sidebar-nav a:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .sidebar-nav a:hover i {
+            color: var(--primary);
+        }
+
+        .sidebar-nav li.active a {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 8px 15px rgba(10,88,202,0.2);
+        }
+
+        .sidebar-nav li.active a i {
+            color: white;
+        }
+
+        .logout-item {
+            margin-top: 30px;
+            border-top: 1px solid var(--gray-200);
+            padding-top: 20px;
+        }
+
+        .logout-item a {
+            color: var(--danger);
+        }
+
+        .logout-item a i {
+            color: var(--danger);
+        }
+
+        .logout-item a:hover {
+            background: rgba(220,53,69,0.1);
+            color: var(--danger);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            transition: var(--transition);
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .user-profile {
+            background: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--gray-200);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile i {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+        }
+
+        .content-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .content-header p {
+            color: var(--gray-600);
+            font-size: 1rem;
+        }
+
+        /* ===== STATS CARD ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(10,88,202,0.08);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-light);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .card-info h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .card-info p {
+            color: var(--gray-600);
+            font-size: 0.85rem;
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+
+        /* ===== TABLE & CONTAINER ===== */
+        .data-section {
+            margin-bottom: 30px;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--gray-200);
+        }
+
+        .table-container h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .table-container h3 i {
+            color: var(--primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: var(--gray-100);
+            padding: 16px 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-600);
+            border-bottom: 2px solid var(--gray-300);
+            text-align: left;
+        }
+
+        tbody td {
+            padding: 16px 12px;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 0.95rem;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: var(--gray-100);
+        }
+
+        .btn-sm {
+            padding: 6px 16px;
+            border-radius: 8px;
+            border: none;
+            background: var(--gray-200);
+            color: var(--dark);
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .btn-sm:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-success:hover {
+            background: #1e7e34;
+            transform: translateY(-2px);
+        }
+
+        /* ===== GRID 3 KOLOM UNTUK CHART ===== */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--gray-200);
+        }
+
+        .chart-container h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        canvas {
+            max-height: 250px;
+            width: 100% !important;
+        }
+
+        /* ===== MODAL FORM BERITA ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-600);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: rgba(40,167,69,0.1);
+            color: var(--success);
+            border: 1px solid rgba(40,167,69,0.2);
+        }
+
+        .alert-danger {
+            background: rgba(220,53,69,0.1);
+            color: var(--danger);
+            border: 1px solid rgba(220,53,69,0.2);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="sidebar-header">
             <h3>DATA KE AKSI</h3>
-            <small id="lokasi-info">Kec. Sumber, Cirebon</small>
+            <small>
+                <i class="fas fa-map-marker-alt"></i>
+                Kec. Sumber, Kab. Cirebon
+            </small>
         </div>
         <nav class="sidebar-nav">
             <ul>
-                <li class="active"><a href="#"><i class="fas fa-home"></i> Beranda</a></li>
-                <li><a href="admin/input_data.html"><i class="fas fa-edit"></i> Input Data Baru</a></li>
-                <li><a href="admin/statistik_desil.html"><i class="fas fa-chart-bar"></i> Statistik Desil</a></li>
-                <li class="logout-item"><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+                <li class="active">
+                    <a href="#">
+                        <i class="fas fa-home"></i>
+                        Beranda
+                    </a>
+                </li>
+                <li>
+                    <a href="admin/input_data.html">
+                        <i class="fas fa-database"></i>
+                        Input Data DTSEN
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="openModalBerita()">
+                        <i class="fas fa-newspaper"></i>
+                        Input Berita Baru
+                    </a>
+                </li>
+                <li>
+                    <a href="admin/statistik_desil.html">
+                        <i class="fas fa-chart-bar"></i>
+                        Statistik Desil
+                    </a>
+                </li>
+                <li class="logout-item">
+                    <a href="#" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Keluar
+                    </a>
+                </li>
             </ul>
         </nav>
     </aside>
 
+    <!-- MAIN CONTENT -->
     <main class="main-content">
         <header class="top-nav">
             <div class="user-profile">
-                <span>Update: <strong id="update-date">-</strong></span>
+                <i class="fas fa-user-circle"></i>
+                <span>Update: <strong id="update-date">Memuat...</strong></span>
             </div>
         </header>
 
         <section class="content-header">
-            <h1 id="title-wilayah">Data Kecamatan</h1>
-            <p>Distribusi Kesejahteraan Keluarga Berdasarkan Desil.</p>
+            <h1 id="title-wilayah">Dashboard Kecamatan Sumber</h1>
+            <p>Distribusi Kesejahteraan Keluarga Berdasarkan Data DTSEN Real-time.</p>
         </section>
 
+        <!-- STATS CARDS -->
         <section class="stats-grid">
             <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-users"></i>
+                </div>
                 <div class="card-info">
                     <h3 id="total-kk-wilayah">0</h3>
                     <p>Total KK Terdata</p>
                 </div>
             </div>
             <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
                 <div class="card-info">
                     <h3 id="total-desa">0</h3>
                     <p>Kelurahan/Desa</p>
                 </div>
             </div>
-        </section>
-
-        <section class="data-section" style="margin-bottom: 2rem;">
-            <div class="table-container">
-                <h3>Grafik Total Desil Kecamatan</h3>
-                <canvas id="chartDesil" height="100"></canvas>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i>
+                </div>
+                <div class="card-info">
+                    <h3 id="total-prioritas">0</h3>
+                    <p>Prioritas D1+D2</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-newspaper" style="color: #17a2b8;"></i>
+                </div>
+                <div class="card-info">
+                    <h3 id="total-berita">0</h3>
+                    <p>Berita Terbit</p>
+                </div>
             </div>
         </section>
 
+        <!-- GRAFIK UTAMA DESIL -->
         <section class="data-section">
             <div class="table-container">
-                <h3>Rincian Per Wilayah</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Kode</th>
-                            <th>Nama Kelurahan/Desa</th>
-                            <th>Jenis</th>
-                            <th>Total KK</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body">
-                        </tbody>
-                </table>
+                <h3>
+                    <i class="fas fa-chart-bar"></i>
+                    Grafik Distribusi Desil Kecamatan Sumber
+                </h3>
+                <canvas id="chartDesil" height="120"></canvas>
             </div>
         </section>
-        <section class="data-section" style="margin-bottom: 2rem;">
-            <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                <div class="table-container">
-                    <h3><i class="fas fa-chart-bar"></i> Akumulasi Desil</h3>
-                    <canvas id="chartDesil"></canvas>
-                </div>
-                <div class="table-container">
-                    <h3><i class="fas fa-hand-holding-heart"></i> Sebaran Bansos</h3>
-                    <canvas id="chartBansos"></canvas>
-                </div>
-                <div class="table-container">
-                    <h3><i class="fas fa-concierge-bell"></i> Aktivitas Layanan</h3>
-                    <canvas id="chartLayanan"></canvas>
+
+        <!-- GRID 3 CHART: BANSOS, LAYANAN, BERITA -->
+        <section class="chart-grid">
+            <div class="chart-container">
+                <h4>
+                    <i class="fas fa-hand-holding-heart" style="color: #28a745;"></i>
+                    Sebaran Bantuan Sosial
+                </h4>
+                <canvas id="chartBansos"></canvas>
+            </div>
+            <div class="chart-container">
+                <h4>
+                    <i class="fas fa-headset" style="color: #ffc107;"></i>
+                    Aktivitas Layanan
+                </h4>
+                <canvas id="chartLayanan"></canvas>
+            </div>
+            <div class="chart-container">
+                <h4>
+                    <i class="fas fa-newspaper" style="color: #17a2b8;"></i>
+                    Statistik Berita
+                </h4>
+                <canvas id="chartBerita"></canvas>
+            </div>
+        </section>
+
+        <!-- TABEL RINCIAN WILAYAH -->
+        <section class="data-section">
+            <div class="table-container">
+                <h3>
+                    <i class="fas fa-table"></i>
+                    Rincian Per Wilayah
+                </h3>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kode</th>
+                                <th>Nama Kelurahan/Desa</th>
+                                <th>Jenis</th>
+                                <th>Total KK</th>
+                                <th>D1+D2</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 40px;">
+                                    <i class="fas fa-spinner fa-spin mr-2"></i>
+                                    Memuat data wilayah...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
     </main>
 
-    <script type="module">
-    // 1. IMPORT (Hanya sekali di paling atas)
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
-
-    // 2. KONFIGURASI
-    const firebaseConfig = {
-        apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
-        authDomain: "data-ke-aksi-auth.firebaseapp.com",
-        projectId: "data-ke-aksi-auth",
-        storageBucket: "data-ke-aksi-auth.firebasestorage.app",
-        messagingSenderId: "631382692174",
-        appId: "1:631382692174:web:c10a099fb3021849eace1f"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-
-    // 3. FUNGSI UTAMA (Hanya deklarasikan SATU KALI)
-    async function loadDashboardFromFirestore() {
-        try {
-            const q = query(collection(db, "wilayah_desa"), orderBy("nama", "asc"));
-            const querySnapshot = await getDocs(q);
+    <!-- MODAL INPUT BERITA -->
+    <div id="modalBerita" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-newspaper mr-2"></i> Input Berita Baru</h2>
+                <span class="modal-close" onclick="closeModalBerita()">&times;</span>
+            </div>
             
-            let totalDesil = Array(10).fill(0);
-            let totalBansos = { bpnt: 0, pkh: 0, pbi: 0 };
-            let totalLayanan = { pengaduan: 0, sktm: 0, dtks: 0 };
-            let totalKK = 0;
-            let countDesa = 0;
+            <div id="beritaAlert" style="display: none;"></div>
+            
+            <form id="formBerita">
+                <div class="form-group">
+                    <label for="judul">Judul Berita</label>
+                    <input type="text" id="judul" class="form-control" placeholder="Contoh: Penyaluran Bansos Tahap 1 2026" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="kategori">Kategori</label>
+                    <select id="kategori" class="form-control" required>
+                        <option value="">-- Pilih Kategori --</option>
+                        <option value="Bansos">Bantuan Sosial</option>
+                        <option value="DTSEN">Pembaruan DTSEN</option>
+                        <option value="Pelayanan">Pelayanan Masyarakat</option>
+                        <option value="Kegiatan">Kegiatan TKSK</option>
+                        <option value="Pengumuman">Pengumuman</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="isi">Isi Berita</label>
+                    <textarea id="isi" class="form-control" placeholder="Tuliskan isi berita secara lengkap..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="penulis">Penulis</label>
+                    <input type="text" id="penulis" class="form-control" placeholder="Nama penulis" value="Admin TKSK" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gambar">URL Gambar (opsional)</label>
+                    <input type="url" id="gambar" class="form-control" placeholder="https://contoh.com/gambar.jpg">
+                    <small class="text-muted">Gunakan URL gambar dari internet atau upload manual</small>
+                </div>
+                
+                <div style="display: flex; gap: 15px; margin-top: 25px;">
+                    <button type="submit" class="btn-success" style="flex: 1; justify-content: center;">
+                        <i class="fas fa-paper-plane"></i>
+                        Terbitkan Berita
+                    </button>
+                    <button type="button" class="btn-sm" onclick="closeModalBerita()" style="flex: 0.3;">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            const tableBody = document.getElementById('table-body');
-            tableBody.innerHTML = "";
+    <script type="module">
+        // ============================================================
+        // FIREBASE INITIALIZATION - TIDAK DIUBAH (SESUAI PERMINTAAN)
+        // ============================================================
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            getDocs, 
+            query, 
+            orderBy,
+            addDoc,
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
-            querySnapshot.forEach((doc) => {
-                const w = doc.data();
-                countDesa++;
-                totalKK += (w.total_kk || 0);
+        // Konfigurasi Firebase - TIDAK DIUBAH
+        const firebaseConfig = {
+            apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
+            authDomain: "data-ke-aksi-auth.firebaseapp.com",
+            projectId: "data-ke-aksi-auth",
+            storageBucket: "data-ke-aksi-auth.firebasestorage.app",
+            messagingSenderId: "631382692174",
+            appId: "1:631382692174:web:c10a099fb3021849eace1f"
+        };
 
-                if(w.desil) w.desil.forEach((val, i) => { totalDesil[i] += val; });
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
 
-                if(w.bansos) {
-                    totalBansos.bpnt += (w.bansos.bpnt || 0);
-                    totalBansos.pkh += (w.bansos.pkh || 0);
-                    totalBansos.pbi += (w.bansos.pbi || 0);
+        // ============================================================
+        // GLOBAL VARIABLES
+        // ============================================================
+        let charts = {
+            desil: null,
+            bansos: null,
+            layanan: null,
+            berita: null
+        };
+        let totalBerita = 0;
+
+        // ============================================================
+        // FUNGSI UPDATE TANGGAL
+        // ============================================================
+        function updateDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            document.getElementById('update-date').innerText = now.toLocaleDateString('id-ID', options);
+        }
+        updateDate();
+        setInterval(updateDate, 60000);
+
+        // ============================================================
+        // LOAD DATA DARI FIRESTORE
+        // ============================================================
+        async function loadDashboardFromFirestore() {
+            try {
+                const q = query(collection(db, "wilayah_desa"), orderBy("nama", "asc"));
+                const querySnapshot = await getDocs(q);
+                
+                let totalDesil = Array(10).fill(0);
+                let totalBansos = { bpnt: 0, pkh: 0, pbi: 0 };
+                let totalLayanan = { pengaduan: 0, sktm: 0, dtks: 0 };
+                let totalKK = 0;
+                let countDesa = 0;
+                let totalD12 = 0;
+
+                const tableBody = document.getElementById('table-body');
+                tableBody.innerHTML = "";
+
+                querySnapshot.forEach((doc) => {
+                    const w = doc.data();
+                    countDesa++;
+                    totalKK += (w.total_kk || 0);
+
+                    if(w.desil) {
+                        w.desil.forEach((val, i) => { 
+                            totalDesil[i] += (parseInt(val) || 0); 
+                        });
+                        totalD12 += (parseInt(w.desil[0]) || 0) + (parseInt(w.desil[1]) || 0);
+                    }
+
+                    if(w.bansos) {
+                        totalBansos.bpnt += (parseInt(w.bansos.bpnt) || 0);
+                        totalBansos.pkh += (parseInt(w.bansos.pkh) || 0);
+                        totalBansos.pbi += (parseInt(w.bansos.pbi) || 0);
+                    }
+
+                    if(w.layanan) {
+                        totalLayanan.pengaduan += (parseInt(w.layanan.pengaduan) || 0);
+                        totalLayanan.sktm += (parseInt(w.layanan.sktm) || 0);
+                        totalLayanan.dtks += (parseInt(w.layanan.dtks) || 0);
+                    }
+
+                    const d12Wilayah = (parseInt(w.desil?.[0]) || 0) + (parseInt(w.desil?.[1]) || 0);
+                    let status = 'Rendah';
+                    let badgeClass = 'badge-success';
+                    if (d12Wilayah > 500) {
+                        status = 'Tinggi';
+                    } else if (d12Wilayah >= 300) {
+                        status = 'Sedang';
+                    }
+
+                    tableBody.innerHTML += `<tr>
+                        <td><code>${w.kode || `D${String(countDesa).padStart(3, '0')}`}</code></td>
+                        <td><strong>${w.nama_wilayah || w.nama || 'N/A'}</strong></td>
+                        <td>${w.jenis || 'Desa'}</td>
+                        <td>${(w.total_kk || 0).toLocaleString('id-ID')}</td>
+                        <td><span style="font-weight: 700; color: ${d12Wilayah > 500 ? '#dc3545' : d12Wilayah >= 300 ? '#ffc107' : '#28a745'};">${d12Wilayah.toLocaleString('id-ID')}</span></td>
+                        <td><span style="background: ${d12Wilayah > 500 ? '#dc3545' : d12Wilayah >= 300 ? '#ffc107' : '#28a745'}; color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 600;">${status}</span></td>
+                        <td>
+                            <button class="btn-sm" onclick="alert('Detail wilayah: ${w.nama_wilayah || w.nama}')">
+                                <i class="fas fa-eye mr-1"></i> Detail
+                            </button>
+                        </td>
+                    </tr>`;
+                });
+
+                // Update UI
+                document.getElementById('total-kk-wilayah').innerText = totalKK.toLocaleString('id-ID');
+                document.getElementById('total-desa').innerText = countDesa;
+                document.getElementById('total-prioritas').innerText = totalD12.toLocaleString('id-ID');
+
+                // Load total berita dari koleksi 'berita'
+                await loadTotalBerita();
+                
+                // Render semua chart
+                renderAllCharts(totalDesil, totalBansos, totalLayanan);
+
+            } catch (err) {
+                console.error("Gagal memuat data:", err);
+                document.getElementById('table-body').innerHTML = `<tr><td colspan="7" style="text-align: center; color: #dc3545; padding: 40px;">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>Gagal memuat data. Periksa koneksi Firebase.
+                </td></tr>`;
+            }
+        }
+
+        // ============================================================
+        // LOAD TOTAL BERITA DARI FIRESTORE
+        // ============================================================
+        async function loadTotalBerita() {
+            try {
+                const beritaSnapshot = await getDocs(collection(db, "berita"));
+                totalBerita = beritaSnapshot.size;
+                document.getElementById('total-berita').innerText = totalBerita;
+                
+                // Update chart berita
+                updateChartBerita(totalBerita);
+                
+            } catch (error) {
+                console.error("Gagal load berita:", error);
+                document.getElementById('total-berita').innerText = '0';
+            }
+        }
+
+        // ============================================================
+        // RENDER ALL CHARTS
+        // ============================================================
+        function renderAllCharts(desil, bansos, layanan) {
+            // Hapus chart lama
+            Object.keys(charts).forEach(key => {
+                if (charts[key]) {
+                    charts[key].destroy();
+                    charts[key] = null;
                 }
-
-                if(w.layanan) {
-                    totalLayanan.pengaduan += (w.layanan.pengaduan || 0);
-                    totalLayanan.sktm += (w.layanan.sktm || 0);
-                    totalLayanan.dtks += (w.layanan.dtks || 0);
-                }
-
-                tableBody.innerHTML += `<tr>
-                    <td>${w.kode}</td>
-                    <td><strong>${w.nama}</strong></td>
-                    <td>${w.jenis}</td>
-                    <td>${(w.total_kk || 0).toLocaleString()}</td>
-                    <td><button class="btn-sm">Detail</button></td>
-                </tr>`;
             });
 
-            document.getElementById('total-kk-wilayah').innerText = totalKK.toLocaleString();
-            document.getElementById('total-desa').innerText = countDesa;
+            // 1. Chart Desil (Bar)
+            const ctxDesil = document.getElementById('chartDesil')?.getContext('2d');
+            if (ctxDesil) {
+                charts.desil = new Chart(ctxDesil, {
+                    type: 'bar',
+                    data: {
+                        labels: ['D1','D2','D3','D4','D5','D6','D7','D8','D9','D10'],
+                        datasets: [{
+                            label: 'Jumlah KK',
+                            data: desil,
+                            backgroundColor: [
+                                '#dc3545', '#fd7e14', '#ffc107', '#28a745', '#17a2b8',
+                                '#6c757d', '#6c757d', '#6c757d', '#6c757d', '#6c757d'
+                            ],
+                            borderRadius: 6,
+                            barPercentage: 0.7,
+                            categoryPercentage: 0.9
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { 
+                                callbacks: { 
+                                    label: (ctx) => ` ${ctx.raw.toLocaleString('id-ID')} KK` 
+                                } 
+                            }
+                        },
+                        scales: {
+                            y: { 
+                                beginAtZero: true,
+                                ticks: { callback: (v) => v.toLocaleString('id-ID') }
+                            }
+                        }
+                    }
+                });
+            }
 
-            renderAllCharts(totalDesil, totalBansos, totalLayanan);
-        } catch (err) {
-            console.error("Gagal memuat data:", err);
+            // 2. Chart Bansos (Doughnut)
+            const ctxBansos = document.getElementById('chartBansos')?.getContext('2d');
+            if (ctxBansos) {
+                charts.bansos = new Chart(ctxBansos, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['BPNT', 'PKH', 'PBI'],
+                        datasets: [{
+                            data: [bansos.bpnt, bansos.pkh, bansos.pbi],
+                            backgroundColor: ['#ffc107', '#28a745', '#17a2b8'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { position: 'bottom' },
+                            tooltip: { 
+                                callbacks: { 
+                                    label: (ctx) => ` ${ctx.label}: ${ctx.raw.toLocaleString('id-ID')}` 
+                                } 
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 3. Chart Layanan (Horizontal Bar)
+            const ctxLayanan = document.getElementById('chartLayanan')?.getContext('2d');
+            if (ctxLayanan) {
+                charts.layanan = new Chart(ctxLayanan, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Pengaduan', 'SKTM', 'DTKS'],
+                        datasets: [{
+                            label: 'Jumlah Layanan',
+                            data: [layanan.pengaduan, layanan.sktm, layanan.dtks],
+                            backgroundColor: ['#ffc107', '#28a745', '#007bff'],
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { 
+                                callbacks: { 
+                                    label: (ctx) => ` ${ctx.raw.toLocaleString('id-ID')}` 
+                                } 
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 4. Chart Berita (awal)
+            updateChartBerita(totalBerita);
         }
-    }
 
-    // 4. FUNGSI RENDER CHART
-    function renderAllCharts(desil, bansos, layanan) {
-        // Hapus chart lama agar tidak tumpang tindih saat reload
-        const ids = ['chartDesil', 'chartBansos', 'chartLayanan'];
-        ids.forEach(id => {
-            const chartStatus = Chart.getChart(id);
-            if (chartStatus) chartStatus.destroy();
-        });
-
-        // Grafik Bar Desil
-        new Chart(document.getElementById('chartDesil'), {
-            type: 'bar',
-            data: {
-                labels: ['D1','D2','D3','D4','D5','D6','D7','D8','D9','D10'],
-                datasets: [{ label: 'Jumlah KK', data: desil, backgroundColor: '#007bff' }]
-            }
-        });
-
-        // Grafik Doughnut Bansos
-        new Chart(document.getElementById('chartBansos'), {
-            type: 'doughnut',
-            data: {
-                labels: ['BPNT', 'PKH', 'PBI'],
-                datasets: [{
-                    data: [bansos.bpnt, bansos.pkh, bansos.pbi],
-                    backgroundColor: ['#ffc107', '#28a745', '#17a2b8']
-                }]
-            }
-        });
-
-        // Grafik Horizontal Bar Layanan
-        new Chart(document.getElementById('chartLayanan'), {
-            type: 'bar',
-            options: { indexAxis: 'y' },
-            data: {
-                labels: ['Pengaduan', 'SKTM', 'Update DTKS'],
-                datasets: [{
-                    label: 'Jumlah Layanan',
-                    data: [layanan.pengaduan, layanan.sktm, layanan.dtks],
-                    backgroundColor: '#6f42c1'
-                }]
-            }
-        });
-    }
-
-    // 5. EKSEKUSI & PROTEKSI
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            loadDashboardFromFirestore();
-        } else {
-            window.location.href = "index.html";
+        // ============================================================
+        // UPDATE CHART BERITA
+        // ============================================================
+        function updateChartBerita(jumlah) {
+            const ctxBerita = document.getElementById('chartBerita')?.getContext('2d');
+            if (!ctxBerita) return;
+            
+            if (charts.berita) charts.berita.destroy();
+            
+            charts.berita = new Chart(ctxBerita, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Berita Terbit', 'Belum Ada Berita'],
+                    datasets: [{
+                        data: [jumlah, Math.max(1, 10 - jumlah)],
+                        backgroundColor: ['#17a2b8', '#e9ecef'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: { callbacks: { label: (ctx) => ` ${ctx.label}: ${ctx.raw}` } }
+                    }
+                }
+            });
         }
-    });
 
-    window.logout = function() {
-        signOut(auth).then(() => { window.location.href = "index.html"; });
-    }
-</script>
+        // ============================================================
+        // FUNGSI INPUT BERITA KE FIRESTORE
+        // ============================================================
+        window.simpanBerita = async function(dataBerita) {
+            try {
+                const docRef = await addDoc(collection(db, "berita"), {
+                    judul: dataBerita.judul,
+                    kategori: dataBerita.kategori,
+                    isi: dataBerita.isi,
+                    penulis: dataBerita.penulis,
+                    gambar: dataBerita.gambar || '',
+                    tanggal: serverTimestamp(),
+                    status: 'published',
+                    views: 0
+                });
+                
+                return { success: true, id: docRef.id };
+            } catch (error) {
+                console.error("Error saving berita:", error);
+                return { success: false, error: error.message };
+            }
+        };
+
+        // ============================================================
+        // AUTH STATE & INIT
+        // ============================================================
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loadDashboardFromFirestore();
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+
+        window.logout = function() {
+            signOut(auth).then(() => { 
+                window.location.href = "index.html"; 
+            });
+        };
+
+        // ============================================================
+        // MODAL HANDLER
+        // ============================================================
+        window.openModalBerita = function() {
+            document.getElementById('modalBerita').classList.add('active');
+        };
+
+        window.closeModalBerita = function() {
+            document.getElementById('modalBerita').classList.remove('active');
+            document.getElementById('formBerita').reset();
+            document.getElementById('beritaAlert').style.display = 'none';
+        };
+
+        // Form Submit Handler
+        document.getElementById('formBerita').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btnSubmit = this.querySelector('button[type="submit"]');
+            const originalText = btnSubmit.innerHTML;
+            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+            btnSubmit.disabled = true;
+
+            const dataBerita = {
+                judul: document.getElementById('judul').value,
+                kategori: document.getElementById('kategori').value,
+                isi: document.getElementById('isi').value,
+                penulis: document.getElementById('penulis').value,
+                gambar: document.getElementById('gambar').value
+            };
+
+            const result = await window.simpanBerita(dataBerita);
+            
+            if (result.success) {
+                // Tampilkan alert sukses
+                const alert = document.getElementById('beritaAlert');
+                alert.style.display = 'flex';
+                alert.className = 'alert alert-success';
+                alert.innerHTML = `<i class="fas fa-check-circle"></i> Berita berhasil diterbitkan! ID: ${result.id}`;
+                
+                // Reset form
+                this.reset();
+                
+                // Update total berita
+                await loadTotalBerita();
+                
+                // Tutup modal setelah 2 detik
+                setTimeout(() => {
+                    window.closeModalBerita();
+                }, 2000);
+            } else {
+                const alert = document.getElementById('beritaAlert');
+                alert.style.display = 'flex';
+                alert.className = 'alert alert-danger';
+                alert.innerHTML = `<i class="fas fa-exclamation-circle"></i> Gagal: ${result.error}`;
+            }
+
+            btnSubmit.innerHTML = originalText;
+            btnSubmit.disabled = false;
+        });
+
+    </script>
 </body>
 </html>
