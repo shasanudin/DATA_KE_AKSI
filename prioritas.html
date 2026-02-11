@@ -448,7 +448,7 @@
             showLoading(true);
             updateConnectionStatus(false);
             
-            const querySnapshot = await getDocs(collection(db, "dtsen_data"));
+            const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
             
             allData = [];
             querySnapshot.forEach((doc) => {
