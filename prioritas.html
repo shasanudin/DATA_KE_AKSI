@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     
     <style>
         :root {
@@ -16,35 +17,20 @@
             --warning: #ffc107;
             --success: #28a745;
             --dark-card: #1a1d20;
-            --info: #17a2b8;
         }
 
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #f4f7f6; 
-            color: #333;
-            padding-bottom: 20px;
+            color: #333; 
         }
 
         /* Hero Header */
         .priority-hero {
             background: linear-gradient(135deg, var(--dark-card) 0%, #343a40 100%);
             color: white;
-            padding: 70px 0 50px;
+            padding: 70px 0;
             border-bottom: 5px solid var(--danger);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .priority-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none"><path d="M0,100 L1000,0 L1000,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
-            background-size: cover;
         }
 
         /* Stats Cards */
@@ -52,19 +38,11 @@
             border: none;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
             background: white;
-            height: 100%;
         }
         .card-stats:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-
-        .card-stats .card-icon {
-            font-size: 2rem;
-            margin-bottom: 15px;
-            opacity: 0.9;
         }
 
         /* Table Design */
@@ -74,24 +52,20 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             border: none;
-            margin-top: 20px;
         }
         .table thead th {
             background-color: #f8f9fa;
-            color: #495057;
+            color: #666;
             border: none;
             text-transform: uppercase;
             font-size: 0.75rem;
             letter-spacing: 1px;
             padding: 15px;
-            font-weight: 700;
-            border-bottom: 2px solid #dee2e6;
         }
         .table td { 
             vertical-align: middle; 
             padding: 15px; 
             border-top: 1px solid #f1f1f1; 
-            transition: background-color 0.2s;
         }
         .table-hover tbody tr:hover {
             background-color: rgba(220, 53, 69, 0.05);
@@ -104,69 +78,45 @@
             font-weight: 700;
             font-size: 0.7rem;
             text-transform: uppercase;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
         }
         .bg-urgent { 
-            background: linear-gradient(135deg, rgba(220, 53, 69, 0.15) 0%, rgba(220, 53, 69, 0.05) 100%); 
+            background: rgba(220, 53, 69, 0.1); 
             color: var(--danger); 
             border: 1px solid rgba(220, 53, 69, 0.3);
         }
         .bg-monitor { 
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 193, 7, 0.05) 100%); 
+            background: rgba(255, 193, 7, 0.1); 
             color: #856404;
             border: 1px solid rgba(255, 193, 7, 0.3);
         }
-        .bg-safe {
-            background: linear-gradient(135deg, rgba(40, 167, 69, 0.15) 0%, rgba(40, 167, 69, 0.05) 100%); 
-            color: var(--success);
-            border: 1px solid rgba(40, 167, 69, 0.3);
-        }
 
         .rank-circle {
-            width: 36px; 
-            height: 36px;
+            width: 32px; 
+            height: 32px;
+            background: linear-gradient(135deg, #007bff 0%, #6610f2 100%);
             display: flex; 
             align-items: center; 
             justify-content: center;
             border-radius: 50%; 
             font-weight: 700; 
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: white;
-            margin: 0 auto;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        .rank-circle.rank-1 { 
-            background: linear-gradient(135deg, #dc3545 0%, #e4606d 100%); 
-            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
-        }
-        .rank-circle.rank-2 { 
-            background: linear-gradient(135deg, #fd7e14 0%, #ffa94d 100%); 
-            box-shadow: 0 4px 12px rgba(253, 126, 20, 0.3);
-        }
-        .rank-circle.rank-3 { 
-            background: linear-gradient(135deg, #20c997 0%, #63d9b0 100%); 
-            box-shadow: 0 4px 12px rgba(32, 201, 151, 0.3);
-        }
-        .rank-circle.rank-4-10 { 
-            background: linear-gradient(135deg, #007bff 0%, #5da8ff 100%); 
-        }
+        .rank-circle.rank-1 { background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%); }
+        .rank-circle.rank-2 { background: linear-gradient(135deg, #fd7e14 0%, #ffc107 100%); }
+        .rank-circle.rank-3 { background: linear-gradient(135deg, #20c997 0%, #007bff 100%); }
 
         .chart-container {
             background: white;
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-            border: 1px solid rgba(0,0,0,0.05);
         }
 
         footer { 
             background: #1a1d20; 
-            color: #adb5bd; 
+            color: #777; 
             margin-top: 80px;
-            padding: 40px 0 20px;
         }
 
         /* Loading Animation */
@@ -176,24 +126,20 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255,255,255,0.98);
+            background: rgba(255,255,255,0.95);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
             flex-direction: column;
-            backdrop-filter: blur(5px);
         }
         .loading-spinner {
             border: 5px solid #f3f3f3;
             border-top: 5px solid #dc3545;
-            border-right: 5px solid #ffc107;
-            border-bottom: 5px solid #28a745;
             border-radius: 50%;
             width: 60px;
             height: 60px;
             animation: spin 1s linear infinite;
-            margin-bottom: 20px;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -207,21 +153,9 @@
             border-radius: 50%;
             display: inline-block;
             margin-right: 8px;
-            animation: pulse 2s infinite;
         }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        .dot-online { 
-            background-color: #28a745;
-            box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
-        }
-        .dot-offline { 
-            background-color: #dc3545;
-            box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
-        }
+        .dot-online { background-color: #28a745; }
+        .dot-offline { background-color: #dc3545; }
         
         /* Progress Bar */
         .progress-container {
@@ -233,72 +167,8 @@
         }
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #dc3545, #fd7e14, #ffc107);
+            background: linear-gradient(90deg, #dc3545, #fd7e14);
             border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-
-        /* Search Input */
-        .search-input-group {
-            position: relative;
-        }
-        .search-input-group .form-control {
-            border-radius: 25px;
-            padding-left: 45px;
-            border: 1px solid #e0e0e0;
-        }
-        .search-input-group .input-group-text {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            z-index: 10;
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .priority-hero {
-                padding: 40px 0 30px;
-            }
-            .priority-hero h1 {
-                font-size: 1.8rem;
-            }
-            .chart-container {
-                padding: 20px;
-            }
-            .table-container {
-                border-radius: 15px;
-            }
-            .table td, .table th {
-                padding: 10px;
-            }
-        }
-
-        /* No Data State */
-        .no-data-state {
-            padding: 50px 20px;
-            text-align: center;
-        }
-        .no-data-state i {
-            font-size: 3rem;
-            color: #6c757d;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
-        /* Export Button */
-        .btn-export {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            border: none;
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .btn-export:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
-            color: white;
         }
     </style>
 </head>
@@ -309,36 +179,24 @@
 <div id="loadingOverlay" class="loading-overlay">
     <div class="loading-spinner"></div>
     <p class="mt-3 font-weight-bold">Memuat data prioritas dari Firebase...</p>
-    <small class="text-muted mt-2">Harap tunggu sebentar</small>
 </div>
 
-<header class="container py-3 bg-white sticky-top shadow-sm">
+<header class="container py-3 bg-white">
   <div class="row align-items-center">
     <div class="col-md-6 text-center text-md-left">
-      <div class="d-flex align-items-center justify-content-center justify-content-md-start">
-        <img src="assets/img/logo/logo-tksk.png" alt="Logo TKSK" height="50" class="img-fluid">
-        <div class="mx-2 text-muted">|</div>
-        <img src="assets/img/logo/logo-puskesos.png" alt="Logo Puskesos" height="50" class="img-fluid">
-      </div>
+      <img src="assets/img/logo/logo-tksk.png" alt="Logo TKSK" height="50" onerror="this.style.display='none'">
+      <img src="assets/img/logo/logo-puskesos.png" alt="Logo Puskesos" height="50" class="ml-2 border-left pl-2" onerror="this.style.display='none'">
     </div>
     <div class="col-md-6 text-right d-none d-md-block">
-        <div class="d-flex align-items-center justify-content-end">
-            <span class="text-muted small font-weight-bold mr-3">
-                <i class="fas fa-database mr-1"></i> 
-                <span id="dataStatus">
-                    <span class="status-dot dot-offline"></span>
-                    Menghubungkan ke Firebase...
-                </span>
+        <span class="text-muted small font-weight-bold">
+            <i class="fas fa-database mr-1"></i> 
+            <span id="dataStatus">
+                <span class="status-dot dot-offline"></span>
+                Menghubungkan ke Firebase...
             </span>
-            <button id="btnRefresh" class="btn btn-sm btn-outline-primary d-flex align-items-center">
-                <i class="fas fa-sync-alt mr-2"></i> 
-                <span>Refresh</span>
-            </button>
-        </div>
-    </div>
-    <div class="col-12 d-md-none text-center mt-2">
-        <button id="btnRefreshMobile" class="btn btn-sm btn-outline-primary">
-            <i class="fas fa-sync-alt mr-1"></i> Refresh Data
+        </span>
+        <button id="btnRefresh" class="btn btn-sm btn-outline-primary ml-3">
+            <i class="fas fa-sync-alt"></i> Refresh
         </button>
     </div>
   </div>
@@ -347,17 +205,17 @@
 <div id="navbar"></div>
 
 <section class="priority-hero text-center">
-    <div class="container position-relative">
+    <div class="container">
         <h1 class="display-4 font-weight-bold mb-3">Prioritas Intervensi DTSEN</h1>
         <p class="lead opacity-75">Analisis real-time berdasarkan data Firebase Firestore</p>
         <div class="mt-4">
-            <span class="badge badge-light mr-2 mb-2">
+            <span class="badge badge-light mr-2">
                 <i class="fas fa-fire mr-1"></i> Firebase Connected
             </span>
-            <span class="badge badge-light mr-2 mb-2">
+            <span class="badge badge-light mr-2">
                 <i class="fas fa-clock mr-1"></i> Update: <span id="lastUpdate">-</span>
             </span>
-            <span class="badge badge-light mb-2">
+            <span class="badge badge-light">
                 <i class="fas fa-wifi mr-1"></i> <span id="connectionStatus">Offline</span>
             </span>
         </div>
@@ -367,59 +225,47 @@
 <main class="container py-5">
   
   <!-- Summary Statistics -->
-  <div class="row mb-5">
-    <div class="col-md-3 mb-4">
-      <div class="card card-stats p-4 text-center">
-        <div class="card-icon text-primary">
-          <i class="fas fa-map-marked-alt"></i>
-        </div>
-        <small class="text-muted font-weight-bold d-block mb-2 text-uppercase">
-            Wilayah Terdata
+  <div class="row mb-5 text-center">
+    <div class="col-md-3 mb-3">
+      <div class="card card-stats p-4">
+        <small class="text-muted font-weight-bold d-block mb-2">
+            <i class="fas fa-map-marked-alt mr-1"></i> WILAYAH TERDATA
         </small>
-        <h3 id="totalWilayah" class="text-dark font-weight-bold mb-2">0</h3>
-        <small class="text-muted" id="wilayahDetail">Memuat data...</small>
+        <h3 id="totalWilayah" class="text-dark font-weight-bold mb-0">0</h3>
+        <small class="text-muted" id="wilayahDetail">Memuat...</small>
       </div>
     </div>
-    <div class="col-md-3 mb-4">
-      <div class="card card-stats p-4 text-center text-white" style="background: linear-gradient(135deg, #dc3545 0%, #e4606d 100%);">
-        <div class="card-icon">
-          <i class="fas fa-exclamation-triangle"></i>
-        </div>
-        <small class="font-weight-bold d-block mb-2 text-uppercase opacity-90">
-            Prioritas (D1-2)
+    <div class="col-md-3 mb-3">
+      <div class="card card-stats p-4 bg-danger text-white">
+        <small class="font-weight-bold d-block mb-2 text-uppercase">
+            <i class="fas fa-exclamation-triangle mr-1"></i> Prioritas (D1-2)
         </small>
-        <h3 id="desil12" class="font-weight-bold mb-2">0</h3>
+        <h3 id="desil12" class="font-weight-bold mb-0">0</h3>
         <small id="persenD12" class="opacity-75">0% dari total</small>
       </div>
     </div>
-    <div class="col-md-3 mb-4">
-      <div class="card card-stats p-4 text-center" style="background: linear-gradient(135deg, #ffc107 0%, #ffd54f 100%);">
-        <div class="card-icon">
-          <i class="fas fa-eye"></i>
-        </div>
+    <div class="col-md-3 mb-3">
+      <div class="card card-stats p-4 bg-warning">
         <small class="font-weight-bold d-block mb-2 text-uppercase">
-            Rentan (D3-4)
+            <i class="fas fa-eye mr-1"></i> Rentan (D3-4)
         </small>
-        <h3 id="desil34" class="font-weight-bold mb-2">0</h3>
+        <h3 id="desil34" class="font-weight-bold mb-0">0</h3>
         <small id="persenD34" class="opacity-75">0% dari total</small>
       </div>
     </div>
-    <div class="col-md-3 mb-4">
-      <div class="card card-stats p-4 text-center text-white" style="background: linear-gradient(135deg, #28a745 0%, #63d9b0 100%);">
-        <div class="card-icon">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <small class="font-weight-bold d-block mb-2 text-uppercase opacity-90">
-            Mampu (D5-10)
+    <div class="col-md-3 mb-3">
+      <div class="card card-stats p-4 bg-success text-white">
+        <small class="font-weight-bold d-block mb-2 text-uppercase">
+            <i class="fas fa-check-circle mr-1"></i> Mampu (D5-10)
         </small>
-        <h3 id="desil510" class="font-weight-bold mb-2">0</h3>
+        <h3 id="desil510" class="font-weight-bold mb-0">0</h3>
         <small id="persenD510" class="opacity-75">0% dari total</small>
       </div>
     </div>
   </div>
 
   <!-- Chart Section -->
-  <div class="chart-container">
+  <div class="chart-container mb-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h5 class="font-weight-bold mb-0">
             <i class="fas fa-chart-bar mr-2 text-danger"></i>
@@ -434,26 +280,28 @@
             </button>
         </div>
     </div>
-    <div style="height: 400px; position: relative;">
+    <div style="height: 350px; position: relative;">
         <canvas id="desilChart"></canvas>
     </div>
-    <div class="progress-container mt-3">
+    <div class="progress-container">
         <div id="chartProgress" class="progress-bar" style="width: 0%"></div>
     </div>
   </div>
 
   <!-- Data Table -->
-  <div class="mb-4">
-      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
-          <div class="mb-3 mb-md-0">
-              <h4 class="font-weight-bold mb-1">Matriks Ranking Prioritas Intervensi</h4>
+  <div class="mb-3">
+      <div class="d-flex justify-content-between align-items-center">
+          <div>
+              <h4 class="font-weight-bold">Matriks Ranking Prioritas Intervensi</h4>
               <p class="text-muted mb-0">Data diurutkan berdasarkan jumlah penduduk paling rentan (Desil 1 & 2)</p>
           </div>
-          <div class="w-100 w-md-auto">
-              <div class="search-input-group">
-                  <input type="text" id="searchTable" class="form-control" placeholder="Cari nama wilayah..." aria-label="Cari wilayah">
-                  <div class="input-group-text">
-                      <i class="fas fa-search text-muted"></i>
+          <div class="text-right">
+              <div class="input-group input-group-sm" style="width: 300px;">
+                  <input type="text" id="searchTable" class="form-control" placeholder="Cari nama wilayah...">
+                  <div class="input-group-append">
+                      <span class="input-group-text">
+                          <i class="fas fa-search"></i>
+                      </span>
                   </div>
               </div>
           </div>
@@ -462,16 +310,16 @@
 
   <div class="table-container">
     <div class="table-responsive">
-        <table class="table table-hover mb-0" id="priorityTable">
+        <table class="table table-hover mb-0 text-center" id="priorityTable">
           <thead>
             <tr>
-              <th width="100" class="text-center">Rank</th>
+              <th width="80">Rank</th>
               <th class="text-left">Desa / Kelurahan</th>
-              <th class="text-center">Desil 1 <small class="text-danger">(Sangat Miskin)</small></th>
-              <th class="text-center">Desil 2 <small class="text-warning">(Miskin)</small></th>
-              <th class="text-center font-weight-bold">Gabungan (D1+D2)</th>
-              <th class="text-center">% dari Total</th>
-              <th class="text-center">Status Prioritas</th>
+              <th>Desil 1 <small class="text-danger">(Sangat Miskin)</small></th>
+              <th>Desil 2 <small class="text-warning">(Miskin)</small></th>
+              <th class="font-weight-bold">Gabungan (D1+D2)</th>
+              <th>% dari Total</th>
+              <th>Status Prioritas</th>
             </tr>
           </thead>
           <tbody id="tabelPrioritas">
@@ -480,7 +328,7 @@
                     <div class="spinner-border text-primary" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
-                    <p class="mt-2 text-muted">Memuat data prioritas...</p>
+                    <p class="mt-2">Memuat data prioritas...</p>
                 </td>
             </tr>
           </tbody>
@@ -488,16 +336,13 @@
     </div>
     
     <!-- Table Footer -->
-    <div class="p-3 border-top bg-light d-flex flex-column flex-md-row justify-content-between align-items-center">
-        <small class="text-muted mb-2 mb-md-0 text-center text-md-left">
+    <div class="p-3 border-top bg-light d-flex justify-content-between align-items-center">
+        <small class="text-muted">
             <span id="tableCount">0</span> wilayah terdata | 
             <span id="priorityCount">0</span> dalam prioritas tinggi
         </small>
-        <div class="d-flex gap-2">
-            <button id="btnClearSearch" class="btn btn-sm btn-outline-secondary" style="display: none;">
-                <i class="fas fa-times mr-1"></i> Clear Pencarian
-            </button>
-            <button class="btn btn-sm btn-export" onclick="exportToCSV()">
+        <div>
+            <button class="btn btn-sm btn-outline-primary" onclick="window.exportToCSV ? window.exportToCSV() : alert('Fungsi export belum tersedia')">
                 <i class="fas fa-download mr-1"></i> Export CSV
             </button>
         </div>
@@ -506,33 +351,29 @@
 
 </main>
 
-<footer>
+<footer class="py-5">
   <div class="container text-center">
     <p class="mb-1 font-weight-bold text-white">DARI DATA KE AKSI</p>
-    <p class="small mb-3">Sistem Informasi Monitoring Kesejahteraan Sosial Kecamatan Sumber</p>
-    <p class="small text-muted">
+    <p class="small mb-0">Sistem Informasi Monitoring Kesejahteraan Sosial Kecamatan Sumber</p>
+    <p class="small text-muted mt-2">
         <i class="fas fa-database mr-1"></i> 
         Data Sumber: Firebase Firestore | 
         <i class="fas fa-clock ml-3 mr-1"></i> 
-        Update Terakhir: <span id="footerUpdate">-</span> |
-        <i class="fas fa-code ml-3 mr-1"></i>
-        Versi: 2.1.0
+        Update Terakhir: <span id="footerUpdate">-</span>
     </p>
   </div>
 </footer>
 
 <!-- Firebase SDK -->
 <script type="module">
-    import { initializeApp as initializeFirebaseApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
         getFirestore, 
         collection, 
-        getDocs,
-        enableIndexedDbPersistence
-    } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+        getDocs
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // PERHATIAN: API Key seharusnya tidak disimpan di client-side untuk produksi
-    // Sebaiknya gunakan Firebase Security Rules dan Environment Variables
+    // Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
         authDomain: "data-ke-aksi-auth.firebaseapp.com",
@@ -543,35 +384,13 @@
     };
 
     // Initialize Firebase
-    let firebaseApp;
-    let db;
-    
-    try {
-        firebaseApp = initializeFirebaseApp(firebaseConfig);  // Changed variable name
-        db = getFirestore(firebaseApp);
-        
-        // Enable offline persistence
-        enableIndexedDbPersistence(db)
-            .catch((err) => {
-                if (err.code === 'failed-precondition') {
-                    console.warn('Multiple tabs open, persistence can only be enabled in one tab at a time.');
-                } else if (err.code === 'unimplemented') {
-                    console.warn('The current browser doesn\'t support persistence');
-                }
-            });
-            
-        console.log('Firebase initialized successfully');
-    } catch (error) {
-        console.error('Firebase initialization error:', error);
-        showError('Gagal menginisialisasi Firebase. Periksa koneksi internet Anda.');
-    }
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
     // Global Variables
     let chartInstance = null;
     let allData = [];
     let filteredData = [];
-    let isOnline = navigator.onLine;
-    let autoRefreshInterval = null;
 
     // DOM Elements
     const loadingOverlay = document.getElementById('loadingOverlay');
@@ -580,57 +399,35 @@
     const lastUpdate = document.getElementById('lastUpdate');
     const footerUpdate = document.getElementById('footerUpdate');
     const btnRefresh = document.getElementById('btnRefresh');
-    const btnRefreshMobile = document.getElementById('btnRefreshMobile');
     const searchTable = document.getElementById('searchTable');
-    const btnClearSearch = document.getElementById('btnClearSearch');
 
     // Show/Hide Loading
     function showLoading(show) {
-        loadingOverlay.style.display = show ? 'flex' : 'none';
-    }
-
-    // Show Error Message
-    function showError(message) {
-        const tbody = document.getElementById('tabelPrioritas');
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="7" class="text-center py-5">
-                    <i class="fas fa-exclamation-triangle fa-2x text-danger mb-3"></i>
-                    <p class="font-weight-bold">${message}</p>
-                    <button onclick="loadDataFromFirebase()" class="btn btn-sm btn-primary mt-2">
-                        <i class="fas fa-redo mr-1"></i> Coba Lagi
-                    </button>
-                </td>
-            </tr>
-        `;
+        if (loadingOverlay) {
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+        }
     }
 
     // Update Connection Status
     function updateConnectionStatus(connected) {
-        isOnline = connected;
-        const statusDot = dataStatus.querySelector('.status-dot');
+        if (!dataStatus || !connectionStatus) return;
         
+        const statusDot = dataStatus.querySelector('.status-dot');
         if (connected) {
             connectionStatus.textContent = 'Online';
             connectionStatus.className = 'text-success';
-            statusDot.className = 'status-dot dot-online';
+            if (statusDot) {
+                statusDot.className = 'status-dot dot-online';
+            }
             dataStatus.innerHTML = '<span class="status-dot dot-online"></span>Firebase Connected';
         } else {
             connectionStatus.textContent = 'Offline';
             connectionStatus.className = 'text-danger';
-            statusDot.className = 'status-dot dot-offline';
-            dataStatus.innerHTML = '<span class="status-dot dot-offline"></span>Firebase Disconnected';
-            
-            // Show offline warning
-            if (allData.length === 0) {
-                showError('Anda sedang offline. Periksa koneksi internet Anda.');
+            if (statusDot) {
+                statusDot.className = 'status-dot dot-offline';
             }
+            dataStatus.innerHTML = '<span class="status-dot dot-offline"></span>Firebase Disconnected';
         }
-    }
-
-    // Check Online Status
-    function checkOnlineStatus() {
-        updateConnectionStatus(navigator.onLine);
     }
 
     // Format Number
@@ -641,86 +438,66 @@
 
     // Calculate Percentage
     function calculatePercentage(part, total) {
-        if (total === 0 || !part) return '0%';
+        if (!total || total === 0) return '0%';
         return ((part / total) * 100).toFixed(1) + '%';
     }
 
     // Get Priority Level
     function getPriorityLevel(d12) {
-        if (d12 >= 600) return { 
-            text: 'Prioritas Tinggi', 
-            class: 'bg-urgent',
-            icon: 'exclamation-triangle'
-        };
-        if (d12 >= 400) return { 
-            text: 'Prioritas Menengah', 
-            class: 'bg-monitor',
-            icon: 'exclamation-circle'
-        };
-        if (d12 >= 200) return { 
-            text: 'Prioritas Rendah', 
-            class: 'bg-monitor',
-            icon: 'eye'
-        };
-        return { 
-            text: 'Pemantauan', 
-            class: 'bg-safe',
-            icon: 'check-circle'
-        };
-    }
-
-    // Validate Data
-    function validateData(data) {
-        return {
-            ...data,
-            desil: Array.isArray(data.desil) && data.desil.length === 10 
-                ? data.desil.map(d => Number(d) || 0)
-                : Array(10).fill(0),
-            nama: data.nama_wilayah || data.nama || 'Wilayah Tanpa Nama',
-            total_kk: Array.isArray(data.desil) 
-                ? data.desil.reduce((a, b) => (Number(a) || 0) + (Number(b) || 0), 0)
-                : 0
-        };
+        if (d12 >= 600) return { text: 'Prioritas Tinggi', class: 'bg-urgent' };
+        if (d12 >= 400) return { text: 'Prioritas Menengah', class: 'bg-urgent' };
+        if (d12 >= 200) return { text: 'Prioritas Rendah', class: 'bg-monitor' };
+        return { text: 'Pemantauan', class: 'bg-monitor' };
     }
 
     // Load Data from Firebase
- async function loadDataFromFirebase() {  // Changed function name
+    async function loadData() {
         try {
-            if (!isOnline) {
-                showError('Anda sedang offline. Periksa koneksi internet Anda.');
-                return;
-            }
-
             showLoading(true);
             updateConnectionStatus(false);
             
-            console.log('Loading data from Firebase...');
-            
+            console.log('Mengambil data dari Firebase...');
             const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
-            
-            if (querySnapshot.empty) {
-                console.log('No data found in Firebase');
-                allData = [];
-                showError('Tidak ada data ditemukan di Firebase');
-                updateStatistics();
-                return;
-            }
             
             allData = [];
             querySnapshot.forEach((doc) => {
-                try {
-                    const validatedData = validateData(doc.data());
-                    allData.push({
-                        id: doc.id,
-                        ...validatedData,
-                        timestamp: doc.data().timestamp || new Date().toISOString()
-                    });
-                } catch (error) {
-                    console.warn(`Error validating document ${doc.id}:`, error);
+                const data = doc.data();
+                
+                // Pastikan data desil adalah array
+                let desilArray = data.desil;
+                if (!Array.isArray(desilArray)) {
+                    if (desilArray && typeof desilArray === 'object') {
+                        desilArray = Object.values(desilArray);
+                    } else {
+                        desilArray = Array(10).fill(0);
+                    }
                 }
+                
+                // Pastikan array memiliki minimal 10 elemen
+                while (desilArray.length < 10) {
+                    desilArray.push(0);
+                }
+                
+                const total = desilArray.reduce((a, b) => (a || 0) + (b || 0), 0);
+                
+                allData.push({
+                    id: doc.id,
+                    nama: data.nama_wilayah || data.nama || doc.id || 'N/A',
+                    desil: desilArray,
+                    timestamp: data.timestamp || new Date().toISOString(),
+                    total_kk: total
+                });
             });
             
-            console.log(`Data loaded: ${allData.length} valid records`);
+            console.log('Data loaded from Firebase:', allData.length, 'records');
+            
+            // Filter data yang valid (memiliki nama dan total > 0)
+            allData = allData.filter(item => 
+                item.nama !== 'N/A' && 
+                item.nama !== null && 
+                item.nama !== '' && 
+                item.total_kk > 0
+            );
             
             // Sort by D1+D2 descending
             allData.sort((a, b) => {
@@ -737,7 +514,16 @@
             renderChart();
             
             // Update timestamp
-            updateTimestamp();
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('id-ID', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const dateString = now.toLocaleDateString('id-ID');
+            
+            if (lastUpdate) lastUpdate.textContent = timeString;
+            if (footerUpdate) footerUpdate.textContent = timeString + ' ' + dateString;
             
             updateConnectionStatus(true);
             
@@ -745,18 +531,36 @@
             console.error('Error loading data:', error);
             updateConnectionStatus(false);
             
-            if (error.code === 'unavailable') {
-                showError('Firebase tidak tersedia. Periksa koneksi internet atau konfigurasi Firebase.');
-            } else if (error.code === 'permission-denied') {
-                showError('Akses ditolak. Periksa Firebase Security Rules.');
-            } else {
-                showError('Gagal memuat data: ' + error.message);
-            }
+            // Load sample data jika gagal
+            loadSampleData();
         } finally {
             showLoading(false);
         }
     }
-    
+
+    // Load Sample Data (fallback)
+    function loadSampleData() {
+        console.log('Loading sample data...');
+        
+        allData = [
+            { id: '1', nama: 'Desa Sumber', desil: [450, 380, 250, 200, 150, 100, 80, 60, 40, 20], total_kk: 1730 },
+            { id: '2', nama: 'Kelurahan Sukasari', desil: [520, 410, 300, 240, 180, 120, 90, 70, 50, 30], total_kk: 2010 },
+            { id: '3', nama: 'Desa Mekarjaya', desil: [380, 320, 280, 210, 160, 110, 85, 65, 45, 25], total_kk: 1680 },
+            { id: '4', nama: 'Desa Karanganyar', desil: [290, 250, 200, 180, 140, 100, 75, 55, 35, 20], total_kk: 1345 },
+            { id: '5', nama: 'Desa Sukamaju', desil: [180, 160, 140, 120, 110, 90, 70, 50, 30, 15], total_kk: 965 },
+            { id: '6', nama: 'Kelurahan Sindang', desil: [220, 190, 170, 150, 130, 95, 80, 60, 40, 25], total_kk: 1160 }
+        ];
+        
+        filteredData = [...allData];
+        
+        updateStatistics();
+        renderTable();
+        renderChart();
+        
+        if (lastUpdate) lastUpdate.textContent = 'Sample Data';
+        if (footerUpdate) footerUpdate.textContent = 'Sample Data (Firebase Offline)';
+    }
+
     // Update Statistics
     function updateStatistics() {
         let totalKK = 0;
@@ -765,25 +569,33 @@
         let totalD510 = 0;
         
         allData.forEach(item => {
-            const desil = item.desil;
-            totalKK += item.total_kk;
+            const desil = item.desil || [];
+            totalKK += item.total_kk || 0;
             totalD12 += (desil[0] || 0) + (desil[1] || 0);
             totalD34 += (desil[2] || 0) + (desil[3] || 0);
-            totalD510 += desil.slice(4).reduce((a, b) => a + b, 0);
+            totalD510 += desil.slice(4).reduce((a, b) => (a || 0) + (b || 0), 0);
         });
         
         // Update statistics cards
-        document.getElementById('totalWilayah').textContent = formatNumber(allData.length);
-        document.getElementById('wilayahDetail').textContent = `${formatNumber(totalKK)} KK total`;
+        const totalWilayahEl = document.getElementById('totalWilayah');
+        const wilayahDetailEl = document.getElementById('wilayahDetail');
+        const desil12El = document.getElementById('desil12');
+        const persenD12El = document.getElementById('persenD12');
+        const desil34El = document.getElementById('desil34');
+        const persenD34El = document.getElementById('persenD34');
+        const desil510El = document.getElementById('desil510');
+        const persenD510El = document.getElementById('persenD510');
+        const tableCountEl = document.getElementById('tableCount');
+        const priorityCountEl = document.getElementById('priorityCount');
         
-        document.getElementById('desil12').textContent = formatNumber(totalD12);
-        document.getElementById('persenD12').textContent = calculatePercentage(totalD12, totalKK);
-        
-        document.getElementById('desil34').textContent = formatNumber(totalD34);
-        document.getElementById('persenD34').textContent = calculatePercentage(totalD34, totalKK);
-        
-        document.getElementById('desil510').textContent = formatNumber(totalD510);
-        document.getElementById('persenD510').textContent = calculatePercentage(totalD510, totalKK);
+        if (totalWilayahEl) totalWilayahEl.textContent = allData.length;
+        if (wilayahDetailEl) wilayahDetailEl.textContent = `${formatNumber(totalKK)} KK total`;
+        if (desil12El) desil12El.textContent = formatNumber(totalD12);
+        if (persenD12El) persenD12El.textContent = calculatePercentage(totalD12, totalKK);
+        if (desil34El) desil34El.textContent = formatNumber(totalD34);
+        if (persenD34El) persenD34El.textContent = calculatePercentage(totalD34, totalKK);
+        if (desil510El) desil510El.textContent = formatNumber(totalD510);
+        if (persenD510El) persenD510El.textContent = calculatePercentage(totalD510, totalKK);
         
         // Update table counts
         const highPriority = allData.filter(item => {
@@ -791,25 +603,25 @@
             return d12 >= 400;
         }).length;
         
-        document.getElementById('tableCount').textContent = allData.length;
-        document.getElementById('priorityCount').textContent = highPriority;
+        if (tableCountEl) tableCountEl.textContent = allData.length;
+        if (priorityCountEl) priorityCountEl.textContent = highPriority;
     }
 
     // Render Table
     function renderTable() {
         const tbody = document.getElementById('tabelPrioritas');
         
-        if (filteredData.length === 0) {
+        if (!tbody) return;
+        
+        if (!filteredData || filteredData.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="7" class="text-center py-5 no-data-state">
-                        <i class="fas fa-search fa-3x mb-3"></i>
-                        <p class="font-weight-bold">Tidak ada data yang sesuai dengan pencarian</p>
-                        <small class="text-muted">Coba kata kunci lain atau hapus pencarian</small>
+                    <td colspan="7" class="text-center py-5">
+                        <i class="fas fa-database fa-2x text-muted mb-3"></i>
+                        <p>Tidak ada data yang sesuai dengan pencarian</p>
                     </td>
                 </tr>
             `;
-            btnClearSearch.style.display = 'none';
             return;
         }
         
@@ -822,41 +634,34 @@
             const d1 = item.desil[0] || 0;
             const d2 = item.desil[1] || 0;
             const d12 = d1 + d2;
-            const percentage = calculatePercentage(d12, totalD12Kecamatan);
+            const percentage = totalD12Kecamatan > 0 ? ((d12 / totalD12Kecamatan) * 100).toFixed(1) + '%' : '0%';
             const priority = getPriorityLevel(d12);
             
             // Determine rank class
-            let rankClass = 'rank-4-10';
+            let rankClass = '';
             if (index === 0) rankClass = 'rank-1';
             else if (index === 1) rankClass = 'rank-2';
             else if (index === 2) rankClass = 'rank-3';
             
             html += `
                 <tr>
-                    <td class="text-center">
-                        <div class="rank-circle ${rankClass}">${index + 1}</div>
+                    <td><div class="rank-circle mx-auto ${rankClass}">${index + 1}</div></td>
+                    <td class="text-left">
+                        <div class="font-weight-bold">${item.nama || 'N/A'}</div>
+                        <small class="text-muted">${formatNumber(item.total_kk || 0)} KK total</small>
                     </td>
+                    <td class="font-weight-bold text-danger">${formatNumber(d1)}</td>
+                    <td class="font-weight-bold text-warning">${formatNumber(d2)}</td>
+                    <td class="font-weight-bold" style="color: #dc3545;">${formatNumber(d12)}</td>
                     <td>
-                        <div class="font-weight-bold mb-1">${item.nama}</div>
-                        <small class="text-muted">
-                            <i class="fas fa-home mr-1"></i>
-                            ${formatNumber(item.total_kk)} KK total
-                        </small>
-                    </td>
-                    <td class="text-center font-weight-bold text-danger">${formatNumber(d1)}</td>
-                    <td class="text-center font-weight-bold text-warning">${formatNumber(d2)}</td>
-                    <td class="text-center font-weight-bold" style="color: #dc3545; font-size: 1.1rem;">
-                        ${formatNumber(d12)}
-                    </td>
-                    <td class="text-center">
-                        <div class="font-weight-bold mb-1">${percentage}</div>
+                        <div class="font-weight-bold">${percentage}</div>
                         <div class="progress-container">
                             <div class="progress-bar" style="width: ${percentage}"></div>
                         </div>
                     </td>
-                    <td class="text-center">
+                    <td>
                         <span class="badge-priority ${priority.class}">
-                            <i class="fas fa-${priority.icon} mr-1"></i>
+                            <i class="fas fa-${d12 >= 400 ? 'exclamation-triangle' : 'eye'} mr-1"></i>
                             ${priority.text}
                         </span>
                     </td>
@@ -865,166 +670,145 @@
         });
         
         tbody.innerHTML = html;
-        btnClearSearch.style.display = searchTable.value ? 'block' : 'none';
     }
 
     // Render Chart
     function renderChart(type = 'bar') {
-        const ctx = document.getElementById('desilChart');
+        const canvas = document.getElementById('desilChart');
         
-        if (!ctx) {
-            console.error('Chart canvas not found');
+        if (!canvas) return;
+        
+        // Check if Chart is available
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js not loaded');
             return;
         }
         
         // Destroy existing chart
         if (chartInstance) {
             chartInstance.destroy();
+            chartInstance = null;
         }
         
         // Prepare data
         const labels = filteredData.map(item => 
-            item.nama.length > 20 ? item.nama.substring(0, 20) + '...' : item.nama
+            item.nama && item.nama.length > 15 ? item.nama.substring(0, 15) + '...' : (item.nama || 'N/A')
         );
         const dataD1 = filteredData.map(item => item.desil[0] || 0);
         const dataD2 = filteredData.map(item => item.desil[1] || 0);
         
-        // Create chart
-        try {
-            chartInstance = new Chart(ctx, {
-                type: type === 'horizontalBar' ? 'bar' : type,
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Desil 1 (Sangat Miskin)',
-                            data: dataD1,
-                            backgroundColor: 'rgba(220, 53, 69, 0.8)',
-                            borderColor: 'rgba(220, 53, 69, 1)',
-                            borderWidth: 2,
-                            borderRadius: 6,
-                            borderSkipped: false
-                        },
-                        {
-                            label: 'Desil 2 (Miskin)',
-                            data: dataD2,
-                            backgroundColor: 'rgba(255, 193, 7, 0.8)',
-                            borderColor: 'rgba(255, 193, 7, 1)',
-                            borderWidth: 2,
-                            borderRadius: 6,
-                            borderSkipped: false
-                        }
-                    ]
-                },
-                options: {
-                    indexAxis: type === 'horizontalBar' ? 'y' : 'x',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true,
-                                font: {
-                                    size: 12,
-                                    family: "'Inter', sans-serif"
-                                }
-                            }
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleFont: {
-                                family: "'Inter', sans-serif"
-                            },
-                            bodyFont: {
-                                family: "'Inter', sans-serif"
-                            },
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.dataset.label}: ${formatNumber(context.raw)} KK`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45,
-                                font: {
-                                    size: 11,
-                                    family: "'Inter', sans-serif"
-                                }
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return formatNumber(value);
-                                },
-                                font: {
-                                    family: "'Inter', sans-serif"
-                                }
-                            },
-                            title: {
-                                display: true,
-                                text: 'Jumlah KK',
-                                font: {
-                                    family: "'Inter', sans-serif",
-                                    weight: 'bold'
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    }
-                }
-            });
-            
-            // Animate progress bar
-            animateChartProgress();
-            
-        } catch (error) {
-            console.error('Error creating chart:', error);
+        // Prepare chart type
+        let chartType = type;
+        if (type === 'horizontalBar') {
+            chartType = 'bar';
         }
-    }
-
-    // Animate Chart Progress Bar
-    function animateChartProgress() {
-        const progressBar = document.getElementById('chartProgress');
-        let width = 0;
-        const interval = setInterval(() => {
-            if (width >= 100) {
-                clearInterval(interval);
-            } else {
-                width += 5;
-                progressBar.style.width = width + '%';
+        
+        const ctx = canvas.getContext('2d');
+        
+        chartInstance = new Chart(ctx, {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Desil 1 (Sangat Miskin)',
+                        data: dataD1,
+                        backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                        borderColor: 'rgba(220, 53, 69, 1)',
+                        borderWidth: 1,
+                        borderRadius: 5
+                    },
+                    {
+                        label: 'Desil 2 (Miskin)',
+                        data: dataD2,
+                        backgroundColor: 'rgba(255, 193, 7, 0.7)',
+                        borderColor: 'rgba(255, 193, 7, 1)',
+                        borderWidth: 1,
+                        borderRadius: 5
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: type === 'horizontalBar' ? 'y' : 'x',
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            font: {
+                                size: 11
+                            }
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${formatNumber(context.raw)} KK`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: type !== 'horizontalBar'
+                        },
+                        ticks: {
+                            maxRotation: 45,
+                            minRotation: 45,
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return formatNumber(value);
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
             }
-        }, 30);
+        });
+        
+        // Animate progress bar
+        const progressBar = document.getElementById('chartProgress');
+        if (progressBar) {
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                } else {
+                    width += 10;
+                    progressBar.style.width = width + '%';
+                }
+            }, 50);
+        }
     }
 
     // Filter Table
     function filterTable(searchTerm) {
+        if (!searchTerm && searchTerm !== '') return;
+        
         searchTerm = searchTerm.toLowerCase().trim();
         
         if (!searchTerm) {
             filteredData = [...allData];
         } else {
             filteredData = allData.filter(item => 
-                item.nama.toLowerCase().includes(searchTerm)
+                item.nama && item.nama.toLowerCase().includes(searchTerm)
             );
         }
         
@@ -1032,36 +816,28 @@
         renderChart();
     }
 
-    // Clear Search
-    function clearSearch() {
-        searchTable.value = '';
-        filterTable('');
-    }
-
     // Export to CSV
     function exportToCSV() {
-        if (allData.length === 0) {
+        if (!allData || allData.length === 0) {
             alert('Tidak ada data untuk diexport');
             return;
         }
         
         try {
-            const headers = ['Rank', 'Wilayah', 'Total KK', 'Desil 1', 'Desil 2', 'Total D1+D2', 'Persentase', 'Status Prioritas'];
-            const totalD12Kecamatan = allData.reduce((sum, item) => 
-                sum + (item.desil[0] || 0) + (item.desil[1] || 0), 0
-            );
-            
+            const headers = ['Rank', 'Wilayah', 'Desil 1', 'Desil 2', 'Total D1+D2', 'Persentase', 'Status Prioritas'];
             const rows = allData.map((item, index) => {
                 const d1 = item.desil[0] || 0;
                 const d2 = item.desil[1] || 0;
                 const d12 = d1 + d2;
-                const percentage = ((d12 / totalD12Kecamatan) * 100).toFixed(1) + '%';
+                const totalD12Kecamatan = allData.reduce((sum, i) => 
+                    sum + (i.desil[0] || 0) + (i.desil[1] || 0), 0
+                );
+                const percentage = totalD12Kecamatan > 0 ? ((d12 / totalD12Kecamatan) * 100).toFixed(1) + '%' : '0%';
                 const priority = getPriorityLevel(d12);
                 
                 return [
                     index + 1,
-                    `"${item.nama}"`,
-                    item.total_kk,
+                    item.nama || 'N/A',
                     d1,
                     d2,
                     d12,
@@ -1072,7 +848,12 @@
             
             const csvContent = [
                 headers.join(','),
-                ...rows.map(row => row.join(','))
+                ...rows.map(row => row.map(cell => {
+                    if (typeof cell === 'string' && cell.includes(',')) {
+                        return `"${cell}"`;
+                    }
+                    return cell;
+                }).join(','))
             ].join('\n');
             
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1086,94 +867,65 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            
-            // Show success message
-            alert(`Data berhasil diexport (${allData.length} wilayah)`);
+            URL.revokeObjectURL(url);
             
         } catch (error) {
-            console.error('Export error:', error);
+            console.error('Error exporting CSV:', error);
             alert('Gagal mengexport data: ' + error.message);
         }
     }
 
-    // Initialize Application
-   async function initApplication() {  // Changed function name
-        try {
-            // Load Navbar
-            try {
-                const navbarResponse = await fetch('navbar.html');
-                if (navbarResponse.ok) {
-                    const navbarHTML = await navbarResponse.text();
-                    document.getElementById('navbar').innerHTML = navbarHTML;
-                }
-            } catch (error) {
-                console.warn('Navbar tidak ditemukan atau gagal dimuat');
-            }
-            
-            // Load Data
-            await loadDataFromFirebase();  // Updated function call
-            
-            // Event Listeners
-            btnRefresh.addEventListener('click', loadDataFromFirebase);  // Updated
-            if (btnRefreshMobile) {
-                btnRefreshMobile.addEventListener('click', loadDataFromFirebase);  // Updated
-            }
-            
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load Navbar
+        fetch('navbar.html')
+            .then(res => res.text())
+            .then(html => { 
+                const navbar = document.getElementById('navbar');
+                if (navbar) navbar.innerHTML = html; 
+            })
+            .catch(() => {
+                console.warn('Navbar tidak ditemukan');
+            });
+        
+        // Load Data
+        loadData();
+        
+        // Event Listeners
+        if (btnRefresh) {
+            btnRefresh.addEventListener('click', loadData);
+        }
+        
+        if (searchTable) {
             searchTable.addEventListener('input', function() {
                 filterTable(this.value);
             });
-            
-            btnClearSearch.addEventListener('click', clearSearch);
-            
-            // Chart Type Toggle
-            document.querySelectorAll('[data-chart-type]').forEach(button => {
-                button.addEventListener('click', function() {
-                    document.querySelectorAll('[data-chart-type]').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    this.classList.add('active');
-                    renderChart(this.dataset.chartType);
-                });
-            });
-            
-            // Online/Offline detection
-            window.addEventListener('online', checkOnlineStatus);
-            window.addEventListener('offline', checkOnlineStatus);
-            
-            // Auto-refresh every 5 minutes
-            if (autoRefreshInterval) {
-                clearInterval(autoRefreshInterval);
-            }
-            autoRefreshInterval = setInterval(() => {
-                if (isOnline) {
-                    console.log('Auto-refreshing data...');
-                    loadDataFromFirebase();  // Updated
-                }
-            }, 5 * 60 * 1000); // 5 minutes
-            
-            // Initial connection check
-            checkOnlineStatus();
-            
-        } catch (error) {
-            console.error('Initialization error:', error);
-            showError('Gagal menginisialisasi aplikasi: ' + error.message);
         }
-    }
+        
+        // Chart Type Toggle
+        document.querySelectorAll('[data-chart-type]').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('[data-chart-type]').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                renderChart(this.dataset.chartType);
+            });
+        });
+        
+        // Auto-refresh every 2 minutes
+        setInterval(loadData, 2 * 60 * 1000);
+    });
 
     // Make functions available globally
-    window.loadData = loadDataFromFirebase;  // Updated
+    window.loadData = loadData;
     window.exportToCSV = exportToCSV;
     window.filterTable = filterTable;
-    window.clearSearch = clearSearch;
-
-    // Initialize when DOM is loaded
-    document.addEventListener('DOMContentLoaded', initApplication);  // Updated
-
+    window.loadSampleData = loadSampleData;
 </script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </body>
 </html>
