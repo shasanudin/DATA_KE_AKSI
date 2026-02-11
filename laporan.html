@@ -143,6 +143,16 @@
             border-radius: 10px;
             margin: 15px 0;
         }
+        
+        /* QR Code Styling */
+        #qrcodeTTD {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+            padding: 5px;
+            border: 1px solid #ddd;
+            background: white;
+        }
     </style>
 </head>
 <body>
@@ -193,7 +203,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
         // Firebase Configuration
         const firebaseConfig = {
@@ -218,7 +228,7 @@
             try {
                 showLoading(true);
                 
-                // Ambil data dari koleksi 'dtsen_data'
+                // Ambil data dari koleksi 'wilayah_desa'
                 const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
                 
                 cachedData = [];
@@ -226,8 +236,7 @@
                     const data = doc.data();
                     cachedData.push({
                         id: doc.id,
-                        ...data,
-                        // Pastikan struktur data konsisten
+                        nama: data.nama || data.nama_wilayah || 'N/A',
                         desil: data.desil || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                         timestamp: data.timestamp || new Date().toISOString()
                     });
@@ -275,10 +284,12 @@
             let totalKK = 0;
             
             cachedData.forEach(item => {
-                item.desil.forEach((count, index) => {
-                    totalDesil[index] += count;
-                });
-                totalKK += item.desil.reduce((a, b) => a + b, 0);
+                if (item.desil && Array.isArray(item.desil)) {
+                    item.desil.forEach((count, index) => {
+                        totalDesil[index] += Number(count) || 0;
+                    });
+                    totalKK += item.desil.reduce((a, b) => a + (Number(b) || 0), 0);
+                }
             });
             
             const totalD1D2 = totalDesil[0] + totalDesil[1];
@@ -294,21 +305,21 @@
                 <div class="col-md-3">
                     <div class="summary-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
                         <h6>Total KK Terdata</h6>
-                        <h3>${totalKK.toLocaleString()}</h3>
+                        <h3>${totalKK.toLocaleString('id-ID')}</h3>
                         <small><i class="fas fa-home"></i> Kepala Keluarga</small>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="summary-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
                         <h6>KK Prioritas (D1-D2)</h6>
-                        <h3>${totalD1D2.toLocaleString()}</h3>
+                        <h3>${totalD1D2.toLocaleString('id-ID')}</h3>
                         <small><i class="fas fa-exclamation-triangle"></i> Butuh Intervensi</small>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="summary-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
                         <h6>Persentase Prioritas</h6>
-                        <h3>${((totalD1D2 / totalKK) * 100).toFixed(1)}%</h3>
+                        <h3>${totalKK > 0 ? ((totalD1D2 / totalKK) * 100).toFixed(1) : '0'}%</h3>
                         <small><i class="fas fa-chart-pie"></i> dari Total KK</small>
                     </div>
                 </div>
@@ -330,10 +341,10 @@
             const laporanContainer = document.getElementById('laporanContainer');
             laporanContainer.innerHTML = buildLaporanHTML();
             
-            // Render charts
+            // Render charts dan QR code
             setTimeout(() => {
                 renderCharts();
-                generateQRCode();
+                generateQRCode(); // Panggil fungsi generateQRCode
             }, 100);
         }
 
@@ -348,36 +359,48 @@
             });
             
             // Hitung aggregat data
-            const totalDesil = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            const totalDesil = [0, 0, 0, 0, 0, 0]; // D1, D2, D3, D4, D5, D6-D10
             let totalKK = 0;
             
             cachedData.forEach(item => {
-                item.desil.forEach((count, index) => {
-                    totalDesil[index] += count;
-                });
-                totalKK += item.desil.reduce((a, b) => a + b, 0);
+                const desil = item.desil || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                
+                // D1
+                totalDesil[0] += Number(desil[0]) || 0;
+                // D2
+                totalDesil[1] += Number(desil[1]) || 0;
+                // D3
+                totalDesil[2] += Number(desil[2]) || 0;
+                // D4
+                totalDesil[3] += Number(desil[3]) || 0;
+                // D5
+                totalDesil[4] += Number(desil[4]) || 0;
+                // D6-D10
+                totalDesil[5] += desil.slice(5).reduce((sum, val) => sum + (Number(val) || 0), 0);
+                
+                totalKK += desil.reduce((a, b) => a + (Number(b) || 0), 0);
             });
             
             const totalD1D2 = totalDesil[0] + totalDesil[1];
             
             // Urutkan data berdasarkan total D1+D2 (descending)
             const sortedData = [...cachedData].sort((a, b) => {
-                const aD12 = (a.desil[0] || 0) + (a.desil[1] || 0);
-                const bD12 = (b.desil[0] || 0) + (b.desil[1] || 0);
+                const aD12 = (Number(a.desil[0]) || 0) + (Number(a.desil[1]) || 0);
+                const bD12 = (Number(b.desil[0]) || 0) + (Number(b.desil[1]) || 0);
                 return bD12 - aD12;
             });
             
             // Tentukan wilayah dengan prioritas tertinggi
             const topWilayah = sortedData[0];
-            const topD12 = (topWilayah.desil[0] || 0) + (topWilayah.desil[1] || 0);
+            const topD12 = (Number(topWilayah.desil[0]) || 0) + (Number(topWilayah.desil[1]) || 0);
             
             // Bangun tabel prioritas
             let tabelPrioritasHTML = '';
             sortedData.forEach((item, index) => {
-                const d1 = item.desil[0] || 0;
-                const d2 = item.desil[1] || 0;
+                const d1 = Number(item.desil[0]) || 0;
+                const d2 = Number(item.desil[1]) || 0;
                 const d12 = d1 + d2;
-                const persentase = ((d12 / totalD1D2) * 100).toFixed(1);
+                const persentase = totalD1D2 > 0 ? ((d12 / totalD1D2) * 100).toFixed(1) : '0';
                 
                 let prioritas = 'Rendah';
                 let badgeClass = 'badge-success';
@@ -393,10 +416,10 @@
                 tabelPrioritasHTML += `
                     <tr>
                         <td>${index + 1}</td>
-                        <td>${item.nama_wilayah || item.nama || 'N/A'}</td>
-                        <td class="text-center">${d1}</td>
-                        <td class="text-center">${d2}</td>
-                        <td class="text-center font-weight-bold">${d12}</td>
+                        <td>${item.nama || 'N/A'}</td>
+                        <td class="text-center">${d1.toLocaleString('id-ID')}</td>
+                        <td class="text-center">${d2.toLocaleString('id-ID')}</td>
+                        <td class="text-center font-weight-bold">${d12.toLocaleString('id-ID')}</td>
                         <td class="text-center">${persentase}%</td>
                         <td class="text-center">
                             <span class="badge ${badgeClass} badge-prioritas">${prioritas}</span>
@@ -415,7 +438,7 @@
                                 <h6 style="margin: 0; font-size: 14px;">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</h6>
                                 <h4 style="margin: 5px 0; font-weight: bold;">FORUM PUSKESOS KECAMATAN SUMBER</h4>
                                 <h2 style="margin: 10px 0; font-weight: bold; color: #2c3e50;">DARI DATA KE AKSI</h2>
-                                <p style="margin: 0; font-size: 12px;">Sekretariat: Jl. Sunan Drajat No. 16, Kecamatan Sumber</p>
+                                <p style="margin: 0; font-size: 12px;">Sekretariat: Jl. Sunan Malik Ibrahin No.02, Kecamatan Sumber</p>
                             </div>
                             <img src="assets/img/logo/logo-puskesos.png" alt="Puskesos" class="logo-header">
                         </div>
@@ -441,10 +464,10 @@
                 <div class="page">
                     <div class="kop-surat">
                         <h4>LAPORAN ANALISIS DTSEN</h4>
-                        <h5>KECAMATAN SUMBER - EXECUTIVE SUMMARY</h5>
+                        <h5>KECAMATAN SUMBER - LAPORAN KEMISKINAN</h5>
                     </div>
                     
-                    <h5 class="mt-4">Ringkasan Eksekutif</h5>
+                    <h5 class="mt-4">Ringkasan Kemiskinan</h5>
                     <p class="text-justify">
                         Laporan ini menyajikan analisis komprehensif Data Terpadu Sosial Ekonomi Nasional (DTSEN) di Kecamatan Sumber. 
                         Data diambil dari database Firebase Firestore yang diperbarui secara real-time oleh Tim TKSK dan Puskesos.
@@ -464,23 +487,23 @@
                                         </tr>
                                         <tr>
                                             <td>Total KK Terdata</td>
-                                            <td class="text-right font-weight-bold">${totalKK.toLocaleString()}</td>
+                                            <td class="text-right font-weight-bold">${totalKK.toLocaleString('id-ID')}</td>
                                         </tr>
                                         <tr>
                                             <td>KK Desil 1 (Sangat Miskin)</td>
-                                            <td class="text-right font-weight-bold text-danger">${totalDesil[0].toLocaleString()}</td>
+                                            <td class="text-right font-weight-bold text-danger">${totalDesil[0].toLocaleString('id-ID')}</td>
                                         </tr>
                                         <tr>
                                             <td>KK Desil 2 (Miskin)</td>
-                                            <td class="text-right font-weight-bold text-warning">${totalDesil[1].toLocaleString()}</td>
+                                            <td class="text-right font-weight-bold text-warning">${totalDesil[1].toLocaleString('id-ID')}</td>
                                         </tr>
                                         <tr>
                                             <td>Total Prioritas (D1+D2)</td>
-                                            <td class="text-right font-weight-bold">${totalD1D2.toLocaleString()}</td>
+                                            <td class="text-right font-weight-bold">${totalD1D2.toLocaleString('id-ID')}</td>
                                         </tr>
                                         <tr>
                                             <td>Persentase Prioritas</td>
-                                            <td class="text-right font-weight-bold">${((totalD1D2 / totalKK) * 100).toFixed(1)}%</td>
+                                            <td class="text-right font-weight-bold">${totalKK > 0 ? ((totalD1D2 / totalKK) * 100).toFixed(1) : '0'}%</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -493,10 +516,10 @@
                                     <h6 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Wilayah Prioritas Tertinggi</h6>
                                 </div>
                                 <div class="card-body text-center">
-                                    <h3 class="text-danger">${topWilayah.nama_wilayah || topWilayah.nama}</h3>
+                                    <h3 class="text-danger">${topWilayah.nama || 'N/A'}</h3>
                                     <p class="mb-1">Memiliki total KK prioritas:</p>
-                                    <h2 class="font-weight-bold">${topD12.toLocaleString()} KK</h2>
-                                    <p class="text-muted mb-0">(${((topD12 / totalD1D2) * 100).toFixed(1)}% dari total prioritas kecamatan)</p>
+                                    <h2 class="font-weight-bold">${topD12.toLocaleString('id-ID')} KK</h2>
+                                    <p class="text-muted mb-0">(${totalD1D2 > 0 ? ((topD12 / totalD1D2) * 100).toFixed(1) : '0'}% dari total prioritas kecamatan)</p>
                                     <div class="mt-3">
                                         <span class="badge badge-danger badge-pill px-3 py-2">PRIORITAS TINGGI</span>
                                     </div>
@@ -508,7 +531,7 @@
                     <div class="mt-4">
                         <h5>Rekomendasi Aksi Segera:</h5>
                         <ol>
-                            <li>Fokuskan intervensi di ${topWilayah.nama_wilayah || topWilayah.nama} sebagai wilayah prioritas tertinggi</li>
+                            <li>Fokuskan intervensi di ${topWilayah.nama || 'N/A'} sebagai wilayah prioritas tertinggi</li>
                             <li>Koordinasi dengan Dinas Sosial untuk percepatan penyaluran bantuan sosial</li>
                             <li>Pelaksanaan pendampingan intensif oleh TKSK dan Puskesos setempat</li>
                             <li>Pemantauan berkala perkembangan kondisi sosial ekonomi</li>
@@ -536,33 +559,53 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Wilayah</th>
-                                        ${Array.from({length: 10}, (_, i) => `<th class="text-center">D${i+1}</th>`).join('')}
+                                        <th class="text-center">D1</th>
+                                        <th class="text-center">D2</th>
+                                        <th class="text-center">D3</th>
+                                        <th class="text-center">D4</th>
+                                        <th class="text-center">D5</th>
+                                        <th class="text-center">D6-D10</th>
                                         <th class="text-center">Total</th>
                                         <th class="text-center">D1+D2</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     ${sortedData.map((item, index) => {
-                                        const total = (item.desil || []).reduce((a, b) => a + b, 0);
-                                        const d12 = (item.desil[0] || 0) + (item.desil[1] || 0);
+                                        const desil = item.desil || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                                        const d1 = Number(desil[0]) || 0;
+                                        const d2 = Number(desil[1]) || 0;
+                                        const d3 = Number(desil[2]) || 0;
+                                        const d4 = Number(desil[3]) || 0;
+                                        const d5 = Number(desil[4]) || 0;
+                                        const d6d10 = desil.slice(5).reduce((sum, val) => sum + (Number(val) || 0), 0);
+                                        const total = d1 + d2 + d3 + d4 + d5 + d6d10;
+                                        const d12 = d1 + d2;
                                         
                                         return `
                                             <tr>
                                                 <td>${index + 1}</td>
-                                                <td>${item.nama_wilayah || item.nama}</td>
-                                                ${Array.from({length: 10}, (_, i) => 
-                                                    `<td class="text-center">${item.desil[i] || 0}</td>`
-                                                ).join('')}
-                                                <td class="text-center font-weight-bold">${total}</td>
-                                                <td class="text-center font-weight-bold ${d12 >= 400 ? 'text-danger' : d12 >= 200 ? 'text-warning' : 'text-success'}">${d12}</td>
+                                                <td>${item.nama || 'N/A'}</td>
+                                                <td class="text-center">${d1.toLocaleString('id-ID')}</td>
+                                                <td class="text-center">${d2.toLocaleString('id-ID')}</td>
+                                                <td class="text-center">${d3.toLocaleString('id-ID')}</td>
+                                                <td class="text-center">${d4.toLocaleString('id-ID')}</td>
+                                                <td class="text-center">${d5.toLocaleString('id-ID')}</td>
+                                                <td class="text-center">${d6d10.toLocaleString('id-ID')}</td>
+                                                <td class="text-center font-weight-bold">${total.toLocaleString('id-ID')}</td>
+                                                <td class="text-center font-weight-bold ${d12 >= 400 ? 'text-danger' : d12 >= 200 ? 'text-warning' : 'text-success'}">${d12.toLocaleString('id-ID')}</td>
                                             </tr>
                                         `;
                                     }).join('')}
                                     <tr class="table-secondary font-weight-bold">
                                         <td colspan="2">TOTAL KECAMATAN</td>
-                                        ${totalDesil.map(d => `<td class="text-center">${d}</td>`).join('')}
-                                        <td class="text-center">${totalKK.toLocaleString()}</td>
-                                        <td class="text-center">${totalD1D2.toLocaleString()}</td>
+                                        <td class="text-center">${totalDesil[0].toLocaleString('id-ID')}</td>
+                                        <td class="text-center">${totalDesil[1].toLocaleString('id-ID')}</td>
+                                        <td class="text-center">${totalDesil[2].toLocaleString('id-ID')}</td>
+                                        <td class="text-center">${totalDesil[3].toLocaleString('id-ID')}</td>
+                                        <td class="text-center">${totalDesil[4].toLocaleString('id-ID')}</td>
+                                        <td class="text-center">${totalDesil[5].toLocaleString('id-ID')}</td>
+                                        <td class="text-center">${totalKK.toLocaleString('id-ID')}</td>
+                                        <td class="text-center">${totalD1D2.toLocaleString('id-ID')}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -626,14 +669,14 @@
                     <div class="text-justify">
                         <p>
                             Berdasarkan data DTSEN yang terkumpul dari ${cachedData.length} wilayah di Kecamatan Sumber, 
-                            teridentifikasi <strong>${totalD1D2.toLocaleString()} KK</strong> yang termasuk dalam kategori prioritas 
-                            (Desil 1 dan 2). Angka ini merepresentasikan <strong>${((totalD1D2 / totalKK) * 100).toFixed(1)}%</strong> 
+                            teridentifikasi <strong>${totalD1D2.toLocaleString('id-ID')} KK</strong> yang termasuk dalam kategori prioritas 
+                            (Desil 1 dan 2). Angka ini merepresentasikan <strong>${totalKK > 0 ? ((totalD1D2 / totalKK) * 100).toFixed(1) : '0'}%</strong> 
                             dari total populasi terdata.
                         </p>
                         
                         <p>
-                            Wilayah <strong>${topWilayah.nama_wilayah || topWilayah.nama}</strong> menjadi fokus utama dengan 
-                            kontribusi <strong>${((topD12 / totalD1D2) * 100).toFixed(1)}%</strong> dari total KK prioritas kecamatan. 
+                            Wilayah <strong>${topWilayah.nama || 'N/A'}</strong> menjadi fokus utama dengan 
+                            kontribusi <strong>${totalD1D2 > 0 ? ((topD12 / totalD1D2) * 100).toFixed(1) : '0'}%</strong> dari total KK prioritas kecamatan. 
                             Kondisi ini mengindikasikan konsentrasi kerentanan sosial ekonomi yang memerlukan intervensi terpadu.
                         </p>
                     </div>
@@ -722,7 +765,7 @@
                     <div class="text-justify mt-4">
                         <h5>Kesimpulan</h5>
                         <p>
-                            Data DTSEN Kecamatan Sumber menunjukkan bahwa terdapat ${totalD1D2.toLocaleString()} KK yang memerlukan 
+                            Data DTSEN Kecamatan Sumber menunjukkan bahwa terdapat <strong>${totalD1D2.toLocaleString('id-ID')} KK</strong> yang memerlukan 
                             perhatian khusus melalui program perlindungan sosial. Dengan pendekatan berbasis data yang akurat, 
                             diharapkan intervensi dapat lebih tepat sasaran, efektif, dan efisien dalam mengurangi tingkat 
                             kerentanan sosial ekonomi masyarakat.
@@ -772,28 +815,36 @@
 
         // Fungsi untuk render charts
         function renderCharts() {
-            // Hitung total per desil
-            const totalDesil = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            // Hitung total per desil dengan D6-D10 digabung
+            const totalDesil = [0, 0, 0, 0, 0, 0]; // D1, D2, D3, D4, D5, D6-D10
             
             cachedData.forEach(item => {
-                item.desil.forEach((count, index) => {
-                    totalDesil[index] += count;
-                });
+                const desil = item.desil || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                totalDesil[0] += Number(desil[0]) || 0; // D1
+                totalDesil[1] += Number(desil[1]) || 0; // D2
+                totalDesil[2] += Number(desil[2]) || 0; // D3
+                totalDesil[3] += Number(desil[3]) || 0; // D4
+                totalDesil[4] += Number(desil[4]) || 0; // D5
+                totalDesil[5] += desil.slice(5).reduce((sum, val) => sum + (Number(val) || 0), 0); // D6-D10
             });
             
-            // Chart 1: Distribusi Desil
+            // Chart 1: Distribusi Desil (D6-D10 digabung)
             const ctx1 = document.getElementById('chartDistribusiDesil');
             if (ctx1) {
                 const chart1 = new Chart(ctx1, {
                     type: 'bar',
                     data: {
-                        labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10'],
+                        labels: ["D1", "D2", "D3", "D4", "D5", "D6-D10"],
                         datasets: [{
                             label: 'Jumlah KK',
                             data: totalDesil,
                             backgroundColor: [
-                                '#dc3545', '#fd7e14', '#ffc107', '#28a745', '#20c997',
-                                '#17a2b8', '#007bff', '#6610f2', '#e83e8c', '#6c757d'
+                                '#dc3545', // D1 - merah
+                                '#fd7e14', // D2 - oranye
+                                '#ffc107', // D3 - kuning
+                                '#28a745', // D4 - hijau
+                                '#20c997', // D5 - hijau muda
+                                '#6c757d'  // D6-D10 - abu-abu
                             ],
                             borderWidth: 1
                         }]
@@ -808,8 +859,8 @@
                                     label: function(context) {
                                         const value = context.raw;
                                         const total = totalDesil.reduce((a, b) => a + b, 0);
-                                        const percentage = ((value / total) * 100).toFixed(1);
-                                        return `${value} KK (${percentage}%)`;
+                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                        return `${value.toLocaleString('id-ID')} KK (${percentage}%)`;
                                     }
                                 }
                             }
@@ -820,6 +871,11 @@
                                 title: {
                                     display: true,
                                     text: 'Jumlah KK'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value.toLocaleString('id-ID');
+                                    }
                                 }
                             },
                             x: {
@@ -834,43 +890,67 @@
                 chartInstances.push(chart1);
             }
             
-            // Chart 2: Prioritas Wilayah
+            // Chart 2: Prioritas Wilayah (D1+D2 per wilayah)
             const sortedData = [...cachedData].sort((a, b) => {
-                const aD12 = (a.desil[0] || 0) + (a.desil[1] || 0);
-                const bD12 = (b.desil[0] || 0) + (b.desil[1] || 0);
+                const aD12 = (Number(a.desil[0]) || 0) + (Number(a.desil[1]) || 0);
+                const bD12 = (Number(b.desil[0]) || 0) + (Number(b.desil[1]) || 0);
                 return bD12 - aD12;
             });
             
             const ctx2 = document.getElementById('chartPrioritasWilayah');
             if (ctx2) {
-                const labels = sortedData.map(item => item.nama_wilayah || item.nama);
-                const dataD12 = sortedData.map(item => (item.desil[0] || 0) + (item.desil[1] || 0));
+                const labels = sortedData.map(item => 
+                    item.nama.length > 20 ? item.nama.substring(0, 20) + '...' : item.nama
+                );
+                const dataD1 = sortedData.map(item => Number(item.desil[0]) || 0);
+                const dataD2 = sortedData.map(item => Number(item.desil[1]) || 0);
+                const dataD12 = sortedData.map(item => 
+                    (Number(item.desil[0]) || 0) + (Number(item.desil[1]) || 0)
+                );
                 
                 const chart2 = new Chart(ctx2, {
-                    type: 'horizontalBar',
+                    type: 'bar',
                     data: {
                         labels: labels,
-                        datasets: [{
-                            label: 'KK Prioritas (D1+D2)',
-                            data: dataD12,
-                            backgroundColor: dataD12.map(value => 
-                                value >= 400 ? '#dc3545' : 
-                                value >= 200 ? '#ffc107' : 
-                                '#28a745'
-                            ),
-                            borderWidth: 1
-                        }]
+                        datasets: [
+                            {
+                                label: 'Desil 1 (Sangat Miskin)',
+                                data: dataD1,
+                                backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                                borderColor: 'rgba(220, 53, 69, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Desil 2 (Miskin)',
+                                data: dataD2,
+                                backgroundColor: 'rgba(255, 193, 7, 0.8)',
+                                borderColor: 'rgba(255, 193, 7, 1)',
+                                borderWidth: 1
+                            }
+                        ]
                     },
                     options: {
                         indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { display: false },
+                            legend: {
+                                display: true,
+                                position: 'top',
+                            },
                             tooltip: {
+                                mode: 'index',
+                                intersect: false,
                                 callbacks: {
                                     label: function(context) {
-                                        return `${context.raw} KK prioritas`;
+                                        return `${context.dataset.label}: ${context.raw.toLocaleString('id-ID')} KK`;
+                                    },
+                                    afterLabel: function(context) {
+                                        if (context.datasetIndex === 1) { // Untuk dataset D2
+                                            const dataIndex = context.dataIndex;
+                                            const totalD12 = dataD12[dataIndex];
+                                            return `Total D1+D2: ${totalD12.toLocaleString('id-ID')} KK`;
+                                        }
                                     }
                                 }
                             }
@@ -880,7 +960,19 @@
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: 'Jumlah KK Prioritas (D1+D2)'
+                                    text: 'Jumlah KK'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value.toLocaleString('id-ID');
+                                    }
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    autoSkip: false,
+                                    maxRotation: 0,
+                                    minRotation: 0
                                 }
                             }
                         }
@@ -890,31 +982,49 @@
             }
         }
 
-        // Fungsi untuk generate QR Code
+        // Fungsi untuk generate QR Code - DIPERBAIKI
         function generateQRCode() {
             const now = new Date();
+            const totalD1D2 = cachedData.reduce((sum, item) => {
+                return sum + (Number(item.desil[0]) || 0) + (Number(item.desil[1]) || 0);
+            }, 0);
+            
             const qrData = {
                 dokumen: 'Laporan DTSEN Kecamatan Sumber',
                 tanggal: now.toISOString(),
                 total_wilayah: cachedData.length,
-                total_prioritas: cachedData.reduce((sum, item) => 
-                    sum + (item.desil[0] || 0) + (item.desil[1] || 0), 0
-                ),
+                total_prioritas: totalD1D2,
                 penandatangan: 'SHIDIQ HASANUDIN, S.IP',
                 id_dokumen: `DTSEN-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`
             };
             
             const qrElement = document.getElementById('qrcodeTTD');
-            if (qrElement) {
+            if (qrElement && typeof QRCode !== 'undefined') {
+                // Hapus QR code sebelumnya jika ada
                 qrElement.innerHTML = '';
-                new QRCode(qrElement, {
-                    text: JSON.stringify(qrData),
-                    width: 120,
-                    height: 120,
-                    colorDark: '#000000',
-                    colorLight: '#ffffff',
-                    correctLevel: QRCode.CorrectLevel.H
-                });
+                
+                // Pastikan elemen div kosong
+                const container = document.createElement('div');
+                qrElement.appendChild(container);
+                
+                // Generate QR code baru
+                try {
+                    new QRCode(container, {
+                        text: JSON.stringify(qrData),
+                        width: 110,
+                        height: 110,
+                        colorDark: '#000000',
+                        colorLight: '#ffffff',
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                    
+                    console.log('QR Code generated successfully');
+                } catch (error) {
+                    console.error('Error generating QR code:', error);
+                    qrElement.innerHTML = '<p class="text-danger small">QR Code gagal dibuat</p>';
+                }
+            } else {
+                console.warn('QR Code element not found or QRCode library not loaded');
             }
         }
 
@@ -937,7 +1047,10 @@
                 }
             };
 
-            html2pdf().set(opt).from(element).save();
+            // Pastikan QR code sudah digenerate sebelum export
+            setTimeout(() => {
+                html2pdf().set(opt).from(element).save();
+            }, 500);
         }
 
         // Inisialisasi saat halaman dimuat
