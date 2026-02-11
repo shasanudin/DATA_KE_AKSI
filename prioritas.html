@@ -437,8 +437,9 @@
 
     // Get Priority Level
     function getPriorityLevel(d12) {
-        if (d12 >= 400) return { text: 'Prioritas Tinggi', class: 'bg-urgent' };
-        if (d12 >= 200) return { text: 'Prioritas Menengah', class: 'bg-monitor' };
+        if (d12 >= 600) return { text: 'Prioritas Tinggi', class: 'bg-urgent' };
+        if (d12 >= 400) return { text: 'Prioritas Menengah', class: 'bg-monitor' };
+        if (d12 >= 200) return { text: 'Prioritas Rendah', class: 'bg-monitor' };
         return { text: 'Pemantauan', class: '' };
     }
 
