@@ -21,6 +21,7 @@
             --light: #f8f9fa;
             --dark: #212529;
             --bg-gradient: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            --header-height: 100px;
         }
 
         body {
@@ -28,15 +29,36 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             color: #333;
+            padding-top: var(--header-height);
         }
 
-        /* Header Styling */
+        /* Header Styling - Fixed Sticky Header */
         .main-header {
             background: white;
             box-shadow: 0 2px 20px rgba(0,0,0,0.08);
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 1000;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            border-bottom: 3px solid #4361ee;
+            transition: all 0.3s ease;
+        }
+
+        .main-header.scrolled {
+            height: 80px;
+            box-shadow: 0 5px 25px rgba(67, 97, 238, 0.15);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .main-header .container {
+            width: 100%;
+            max-width: 100%;
+            padding: 0 30px;
         }
 
         .logo-container {
@@ -58,6 +80,27 @@
             padding: 8px 20px;
             border-radius: 25px;
             box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        /* Navbar Styling */
+        #navbar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            transition: top 0.3s ease;
+        }
+
+        .main-header.scrolled + #navbar {
+            top: 80px;
+        }
+
+        /* Main Content Adjustment */
+        main.container {
+            padding-top: 30px;
         }
 
         /* Card Styling */
@@ -295,8 +338,58 @@
             100% { opacity: 1; }
         }
 
+        /* Scroll to Top Button */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            z-index: 999;
+        }
+
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
+            :root {
+                --header-height: 120px;
+            }
+            
+            .main-header {
+                height: auto;
+                min-height: var(--header-height);
+                padding: 10px 0;
+            }
+            
+            .main-header .container {
+                padding: 0 20px;
+            }
+            
+            body {
+                padding-top: var(--header-height);
+            }
+            
             .kpi-card {
                 min-height: 150px;
                 padding: 20px;
@@ -313,6 +406,14 @@
             .chart-container {
                 height: 250px;
             }
+            
+            #navbar {
+                top: var(--header-height);
+            }
+            
+            .main-header.scrolled + #navbar {
+                top: var(--header-height);
+            }
         }
     </style>
 </head>
@@ -326,14 +427,15 @@
     <p class="text-muted">Menghubungkan ke database Firebase...</p>
 </div>
 
-<header class="main-header py-3">
+<!-- Sticky Header -->
+<header class="main-header" id="mainHeader">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6">
                 <div class="logo-container">
-                    <img src="assets/img/logo/logo-tksk.png" alt="Logo TKSK" height="50" class="img-fluid">
+                    <img src="assets/img/logo/logo-tksk.png" alt="Logo TKSK" height="50" class="img-fluid" onerror="this.style.display='none'">
                     <div class="logo-divider"></div>
-                    <img src="assets/img/logo/logo-puskesos.png" alt="Logo Puskesos" height="50" class="img-fluid">
+                    <img src="assets/img/logo/logo-puskesos.png" alt="Logo Puskesos" height="50" class="img-fluid" onerror="this.style.display='none'">
                 </div>
             </div>
             <div class="col-md-6 text-md-right text-center mt-3 mt-md-0">
@@ -349,8 +451,10 @@
     </div>
 </header>
 
+<!-- Navbar -->
 <div id="navbar"></div>
 
+<!-- Main Content -->
 <main class="container my-5">
     
     <!-- Header Section -->
@@ -498,6 +602,7 @@
     </div>
 </main>
 
+<!-- Footer -->
 <footer class="bg-dark text-white py-4 mt-5">
     <div class="container">
         <div class="row">
@@ -518,6 +623,11 @@
     </div>
 </footer>
 
+<!-- Scroll to Top Button -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
 <!-- Firebase SDK -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
@@ -529,7 +639,6 @@
     } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
     // Firebase Configuration
-    // PERINGATAN: Untuk produksi, gunakan environment variables atau backend
     const firebaseConfig = {
         apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
         authDomain: "data-ke-aksi-auth.firebaseapp.com",
@@ -582,10 +691,14 @@
     const recommendations = document.getElementById('recommendations');
     const totalWilayah = document.getElementById('totalWilayah');
     const totalPenerima = document.getElementById('totalPenerima');
+    const mainHeader = document.getElementById('mainHeader');
+    const scrollTop = document.getElementById('scrollTop');
 
     // Show/Hide Loading
     function showLoading(show) {
-        loadingOverlay.style.display = show ? 'flex' : 'none';
+        if (loadingOverlay) {
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+        }
     }
 
     // Update Connection Status
@@ -615,8 +728,8 @@
             year: 'numeric'
         });
         
-        lastUpdate.textContent = `${dateString} ${timeString}`;
-        footerUpdate.textContent = `${dateString} ${timeString}`;
+        if (lastUpdate) lastUpdate.textContent = `${dateString} ${timeString}`;
+        if (footerUpdate) footerUpdate.textContent = `${dateString} ${timeString}`;
     }
 
     // Format Number
@@ -724,7 +837,7 @@
             });
         }
         
-        return recommendations.slice(0, 4); // Limit to 4 recommendations
+        return recommendations.slice(0, 4);
     }
 
     // Render KPI Cards
@@ -786,11 +899,13 @@
             `;
         });
         
-        kpiCards.innerHTML = html;
+        if (kpiCards) kpiCards.innerHTML = html;
     }
 
     // Render Evaluation Table
     function renderEvaluationTable(data) {
+        if (!evalHead || !evalTable) return;
+        
         // Table Header
         evalHead.innerHTML = `
             <tr>
@@ -856,6 +971,8 @@
 
     // Render Recommendations
     function renderRecommendations(recommendations) {
+        if (!document.getElementById('recommendations')) return;
+        
         let html = '';
         
         if (recommendations.length === 0) {
@@ -893,6 +1010,8 @@
     // Render Chart
     function renderChart(data) {
         const ctx = document.getElementById('evalChart');
+        
+        if (!ctx) return;
         
         // Destroy existing chart
         if (evalChart) {
@@ -1043,11 +1162,6 @@
     // Load Data from Firebase
     async function loadData() {
         try {
-            if (!isOnline) {
-                showError('Anda sedang offline. Data ditampilkan dari cache lokal.');
-                return;
-            }
-
             showLoading(true);
             updateConnectionStatus(false);
             
@@ -1101,8 +1215,8 @@
             const metrics = calculateKPIMetrics(evaluationData);
             
             // Update UI
-            totalWilayah.textContent = metrics.totalWilayah;
-            totalPenerima.textContent = formatNumber(metrics.totalPenerima);
+            if (totalWilayah) totalWilayah.textContent = metrics.totalWilayah;
+            if (totalPenerima) totalPenerima.textContent = formatNumber(metrics.totalPenerima);
             
             renderKPICards(metrics);
             renderEvaluationTable(evaluationData);
@@ -1124,8 +1238,8 @@
             evaluationData = generateSampleData();
             const metrics = calculateKPIMetrics(evaluationData);
             
-            totalWilayah.textContent = metrics.totalWilayah;
-            totalPenerima.textContent = formatNumber(metrics.totalPenerima);
+            if (totalWilayah) totalWilayah.textContent = metrics.totalWilayah;
+            if (totalPenerima) totalPenerima.textContent = formatNumber(metrics.totalPenerima);
             
             renderKPICards(metrics);
             renderEvaluationTable(evaluationData);
@@ -1169,7 +1283,10 @@
         fetch('navbar.html')
             .then(res => res.ok ? res.text() : '')
             .then(html => {
-                if (html) document.getElementById('navbar').innerHTML = html;
+                if (html) {
+                    const navbar = document.getElementById('navbar');
+                    if (navbar) navbar.innerHTML = html;
+                }
             })
             .catch(() => console.log('Navbar not loaded'));
         
@@ -1177,7 +1294,9 @@
         loadData();
         
         // Event listeners
-        btnRefresh.addEventListener('click', loadData);
+        if (btnRefresh) {
+            btnRefresh.addEventListener('click', loadData);
+        }
         
         // Online/offline detection
         window.addEventListener('online', () => {
@@ -1195,6 +1314,17 @@
         
         // Initial connection status
         updateConnectionStatus(navigator.onLine);
+        
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                mainHeader.classList.add('scrolled');
+                scrollTop.classList.add('show');
+            } else {
+                mainHeader.classList.remove('scrolled');
+                scrollTop.classList.remove('show');
+            }
+        });
     });
 
     // Make functions available globally
