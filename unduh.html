@@ -12,13 +12,16 @@
 <style>
 body{font-family:'Inter',sans-serif;background:#f4f7f6;}
 .paper{background:#fff;width:210mm;min-height:297mm;padding:15mm 20mm;margin:30px auto;box-shadow:0 0 20px rgba(0,0,0,.05);font-family:"Times New Roman";color:#000;}
-.kop-surat-container{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #000;padding-bottom:10px;}
+.kop-surat-container{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #000;padding-bottom:10px;margin-bottom:15px;}
 .logo-box{width:85px;flex-shrink:0;}
 .logo-kop{width:100%;}
 .teks-kop{text-align:center;flex-grow:1;}
 .kop-line{border-bottom:1px solid #000;margin:2px 0 10px;}
 .qr-box{border:1px solid #eee;padding:5px;background:#fff;display:inline-block;}
-.card-custom{border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,.05);background:#fff;}
+
+/* Styling untuk kop surat di halaman berikutnya */
+.kop-halaman { margin-bottom: 25px; }
+
 @media print{
   body *{visibility:hidden;}
   .paper,.paper *{visibility:visible;}
@@ -77,47 +80,96 @@ Generate Data
 </div>
 
 <div class="paper" id="cetakArea">
-<div class="kop-surat-container">
-<div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
-<div class="teks-kop">
-<h6 style="font-size:14px;margin:0;">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</h6>
-<h5 class="font-weight-bold" style="font-size:16px;margin:2px 0;">FORUM PUSKESOS KECAMATAN SUMBER</h5>
-<h2 class="font-weight-bold" style="font-size:26px;margin:4px 0;">DARI DATA KE AKSI</h2>
-<p style="font-size:11px;">Sekretariat: Jl. Sunan Drajat No.16</p>
-</div>
-<div class="logo-box text-right"><img src="assets/img/logo/logo-puskesos.png" class="logo-kop"></div>
-</div>
-
-<div class="kop-line"></div>
-<p class="text-center mb-3">Nomor: 460 / <span id="hashNomor">---</span> / TKSK-SBR / 2026</p>
-
 <!-- Halaman 1: Agregasi -->
+<div class="kop-halaman">
+  <div class="kop-surat-container">
+    <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
+    <div class="teks-kop">
+      <h6 style="font-size:14px;margin:0;">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</h6>
+      <h5 class="font-weight-bold" style="font-size:16px;margin:2px 0;">FORUM PUSKESOS KECAMATAN SUMBER</h5>
+      <h2 class="font-weight-bold" style="font-size:26px;margin:4px 0;">DARI DATA KE AKSI</h2>
+      <p style="font-size:11px;">Sekretariat: Jl. Sunan Drajat No.16</p>
+    </div>
+    <div class="logo-box text-right"><img src="assets/img/logo/logo-puskesos.png" class="logo-kop"></div>
+  </div>
+  <div class="kop-line"></div>
+  <p class="text-center mb-3">Nomor: 460 / <span id="hashNomor">---</span> / TKSK-SBR / 2026</p>
+</div>
+
 <div id="kontenHal1" style="min-height:250px;"></div>
 
 <!-- Halaman 2: Prioritas Desa -->
-<div style="page-break-before:always;" id="kontenHal2" style="min-height:250px;"></div>
+<div style="page-break-before:always;">
+  <div class="kop-halaman">
+    <div class="kop-surat-container">
+      <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
+      <div class="teks-kop">
+        <h6 style="font-size:14px;margin:0;">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</h6>
+        <h5 class="font-weight-bold" style="font-size:16px;margin:2px 0;">FORUM PUSKESOS KECAMATAN SUMBER</h5>
+        <h2 class="font-weight-bold" style="font-size:26px;margin:4px 0;">DARI DATA KE AKSI</h2>
+        <p style="font-size:11px;">Sekretariat: Jl. Sunan Drajat No.16</p>
+      </div>
+      <div class="logo-box text-right"><img src="assets/img/logo/logo-puskesos.png" class="logo-kop"></div>
+    </div>
+    <div class="kop-line"></div>
+    <p class="text-center mb-3">Nomor: 460 / <span id="hashNomor2">---</span> / TKSK-SBR / 2026</p>
+  </div>
+  <div id="kontenHal2" style="min-height:250px;"></div>
+</div>
 
 <!-- Halaman 3: Bansos per desa -->
-<div style="page-break-before:always;" id="kontenHal3" style="min-height:250px;"></div>
+<div style="page-break-before:always;">
+  <div class="kop-halaman">
+    <div class="kop-surat-container">
+      <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
+      <div class="teks-kop">
+        <h6 style="font-size:14px;margin:0;">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</h6>
+        <h5 class="font-weight-bold" style="font-size:16px;margin:2px 0;">FORUM PUSKESOS KECAMATAN SUMBER</h5>
+        <h2 class="font-weight-bold" style="font-size:26px;margin:4px 0;">DARI DATA KE AKSI</h2>
+        <p style="font-size:11px;">Sekretariat: Jl. Sunan Drajat No.16</p>
+      </div>
+      <div class="logo-box text-right"><img src="assets/img/logo/logo-puskesos.png" class="logo-kop"></div>
+    </div>
+    <div class="kop-line"></div>
+    <p class="text-center mb-3">Nomor: 460 / <span id="hashNomor3">---</span> / TKSK-SBR / 2026</p>
+  </div>
+  <div id="kontenHal3" style="min-height:250px;"></div>
+</div>
 
 <!-- Halaman 4: Layanan per desa + QR + TTD -->
-<div style="page-break-before:always;" id="kontenHal4" style="min-height:250px;"></div>
+<div style="page-break-before:always;">
+  <div class="kop-halaman">
+    <div class="kop-surat-container">
+      <div class="logo-box"><img src="assets/img/logo/logo-tksk.png" class="logo-kop"></div>
+      <div class="teks-kop">
+        <h6 style="font-size:14px;margin:0;">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</h6>
+        <h5 class="font-weight-bold" style="font-size:16px;margin:2px 0;">FORUM PUSKESOS KECAMATAN SUMBER</h5>
+        <h2 class="font-weight-bold" style="font-size:26px;margin:4px 0;">DARI DATA KE AKSI</h2>
+        <p style="font-size:11px;">Sekretariat: Jl. Sunan Drajat No.16</p>
+      </div>
+      <div class="logo-box text-right"><img src="assets/img/logo/logo-puskesos.png" class="logo-kop"></div>
+    </div>
+    <div class="kop-line"></div>
+    <p class="text-center mb-3">Nomor: 460 / <span id="hashNomor4">---</span> / TKSK-SBR / 2026</p>
+  </div>
+  <div id="kontenHal4" style="min-height:250px;"></div>
 
-<div class="row mt-4">
-<div class="col-7">
-<div style="border:1px solid #000;padding:8px;font-size:10px;">
-<strong>Catatan Verifikasi:</strong><br>
-- Data diambil dari database DTSEN.<br>
-- D1-D2 kategori kerentanan tinggi.
-</div>
-</div>
+  <div class="row mt-4">
+    <div class="col-7">
+      <div style="border:1px solid #000;padding:8px;font-size:10px;">
+        <strong>Catatan Verifikasi:</strong><br>
+        - Data diambil dari database DTSEN.<br>
+        - D1-D2 kategori kerentanan tinggi.
+      </div>
+    </div>
 
-<div class="col-5 text-center">
-<p>Sumber, <span id="tglSekarang"></span></p>
-<div id="qrcode" class="qr-box mb-2"></div>
-<p class="font-weight-bold mb-0">SHIDIQ HASANUDIN, S.IP</p>
-<small>ID Verif: <span id="hashID">-</span></small>
-</div>
+    <div class="col-5 text-center">
+      <p>Sumber, <span id="tglSekarang"></span></p>
+      <div id="qrcode" class="qr-box mb-2"></div>
+      <p class="font-weight-bold mb-0">SHIDIQ HASANUDIN, S.IP</p>
+      <small>ID Verif: <span id="hashID">-</span></small>
+    </div>
+  </div>
 </div>
 
 </div>
