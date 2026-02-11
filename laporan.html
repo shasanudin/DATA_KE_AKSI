@@ -1,391 +1,956 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Laporan Bulanan DTSEN TKSK dan Puskesos Kecamatan Sumber</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-  <button class="btn btn-secondary mb-2" onclick="window.print()">
-🖨️ Print Landscape
-</button>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
-
-<style>
-body { font-family: "Times New Roman", serif; }
-.page { padding: 25mm; page-break-after: always; }
-.no-print { margin: 20px; }
-header { text-align: center; }
-header img { height: 70px; }
-h5 { margin-top: 20px; }
-canvas { max-width: 100%; height: 300px !important; }
-.table-sm td, .table-sm th { font-size: 12px; }
-.ttd { height: 100px; }
-/* ================= PRINT LANDSCAPE ================= */
-@media print {
-  @page {
-    size: A4 landscape;
-    margin: 15mm;
-  }
-
-  body {
-    font-size: 11pt;
-  }
-
-  canvas {
-    max-height: 260px !important;
-  }
-
-  #map {
-    height: 260px !important;
-  }
-
-  .no-print,
-  button,
-  input[type=range] {
-    display: none !important;
-  }
-
-  table {
-    page-break-inside: avoid;
-  }
-
-  h4, h6 {
-    page-break-after: avoid;
-  }
-}
-</style>
-</head>
-
-<body>
-
-  <div class="no-print">
-    <a href="index.html" class="btn btn-outline-secondary btn-sm">Kembali</a>
-  </div>
-<div class="no-print">
-<button class="btn btn-danger" onclick="exportPDF()">Export PDF</button>
-</div>
-
-<div id="laporan">
-
-  <div class="page">
-    <header>
-      <img src="assets/img/logo/logo-tksk.png" alt="TKSK">
-      <img src="assets/img/logo/logo-puskesos.png" alt="Puskesos" class="ml-2">
-      <h4 class="font-weight-bold mt-3">LAPORAN BULANAN</h4>
-      <h4 class="font-weight-bold">DATA TERPADU SOSIAL EKONOMI NASIONAL (DTSEN)</h4>
-      <p>Kecamatan <span id="kecamatan"></span><br>
-        Kabupaten <span id="kabupaten"></span><br>
-        Provinsi Jawa Barat</p>
-      <p><strong>Periode:</strong> <span id="updated"></span></p>
-    </header>
-    <hr>
-    <p class="text-justify">
-      Laporan ini menyajikan analisis komprehensif mengenai peta kerentanan sosial ekonomi di wilayah Kecamatan Sumber. Data ini dikumpulkan dan diverifikasi untuk memastikan ketepatan sasaran program perlindungan sosial. Fokus utama laporan adalah pada kelompok Desil 1 (Sangat Miskin) dan Desil 2 (Miskin) yang memerlukan intervensi segera.
-    </p>
-  </div>
-
-  <div class="page">
-    <h5>Distribusi Rumah Tangga Berdasarkan Kelompok Desil</h5>
-    <canvas id="chartKelompokDesil"></canvas>
-    <div class="mt-4">
-      <table class="table table-bordered table-sm text-center">
-        <thead class="thead-light">
-          <tr>
-            <th>Kategori</th>
-            <th>D1</th>
-            <th>D2</th>
-            <th>D3</th>
-            <th>D4</th>
-            <th>D5</th>
-            <th>D6-D10</th>
-          </tr>
-        </thead>
-        <tbody id="tabelDataDesil"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="page">
-    <h5>Grafik Prioritas Desil 1–2 per Kelurahan/Desa</h5>
-    <canvas id="chartKelurahan"></canvas>
-    <div class="mt-4">
-      <table class="table table-bordered table-sm">
-        <thead class="thead-light">
-          <tr>
-            <th>Kelurahan/Desa</th>
-            <th>Jumlah D1 + D2 (Jiwa/KK)</th>
-            <th>Persentase Terhadap Total Kecamatan</th>
-          </tr>
-        </thead>
-        <tbody id="tabelDataKelurahan"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="page">
-    <h5>Tabel Prioritas Intervensi dan Tingkat Kerentanan</h5>
-    <table class="table table-bordered table-sm">
-      <thead class="thead-light">
-        <tr>
-          <th>Wilayah</th>
-          <th>D1</th>
-          <th>D2</th>
-          <th>Total D1–D2</th>
-          <th>Kerentanan</th>
-          <th>Prioritas</th>
-        </tr>
-      </thead>
-      <tbody id="tabelPrioritas"></tbody>
-    </table>
-  </div>
-
-  <div class="page">
-    <h5>Analisis dan Rekomendasi Strategis</h5>
-    <div id="narasiRekomendasi" class="text-justify" style="line-height: 1.6;">
-      </div>
-  </div>
-
-  <div class="page">
-    <h5>Dashboard Interaktif DTSEN</h5>
-    <label>Filter Desil Maksimal: <strong id="labelDesil">2</strong></label>
-    <input type="range" min="1" max="10" value="2" id="desilSlider" class="w-100">
-    <canvas id="chartDashboard" class="mt-4"></canvas>
-  </div>
-
-  <div class="page">
-    <div class="row text-center mt-5 align-items-start">
-      <div class="col-6">
-        <p>Mengetahui,<br>Camat Sumber</p>
-        <div class="ttd"></div>
-        <p><strong>(............................)</strong><br>NIP. ............................</p>
-      </div>
-      <div class="col-6 d-flex flex-column align-items-center">
-        <p id="tanggalTTD" class="mb-2"></p>
-        <p class="mb-2">TKSK Kecamatan Sumber</p>
-        <div id="qrcode" style="width:120px;height:120px;"></div>
-        <p class="mt-2 font-weight-bold">Shidiq Hasanudin, S.IP</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-fetch("data/dtsen.json").then(r => r.json()).then(data => {
-  // Update Header
-  document.getElementById("kecamatan").innerText = data.kecamatan;
-  document.getElementById("kabupaten").innerText = data.kabupaten;
-  document.getElementById("updated").innerText = data.updated;
-
-  let totalD = [0, 0, 0, 0, 0, 0];
-  let labelsKel = [];
-  let dataKel = [];
-  let totalD1D2_Kecamatan = 0;
-
-  // Analisis Data
-  data.wilayah.forEach(w => {
-    let d1 = w.desil[0];
-    let d2 = w.desil[1];
-    let d12 = d1 + d2;
-    totalD1D2_Kecamatan += d12;
-
-    totalD[0] += d1;
-    totalD[1] += d2;
-    totalD[2] += w.desil[2];
-    totalD[3] += w.desil[3];
-    totalD[4] += w.desil[4];
-    totalD[5] += w.desil.slice(5).reduce((a, b) => a + b, 0);
-
-    labelsKel.push(w.nama);
-    dataKel.push(d12);
-
-    let prioritas = d12 >= 400 ? "Tinggi" : d12 >= 200 ? "Sedang" : "Rendah";
-    let kerentanan = d12 >= 400 ? "Sangat Rentan" : d12 >= 200 ? "Rentan" : "Relatif Stabil";
-
-    // Isi Tabel Prioritas
-    document.getElementById("tabelPrioritas").innerHTML += `
-      <tr>
-        <td>${w.nama}</td>
-        <td>${d1}</td>
-        <td>${d2}</td>
-        <td><strong>${d12}</strong></td>
-        <td>${kerentanan}</td>
-        <td><span class="badge ${prioritas==='Tinggi'?'badge-danger':prioritas==='Sedang'?'badge-warning':'badge-success'}">${prioritas}</span></td>
-      </tr>`;
-  });
-
-  // Isi Tabel Data Desil (Pendukung Grafik 1)
-  document.getElementById("tabelDataDesil").innerHTML = `
-    <tr>
-      <td>Jumlah KK</td>
-      <td>${totalD[0]}</td>
-      <td>${totalD[1]}</td>
-      <td>${totalD[2]}</td>
-      <td>${totalD[3]}</td>
-      <td>${totalD[4]}</td>
-      <td>${totalD[5]}</td>
-    </tr>`;
-
-  // Isi Tabel Data Kelurahan (Pendukung Grafik 2)
-  data.wilayah.forEach(w => {
-    let d12 = w.desil[0] + w.desil[1];
-    let persen = ((d12 / totalD1D2_Kecamatan) * 100).toFixed(1);
-    document.getElementById("tabelDataKelurahan").innerHTML += `
-      <tr>
-        <td>${w.nama}</td>
-        <td>${d12}</td>
-        <td>${persen}%</td>
-      </tr>`;
-  });
-
-  // Render Grafik Kelompok
-  new Chart(document.getElementById('chartKelompokDesil'), {
-    type: "bar",
-    data: {
-      labels: ["D1", "D2", "D3", "D4", "D5", "D6–D10"],
-      datasets: [{ label: 'Jumlah KK', data: totalD, backgroundColor: "#007bff" }]
-    },
-    options: { plugins: { legend: { display: false } } }
-  });
-
-  // Render Grafik Kelurahan
-  new Chart(document.getElementById('chartKelurahan'), {
-    type: "bar",
-    data: {
-      labels: labelsKel,
-      datasets: [{ label: 'Total D1-D2', data: dataKel, backgroundColor: "#dc3545" }]
-    },
-    options: { indexAxis: "y", plugins: { legend: { display: false } } }
-  });
-
-  // GENERATE NARASI REKOMENDASI OTOMATIS
-  const wilayahTertinggi = data.wilayah.reduce((prev, current) => 
-    (prev.desil[0] + prev.desil[1] > current.desil[0] + current.desil[1]) ? prev : current
-  );
-
-  document.getElementById("narasiRekomendasi").innerHTML = `
-    <p>Berdasarkan hasil analisis data DTSEN periode ${data.updated}, ditemukan bahwa wilayah <strong>${wilayahTertinggi.nama}</strong> memiliki konsentrasi penduduk sangat rentan (Desil 1 & 2) tertinggi. Hal ini menunjukkan perlunya alokasi sumber daya yang lebih besar ke wilayah tersebut.</p>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Laporan DTSEN - TKSK & Puskesos Kecamatan Sumber</title>
     
-    <h6><strong>Langkah Strategis:</strong></h6>
-    <ul>
-      <li><strong>Intervensi Berbasis Wilayah:</strong> Melakukan <i>micro-targeting</i> di ${wilayahTertinggi.nama} melalui program perbaikan rumah tidak layak huni (Rutilahu) dan jaminan kesehatan daerah bagi ${wilayahTertinggi.desil[0]} KK di kategori Desil 1.</li>
-      <li><strong>Penguatan Ekonomi:</strong> Bagi kelompok Desil 3 dan 4 yang berjumlah ${totalD[2]+totalD[3]} KK, direkomendasikan pemberian stimulan modal usaha kelompok agar tidak jatuh ke kategori miskin (Desil 2).</li>
-      <li><strong>Validasi Puskesos:</strong> Puskesos di tingkat kelurahan wajib melakukan pemutakhiran data setiap 3 bulan untuk memantau graduasi mandiri (penduduk yang keluar dari kemiskinan).</li>
-      <li><strong>Sinergi Stakeholder:</strong> Camat Sumber perlu mengoordinasikan bantuan CSR perusahaan lokal untuk disalurkan pada program padat karya di kelurahan dengan status prioritas 'Tinggi'.</li>
-    </ul>
-  `;
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- QR Code Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <!-- Print & PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: #f8f9fa;
+        }
+        
+        .page {
+            background: white;
+            padding: 25mm;
+            margin: 20px auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            min-height: 297mm;
+            position: relative;
+        }
+        
+        .kop-surat {
+            text-align: center;
+            border-bottom: 3px solid #000;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .kop-surat h2 {
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .kop-surat h4 {
+            margin: 3px 0;
+        }
+        
+        .logo-header {
+            height: 80px;
+            margin: 0 15px;
+        }
+        
+        .table-laporan {
+            font-size: 12px;
+        }
+        
+        .table-laporan th {
+            background-color: #f2f2f2;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .badge-prioritas {
+            font-size: 11px;
+            padding: 4px 8px;
+        }
+        
+        .ttd-section {
+            margin-top: 80px;
+        }
+        
+        .ttd-box {
+            height: 100px;
+            border-bottom: 1px solid #000;
+            margin-bottom: 10px;
+        }
+        
+        @media print {
+            body {
+                background: white !important;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .page {
+                box-shadow: none;
+                margin: 0;
+                padding: 20mm;
+                page-break-after: always;
+            }
+            
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #007bff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="ml-3">Memuat data dari Firebase...</div>
+    </div>
 
-  // QR & TTD (Same as before)
-  new QRCode(document.getElementById("qrcode"), {
-    text: JSON.stringify({ dokumen: "Laporan DTSEN", penandatangan: "Shidiq Hasanudin, S.IP" }),
-    width: 120, height: 120
-  });
-  document.getElementById("tanggalTTD").innerText = "Sumber, " + new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
-});
+    <!-- Control Panel (Non-Printable) -->
+    <div class="container-fluid bg-light py-3 no-print">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h4><i class="fas fa-chart-line text-primary"></i> Laporan DTSEN - Dashboard</h4>
+                    <p class="mb-0 text-muted">Data real-time dari Firebase Firestore</p>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button class="btn btn-primary" onclick="generateLaporan()">
+                        <i class="fas fa-sync-alt"></i> Generate Laporan
+                    </button>
+                    <button class="btn btn-success ml-2" onclick="exportPDF()">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                    <button class="btn btn-secondary ml-2" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <a href="index.html" class="btn btn-outline-dark ml-2">
+                        <i class="fas fa-arrow-left"></i> Kembali
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Data Stats -->
+            <div class="row mt-3" id="dataStats">
+                <!-- Stats will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
 
-// Dashboard Logic (Same as before)
-let dashChart;
-const slider = document.getElementById("desilSlider");
-const label = document.getElementById("labelDesil");
+    <!-- Laporan Container -->
+    <div class="container mt-4">
+        <div id="laporanContainer">
+            <!-- Laporan akan di-generate di sini -->
+        </div>
+    </div>
 
-function updateDash(maxDesil) {
-  fetch("data/dtsen.json").then(r=>r.json()).then(data=>{
-    const labels = data.wilayah.map(w => w.nama);
-    const values = data.wilayah.map(w => {
-      let sum = 0;
-      for(let i=0; i<maxDesil; i++) sum += w.desil[i];
-      return sum;
-    });
-    if(dashChart) dashChart.destroy();
-    dashChart = new Chart(document.getElementById('chartDashboard'), {
-      type: "bar",
-      data: { labels, datasets: [{ data: values, backgroundColor: "#28a745" }] },
-      options: { plugins: { legend: { display: false } } }
-    });
-  });
-}
-slider.addEventListener("input", () => { label.innerText = slider.value; updateDash(slider.value); });
-updateDash(2);
-</script>
-<script>
-fetch("data/dtsen.json")
-.then(r=>r.json())
-.then(data=>{
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
-const map = L.map('map').setView([-6.759,108.48], 13);
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
+            authDomain: "data-ke-aksi-auth.firebaseapp.com",
+            projectId: "data-ke-aksi-auth",
+            storageBucket: "data-ke-aksi-auth.firebasestorage.app",
+            messagingSenderId: "631382692174",
+            appId: "1:631382692174:web:c10a099fb3021849eace1f"
+        };
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-  attribution:'© OpenStreetMap'
-}).addTo(map);
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-const heatData = [];
+        // Global Variables
+        let cachedData = [];
+        let chartInstances = [];
 
-data.wilayah.forEach(w=>{
-  const d12 = w.desil[0] + w.desil[1];
-  heatData.push([w.lat, w.lng, d12]);
-});
+        // Fungsi untuk memuat data dari Firebase
+        async function loadDataFromFirebase() {
+            try {
+                showLoading(true);
+                
+                // Ambil data dari koleksi 'dtsen_data'
+                const querySnapshot = await getDocs(collection(db, "dtsen_data"));
+                
+                cachedData = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    cachedData.push({
+                        id: doc.id,
+                        ...data,
+                        // Pastikan struktur data konsisten
+                        desil: data.desil || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        timestamp: data.timestamp || new Date().toISOString()
+                    });
+                });
+                
+                console.log('Data loaded from Firebase:', cachedData.length, 'records');
+                
+                // Tampilkan stats
+                updateDataStats();
+                
+                // Generate laporan otomatis
+                generateLaporan();
+                
+            } catch (error) {
+                console.error('Error loading data from Firebase:', error);
+                alert('Gagal memuat data dari Firebase: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
 
-L.heatLayer(heatData,{
-  radius:35,
-  blur:25,
-  maxZoom:13
-}).addTo(map);
+        // Fungsi untuk menampilkan/menyembunyikan loading
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.style.display = show ? 'flex' : 'none';
+        }
 
-});
-</script>
-<script>
-let dashChart;
+        // Fungsi untuk update data stats
+        function updateDataStats() {
+            const statsContainer = document.getElementById('dataStats');
+            
+            if (cachedData.length === 0) {
+                statsContainer.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i> Tidak ada data ditemukan di Firebase
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Hitung total per desil
+            const totalDesil = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            let totalKK = 0;
+            
+            cachedData.forEach(item => {
+                item.desil.forEach((count, index) => {
+                    totalDesil[index] += count;
+                });
+                totalKK += item.desil.reduce((a, b) => a + b, 0);
+            });
+            
+            const totalD1D2 = totalDesil[0] + totalDesil[1];
+            
+            statsContainer.innerHTML = `
+                <div class="col-md-3">
+                    <div class="summary-card">
+                        <h6>Total Data Wilayah</h6>
+                        <h3>${cachedData.length}</h3>
+                        <small><i class="fas fa-map-marker-alt"></i> Kelurahan/Desa</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="summary-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <h6>Total KK Terdata</h6>
+                        <h3>${totalKK.toLocaleString()}</h3>
+                        <small><i class="fas fa-home"></i> Kepala Keluarga</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="summary-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <h6>KK Prioritas (D1-D2)</h6>
+                        <h3>${totalD1D2.toLocaleString()}</h3>
+                        <small><i class="fas fa-exclamation-triangle"></i> Butuh Intervensi</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="summary-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        <h6>Persentase Prioritas</h6>
+                        <h3>${((totalD1D2 / totalKK) * 100).toFixed(1)}%</h3>
+                        <small><i class="fas fa-chart-pie"></i> dari Total KK</small>
+                    </div>
+                </div>
+            `;
+        }
 
-fetch("data/dtsen.json")
-.then(r=>r.json())
-.then(data=>{
+        // Fungsi untuk generate laporan
+        function generateLaporan() {
+            if (cachedData.length === 0) {
+                alert('Tidak ada data untuk di-generate. Silakan tunggu atau refresh halaman.');
+                return;
+            }
+            
+            // Hancurkan chart sebelumnya
+            chartInstances.forEach(chart => chart.destroy());
+            chartInstances = [];
+            
+            // Generate konten laporan
+            const laporanContainer = document.getElementById('laporanContainer');
+            laporanContainer.innerHTML = buildLaporanHTML();
+            
+            // Render charts
+            setTimeout(() => {
+                renderCharts();
+                generateQRCode();
+            }, 100);
+        }
 
-const slider = document.getElementById("desilSlider");
-const label = document.getElementById("labelDesil");
+        // Fungsi untuk membangun HTML laporan
+        function buildLaporanHTML() {
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            // Hitung aggregat data
+            const totalDesil = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            let totalKK = 0;
+            
+            cachedData.forEach(item => {
+                item.desil.forEach((count, index) => {
+                    totalDesil[index] += count;
+                });
+                totalKK += item.desil.reduce((a, b) => a + b, 0);
+            });
+            
+            const totalD1D2 = totalDesil[0] + totalDesil[1];
+            
+            // Urutkan data berdasarkan total D1+D2 (descending)
+            const sortedData = [...cachedData].sort((a, b) => {
+                const aD12 = (a.desil[0] || 0) + (a.desil[1] || 0);
+                const bD12 = (b.desil[0] || 0) + (b.desil[1] || 0);
+                return bD12 - aD12;
+            });
+            
+            // Tentukan wilayah dengan prioritas tertinggi
+            const topWilayah = sortedData[0];
+            const topD12 = (topWilayah.desil[0] || 0) + (topWilayah.desil[1] || 0);
+            
+            // Bangun tabel prioritas
+            let tabelPrioritasHTML = '';
+            sortedData.forEach((item, index) => {
+                const d1 = item.desil[0] || 0;
+                const d2 = item.desil[1] || 0;
+                const d12 = d1 + d2;
+                const persentase = ((d12 / totalD1D2) * 100).toFixed(1);
+                
+                let prioritas = 'Rendah';
+                let badgeClass = 'badge-success';
+                
+                if (d12 >= 400) {
+                    prioritas = 'Tinggi';
+                    badgeClass = 'badge-danger';
+                } else if (d12 >= 200) {
+                    prioritas = 'Sedang';
+                    badgeClass = 'badge-warning';
+                }
+                
+                tabelPrioritasHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.nama_wilayah || item.nama || 'N/A'}</td>
+                        <td class="text-center">${d1}</td>
+                        <td class="text-center">${d2}</td>
+                        <td class="text-center font-weight-bold">${d12}</td>
+                        <td class="text-center">${persentase}%</td>
+                        <td class="text-center">
+                            <span class="badge ${badgeClass} badge-prioritas">${prioritas}</span>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            return `
+                <!-- HALAMAN 1: COVER -->
+                <div class="page">
+                    <div class="kop-surat">
+                        <div class="d-flex justify-content-center align-items-center mb-3">
+                            <img src="assets/img/logo/logo-tksk.png" alt="TKSK" class="logo-header">
+                            <div class="text-center mx-4">
+                                <h6 style="margin: 0; font-size: 14px;">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN (TKSK)</h6>
+                                <h4 style="margin: 5px 0; font-weight: bold;">FORUM PUSKESOS KECAMATAN SUMBER</h4>
+                                <h2 style="margin: 10px 0; font-weight: bold; color: #2c3e50;">DARI DATA KE AKSI</h2>
+                                <p style="margin: 0; font-size: 12px;">Sekretariat: Jl. Sunan Drajat No. 16, Kecamatan Sumber</p>
+                            </div>
+                            <img src="assets/img/logo/logo-puskesos.png" alt="Puskesos" class="logo-header">
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-5 pt-5">
+                        <h1 class="font-weight-bold" style="color: #2c3e50;">LAPORAN ANALISIS DTSEN</h1>
+                        <h3 class="mt-4">KECAMATAN SUMBER</h3>
+                        <h4>KABUPATEN CIREBON</h4>
+                        <h5>PROVINSI JAWA BARAT</h5>
+                        
+                        <div class="mt-5 pt-5">
+                            <h4>PERIODE: ${formattedDate}</h4>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-5 pt-5">
+                        <p><em>"Data yang akurat untuk kebijakan yang tepat sasaran"</em></p>
+                    </div>
+                </div>
 
-function updateChart(maxDesil){
-  const labels = [];
-  const values = [];
+                <!-- HALAMAN 2: EXECUTIVE SUMMARY -->
+                <div class="page">
+                    <div class="kop-surat">
+                        <h4>LAPORAN ANALISIS DTSEN</h4>
+                        <h5>KECAMATAN SUMBER - EXECUTIVE SUMMARY</h5>
+                    </div>
+                    
+                    <h5 class="mt-4">Ringkasan Eksekutif</h5>
+                    <p class="text-justify">
+                        Laporan ini menyajikan analisis komprehensif Data Terpadu Sosial Ekonomi Nasional (DTSEN) di Kecamatan Sumber. 
+                        Data diambil dari database Firebase Firestore yang diperbarui secara real-time oleh Tim TKSK dan Puskesos.
+                    </p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0"><i class="fas fa-chart-bar"></i> Statistik Utama</h6>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td>Total Wilayah Terdata</td>
+                                            <td class="text-right font-weight-bold">${cachedData.length}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total KK Terdata</td>
+                                            <td class="text-right font-weight-bold">${totalKK.toLocaleString()}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>KK Desil 1 (Sangat Miskin)</td>
+                                            <td class="text-right font-weight-bold text-danger">${totalDesil[0].toLocaleString()}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>KK Desil 2 (Miskin)</td>
+                                            <td class="text-right font-weight-bold text-warning">${totalDesil[1].toLocaleString()}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Prioritas (D1+D2)</td>
+                                            <td class="text-right font-weight-bold">${totalD1D2.toLocaleString()}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Persentase Prioritas</td>
+                                            <td class="text-right font-weight-bold">${((totalD1D2 / totalKK) * 100).toFixed(1)}%</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Wilayah Prioritas Tertinggi</h6>
+                                </div>
+                                <div class="card-body text-center">
+                                    <h3 class="text-danger">${topWilayah.nama_wilayah || topWilayah.nama}</h3>
+                                    <p class="mb-1">Memiliki total KK prioritas:</p>
+                                    <h2 class="font-weight-bold">${topD12.toLocaleString()} KK</h2>
+                                    <p class="text-muted mb-0">(${((topD12 / totalD1D2) * 100).toFixed(1)}% dari total prioritas kecamatan)</p>
+                                    <div class="mt-3">
+                                        <span class="badge badge-danger badge-pill px-3 py-2">PRIORITAS TINGGI</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Rekomendasi Aksi Segera:</h5>
+                        <ol>
+                            <li>Fokuskan intervensi di ${topWilayah.nama_wilayah || topWilayah.nama} sebagai wilayah prioritas tertinggi</li>
+                            <li>Koordinasi dengan Dinas Sosial untuk percepatan penyaluran bantuan sosial</li>
+                            <li>Pelaksanaan pendampingan intensif oleh TKSK dan Puskesos setempat</li>
+                            <li>Pemantauan berkala perkembangan kondisi sosial ekonomi</li>
+                        </ol>
+                    </div>
+                </div>
 
-  data.wilayah.forEach(w=>{
-    let total = 0;
-    for(let i=0;i<maxDesil;i++) total += w.desil[i];
-    labels.push(w.nama);
-    values.push(total);
-  });
+                <!-- HALAMAN 3: DISTRIBUSI DESIL -->
+                <div class="page">
+                    <div class="kop-surat">
+                        <h4>LAPORAN ANALISIS DTSEN</h4>
+                        <h5>DISTRIBUSI KELOMPOK DESIL KECAMATAN SUMBER</h5>
+                    </div>
+                    
+                    <h5 class="mt-4">Grafik Distribusi Kelompok Desil</h5>
+                    <div class="chart-container">
+                        <canvas id="chartDistribusiDesil"></canvas>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Tabel Distribusi Desil per Wilayah</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm table-laporan">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Wilayah</th>
+                                        ${Array.from({length: 10}, (_, i) => `<th class="text-center">D${i+1}</th>`).join('')}
+                                        <th class="text-center">Total</th>
+                                        <th class="text-center">D1+D2</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${sortedData.map((item, index) => {
+                                        const total = (item.desil || []).reduce((a, b) => a + b, 0);
+                                        const d12 = (item.desil[0] || 0) + (item.desil[1] || 0);
+                                        
+                                        return `
+                                            <tr>
+                                                <td>${index + 1}</td>
+                                                <td>${item.nama_wilayah || item.nama}</td>
+                                                ${Array.from({length: 10}, (_, i) => 
+                                                    `<td class="text-center">${item.desil[i] || 0}</td>`
+                                                ).join('')}
+                                                <td class="text-center font-weight-bold">${total}</td>
+                                                <td class="text-center font-weight-bold ${d12 >= 400 ? 'text-danger' : d12 >= 200 ? 'text-warning' : 'text-success'}">${d12}</td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                    <tr class="table-secondary font-weight-bold">
+                                        <td colspan="2">TOTAL KECAMATAN</td>
+                                        ${totalDesil.map(d => `<td class="text-center">${d}</td>`).join('')}
+                                        <td class="text-center">${totalKK.toLocaleString()}</td>
+                                        <td class="text-center">${totalD1D2.toLocaleString()}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-  if(dashChart) dashChart.destroy();
+                <!-- HALAMAN 4: PRIORITAS WILAYAH -->
+                <div class="page">
+                    <div class="kop-surat">
+                        <h4>LAPORAN ANALISIS DTSEN</h4>
+                        <h5>PEMETAAN PRIORITAS WILAYAH INTERVENSI</h5>
+                    </div>
+                    
+                    <h5 class="mt-4">Grafik Prioritas Wilayah (D1+D2)</h5>
+                    <div class="chart-container">
+                        <canvas id="chartPrioritasWilayah"></canvas>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Tabel Prioritas Intervensi</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm table-laporan">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Wilayah</th>
+                                        <th class="text-center">D1</th>
+                                        <th class="text-center">D2</th>
+                                        <th class="text-center">Total D1+D2</th>
+                                        <th class="text-center">% Terhadap Total Prioritas</th>
+                                        <th class="text-center">Tingkat Prioritas</th>
+                                        <th class="text-center">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${tabelPrioritasHTML}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Kriteria Prioritas:</h5>
+                        <ul>
+                            <li><span class="badge badge-danger">Tinggi</span>: ≥ 400 KK prioritas (D1+D2)</li>
+                            <li><span class="badge badge-warning">Sedang</span>: 200-399 KK prioritas (D1+D2)</li>
+                            <li><span class="badge badge-success">Rendah</span>: < 200 KK prioritas (D1+D2)</li>
+                        </ul>
+                    </div>
+                </div>
 
-  dashChart = new Chart(chartDashboard,{
-    type:"bar",
-    data:{
-      labels,
-      datasets:[{
-        data:values,
-        backgroundColor:"#28a745"
-      }]
-    },
-    options:{
-      plugins:{legend:{display:false}},
-      scales:{y:{beginAtZero:true}}
-    }
-  });
-}
+                <!-- HALAMAN 5: ANALISIS DAN REKOMENDASI -->
+                <div class="page">
+                    <div class="kop-surat">
+                        <h4>LAPORAN ANALISIS DTSEN</h4>
+                        <h5>ANALISIS MENDALAM DAN REKOMENDASI STRATEGIS</h5>
+                    </div>
+                    
+                    <h5 class="mt-4">Analisis Kondisi Sosial Ekonomi</h5>
+                    <div class="text-justify">
+                        <p>
+                            Berdasarkan data DTSEN yang terkumpul dari ${cachedData.length} wilayah di Kecamatan Sumber, 
+                            teridentifikasi <strong>${totalD1D2.toLocaleString()} KK</strong> yang termasuk dalam kategori prioritas 
+                            (Desil 1 dan 2). Angka ini merepresentasikan <strong>${((totalD1D2 / totalKK) * 100).toFixed(1)}%</strong> 
+                            dari total populasi terdata.
+                        </p>
+                        
+                        <p>
+                            Wilayah <strong>${topWilayah.nama_wilayah || topWilayah.nama}</strong> menjadi fokus utama dengan 
+                            kontribusi <strong>${((topD12 / totalD1D2) * 100).toFixed(1)}%</strong> dari total KK prioritas kecamatan. 
+                            Kondisi ini mengindikasikan konsentrasi kerentanan sosial ekonomi yang memerlukan intervensi terpadu.
+                        </p>
+                    </div>
+                    
+                    <h5 class="mt-4">Rekomendasi Program Intervensi</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border-info mb-3">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0"><i class="fas fa-hands-helping"></i> Intervensi Jangka Pendek (0-3 Bulan)</h6>
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Penyaluran Bantuan Sosial Tunai (BST) secara tepat sasaran</li>
+                                        <li>Bantuan pangan non-tunai untuk keluarga dengan balita dan lansia</li>
+                                        <li>Program sembako murah di titik-titik kerentanan tinggi</li>
+                                        <li>Pelayanan kesehatan gratis di Puskesmas dan Puskesos</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card border-success mb-3">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0"><i class="fas fa-seedling"></i> Intervensi Jangka Menengah (3-12 Bulan)</h6>
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                        <li>Pelatihan keterampilan dan kewirausahaan</li>
+                                        <li>Program padat karya tunai untuk infrastruktur desa</li>
+                                        <li>Pengembangan usaha mikro kelompok perempuan</li>
+                                        <li>Pendampingan pengajuan KUR (Kredit Usaha Rakyat)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h5 class="mt-4">Indikator Keberhasilan</h5>
+                    <table class="table table-bordered table-sm">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Indikator</th>
+                                <th>Target 6 Bulan</th>
+                                <th>Target 12 Bulan</th>
+                                <th>Satuan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Penurunan KK Desil 1</td>
+                                <td class="text-center">15%</td>
+                                <td class="text-center">30%</td>
+                                <td>% dari baseline</td>
+                            </tr>
+                            <tr>
+                                <td>Peningkatan akses layanan kesehatan</td>
+                                <td class="text-center">80%</td>
+                                <td class="text-center">95%</td>
+                                <td>KK prioritas terlayani</td>
+                            </tr>
+                            <tr>
+                                <td>Penyerapan program pelatihan</td>
+                                <td class="text-center">200</td>
+                                <td class="text-center">500</td>
+                                <td>orang terlatih</td>
+                            </tr>
+                            <tr>
+                                <td>Pengembangan usaha mikro baru</td>
+                                <td class="text-center">50</td>
+                                <td class="text-center">120</td>
+                                <td>unit usaha</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-slider.addEventListener("input",()=>{
-  label.innerText = slider.value;
-  updateChart(Number(slider.value));
-});
+                <!-- HALAMAN 6: PENUTUP DAN TTD -->
+                <div class="page">
+                    <div class="kop-surat">
+                        <h4>LAPORAN ANALISIS DTSEN</h4>
+                        <h5>PENUTUP DAN PENANDATANGANAN</h5>
+                    </div>
+                    
+                    <div class="text-justify mt-4">
+                        <h5>Kesimpulan</h5>
+                        <p>
+                            Data DTSEN Kecamatan Sumber menunjukkan bahwa terdapat ${totalD1D2.toLocaleString()} KK yang memerlukan 
+                            perhatian khusus melalui program perlindungan sosial. Dengan pendekatan berbasis data yang akurat, 
+                            diharapkan intervensi dapat lebih tepat sasaran, efektif, dan efisien dalam mengurangi tingkat 
+                            kerentanan sosial ekonomi masyarakat.
+                        </p>
+                        
+                        <p>
+                            Laporan ini diharapkan dapat menjadi acuan bagi seluruh pemangku kepentingan dalam perencanaan, 
+                            implementasi, dan evaluasi program kesejahteraan sosial di Kecamatan Sumber.
+                        </p>
+                    </div>
+                    
+                    <div class="ttd-section">
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="text-center">Mengetahui,<br>Camat Sumber</p>
+                                <div class="ttd-box"></div>
+                                <p class="text-center font-weight-bold">(.................................)</p>
+                                <p class="text-center">NIP. .................................</p>
+                            </div>
+                            
+                            <div class="col-6">
+                                <p class="text-center">Menyusun,<br>TKSK Kecamatan Sumber</p>
+                                <div class="text-center mb-3">
+                                    <div id="qrcodeTTD"></div>
+                                </div>
+                                <p class="text-center font-weight-bold">SHIDIQ HASANUDIN, S.IP</p>
+                                <p class="text-center">ID TKSK: TK-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}</p>
+                                <p class="text-center text-muted">Sumber, ${now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-5 pt-5">
+                        <div class="alert alert-light border">
+                            <small>
+                                <strong>Catatan:</strong><br>
+                                1. Laporan ini dihasilkan secara otomatis dari sistem database DTSEN<br>
+                                2. Data bersumber dari verifikasi lapangan oleh TKSK dan Puskesos<br>
+                                3. Dokumen ini valid hingga diperbarui dengan data terbaru<br>
+                                4. QR Code memuat metadata verifikasi dokumen
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
-updateChart(2);
+        // Fungsi untuk render charts
+        function renderCharts() {
+            // Hitung total per desil
+            const totalDesil = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            
+            cachedData.forEach(item => {
+                item.desil.forEach((count, index) => {
+                    totalDesil[index] += count;
+                });
+            });
+            
+            // Chart 1: Distribusi Desil
+            const ctx1 = document.getElementById('chartDistribusiDesil');
+            if (ctx1) {
+                const chart1 = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10'],
+                        datasets: [{
+                            label: 'Jumlah KK',
+                            data: totalDesil,
+                            backgroundColor: [
+                                '#dc3545', '#fd7e14', '#ffc107', '#28a745', '#20c997',
+                                '#17a2b8', '#007bff', '#6610f2', '#e83e8c', '#6c757d'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.raw;
+                                        const total = totalDesil.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        return `${value} KK (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Jumlah KK'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Kelompok Desil'
+                                }
+                            }
+                        }
+                    }
+                });
+                chartInstances.push(chart1);
+            }
+            
+            // Chart 2: Prioritas Wilayah
+            const sortedData = [...cachedData].sort((a, b) => {
+                const aD12 = (a.desil[0] || 0) + (a.desil[1] || 0);
+                const bD12 = (b.desil[0] || 0) + (b.desil[1] || 0);
+                return bD12 - aD12;
+            });
+            
+            const ctx2 = document.getElementById('chartPrioritasWilayah');
+            if (ctx2) {
+                const labels = sortedData.map(item => item.nama_wilayah || item.nama);
+                const dataD12 = sortedData.map(item => (item.desil[0] || 0) + (item.desil[1] || 0));
+                
+                const chart2 = new Chart(ctx2, {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'KK Prioritas (D1+D2)',
+                            data: dataD12,
+                            backgroundColor: dataD12.map(value => 
+                                value >= 400 ? '#dc3545' : 
+                                value >= 200 ? '#ffc107' : 
+                                '#28a745'
+                            ),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.raw} KK prioritas`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Jumlah KK Prioritas (D1+D2)'
+                                }
+                            }
+                        }
+                    }
+                });
+                chartInstances.push(chart2);
+            }
+        }
 
-});
-</script>
- 
+        // Fungsi untuk generate QR Code
+        function generateQRCode() {
+            const now = new Date();
+            const qrData = {
+                dokumen: 'Laporan DTSEN Kecamatan Sumber',
+                tanggal: now.toISOString(),
+                total_wilayah: cachedData.length,
+                total_prioritas: cachedData.reduce((sum, item) => 
+                    sum + (item.desil[0] || 0) + (item.desil[1] || 0), 0
+                ),
+                penandatangan: 'SHIDIQ HASANUDIN, S.IP',
+                id_dokumen: `DTSEN-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`
+            };
+            
+            const qrElement = document.getElementById('qrcodeTTD');
+            if (qrElement) {
+                qrElement.innerHTML = '';
+                new QRCode(qrElement, {
+                    text: JSON.stringify(qrData),
+                    width: 120,
+                    height: 120,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            }
+        }
+
+        // Fungsi untuk export PDF
+        function exportPDF() {
+            const element = document.getElementById('laporanContainer');
+            const opt = {
+                margin: [15, 15, 15, 15],
+                filename: `Laporan_DTSEN_Kecamatan_Sumber_${new Date().toISOString().split('T')[0]}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: true
+                },
+                jsPDF: { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait' 
+                }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        }
+
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDataFromFirebase();
+            
+            // Auto-refresh setiap 5 menit
+            setInterval(loadDataFromFirebase, 5 * 60 * 1000);
+        });
+
+        // Export fungsi ke global scope
+        window.generateLaporan = generateLaporan;
+        window.exportPDF = exportPDF;
+    </script>
 </body>
 </html>
