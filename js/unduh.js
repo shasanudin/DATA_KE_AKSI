@@ -1,6 +1,6 @@
 // unduh.js
 // Sistem Cetak Dokumen DTSEN - TKSK & Puskesos Kecamatan Sumber
-// Version: 2.0.0
+// Version: 2.1.0 - SINGLE DOCUMENT NUMBER FOR ALL PAGES
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { 
@@ -33,12 +33,14 @@ try {
 let wilayahData = [];
 let isLoading = false;
 let qrcode = null;
+let nomorSurat = ''; // SATU NOMOR SURAT UNTUK SEMUA
 
 // DOM Elements
 const modeSelect = document.getElementById('mode');
 const desaWrap = document.getElementById('desaWrap');
 const desaSelect = document.getElementById('desaSelect');
 const btnGenerate = document.getElementById('btnGenerate');
+const btnPrint = document.getElementById('btnPrint');
 const kontenHal1 = document.getElementById('kontenHal1');
 const kontenHal2 = document.getElementById('kontenHal2');
 const kontenHal3 = document.getElementById('kontenHal3');
@@ -46,6 +48,10 @@ const kontenHal4 = document.getElementById('kontenHal4');
 const dataCountInfo = document.getElementById('dataCountInfo');
 const lastUpdateInfo = document.getElementById('lastUpdateInfo');
 const tglSekarang = document.getElementById('tglSekarang');
+const nomorSuratUtama = document.getElementById('nomorSuratUtama');
+const nomorSuratLanjutan2 = document.getElementById('nomorSuratLanjutan2');
+const nomorSuratLanjutan3 = document.getElementById('nomorSuratLanjutan3');
+const nomorSuratLanjutan4 = document.getElementById('nomorSuratLanjutan4');
 
 // ============ UTILITY FUNCTIONS ============
 
@@ -73,15 +79,16 @@ function formatDate(date = new Date()) {
 }
 
 /**
- * Generate nomor surat unik
+ * Generate SATU nomor surat untuk semua halaman
+ * Format: 460 / [random] / DTSEN.[bulan] / TKSK-SBR / [tahun]
  */
-function generateNomorSurat(prefix = '001') {
+function generateNomorSurat() {
     const date = new Date();
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const random = Math.floor(Math.random() * 900 + 100);
     
-    return `${random}/DTSEN.${prefix}/${month}/TKSK-SBR/${year}`;
+    return `460 / ${random} / DTSEN.${month} / TKSK-SBR / ${year}`;
 }
 
 /**
@@ -102,10 +109,12 @@ function generateVerificationId() {
  */
 function setLoading(loading) {
     isLoading = loading;
-    btnGenerate.disabled = loading;
-    btnGenerate.innerHTML = loading 
-        ? '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...' 
-        : '<i class="fas fa-sync-alt mr-2"></i> Generate Dokumen';
+    if (btnGenerate) {
+        btnGenerate.disabled = loading;
+        btnGenerate.innerHTML = loading 
+            ? '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...' 
+            : '<i class="fas fa-sync-alt mr-2"></i> Generate Dokumen';
+    }
 }
 
 /**
@@ -138,7 +147,6 @@ async function loadDataFromFirebase() {
             const docData = doc.data();
             let desilArray = docData.desil || [];
             
-            // Pastikan desilArray adalah array
             if (!Array.isArray(desilArray)) {
                 if (desilArray && typeof desilArray === 'object') {
                     desilArray = Object.values(desilArray);
@@ -147,7 +155,6 @@ async function loadDataFromFirebase() {
                 }
             }
             
-            // Pastikan array memiliki 10 elemen
             while (desilArray.length < 10) {
                 desilArray.push(0);
             }
@@ -166,7 +173,6 @@ async function loadDataFromFirebase() {
             });
         });
         
-        // Filter data valid
         return data.filter(item => 
             item.nama && 
             item.nama !== 'N/A' && 
@@ -186,8 +192,7 @@ async function loadDataFromFirebase() {
 function generateSampleData() {
     const desaList = [
         'Sumbergedang', 'Sumberduren', 'Sumbersari', 'Sumberrejo', 'Sumberagung',
-        'Sumberpucung', 'Sumberejo Kidul', 'Sumberwono', 'Sumberpatut', 'Sumberkembar',
-        'Sumberjaya', 'Sumbermulya', 'Sumberbendo', 'Sumbertengah', 'Sumberkarang'
+        'Sumberpucung', 'Sumberejo Kidul', 'Sumberwono', 'Sumberpatut', 'Sumberkembar'
     ];
     
     return desaList.map((nama, index) => {
@@ -229,6 +234,8 @@ function populateDesaSelect(data) {
  * Render halaman 1 - Agregasi Kecamatan
  */
 function renderHalaman1(data) {
+    if (!kontenHal1) return;
+    
     const totalKK = data.reduce((sum, item) => sum + item.total_kk, 0);
     const totalD1 = data.reduce((sum, item) => sum + item.d1, 0);
     const totalD2 = data.reduce((sum, item) => sum + item.d2, 0);
@@ -267,7 +274,7 @@ function renderHalaman1(data) {
                     </tr>
                 </thead>
                 <tbody>
-                    ${data.map((item, index) => `
+                    ${data.slice(0, 10).map((item, index) => `
                         <tr>
                             <td style="text-align: center;">${index + 1}</td>
                             <td>${item.nama}</td>
@@ -307,6 +314,8 @@ function renderHalaman1(data) {
  * Render halaman 2 - Prioritas Intervensi
  */
 function renderHalaman2(data) {
+    if (!kontenHal2) return;
+    
     const totalD12Kecamatan = data.reduce((sum, item) => sum + item.d1 + item.d2, 0);
     const prioritasTinggi = data.filter(item => (item.d1 + item.d2) > 400);
     const prioritasSedang = data.filter(item => {
@@ -367,6 +376,8 @@ function renderHalaman2(data) {
  * Render halaman 3 - Bantuan Sosial
  */
 function renderHalaman3(data) {
+    if (!kontenHal3) return;
+    
     const html = `
         <div>
             <table class="tabel-data">
@@ -412,9 +423,11 @@ function renderHalaman3(data) {
 }
 
 /**
- * Render halaman 4 - Layanan Sosial & QR
+ * Render halaman 4 - Layanan Sosial
  */
 function renderHalaman4(data) {
+    if (!kontenHal4) return;
+    
     const totalD12 = data.reduce((sum, item) => sum + item.d1 + item.d2, 0);
     const totalLayanan = Math.floor(totalD12 * 0.75);
     const layananKesehatan = Math.floor(totalLayanan * 0.4);
@@ -494,12 +507,11 @@ function generateQRCode() {
     const qrContainer = document.getElementById('qrcode');
     if (!qrContainer) return;
     
-    // Clear previous QR code
     qrContainer.innerHTML = '';
     
-    // Generate new QR code
     const qrData = {
         id: verificationId,
+        nomor: nomorSurat,
         instansi: 'TKSK Puskesos Sumber',
         tanggal: formatDate(),
         totalWilayah: wilayahData.length,
@@ -522,24 +534,23 @@ function generateQRCode() {
 }
 
 /**
- * Update nomor surat dan verifikasi ID
+ * Update nomor surat - SATU NOMOR UNTUK SEMUA HALAMAN
  */
 function updateDocumentNumbers() {
-    const nomor1 = generateNomorSurat('001');
-    const nomor2 = generateNomorSurat('002');
-    const nomor3 = generateNomorSurat('003');
-    const nomor4 = generateNomorSurat('004');
+    // Generate SATU nomor surat
+    nomorSurat = generateNomorSurat();
     
-    const hashNomor1 = document.getElementById('hashNomor1');
-    const hashNomor2 = document.getElementById('hashNomor2');
-    const hashNomor3 = document.getElementById('hashNomor3');
-    const hashNomor4 = document.getElementById('hashNomor4');
+    // Update nomor surat di HALAMAN 1
+    if (nomorSuratUtama) {
+        nomorSuratUtama.textContent = nomorSurat;
+    }
     
-    if (hashNomor1) hashNomor1.textContent = nomor1;
-    if (hashNomor2) hashNomor2.textContent = nomor2;
-    if (hashNomor3) hashNomor3.textContent = nomor3;
-    if (hashNomor4) hashNomor4.textContent = nomor4;
+    // Update nomor surat yang sama di HALAMAN 2, 3, 4
+    if (nomorSuratLanjutan2) nomorSuratLanjutan2.textContent = nomorSurat;
+    if (nomorSuratLanjutan3) nomorSuratLanjutan3.textContent = nomorSurat;
+    if (nomorSuratLanjutan4) nomorSuratLanjutan4.textContent = nomorSurat;
     
+    // Update lampiran
     const lampiranCount = document.getElementById('lampiranCount1');
     if (lampiranCount) lampiranCount.textContent = '4';
     
@@ -590,8 +601,10 @@ async function generateDokumen() {
         renderHalaman3(wilayahData);
         renderHalaman4(wilayahData);
         
-        // Generate nomor surat dan QR
+        // Generate SATU nomor surat untuk semua halaman
         updateDocumentNumbers();
+        
+        // Generate QR Code
         generateQRCode();
         
         // Update info panel
@@ -642,7 +655,6 @@ function initEventListeners() {
     }
     
     // Cetak button
-    const btnPrint = document.getElementById('btnPrint');
     if (btnPrint) {
         btnPrint.addEventListener('click', cetakDokumen);
     }
