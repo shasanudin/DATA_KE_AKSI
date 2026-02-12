@@ -64,6 +64,103 @@
             letter-spacing: -0.02em;
         }
 
+        /* ===== PERBAIKAN UNTUK MEDIA CETAK & PDF ===== */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            #lpjContainer {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .lpj-cover, .lpj-content {
+                box-shadow: none;
+                page-break-inside: avoid;
+                page-break-after: always;
+                margin: 0 auto;
+                border-radius: 0;
+                break-inside: avoid;
+            }
+            
+            .lpj-content {
+                page-break-before: always;
+            }
+            
+            .stat-card-premium,
+            .program-card-premium,
+            .csr-partner-card,
+            .prioritas-narasi,
+            .narasi-utama,
+            .insight-card,
+            .signature-premium,
+            .verification-box,
+            .qrcode-premium {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            
+            .roadmap-item-premium {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            
+            @page {
+                size: A4;
+                margin: 1.5cm 1.5cm 1.5cm 1.5cm;
+            }
+            
+            /* QR Code fix for print */
+            #qrcodeLPJ img, #qrcodeLPJ canvas {
+                display: block !important;
+                width: 110px !important;
+                height: 110px !important;
+            }
+            
+            /* Force background colors to print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            /* Prevent orphaned headers */
+            h1, h2, h3, h4, h5 {
+                break-after: avoid;
+            }
+            
+            /* Ensure tables don't break */
+            table {
+                break-inside: avoid;
+            }
+        }
+
+        /* ===== PERBAIKAN QR CODE UNTUK PDF ===== */
+        #qrcodeLPJ {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            padding: 10px;
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        
+        #qrcodeLPJ img, #qrcodeLPJ canvas {
+            width: 110px !important;
+            height: 110px !important;
+            display: block !important;
+            max-width: 100%;
+        }
+
         /* ===== HALAMAN 1: COVER PREMIUM ===== */
         .lpj-cover {
             max-width: 1100px;
@@ -76,6 +173,8 @@
             min-height: 1100px;
             display: flex;
             flex-direction: column;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .cover-pattern {
@@ -240,6 +339,9 @@
             box-shadow: var(--box-shadow-sm);
             padding: 60px 55px;
             position: relative;
+            page-break-inside: avoid;
+            break-inside: avoid;
+            page-break-before: always;
         }
 
         .section-divider {
@@ -293,6 +395,8 @@
             border-left: 10px solid var(--gold);
             box-shadow: 0 15px 35px rgba(196,154,108,0.08);
             position: relative;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .narasi-utama::before {
@@ -326,6 +430,8 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 25px;
             margin: 50px 0;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .stat-card-premium {
@@ -337,6 +443,8 @@
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .stat-card-premium:hover {
@@ -402,6 +510,8 @@
             margin: 50px 0;
             position: relative;
             overflow: hidden;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .insight-card::before {
@@ -444,6 +554,8 @@
             border: 1px solid var(--gray-200);
             margin: 30px 0;
             box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .prioritas-level {
@@ -471,6 +583,8 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 30px;
             margin: 45px 0;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .program-card-premium {
@@ -481,6 +595,8 @@
             transition: var(--transition);
             position: relative;
             box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .program-card-premium:hover {
@@ -549,6 +665,8 @@
             padding: 45px;
             margin: 50px 0;
             border: 1px solid rgba(196,154,108,0.2);
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .csr-grid-premium {
@@ -565,6 +683,8 @@
             text-align: center;
             border: 1px solid var(--gray-200);
             transition: var(--transition);
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .csr-partner-card:hover {
@@ -612,6 +732,8 @@
         .roadmap-premium {
             margin: 60px 0;
             position: relative;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .roadmap-timeline-premium {
@@ -625,6 +747,8 @@
             margin-bottom: 40px;
             position: relative;
             padding-left: 40px;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .roadmap-item-premium::before {
@@ -686,6 +810,8 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .verification-box {
@@ -694,20 +820,28 @@
             padding: 30px;
             max-width: 450px;
             border: 1px solid var(--gray-200);
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .signature-right-premium {
             text-align: center;
             max-width: 350px;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .qrcode-premium {
-            display: inline-block;
-            padding: 12px;
-            background: white;
-            border: 1px solid var(--gray-200);
-            border-radius: 16px;
-            margin-bottom: 20px;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            padding: 12px !important;
+            background: white !important;
+            border: 1px solid var(--gray-200) !important;
+            border-radius: 16px !important;
+            margin-bottom: 20px !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
         }
 
         .signature-name-premium {
@@ -722,6 +856,29 @@
             color: var(--gray-600);
             font-size: 16px;
             margin-bottom: 15px;
+        }
+
+        /* ===== FITUR CETAK ===== */
+        .print-button-container {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .btn-print-premium {
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-print-premium:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(10,75,122,0.3);
         }
 
         /* ===== RESPONSIVE ===== */
@@ -744,15 +901,11 @@
         }
 
         .no-print { display: block; }
-        @media print {
-            .no-print { display: none !important; }
-            .lpj-cover, .lpj-content { box-shadow: none; }
-        }
     </style>
 </head>
 <body>
     <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+    <div id="loadingOverlay" class="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
         <div style="width: 70px; height: 70px; border: 6px solid #f3f3f3; border-top-color: #c49a6c; border-radius: 50%; animation: spin 1s linear infinite;"></div>
         <p style="margin-top: 25px; font-weight: 600; color: #0a4b7a;">Menyusun LPJ Strategis DTSEN 2026...</p>
         <p style="color: #6c757d; font-size: 14px;">Mengolah data prioritas dan program kemitraan</p>
@@ -766,16 +919,21 @@
                     <h4 class="font-weight-bold"><i class="fas fa-crown" style="color: #c49a6c;"></i> LPJ Strategis DTSEN 2026</h4>
                     <p class="mb-0 text-muted">Kecamatan Sumber · Laporan Pertanggungjawaban Berbasis Data & Kemitraan</p>
                 </div>
-                <div class="col-md-6 text-right">
-                    <button class="btn" style="background: #0a4b7a; color: white;" onclick="generateLPJ()">
-                        <i class="fas fa-sync-alt"></i> Generate LPJ
-                    </button>
-                    <button class="btn btn-success ml-2" onclick="exportPDF()">
-                        <i class="fas fa-file-pdf"></i> Export PDF
-                    </button>
-                    <a href="index.html" class="btn btn-outline-secondary ml-2">
-                        <i class="fas fa-arrow-left"></i> Dashboard
-                    </a>
+                <div class="col-md-6">
+                    <div class="print-button-container">
+                        <button class="btn" style="background: #0a4b7a; color: white;" onclick="generateLPJ()">
+                            <i class="fas fa-sync-alt"></i> Generate LPJ
+                        </button>
+                        <button class="btn" style="background: #c49a6c; color: white;" onclick="printLPJ()">
+                            <i class="fas fa-print"></i> Cetak LPJ
+                        </button>
+                        <button class="btn btn-success" onclick="exportPDF()">
+                            <i class="fas fa-file-pdf"></i> Export PDF
+                        </button>
+                        <a href="index.html" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Dashboard
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -845,6 +1003,74 @@
         }
 
         // ============================================================
+        // QR CODE FIX - PASTIKAN TERBACA SAAT EXPORT PDF & CETAK
+        // ============================================================
+        function generateQRCode(containerId, vid) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            // Clear container
+            container.innerHTML = '';
+            
+            // Buat wrapper untuk QR code
+            const qrWrapper = document.createElement('div');
+            qrWrapper.style.display = 'flex';
+            qrWrapper.style.justifyContent = 'center';
+            qrWrapper.style.alignItems = 'center';
+            qrWrapper.style.width = '100%';
+            
+            try {
+                // Generate QR Code dengan ukuran yang konsisten
+                new QRCode(qrWrapper, {
+                    text: JSON.stringify({ 
+                        id: vid, 
+                        laporan: laporanID, 
+                        tanggal: formatDate(), 
+                        instansi: 'TKSK Puskesos Sumber',
+                        validasi: 'Dokumen Resmi DTSEN 2026'
+                    }),
+                    width: 130,
+                    height: 130,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+                
+                container.appendChild(qrWrapper);
+                
+                // Fallback untuk print/PDF - paksa canvas ke img
+                setTimeout(() => {
+                    const canvas = container.querySelector('canvas');
+                    if (canvas) {
+                        // Simpan canvas asli
+                        const originalCanvas = canvas;
+                        // Buat img dari canvas untuk print compatibility
+                        const img = document.createElement('img');
+                        img.src = canvas.toDataURL('image/png');
+                        img.style.width = '130px';
+                        img.style.height = '130px';
+                        img.style.display = 'block';
+                        img.style.maxWidth = '100%';
+                        
+                        // Ganti canvas dengan img untuk print
+                        if (window.matchMedia('print').matches || navigator.userAgent.includes('html2pdf')) {
+                            container.innerHTML = '';
+                            container.appendChild(img);
+                        }
+                    }
+                }, 200);
+                
+            } catch (e) { 
+                console.error('QR Code Error:', e);
+                // Fallback text
+                qrWrapper.innerHTML = `<div style="width:130px;height:130px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:11px;text-align:center;border-radius:8px;">
+                    <i class="fas fa-qrcode" style="font-size:40px;color:#666;"></i><br>${vid.substring(0,10)}...
+                </div>`;
+                container.appendChild(qrWrapper);
+            }
+        }
+
+        // ============================================================
         // LOAD DATA FIREBASE
         // ============================================================
         async function loadDataFromFirebase() {
@@ -906,21 +1132,6 @@
         }
 
         // ============================================================
-        // GENERATE QR CODE
-        // ============================================================
-        function generateQRCode(containerId, vid) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            container.innerHTML = '';
-            try {
-                new QRCode(container, {
-                    text: JSON.stringify({ id: vid, laporan: laporanID, tanggal: formatDate(), instansi: 'TKSK Puskesos Sumber' }),
-                    width: 110, height: 110
-                });
-            } catch (e) { console.error(e); }
-        }
-
-        // ============================================================
         // BUILD LPJ LENGKAP DENGAN COVER + NARASI STRATEGIS
         // ============================================================
         function buildLPJ() {
@@ -950,7 +1161,6 @@
             // ========== NARASI DINAMIS ==========
             const persenPrioritas = ((totalD12/totalKK)*100).toFixed(1);
             const kontribusiTop1 = totalD12 > 0 ? ((top1.d1+top1.d2)/totalD12*100).toFixed(1) : '0';
-            const rataDesil = (totalKK / wilayahData.length).toFixed(0);
             
             // ========== GENERATE HTML ==========
             return `
@@ -1418,6 +1628,53 @@
         }
 
         // ============================================================
+        // FITUR CETAK & EXPORT PDF
+        // ============================================================
+        window.printLPJ = function() {
+            // Generate QR code dulu
+            generateQRCode('qrcodeLPJ', verificationId);
+            
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        };
+
+        window.exportPDF = function() {
+            const element = document.getElementById('lpjContainer');
+            
+            // Generate QR code dengan kualitas tinggi
+            generateQRCode('qrcodeLPJ', verificationId);
+            
+            setTimeout(() => {
+                const opt = {
+                    margin: [15, 15, 15, 15],
+                    filename: `LPJ_Strategis_DTSEN_${new Date().toISOString().split('T')[0]}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2, 
+                        useCORS: true,
+                        letterRendering: true,
+                        allowTaint: false,
+                        logging: false
+                    },
+                    jsPDF: { 
+                        unit: 'mm', 
+                        format: 'a4', 
+                        orientation: 'portrait',
+                        compress: true
+                    },
+                    pagebreak: { 
+                        mode: ['css', 'legacy'],
+                        before: '.lpj-content',
+                        after: '.lpj-cover'
+                    }
+                };
+                
+                html2pdf().set(opt).from(element).save();
+            }, 700);
+        };
+
+        // ============================================================
         // GENERATE & EXPORT
         // ============================================================
         window.generateLPJ = function() {
@@ -1425,18 +1682,7 @@
             document.getElementById('lpjContainer').innerHTML = buildLPJ();
             setTimeout(() => {
                 generateQRCode('qrcodeLPJ', verificationId);
-            }, 200);
-        };
-
-        window.exportPDF = function() {
-            const element = document.getElementById('lpjContainer');
-            html2pdf().set({
-                margin: [15, 15, 15, 15],
-                filename: `LPJ_Strategis_DTSEN_${new Date().toISOString().split('T')[0]}.pdf`,
-                image: { type: 'jpeg', quality: 0.95 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            }).from(element).save();
+            }, 300);
         };
 
         // ============================================================
@@ -1445,8 +1691,48 @@
         document.addEventListener('DOMContentLoaded', async () => {
             await loadDataFromFirebase();
             generateLPJ();
-            setInterval(async () => { await loadDataFromFirebase(); generateLPJ(); }, 5 * 60 * 1000);
+            
+            // Auto refresh setiap 5 menit
+            setInterval(async () => { 
+                await loadDataFromFirebase(); 
+                generateLPJ(); 
+            }, 5 * 60 * 1000);
+            
+            // Fix QR code untuk print preview
+            window.addEventListener('beforeprint', function() {
+                generateQRCode('qrcodeLPJ', verificationId);
+            });
         });
+        
+        // ============================================================
+        // EXPOSE FUNCTIONS TO GLOBAL SCOPE
+        // ============================================================
+        window.formatNumber = formatNumber;
+        window.formatDate = formatDate;
+        window.generateLaporanID = generateLaporanID;
+        window.generateVerificationId = generateVerificationId;
+    </script>
+    
+    <!-- Fallback untuk QR Code di Print/PDF -->
+    <script>
+        // Polyfill untuk browser lama
+        if (typeof window.QRCode === 'undefined') {
+            console.warn('QRCode library not loaded, using fallback');
+            window.QRCode = function(container, options) {
+                const div = document.createElement('div');
+                div.style.width = options.width + 'px';
+                div.style.height = options.height + 'px';
+                div.style.background = '#f0f0f0';
+                div.style.display = 'flex';
+                div.style.alignItems = 'center';
+                div.style.justifyContent = 'center';
+                div.style.fontSize = '11px';
+                div.style.textAlign = 'center';
+                div.style.borderRadius = '8px';
+                div.innerHTML = '<i class="fas fa-qrcode" style="font-size:40px;color:#666;"></i><br>QR Code';
+                container.appendChild(div);
+            };
+        }
     </script>
 </body>
 </html>
