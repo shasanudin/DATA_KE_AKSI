@@ -1,6 +1,6 @@
 // unduh.js
 // Sistem Cetak Dokumen DTSEN - TKSK & Puskesos Kecamatan Sumber
-// Version: 2.4.3 - QR CODE & TTD DI HALAMAN 1 + BANTUAN SOSIAL DARI FIREBASE (QUERY LANGSUNG)
+// Version: 2.4.4 - QR CODE & TTD DI HALAMAN 1 + BANTUAN SOSIAL DARI FIREBASE (FIX: AMBIL DARI MAP BANSOS)
 // Fitur: SHOW ALL DATA + PRIORITAS >500/300-500/<300 + RASIO DTSEN
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
@@ -473,7 +473,7 @@ function renderHalaman2(data) {
 /**
  * ============================================================
  * HALAMAN 3 - REKAP BANTUAN SOSIAL PER DESA (BPNT, PKH, PBI)
- * DATA LANGSUNG DARI FIREBASE - DENGAN QUERY LANGSUNG
+ * DATA LANGSUNG DARI FIREBASE - AMBIL DARI MAP BANSOS
  * ============================================================
  */
 async function renderHalaman3(dataWilayah) {
@@ -490,27 +490,23 @@ async function renderHalaman3(dataWilayah) {
             const docData = doc.data();
             const namaDesa = docData.nama_wilayah || docData.nama || doc.id;
             
-            // Ambil data bansos dari berbagai kemungkinan struktur
+            // Ambil data bansos dari map/objek 'bansos' (SESUAI STRUKTUR DATABASE ANDA)
             let pkh = 0, bpnt = 0, pbi = 0;
             
-            // Cek struktur data di Firebase
-            if (docData.bantuan) {
-                // Jika data bansos ada di dalam objek 'bantuan'
-                pkh = parseInt(docData.bantuan.pkh) || 0;
-                bpnt = parseInt(docData.bantuan.bpnt) || 0;
-                pbi = parseInt(docData.bantuan.pbi) || 0;
+            if (docData.bansos && typeof docData.bansos === 'object') {
+                // Data bansos ada di dalam map 'bansos'
+                pkh = parseInt(docData.bansos.pkh) || 0;
+                bpnt = parseInt(docData.bansos.bpnt) || 0;
+                pbi = parseInt(docData.bansos.pbi) || 0;
+                
+                console.log(`📊 Data bansos untuk ${namaDesa}: PKH=${pkh}, BPNT=${bpnt}, PBI=${pbi} (dari map bansos)`);
             } else {
-                // Jika data bansos langsung di root dokumen
+                // Fallback: cek di root dokumen jika tidak ada map bansos
                 pkh = parseInt(docData.pkh) || 0;
                 bpnt = parseInt(docData.bpnt) || 0;
                 pbi = parseInt(docData.pbi) || 0;
-            }
-            
-            // Jika masih 0, coba cek dengan nama field alternatif
-            if (pkh === 0 && bpnt === 0 && pbi === 0) {
-                pkh = parseInt(docData.PKH) || 0;
-                bpnt = parseInt(docData.BPNT) || 0;
-                pbi = parseInt(docData.PBI) || 0;
+                
+                console.log(`📊 Data bansos untuk ${namaDesa}: PKH=${pkh}, BPNT=${bpnt}, PBI=${pbi} (dari root)`);
             }
             
             bansosPerDesa.set(namaDesa, {
@@ -519,8 +515,6 @@ async function renderHalaman3(dataWilayah) {
                 pbi: pbi,
                 total: pkh + bpnt + pbi
             });
-            
-            console.log(`📊 Data bansos untuk ${namaDesa}: PKH=${pkh}, BPNT=${bpnt}, PBI=${pbi}`);
         });
         
         // Hitung total bansos per program
@@ -561,13 +555,22 @@ async function renderHalaman3(dataWilayah) {
         // Cek apakah ada data bansos
         const adaDataBansos = totalSemuaBansos > 0;
         
+        // Log total untuk debugging
+        console.log('📊 TOTAL BANSOS DARI FIREBASE:', {
+            PKH: totalPKH,
+            BPNT: totalBPNT,
+            PBI: totalPBI,
+            TOTAL: totalSemuaBansos,
+            Sumber: 'Dari map bansos di Firebase'
+        });
+        
         const html = `
             <div>
                 <!-- HEADER INFORMASI -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h5 style="font-size: 14px; font-weight: 700; margin: 10px 0;">REKAP BANTUAN SOSIAL PER DESA</h5>
                     <span style="background: ${adaDataBansos ? '#28a745' : '#ffc107'}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 600;">
-                        <i class="fas fa-database mr-1"></i> ${adaDataBansos ? 'Data Real Firebase' : 'Data Tidak Tersedia'}
+                        <i class="fas fa-database mr-1"></i> ${adaDataBansos ? 'Data Real Firebase (dari map bansos)' : 'Data Tidak Tersedia'}
                     </span>
                 </div>
                 
@@ -655,7 +658,7 @@ async function renderHalaman3(dataWilayah) {
                     </div>
                 </div>
 
-                <!-- INFORMASI PROGRAM DAN DEBUG -->
+                <!-- INFORMASI PROGRAM DAN STATUS DATA -->
                 <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; margin-top: 20px;">
                     <p style="font-weight: 700; margin-bottom: 10px; font-size: 12px;">📋 INFORMASI PROGRAM BANTUAN SOSIAL:</p>
                     <table style="width: 100%; font-size: 11px;">
@@ -677,32 +680,29 @@ async function renderHalaman3(dataWilayah) {
                     <div style="margin-top: 15px; padding: 10px; background: ${adaDataBansos ? '#d4edda' : '#fff3cd'}; border-radius: 5px; border-left: 4px solid ${adaDataBansos ? '#28a745' : '#ffc107'};">
                         <p style="margin-bottom: 5px; font-size: 11px; font-weight: 600;">
                             <i class="fas fa-${adaDataBansos ? 'check-circle' : 'exclamation-triangle'} mr-2"></i>
-                            Status Data: ${adaDataBansos ? 'Data bansos berhasil dimuat dari Firebase' : 'Tidak ada data bansos ditemukan di Firebase'}
+                            Status Data: ${adaDataBansos ? 'Data bansos berhasil dimuat dari Firebase (dari map/objek bansos)' : 'Tidak ada data bansos ditemukan di Firebase'}
                         </p>
-                        <p style="margin-bottom: 0; font-size: 10px; color: #666;">
+                        <p style="margin-bottom: 5px; font-size: 10px; color: #666;">
                             <i class="fas fa-database mr-1"></i> 
                             Sumber: Database Bantuan Sosial Firebase Kecamatan Sumber | Update: ${formatDate(new Date())}
                         </p>
-                        ${!adaDataBansos ? `
-                            <p style="margin-top: 8px; margin-bottom: 0; font-size: 10px; color: #856404;">
-                                <i class="fas fa-info-circle mr-1"></i>
- Pastikan struktur data bansos di Firebase adalah: pkh, bpnt, pbi (atau dalam objek 'bantuan')
+                        ${adaDataBansos ? `
+                            <p style="margin-bottom: 0; font-size: 10px; color: #28a745;">
+                                <i class="fas fa-check mr-1"></i>
+                                Data diambil dari map/objek 'bansos' di setiap dokumen desa
                             </p>
-                        ` : ''}
+                        ` : `
+                            <p style="margin-bottom: 0; font-size: 10px; color: #856404;">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Pastikan data bansos disimpan dalam map/objek bernama 'bansos' dengan field: pkh, bpnt, pbi
+                            </p>
+                        `}
                     </div>
                 </div>
             </div>
         `;
         
         kontenHal3.innerHTML = html;
-        
-        // Log untuk debugging
-        console.log('📊 Total bansos dari Firebase:', {
-            PKH: totalPKH,
-            BPNT: totalBPNT,
-            PBI: totalPBI,
-            TOTAL: totalSemuaBansos
-        });
         
     } catch (error) {
         console.error('❌ Error rendering halaman 3:', error);
@@ -1171,7 +1171,7 @@ async function generateDokumen() {
         // Render semua halaman
         renderHalaman1(wilayahData);     // Halaman 1: Agregasi + TTD + QR
         renderHalaman2(wilayahData);     // Halaman 2: Prioritas Intervensi
-        await renderHalaman3(wilayahData); // Halaman 3: Bantuan Sosial (query langsung dari Firebase)
+        await renderHalaman3(wilayahData); // Halaman 3: Bantuan Sosial (dari map bansos)
         await renderHalaman4(wilayahData); // Halaman 4: Layanan Sosial (tanpa TTD/QR)
         
         // Generate SATU nomor surat untuk semua halaman
@@ -1239,8 +1239,8 @@ async function init() {
     try {
         setLoading(true);
         
-        console.log('🚀 Initializing DTSEN Document Generator v2.4.3');
-        console.log('📌 Fitur: QR Code & TTD di Halaman 1 + Data Bantuan Sosial Query Langsung dari Firebase');
+        console.log('🚀 Initializing DTSEN Document Generator v2.4.4');
+        console.log('📌 Fitur: QR Code & TTD di Halaman 1 + Data Bantuan Sosial dari Map Bansos Firebase');
         
         // Load data awal
         wilayahData = await loadDataFromFirebase();
@@ -1258,7 +1258,7 @@ async function init() {
         
         console.log(`✅ Aplikasi siap dengan ${wilayahData.length} desa`);
         console.log(`📋 Kriteria Prioritas: >500 (Tinggi), 300-500 (Sedang), <300 (Rendah)`);
-        console.log(`📊 Data Bantuan Sosial: Query langsung dari Firebase (mendukung berbagai struktur data)`);
+        console.log(`📊 Data Bantuan Sosial: Mengambil dari map/objek 'bansos' di Firebase`);
         console.log(`📊 Rasio Layanan: Berdasarkan Total DTSEN (Desil 1-10)`);
         console.log(`📍 QR Code & Tanda Tangan: Halaman 1`);
         
