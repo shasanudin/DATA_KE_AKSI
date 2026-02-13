@@ -61,120 +61,88 @@
             letter-spacing: -0.02em;
         }
 
-        /* ===== PERBAIKAN HALAMAN UNTUK PRINT & PDF ===== */
+        /* ===== PERBAIKAN TOTAL UNTUK PRINT & PDF ===== */
         @media print {
-            body {
-                background: white;
-                padding: 0;
-                margin: 0;
+            body, .lpj-cover, .halaman-2, .halaman-3, .halaman-4, .halaman-5, .halaman-6, .halaman-7 {
+                background: white !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
             
             .no-print {
                 display: none !important;
             }
             
-            #lpjContainer {
-                margin: 0;
-                padding: 0;
-            }
-            
-            /* Setiap halaman memiliki page-break */
+            /* FORCE PAGE BREAKS - PASTI TEPAT */
             .lpj-cover {
                 page-break-after: always !important;
                 break-after: page !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
-                box-shadow: none;
-                margin: 0 auto;
-                border-radius: 0;
+                height: 297mm !important;
+                max-height: 297mm !important;
+                overflow: hidden !important;
             }
             
-            .halaman-2, .halaman-3, .halaman-4, .halaman-5, .halaman-6, .halaman-7 {
+            .halaman-2, .halaman-3, .halaman-4, .halaman-5, .halaman-6 {
                 page-break-before: always !important;
                 break-before: page !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
                 page-break-after: always !important;
                 break-after: page !important;
-                box-shadow: none;
-                margin: 0 auto;
-                border-radius: 0;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                height: 297mm !important;
+                max-height: 297mm !important;
+                overflow: hidden !important;
             }
             
-            /* Halaman terakhir tidak perlu page-break-after */
             .halaman-7 {
+                page-break-before: always !important;
+                break-before: page !important;
                 page-break-after: avoid !important;
                 break-after: avoid !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                height: 297mm !important;
+                max-height: 297mm !important;
+                overflow: hidden !important;
             }
             
-            /* Pastikan tidak ada elemen yang terpotong */
-            .narasi-utama, .stat-utama, .insight-card, 
-            .prioritas-narasi, .program-card-premium, 
-            .csr-showcase, .roadmap-premium, 
-            .signature-premium {
+            /* Konten harus pas di halaman */
+            .cover-body, .flexible-content, .signature-premium {
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
             
-            /* QR Code fix */
+            /* QR Code fix position */
             .signature-premium {
                 display: flex !important;
-                flex-wrap: nowrap !important;
-                justify-content: space-between !important;
                 align-items: flex-end !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
-            
-            .verification-box {
-                width: 55% !important;
-            }
-            
-            .signature-right-premium {
-                width: 40% !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
+                justify-content: space-between !important;
+                margin-top: 40px !important;
             }
             
             .qrcode-premium {
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
                 margin: 0 auto 20px auto !important;
-                width: 140px !important;
-                height: 140px !important;
-                padding: 10px !important;
-                border: 1px solid #ddd !important;
-                background: white !important;
             }
             
-            #qrcodeLPJ {
-                width: 120px !important;
-                height: 120px !important;
+            @page {
+                size: A4;
+                margin: 1.2cm 1.2cm 1.2cm 1.2cm;
+                orphans: 0;
+                widows: 0;
             }
             
-            #qrcodeLPJ img, 
-            #qrcodeLPJ canvas {
-                width: 120px !important;
-                height: 120px !important;
-            }
-            
-            /* Force background colors */
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 color-adjust: exact !important;
             }
-            
-            @page {
-                size: A4;
-                margin: 1.5cm 1.5cm 1.5cm 1.5cm;
-            }
         }
 
-        /* ===== PEMBAGIAN HALAMAN UNTUK STRUKTUR YANG TEPAT ===== */
-        .lpj-cover {
+        /* ===== FORCE HEIGHT A4 UNTUK SETIAP HALAMAN ===== */
+        .lpj-cover, .halaman-2, .halaman-3, .halaman-4, .halaman-5, .halaman-6, .halaman-7 {
             max-width: 1100px;
             margin: 30px auto;
             background: white;
@@ -182,593 +150,24 @@
             box-shadow: var(--box-shadow);
             position: relative;
             overflow: hidden;
-            min-height: 1100px;
             display: flex;
             flex-direction: column;
+            min-height: 1100px; /* Mendekati tinggi A4 */
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
         
         .halaman-2, .halaman-3, .halaman-4, .halaman-5, .halaman-6, .halaman-7 {
-            max-width: 1100px;
-            margin: 30px auto;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow-sm);
-            padding: 60px 55px;
-            position: relative;
-            min-height: 1100px;
-            display: flex;
-            flex-direction: column;
+            padding: 50px 50px;
         }
 
-        /* Konten fleksibel */
         .flexible-content {
             flex: 1;
-        }
-
-        .cover-pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: radial-gradient(circle at 10% 20%, rgba(10,75,122,0.03) 0%, transparent 30%),
-                              radial-gradient(circle at 90% 70%, rgba(196,154,108,0.03) 0%, transparent 40%),
-                              repeating-linear-gradient(45deg, rgba(0,0,0,0.01) 0px, rgba(0,0,0,0.01) 1px, transparent 1px, transparent 12px);
-            pointer-events: none;
-        }
-
-        .cover-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 40px 45px;
-            position: relative;
-            z-index: 2;
-            border-bottom: 1px solid rgba(196,154,108,0.2);
-        }
-
-        .cover-logo {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-        }
-
-        .cover-logo img {
-            height: 70px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .cover-badge {
-            background: var(--gold-light);
-            padding: 12px 28px;
-            border-radius: 50px;
-            border: 1px solid var(--gold);
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            letter-spacing: 1.5px;
-        }
-
-        .cover-badge i {
-            color: var(--gold);
-            margin-right: 8px;
-        }
-
-        .cover-body {
-            flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 60px;
-            text-align: center;
-            position: relative;
-            z-index: 2;
         }
 
-        .cover-pre-title {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 6px;
-            color: var(--gold);
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .cover-main-title {
-            font-size: 64px;
-            font-weight: 900;
-            color: var(--primary-dark);
-            line-height: 1.1;
-            margin-bottom: 20px;
-            font-family: 'Playfair Display', serif;
-            text-shadow: 0 4px 12px rgba(10,75,122,0.08);
-        }
-
-        .cover-sub-title {
-            font-size: 24px;
-            color: var(--dark-light);
-            font-weight: 500;
-            max-width: 800px;
-            margin: 0 auto 30px;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: -0.01em;
-            line-height: 1.5;
-        }
-
-        .cover-separator {
-            width: 120px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--gold), var(--primary));
-            margin: 30px auto;
-            border-radius: 3px;
-        }
-
-        .cover-location {
-            display: flex;
-            gap: 40px;
-            justify-content: center;
-            margin: 40px 0;
-        }
-
-        .cover-location-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .cover-location-item i {
-            color: var(--gold);
-            font-size: 24px;
-        }
-
-        .cover-date-box {
-            background: var(--primary-dark);
-            padding: 25px 50px;
-            border-radius: 60px;
-            margin-top: 30px;
-            box-shadow: 0 20px 30px rgba(8,52,92,0.2);
-        }
-
-        .cover-date-box span {
-            font-size: 22px;
-            font-weight: 700;
-            color: white;
-            letter-spacing: 2px;
-        }
-
-        .cover-footer {
-            padding: 30px 45px;
-            border-top: 1px solid rgba(196,154,108,0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-            color: var(--gray-600);
-            font-size: 14px;
-        }
-
-        .cover-footer i {
-            color: var(--gold);
-            margin-right: 8px;
-        }
-
-        /* ===== SECTION DIVIDER ===== */
-        .section-divider {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin: 40px 0 30px;
-        }
-
-        .section-divider-line {
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--gold), var(--primary), transparent);
-        }
-
-        .section-divider-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--gold-light);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-dark);
-            font-size: 20px;
-        }
-
-        .section-title {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--primary-dark);
-            margin-bottom: 25px;
-            font-family: 'Playfair Display', serif;
-            position: relative;
-        }
-
-        /* ===== NARASI BOX ===== */
-        .narasi-utama {
-            background: linear-gradient(145deg, #fff9f5, #fffdfc);
-            border-radius: 32px;
-            padding: 45px 50px;
-            margin: 30px 0;
-            border-left: 10px solid var(--gold);
-            box-shadow: 0 15px 35px rgba(196,154,108,0.08);
-            position: relative;
-        }
-
-        .narasi-utama::before {
-            content: '“';
-            position: absolute;
-            top: -20px;
-            left: 30px;
-            font-size: 120px;
-            color: rgba(196,154,108,0.1);
-            font-family: Georgia, serif;
-        }
-
-        .narasi-quote {
-            font-size: 20px;
-            font-weight: 500;
-            color: var(--dark);
-            line-height: 1.8;
-            font-style: italic;
-        }
-
-        .narasi-highlight {
-            background: linear-gradient(120deg, rgba(196,154,108,0.15) 0%, rgba(196,154,108,0.15) 40%, transparent 80%);
-            padding: 2px 8px;
-            font-weight: 700;
-            color: var(--primary-dark);
-        }
-
-        /* ===== STATISTIK CARD ===== */
-        .stat-utama {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-            margin: 40px 0;
-        }
-
-        .stat-card-premium {
-            background: white;
-            border-radius: 24px;
-            padding: 30px 25px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.02);
-            border: 1px solid rgba(196,154,108,0.15);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card-premium::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 6px;
-            background: linear-gradient(90deg, var(--gold), var(--primary));
-        }
-
-        .stat-icon-premium {
-            width: 60px;
-            height: 60px;
-            background: var(--gold-light);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-dark);
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-
-        .stat-value-premium {
-            font-size: 42px;
-            font-weight: 800;
-            color: var(--primary-dark);
-            line-height: 1;
-            margin-bottom: 8px;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .stat-label-premium {
-            font-size: 15px;
-            color: var(--gray-600);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .stat-desc-premium {
-            font-size: 13px;
-            color: var(--gray-600);
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px dashed var(--gray-200);
-        }
-
-        /* ===== INSIGHT CARD ===== */
-        .insight-card {
-            background: linear-gradient(135deg, var(--primary-dark), #0a2e4a);
-            border-radius: 28px;
-            padding: 40px 45px;
-            color: white;
-            margin: 40px 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .insight-card::before {
-            content: '';
-            position: absolute;
-            top: -30px;
-            right: -30px;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-
-        .insight-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: var(--gold);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .insight-text {
-            font-size: 18px;
-            line-height: 1.8;
-            margin-bottom: 0;
-            font-weight: 400;
-        }
-
-        .insight-text strong {
-            color: var(--gold);
-            font-weight: 800;
-        }
-
-        /* ===== PRIORITAS NARASI ===== */
-        .prioritas-narasi {
-            background: white;
-            border-radius: 28px;
-            padding: 35px;
-            border: 1px solid var(--gray-200);
-            margin: 25px 0;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.02);
-        }
-
-        .prioritas-level {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .prioritas-badge {
-            padding: 8px 24px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .badge-high { background: #dc3545; color: white; }
-        .badge-medium { background: #ffc107; color: black; }
-        .badge-low { background: #28a745; color: white; }
-
-        /* ===== PROGRAM EKSEKUSI ===== */
-        .program-eksekusi {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
-            margin: 30px 0;
-        }
-
-        .program-card-premium {
-            background: white;
-            border-radius: 24px;
-            padding: 35px;
-            border: 1px solid var(--gray-200);
-            position: relative;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.02);
-        }
-
-        .program-icon-premium {
-            width: 70px;
-            height: 70px;
-            background: var(--gold-light);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-dark);
-            font-size: 32px;
-            margin-bottom: 25px;
-        }
-
-        .program-title-premium {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--primary-dark);
-            margin-bottom: 12px;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .program-partner {
-            display: inline-block;
-            padding: 6px 18px;
-            background: var(--gold-light);
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 20px;
-        }
-
-        .program-desc-premium {
-            color: var(--gray-600);
-            font-size: 15px;
-            line-height: 1.7;
-            margin-bottom: 25px;
-        }
-
-        .program-metrics {
-            background: var(--gray-100);
-            border-radius: 16px;
-            padding: 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-        }
-
-        .program-impact {
-            font-weight: 800;
-            color: var(--success);
-        }
-
-        /* ===== CSR KEMITRAAN ===== */
-        .csr-showcase {
-            background: linear-gradient(145deg, #fdf8f2, #fffbf7);
-            border-radius: 32px;
-            padding: 45px;
-            margin: 30px 0;
-            border: 1px solid rgba(196,154,108,0.2);
-        }
-
-        .csr-grid-premium {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            margin-top: 35px;
-        }
-
-        .csr-partner-card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-            border: 1px solid var(--gray-200);
-        }
-
-        .csr-partner-logo {
-            width: 80px;
-            height: 80px;
-            background: var(--gold-light);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            color: var(--primary-dark);
-            font-size: 36px;
-        }
-
-        .csr-partner-name {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--dark);
-            margin-bottom: 10px;
-        }
-
-        .csr-partner-program {
-            font-size: 14px;
-            color: var(--gray-600);
-            margin-bottom: 15px;
-        }
-
-        .csr-tag {
-            display: inline-block;
-            padding: 5px 16px;
-            background: var(--primary-light);
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--primary-dark);
-        }
-
-        /* ===== ROADMAP ===== */
-        .roadmap-premium {
-            margin: 40px 0;
-            position: relative;
-        }
-
-        .roadmap-timeline-premium {
-            position: relative;
-            padding: 20px 0;
-        }
-
-        .roadmap-item-premium {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 40px;
-            position: relative;
-            padding-left: 40px;
-        }
-
-        .roadmap-item-premium::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 10px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--gold);
-            border: 4px solid var(--gold-light);
-            box-shadow: 0 0 0 2px white;
-        }
-
-        .roadmap-item-premium::after {
-            content: '';
-            position: absolute;
-            left: 7px;
-            top: 35px;
-            width: 2px;
-            height: calc(100% + 15px);
-            background: linear-gradient(to bottom, var(--gold), transparent);
-        }
-
-        .roadmap-item-premium:last-child::after {
-            display: none;
-        }
-
-        .roadmap-date-premium {
-            min-width: 150px;
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--primary-dark);
-        }
-
-        .roadmap-content-premium {
-            flex: 1;
-        }
-
-        .roadmap-title-premium {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 8px;
-        }
-
-        .roadmap-desc-premium {
-            color: var(--gray-600);
-            font-size: 15px;
-            line-height: 1.7;
-        }
-
-        /* ===== TANDA TANGAN ===== */
+        /* ===== QR CODE FIX - PASTI DI TEMPATNYA ===== */
         .signature-premium {
             margin-top: 60px;
             padding-top: 40px;
@@ -776,6 +175,8 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .verification-box {
@@ -827,110 +228,164 @@
             object-fit: contain !important;
         }
 
-        .signature-name-premium {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--primary-dark);
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 5px;
+        /* ===== TOMBOL SATU UNTUK PRINT & EXPORT ===== */
+        .btn-lpj-premium {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            box-shadow: 0 10px 20px rgba(10,75,122,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .btn-lpj-premium:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(10,75,122,0.4);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+        
+        .btn-lpj-premium i {
+            margin-right: 10px;
         }
 
-        .signature-title-premium {
-            color: var(--gray-600);
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-
-        /* ===== FITUR CETAK ===== */
         .print-button-container {
             display: flex;
             gap: 15px;
             justify-content: flex-end;
         }
 
-        .btn-print-premium {
-            background: var(--primary-dark);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .btn-print-premium:hover {
-            background: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(10,75,122,0.3);
-        }
-
-        /* ===== FOOTER ===== */
+        /* ===== FOOTER HALAMAN ===== */
         .footer-halaman {
-            margin-top: 40px;
-            padding-top: 20px;
+            margin-top: 30px;
+            padding-top: 15px;
             border-top: 1px dashed var(--gray-300);
             text-align: center;
-            font-size: 11px;
+            font-size: 10px;
             color: var(--gray-600);
         }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 992px) {
-            .stat-utama, .program-eksekusi, .csr-grid-premium {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .cover-main-title { font-size: 48px; }
+        /* ===== KOP SURAT UNTUK SETIAP HALAMAN ===== */
+        .kop-lanjutan {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--gray-300);
+            font-size: 11px;
+            color: var(--gray-600);
+        }
+        
+        .kop-lanjutan .instansi {
+            font-weight: 700;
+            color: var(--primary-dark);
         }
 
-        @media (max-width: 768px) {
-            .stat-utama, .program-eksekusi, .csr-grid-premium {
-                grid-template-columns: 1fr;
-            }
-            .cover-main-title { font-size: 36px; }
-            .halaman-2, .halaman-3, .halaman-4, .halaman-5, .halaman-6, .halaman-7 { 
-                padding: 35px 25px; 
-            }
-            .cover-header { flex-direction: column; gap: 20px; }
-            .cover-location { flex-direction: column; gap: 15px; }
-            .signature-premium { flex-direction: column; align-items: center; gap: 40px; }
-            .verification-box { width: 100%; }
-            .signature-right-premium { width: 100%; }
-        }
-
-        .no-print { display: block; }
+        /* ===== (SEMUA STYLE LAINNYA TETAP SAMA) ===== */
+        .cover-pattern { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle at 10% 20%, rgba(10,75,122,0.03) 0%, transparent 30%), radial-gradient(circle at 90% 70%, rgba(196,154,108,0.03) 0%, transparent 40%), repeating-linear-gradient(45deg, rgba(0,0,0,0.01) 0px, rgba(0,0,0,0.01) 1px, transparent 1px, transparent 12px); pointer-events: none; }
+        .cover-header { display: flex; justify-content: space-between; align-items: center; padding: 40px 45px; position: relative; z-index: 2; border-bottom: 1px solid rgba(196,154,108,0.2); }
+        .cover-logo { display: flex; align-items: center; gap: 25px; }
+        .cover-logo img { height: 70px; width: auto; object-fit: contain; }
+        .cover-badge { background: var(--gold-light); padding: 12px 28px; border-radius: 50px; border: 1px solid var(--gold); font-size: 14px; font-weight: 700; color: var(--primary-dark); letter-spacing: 1.5px; }
+        .cover-badge i { color: var(--gold); margin-right: 8px; }
+        .cover-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 60px; text-align: center; position: relative; z-index: 2; }
+        .cover-pre-title { font-size: 14px; text-transform: uppercase; letter-spacing: 6px; color: var(--gold); font-weight: 700; margin-bottom: 20px; }
+        .cover-main-title { font-size: 64px; font-weight: 900; color: var(--primary-dark); line-height: 1.1; margin-bottom: 20px; font-family: 'Playfair Display', serif; text-shadow: 0 4px 12px rgba(10,75,122,0.08); }
+        .cover-sub-title { font-size: 24px; color: var(--dark-light); font-weight: 500; max-width: 800px; margin: 0 auto 30px; font-family: 'Inter', sans-serif; letter-spacing: -0.01em; line-height: 1.5; }
+        .cover-separator { width: 120px; height: 3px; background: linear-gradient(90deg, var(--gold), var(--primary)); margin: 30px auto; border-radius: 3px; }
+        .cover-location { display: flex; gap: 40px; justify-content: center; margin: 40px 0; }
+        .cover-location-item { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 600; color: var(--dark); }
+        .cover-location-item i { color: var(--gold); font-size: 24px; }
+        .cover-date-box { background: var(--primary-dark); padding: 25px 50px; border-radius: 60px; margin-top: 30px; box-shadow: 0 20px 30px rgba(8,52,92,0.2); }
+        .cover-date-box span { font-size: 22px; font-weight: 700; color: white; letter-spacing: 2px; }
+        .cover-footer { padding: 30px 45px; border-top: 1px solid rgba(196,154,108,0.2); display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; color: var(--gray-600); font-size: 14px; }
+        .cover-footer i { color: var(--gold); margin-right: 8px; }
+        .section-divider { display: flex; align-items: center; gap: 20px; margin: 30px 0 25px; }
+        .section-divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), var(--primary), transparent); }
+        .section-divider-icon { width: 50px; height: 50px; background: var(--gold-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-dark); font-size: 20px; }
+        .section-title { font-size: 32px; font-weight: 800; color: var(--primary-dark); margin-bottom: 25px; font-family: 'Playfair Display', serif; }
+        .narasi-utama { background: linear-gradient(145deg, #fff9f5, #fffdfc); border-radius: 32px; padding: 35px 40px; margin: 25px 0; border-left: 10px solid var(--gold); position: relative; }
+        .narasi-utama::before { content: '“'; position: absolute; top: -20px; left: 30px; font-size: 120px; color: rgba(196,154,108,0.1); font-family: Georgia, serif; }
+        .narasi-quote { font-size: 18px; font-weight: 500; color: var(--dark); line-height: 1.7; font-style: italic; }
+        .narasi-highlight { background: linear-gradient(120deg, rgba(196,154,108,0.15) 0%, rgba(196,154,108,0.15) 40%, transparent 80%); padding: 2px 8px; font-weight: 700; color: var(--primary-dark); }
+        .stat-utama { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 30px 0; }
+        .stat-card-premium { background: white; border-radius: 24px; padding: 25px 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.02); border: 1px solid rgba(196,154,108,0.15); position: relative; overflow: hidden; }
+        .stat-card-premium::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, var(--gold), var(--primary)); }
+        .stat-icon-premium { width: 55px; height: 55px; background: var(--gold-light); border-radius: 18px; display: flex; align-items: center; justify-content: center; color: var(--primary-dark); font-size: 26px; margin-bottom: 15px; }
+        .stat-value-premium { font-size: 38px; font-weight: 800; color: var(--primary-dark); line-height: 1; margin-bottom: 5px; font-family: 'Playfair Display', serif; }
+        .stat-label-premium { font-size: 14px; color: var(--gray-600); font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-desc-premium { font-size: 12px; color: var(--gray-600); margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--gray-200); }
+        .insight-card { background: linear-gradient(135deg, var(--primary-dark), #0a2e4a); border-radius: 28px; padding: 30px 40px; color: white; margin: 30px 0; position: relative; overflow: hidden; }
+        .insight-card::before { content: ''; position: absolute; top: -30px; right: -30px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; }
+        .insight-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; }
+        .insight-text { font-size: 17px; line-height: 1.7; margin-bottom: 0; font-weight: 400; }
+        .insight-text strong { color: var(--gold); font-weight: 800; }
+        .prioritas-narasi { background: white; border-radius: 28px; padding: 30px; border: 1px solid var(--gray-200); margin: 20px 0; box-shadow: 0 10px 25px rgba(0,0,0,0.02); }
+        .prioritas-level { display: flex; align-items: center; gap: 20px; margin-bottom: 15px; }
+        .prioritas-badge { padding: 6px 20px; border-radius: 50px; font-size: 15px; font-weight: 700; letter-spacing: 1px; }
+        .badge-high { background: #dc3545; color: white; }
+        .badge-medium { background: #ffc107; color: black; }
+        .badge-low { background: #28a745; color: white; }
+        .program-eksekusi { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin: 25px 0; }
+        .program-card-premium { background: white; border-radius: 24px; padding: 30px; border: 1px solid var(--gray-200); position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.02); }
+        .program-icon-premium { width: 65px; height: 65px; background: var(--gold-light); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: var(--primary-dark); font-size: 30px; margin-bottom: 20px; }
+        .program-title-premium { font-size: 20px; font-weight: 800; color: var(--primary-dark); margin-bottom: 10px; font-family: 'Playfair Display', serif; }
+        .program-partner { display: inline-block; padding: 5px 16px; background: var(--gold-light); border-radius: 50px; font-size: 12px; font-weight: 700; color: var(--primary-dark); margin-bottom: 15px; }
+        .program-desc-premium { color: var(--gray-600); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+        .program-metrics { background: var(--gray-100); border-radius: 16px; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+        .program-impact { font-weight: 800; color: var(--success); }
+        .csr-showcase { background: linear-gradient(145deg, #fdf8f2, #fffbf7); border-radius: 32px; padding: 35px; margin: 25px 0; border: 1px solid rgba(196,154,108,0.2); }
+        .csr-grid-premium { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 25px; }
+        .csr-partner-card { background: white; border-radius: 20px; padding: 20px; text-align: center; border: 1px solid var(--gray-200); }
+        .csr-partner-logo { width: 70px; height: 70px; background: var(--gold-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; color: var(--primary-dark); font-size: 32px; }
+        .csr-partner-name { font-size: 16px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+        .csr-partner-program { font-size: 13px; color: var(--gray-600); margin-bottom: 12px; }
+        .csr-tag { display: inline-block; padding: 4px 14px; background: var(--primary-light); border-radius: 50px; font-size: 11px; font-weight: 700; color: var(--primary-dark); }
+        .roadmap-premium { margin: 30px 0; position: relative; }
+        .roadmap-timeline-premium { position: relative; padding: 15px 0; }
+        .roadmap-item-premium { display: flex; gap: 25px; margin-bottom: 30px; position: relative; padding-left: 35px; }
+        .roadmap-item-premium::before { content: ''; position: absolute; left: 0; top: 8px; width: 14px; height: 14px; border-radius: 50%; background: var(--gold); border: 4px solid var(--gold-light); box-shadow: 0 0 0 2px white; }
+        .roadmap-item-premium::after { content: ''; position: absolute; left: 6px; top: 32px; width: 2px; height: calc(100% + 10px); background: linear-gradient(to bottom, var(--gold), transparent); }
+        .roadmap-item-premium:last-child::after { display: none; }
+        .roadmap-date-premium { min-width: 140px; font-size: 17px; font-weight: 800; color: var(--primary-dark); }
+        .roadmap-content-premium { flex: 1; }
+        .roadmap-title-premium { font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 5px; }
+        .roadmap-desc-premium { color: var(--gray-600); font-size: 14px; line-height: 1.6; }
+        .signature-name-premium { font-size: 22px; font-weight: 800; color: var(--primary-dark); font-family: 'Playfair Display', serif; margin-bottom: 5px; }
+        .signature-title-premium { color: var(--gray-600); font-size: 15px; margin-bottom: 15px; }
+        .footer-halaman { margin-top: 30px; padding-top: 15px; border-top: 1px dashed var(--gray-300); text-align: center; font-size: 10px; color: var(--gray-600); }
     </style>
 </head>
 <body>
     <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+    <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
         <div style="width: 70px; height: 70px; border: 6px solid #f3f3f3; border-top-color: #c49a6c; border-radius: 50%; animation: spin 1s linear infinite;"></div>
         <p style="margin-top: 25px; font-weight: 600; color: #0a4b7a;">Menyusun LPJ Strategis DTSEN 2026...</p>
         <p style="color: #6c757d; font-size: 14px;">Mengolah data prioritas dan program kemitraan</p>
     </div>
 
-    <!-- Control Panel -->
+    <!-- Control Panel - SATU TOMBOL UNTUK PRINT & EXPORT -->
     <div class="container-fluid bg-light py-3 no-print">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-6">
+                <div class="col-md-7">
                     <h4 class="font-weight-bold"><i class="fas fa-crown" style="color: #c49a6c;"></i> LPJ Strategis DTSEN 2026</h4>
                     <p class="mb-0 text-muted">Kecamatan Sumber · Laporan Pertanggungjawaban Berbasis Data & Kemitraan</p>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5 text-right">
                     <div class="print-button-container">
-                        <button class="btn" style="background: #0a4b7a; color: white;" onclick="generateLPJ()">
-                            <i class="fas fa-sync-alt"></i> Generate LPJ
+                        <button class="btn-lpj-premium" onclick="handlePrintExport()">
+                            <i class="fas fa-file-export"></i> CETAK & EXPORT PDF
                         </button>
-                        <button class="btn" style="background: #c49a6c; color: white;" onclick="printLPJ()">
-                            <i class="fas fa-print"></i> Cetak LPJ
-                        </button>
-                        <button class="btn btn-success" onclick="exportPDF()">
-                            <i class="fas fa-file-pdf"></i> Export PDF
-                        </button>
-                        <a href="index.html" class="btn btn-outline-secondary">
+                        <a href="index.html" class="btn btn-outline-secondary ml-2">
                             <i class="fas fa-arrow-left"></i> Dashboard
                         </a>
                     </div>
+                    <small class="text-muted mt-1 d-block">Klik 1x → Pilih Cetak/PDF → Otomatis sesuai halaman</small>
                 </div>
             </div>
         </div>
@@ -1121,7 +576,7 @@
         }
 
         // ============================================================
-        // BUILD LPJ DENGAN 7 HALAMAN
+        // BUILD LPJ DENGAN 7 HALAMAN - PASTI TIDAK TERPOTONG
         // ============================================================
         function buildLPJ() {
             if (!wilayahData.length) return '<div class="alert alert-danger">Tidak ada data</div>';
@@ -1173,7 +628,7 @@
                         <div class="cover-date-box">
                             <span><i class="fas fa-calendar mr-3"></i> ${formatDate()}</span>
                         </div>
-                        <div style="margin-top: 60px; display: flex; justify-content: center; gap: 40px;">
+                        <div style="margin-top: 50px; display: flex; justify-content: center; gap: 40px;">
                             <div style="text-align: center;">
                                 <div style="font-size: 48px; font-weight: 900; color: var(--primary-dark);">${wilayahData.length}</div>
                                 <div style="color: var(--gray-600); letter-spacing: 2px;">DESA/KELURAHAN</div>
@@ -1197,20 +652,24 @@
 
                 <!-- HALAMAN 2: EKSEKUTIF SUMMARY & FAKTA KUNCI -->
                 <div class="halaman-2">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <div class="kop-lanjutan">
+                        <span class="instansi">TKSK & PUSKESOS KECAMATAN SUMBER</span>
+                        <span>ID: ${laporanID}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <h2 class="section-title" style="margin-bottom: 0;">EKSEKUTIF SUMMARY</h2>
-                        <span style="background: var(--gold-light); padding: 10px 25px; border-radius: 50px; color: var(--primary-dark); font-weight: 700;">
+                        <span style="background: var(--gold-light); padding: 8px 20px; border-radius: 50px; color: var(--primary-dark); font-weight: 700; font-size: 14px;">
                             <i class="fas fa-chart-line mr-2"></i> PRIORITAS: >500 · 300-500 · <300
                         </span>
                     </div>
                     
                     <div class="narasi-utama">
                         <p class="narasi-quote">
-                            Dari <span class="narasi-highlight">${formatNumber(totalKK)} KK</span> yang terdata dalam sistem DTSEN Kecamatan Sumber, 
-                            <span class="narasi-highlight">${formatNumber(totalD12)} KK (${persenPrioritas}%)</span> berada di kelompok prioritas tertinggi.
+                            Dari <span class="narasi-highlight">${formatNumber(totalKK)} KK</span> DTSEN Kecamatan Sumber, 
+                            <span class="narasi-highlight">${formatNumber(totalD12)} KK (${persenPrioritas}%)</span> prioritas tertinggi.
                         </p>
-                        <p class="narasi-quote" style="margin-top: 25px;">
-                            Konsentrasi tertinggi berada di <strong>${top1.nama}</strong> yang menyumbang <strong>${kontribusiTop1}%</strong> dari total KK prioritas kecamatan.
+                        <p class="narasi-quote" style="margin-top: 15px;">
+                            Konsentrasi tertinggi di <strong>${top1.nama}</strong> (${kontribusiTop1}% dari total prioritas).
                         </p>
                     </div>
                     
@@ -1219,33 +678,32 @@
                             <div class="stat-icon-premium"><i class="fas fa-home"></i></div>
                             <div class="stat-value-premium">${formatNumber(totalKK)}</div>
                             <div class="stat-label-premium">Total KK DTSEN</div>
-                            <div class="stat-desc-premium"><i class="fas fa-check-circle text-success"></i> ${wilayahData.length} desa</div>
+                            <div class="stat-desc-premium">${wilayahData.length} desa</div>
                         </div>
                         <div class="stat-card-premium">
                             <div class="stat-icon-premium"><i class="fas fa-exclamation-triangle" style="color: #b22222;"></i></div>
                             <div class="stat-value-premium">${formatNumber(totalD12)}</div>
                             <div class="stat-label-premium">KK PRIORITAS</div>
-                            <div class="stat-desc-premium"><i class="fas fa-arrow-up text-danger"></i> ${persenPrioritas}% dari total</div>
+                            <div class="stat-desc-premium">${persenPrioritas}% dari total</div>
                         </div>
                         <div class="stat-card-premium">
                             <div class="stat-icon-premium"><i class="fas fa-flag"></i></div>
                             <div class="stat-value-premium">${prioritasTinggi}</div>
                             <div class="stat-label-premium">DESA PRIORITAS TINGGI</div>
-                            <div class="stat-desc-premium"><i class="fas fa-fire text-danger"></i> >500 KK</div>
+                            <div class="stat-desc-premium">>500 KK</div>
                         </div>
                         <div class="stat-card-premium">
                             <div class="stat-icon-premium"><i class="fas fa-handshake"></i></div>
                             <div class="stat-value-premium">6</div>
                             <div class="stat-label-premium">PROGRAM CSR</div>
-                            <div class="stat-desc-premium"><i class="fas fa-leaf text-success"></i> Non-APBD</div>
+                            <div class="stat-desc-premium">Non-APBD</div>
                         </div>
                     </div>
 
                     <div class="insight-card">
                         <div class="insight-title"><i class="fas fa-bullseye mr-3"></i> FAKTA KUNCI</div>
                         <div class="insight-text">
-                            <strong>${top1.nama}</strong> adalah episentrum kemiskinan dengan <strong>${formatNumber(top1.d1+top1.d2)} KK prioritas</strong> – 
-                            setara <strong>${kontribusiTop1}%</strong> beban prioritas kecamatan.
+                            <strong>${top1.nama}</strong> episentrum kemiskinan dengan <strong>${formatNumber(top1.d1+top1.d2)} KK prioritas</strong>.
                         </div>
                     </div>
                     
@@ -1256,6 +714,10 @@
 
                 <!-- HALAMAN 3: PRIORITAS & KONSENTRASI -->
                 <div class="halaman-3">
+                    <div class="kop-lanjutan">
+                        <span class="instansi">TKSK & PUSKESOS KECAMATAN SUMBER</span>
+                        <span>ID: ${laporanID}</span>
+                    </div>
                     <div class="section-divider">
                         <div class="section-divider-icon"><i class="fas fa-flag"></i></div>
                         <div class="section-divider-line"></div>
@@ -1266,33 +728,30 @@
                     <div class="prioritas-narasi">
                         <div class="prioritas-level">
                             <span class="prioritas-badge badge-high">PRIORITAS TINGGI >500 KK</span>
-                            <span style="font-size: 24px; font-weight: 800; color: #dc3545;">${prioritasTinggi} DESA</span>
+                            <span style="font-size: 22px; font-weight: 800; color: #dc3545;">${prioritasTinggi} DESA</span>
                         </div>
-                        <p style="font-size: 16px;">
-                            Zona darurat kemiskinan dengan akumulasi <strong>${formatNumber(totalKKPrioritasTinggi)} KK prioritas</strong>.
-                            Intervensi struktural: akses listrik, stimulus usaha mikro, jaminan pendidikan.
+                        <p style="font-size: 15px;">
+                            Zona darurat kemiskinan · <strong>${formatNumber(totalKKPrioritasTinggi)} KK prioritas</strong> · Intervensi segera.
                         </p>
                     </div>
 
                     <div class="prioritas-narasi">
                         <div class="prioritas-level">
                             <span class="prioritas-badge badge-medium">PRIORITAS SEDANG 300-500 KK</span>
-                            <span style="font-size: 24px; font-weight: 800; color: #b9770e;">${prioritasSedang} DESA</span>
+                            <span style="font-size: 22px; font-weight: 800; color: #b9770e;">${prioritasSedang} DESA</span>
                         </div>
-                        <p style="font-size: 16px;">
-                            Zona waspada, sangat rentan terhadap guncangan ekonomi. 
-                            Membutuhkan jaring pengaman sosial dan peningkatan kapasitas ekonomi.
+                        <p style="font-size: 15px;">
+                            Zona waspada · Rentan guncangan · Jaring pengaman sosial.
                         </p>
                     </div>
 
                     <div class="prioritas-narasi">
                         <div class="prioritas-level">
                             <span class="prioritas-badge badge-low">PRIORITAS RENDAH <300 KK</span>
-                            <span style="font-size: 24px; font-weight: 800; color: #2d6a4f;">${prioritasRendah} DESA</span>
+                            <span style="font-size: 22px; font-weight: 800; color: #2d6a4f;">${prioritasRendah} DESA</span>
                         </div>
-                        <p style="font-size: 16px;">
-                            Zona stabil dengan pengawasan. Fokus pada pemberdayaan komunitas 
-                            dan penguatan modal sosial.
+                        <p style="font-size: 15px;">
+                            Zona stabil · Penguatan modal sosial · Pemberdayaan komunitas.
                         </p>
                     </div>
                     
@@ -1303,6 +762,10 @@
 
                 <!-- HALAMAN 4: 6 PROGRAM EKSEKUSI (BAGIAN 1) -->
                 <div class="halaman-4">
+                    <div class="kop-lanjutan">
+                        <span class="instansi">TKSK & PUSKESOS KECAMATAN SUMBER</span>
+                        <span>ID: ${laporanID}</span>
+                    </div>
                     <div class="section-divider">
                         <div class="section-divider-icon"><i class="fas fa-rocket"></i></div>
                         <div class="section-divider-line"></div>
@@ -1310,139 +773,140 @@
                         <div class="section-divider-line"></div>
                     </div>
 
-                    <p style="font-size: 18px; margin-bottom: 30px; color: var(--dark);">
-                        6 program prioritas <span class="narasi-highlight">tanpa membebani APBD</span> melalui kemitraan CSR.
+                    <p style="font-size: 16px; margin-bottom: 25px; color: var(--dark);">
+                        6 program prioritas <span class="narasi-highlight">tanpa APBD</span> · Kemitraan CSR.
                     </p>
 
-                    <div class="program-eksekusi" style="grid-template-columns: 1fr 1fr;">
+                    <div class="program-eksekusi">
                         <div class="program-card-premium">
                             <div class="program-icon-premium"><i class="fas fa-bolt"></i></div>
-                            <div class="program-title-premium">Listrik Pintar Nusantara</div>
-                            <div class="program-partner"><i class="fas fa-building"></i> PT PLN (Persero)</div>
-                            <div class="program-desc-premium">500 sambungan listrik gratis di ${top1.nama} dan ${top5[1]?.nama}.</div>
+                            <div class="program-title-premium">Listrik Pintar</div>
+                            <div class="program-partner">PT PLN (Persero)</div>
+                            <div class="program-desc-premium">500 sambungan gratis di ${top1.nama} & ${top5[1]?.nama}.</div>
                             <div class="program-metrics"><span>Target: 500 KK</span><span class="program-impact">CSR PLN</span></div>
                         </div>
                         <div class="program-card-premium">
                             <div class="program-icon-premium"><i class="fas fa-seedling"></i></div>
-                            <div class="program-title-premium">Kampung Berdaya Hidroponik</div>
-                            <div class="program-partner"><i class="fas fa-mosque"></i> Rumah Zakat</div>
-                            <div class="program-desc-premium">5 desa prioritas sebagai sentra sayuran hidroponik.</div>
+                            <div class="program-title-premium">Kampung Hidroponik</div>
+                            <div class="program-partner">Rumah Zakat</div>
+                            <div class="program-desc-premium">5 desa sentra sayuran hidroponik.</div>
                             <div class="program-metrics"><span>5 desa prioritas</span><span class="program-impact">Zakat Produktif</span></div>
                         </div>
                         <div class="program-card-premium">
                             <div class="program-icon-premium"><i class="fas fa-piggy-bank"></i></div>
                             <div class="program-title-premium">KUR Super Mikro 0%</div>
-                            <div class="program-partner"><i class="fas fa-university"></i> Bank BJB</div>
-                            <div class="program-desc-premium">Kredit mikro Rp 3-5 jt tanpa bunga untuk 300 UMKM.</div>
+                            <div class="program-partner">Bank BJB</div>
+                            <div class="program-desc-premium">Kredit Rp 3-5 jt tanpa bunga · 300 UMKM.</div>
                             <div class="program-metrics"><span>300 UMKM</span><span class="program-impact">CSR Perbankan</span></div>
                         </div>
                         <div class="program-card-premium">
                             <div class="program-icon-premium"><i class="fas fa-graduation-cap"></i></div>
                             <div class="program-title-premium">Beasiswa Anak Bangsa</div>
-                            <div class="program-partner"><i class="fas fa-heart"></i> Yayasan Bangun Sejahtera</div>
-                            <div class="program-desc-premium">Bantuan pendidikan untuk 200 anak dari keluarga prioritas.</div>
+                            <div class="program-partner">Yayasan Bangun Sejahtera</div>
+                            <div class="program-desc-premium">200 anak dari keluarga prioritas.</div>
                             <div class="program-metrics"><span>200 anak</span><span class="program-impact">Filantropi</span></div>
                         </div>
                     </div>
                     
                     <div class="footer-halaman">
-                        <span>Halaman 4 · Program Eksekusi (Bagian 1)</span>
+                        <span>Halaman 4 · Program Eksekusi (Bagian 1/2)</span>
                     </div>
                 </div>
 
                 <!-- HALAMAN 5: 6 PROGRAM EKSEKUSI (BAGIAN 2) + CSR KEMITRAAN -->
                 <div class="halaman-5">
-                    <div class="program-eksekusi" style="grid-template-columns: 1fr 1fr; margin-bottom: 40px;">
+                    <div class="kop-lanjutan">
+                        <span class="instansi">TKSK & PUSKESOS KECAMATAN SUMBER</span>
+                        <span>ID: ${laporanID}</span>
+                    </div>
+                    <div class="program-eksekusi" style="margin-bottom: 25px;">
                         <div class="program-card-premium">
                             <div class="program-icon-premium"><i class="fas fa-trash-alt"></i></div>
-                            <div class="program-title-premium">Kampung Berseri Astra</div>
-                            <div class="program-partner"><i class="fas fa-car"></i> PT Astra Honda</div>
-                            <div class="program-desc-premium">Bank sampah terpadu di 3 desa prioritas.</div>
+                            <div class="program-title-premium">Kampung Berseri</div>
+                            <div class="program-partner">Astra Honda</div>
+                            <div class="program-desc-premium">Bank sampah terpadu 3 desa.</div>
                             <div class="program-metrics"><span>3 desa</span><span class="program-impact">CSR Lingkungan</span></div>
                         </div>
                         <div class="program-card-premium">
                             <div class="program-icon-premium"><i class="fas fa-utensils"></i></div>
-                            <div class="program-title-premium">Pangan Bergizi 1000 Hari</div>
-                            <div class="program-partner"><i class="fas fa-apple-alt"></i> PT Indofood</div>
-                            <div class="program-desc-premium">Paket makanan tambahan untuk 300 balita prioritas.</div>
+                            <div class="program-title-premium">Pangan Bergizi</div>
+                            <div class="program-partner">PT Indofood</div>
+                            <div class="program-desc-premium">300 balita prioritas.</div>
                             <div class="program-metrics"><span>300 balita</span><span class="program-impact">CSR Kesehatan</span></div>
                         </div>
                     </div>
 
                     <div class="csr-showcase">
-                        <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
-                            <div style="width: 60px; height: 60px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-                                <i class="fas fa-handshake" style="font-size: 28px; color: var(--primary-dark);"></i>
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                            <div style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-handshake" style="font-size: 24px; color: var(--primary-dark);"></i>
                             </div>
                             <div>
-                                <h3 style="font-size: 26px; font-weight: 800; color: var(--primary-dark); margin-bottom: 5px;">KEMITRAAN CSR STRATEGIS</h3>
+                                <h3 style="font-size: 22px; font-weight: 800; color: var(--primary-dark); margin-bottom: 5px;">KEMITRAAN CSR</h3>
                                 <p style="color: var(--gray-600); margin-bottom: 0;">6 mitra · 6 program · 0% APBD</p>
                             </div>
                         </div>
                         
                         <div class="csr-grid-premium">
-                            <div class="csr-partner-card"><div class="csr-partner-logo"><i class="fas fa-bolt"></i></div><div class="csr-partner-name">PLN</div><div class="csr-partner-program">Listrik Pintar</div><span class="csr-tag">Infrastruktur</span></div>
-                            <div class="csr-partner-card"><div class="csr-partner-logo"><i class="fas fa-university"></i></div><div class="csr-partner-name">Bank BJB</div><div class="csr-partner-program">KUR Super Mikro</div><span class="csr-tag">Pemberdayaan</span></div>
-                            <div class="csr-partner-card"><div class="csr-partner-logo"><i class="fas fa-mosque"></i></div><div class="csr-partner-name">Rumah Zakat</div><div class="csr-partner-program">Hidroponik</div><span class="csr-tag">Pertanian</span></div>
-                            <div class="csr-partner-card"><div class="csr-partner-logo"><i class="fas fa-car"></i></div><div class="csr-partner-name">Astra Honda</div><div class="csr-partner-program">Kampung Berseri</div><span class="csr-tag">Lingkungan</span></div>
-                            <div class="csr-partner-card"><div class="csr-partner-logo"><i class="fas fa-apple-alt"></i></div><div class="csr-partner-name">Indofood</div><div class="csr-partner-program">Pangan Bergizi</div><span class="csr-tag">Kesehatan</span></div>
-                            <div class="csr-partner-card"><div class="csr-partner-logo"><i class="fas fa-graduation-cap"></i></div><div class="csr-partner-name">YBSM</div><div class="csr-partner-program">Beasiswa</div><span class="csr-tag">Pendidikan</span></div>
-                        </div>
-                        
-                        <div style="margin-top: 30px; background: white; border-radius: 20px; padding: 20px; display: flex; justify-content: space-around;">
-                            <span><i class="fas fa-users" style="color: var(--gold);"></i> 2.150+ penerima</span>
-                            <span><i class="fas fa-coins" style="color: var(--gold);"></i> Rp 4,8 Miliar</span>
-                            <span><i class="fas fa-leaf" style="color: var(--gold);"></i> 100% non-APBD</span>
+                            <div class="csr-partner-card"><div class="csr-partner-logo"><i class="fas fa-bolt"></i></div><div class="csr-partner-name">PLN</div><span class="csr-tag">Infrastruktur</span></div>
+                            <div class="csr-partner-card"><div class="csr-partner-logo"><i class="fas fa-university"></i></div><div class="csr-partner-name">Bank BJB</div><span class="csr-tag">Pemberdayaan</span></div>
+                            <div class="csr-partner-card"><div class="csr-partner-logo"><i class="fas fa-mosque"></i></div><div class="csr-partner-name">Rumah Zakat</div><span class="csr-tag">Pertanian</span></div>
+                            <div class="csr-partner-card"><div class="csr-partner-logo"><i class="fas fa-car"></i></div><div class="csr-partner-name">Astra</div><span class="csr-tag">Lingkungan</span></div>
+                            <div class="csr-partner-card"><div class="csr-partner-logo"><i class="fas fa-apple-alt"></i></div><div class="csr-partner-name">Indofood</div><span class="csr-tag">Kesehatan</span></div>
+                            <div class="csr-partner-card"><div class="csr-partner-logo"><i class="fas fa-graduation-cap"></i></div><div class="csr-partner-name">YBSM</div><span class="csr-tag">Pendidikan</span></div>
                         </div>
                     </div>
                     
                     <div class="footer-halaman">
-                        <span>Halaman 5 · Program Eksekusi (Bagian 2) & Kemitraan CSR</span>
+                        <span>Halaman 5 · Program Eksekusi (Bagian 2/2) & Kemitraan CSR</span>
                     </div>
                 </div>
 
                 <!-- HALAMAN 6: ROADMAP EKSEKUSI 2026 -->
                 <div class="halaman-6">
-                    <div style="margin-bottom: 30px;">
-                        <h3 class="section-title" style="font-size: 28px;">ROADMAP EKSEKUSI 2026</h3>
-                        <p style="font-size: 17px; color: var(--gray-600);">Tahapan konkret menuju implementasi program kemitraan</p>
+                    <div class="kop-lanjutan">
+                        <span class="instansi">TKSK & PUSKESOS KECAMATAN SUMBER</span>
+                        <span>ID: ${laporanID}</span>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h3 class="section-title" style="font-size: 26px;">ROADMAP EKSEKUSI 2026</h3>
                     </div>
 
                     <div class="roadmap-premium">
                         <div class="roadmap-timeline-premium">
                             <div class="roadmap-item-premium">
-                                <div class="roadmap-date-premium">MARET 2026</div>
+                                <div class="roadmap-date-premium">MARET</div>
                                 <div class="roadmap-content-premium">
                                     <div class="roadmap-title-premium">Forum Kemitraan & MoU</div>
-                                    <div class="roadmap-desc-premium">Finalisasi kesepakatan dengan 6 mitra inti.</div>
+                                    <div class="roadmap-desc-premium">6 mitra inti.</div>
                                 </div>
                             </div>
                             <div class="roadmap-item-premium">
-                                <div class="roadmap-date-premium">APRIL 2026</div>
+                                <div class="roadmap-date-premium">APRIL</div>
                                 <div class="roadmap-content-premium">
                                     <div class="roadmap-title-premium">Verifikasi Penerima</div>
-                                    <div class="roadmap-desc-premium">Validasi lapangan untuk 1.500 KK prioritas.</div>
+                                    <div class="roadmap-desc-premium">1.500 KK prioritas.</div>
                                 </div>
                             </div>
                             <div class="roadmap-item-premium">
-                                <div class="roadmap-date-premium">MEI 2026</div>
+                                <div class="roadmap-date-premium">MEI</div>
                                 <div class="roadmap-content-premium">
                                     <div class="roadmap-title-premium">Kick-off Program</div>
-                                    <div class="roadmap-desc-premium">Peluncuran 3 program percontohan.</div>
+                                    <div class="roadmap-desc-premium">3 program percontohan.</div>
                                 </div>
                             </div>
                             <div class="roadmap-item-premium">
-                                <div class="roadmap-date-premium">JUNI-NOV 2026</div>
+                                <div class="roadmap-date-premium">JUN-NOV</div>
                                 <div class="roadmap-content-premium">
-                                    <div class="roadmap-title-premium">Implementasi & Pendampingan</div>
-                                    <div class="roadmap-desc-premium">Eksekusi program di 15 desa prioritas.</div>
+                                    <div class="roadmap-title-premium">Implementasi</div>
+                                    <div class="roadmap-desc-premium">15 desa prioritas.</div>
                                 </div>
                             </div>
                             <div class="roadmap-item-premium">
-                                <div class="roadmap-date-premium">DES 2026</div>
+                                <div class="roadmap-date-premium">DES</div>
                                 <div class="roadmap-content-premium">
                                     <div class="roadmap-title-premium">Evaluasi & Replikasi</div>
-                                    <div class="roadmap-desc-premium">Pengukuran dampak dan penyusunan roadmap 2027.</div>
+                                    <div class="roadmap-desc-premium">Roadmap 2027.</div>
                                 </div>
                             </div>
                         </div>
@@ -1455,6 +919,10 @@
 
                 <!-- HALAMAN 7: PENUTUP & KOMITMEN + TANDA TANGAN -->
                 <div class="halaman-7">
+                    <div class="kop-lanjutan">
+                        <span class="instansi">TKSK & PUSKESOS KECAMATAN SUMBER</span>
+                        <span>ID: ${laporanID}</span>
+                    </div>
                     <div class="section-divider">
                         <div class="section-divider-icon"><i class="fas fa-check-circle"></i></div>
                         <div class="section-divider-line"></div>
@@ -1462,93 +930,79 @@
                         <div class="section-divider-line"></div>
                     </div>
                     
-                    <div style="background: white; border-radius: 24px; padding: 40px; border: 1px solid var(--gold-light); margin-bottom: 40px;">
-                        <p style="font-size: 17px; line-height: 1.9; margin-bottom: 25px;">
-                            Data DTSEN telah memberikan <strong>peta jalan yang jelas</strong>. Dengan keterbatasan APBD, 
-                            pendekatan kemitraan adalah <strong>keharusan strategis</strong>.
+                    <div style="background: white; border-radius: 24px; padding: 30px; border: 1px solid var(--gold-light); margin-bottom: 30px;">
+                        <p style="font-size: 16px; line-height: 1.8; margin-bottom: 20px;">
+                            Data DTSEN memberikan <strong>peta jalan yang jelas</strong>. Kemitraan adalah <strong>keharusan strategis</strong>.
                         </p>
-                        <p style="font-size: 17px; line-height: 1.9; margin-bottom: 25px;">
-                            Enam program bersama mitra CSR adalah <strong>bukti kolaborasi lintas sektor</strong> 
-                            menciptakan dampak lebih besar dengan sumber daya lebih efisien.
+                        <p style="font-size: 16px; line-height: 1.8; margin-bottom: 20px;">
+                            6 program bersama mitra CSR <strong>kolaborasi lintas sektor</strong>.
                         </p>
-                        <p style="font-size: 17px; line-height: 1.9;">
-                            LPJ ini adalah <strong>awal dari aksi nyata</strong>. Kami berkomitmen mengawal implementasi 
-                            hingga dampak dirasakan langsung oleh masyarakat.
+                        <p style="font-size: 16px; line-height: 1.8;">
+                            LPJ ini <strong>awal dari aksi nyata</strong>. Komitmen kawal implementasi.
                         </p>
                     </div>
 
                     <div class="signature-premium">
                         <div class="verification-box">
-                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-                                <i class="fas fa-shield-alt" style="font-size: 32px; color: var(--primary-dark);"></i>
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                <i class="fas fa-shield-alt" style="font-size: 28px; color: var(--primary-dark);"></i>
                                 <div>
-                                    <h5 style="font-weight: 800; margin-bottom: 5px;">VERIFIKASI DOKUMEN</h5>
-                                    <p style="font-size: 12px; color: var(--gray-600); margin-bottom: 0;">Elektronik · Sah</p>
+                                    <h5 style="font-weight: 800; margin-bottom: 5px; font-size: 16px;">VERIFIKASI</h5>
+                                    <p style="font-size: 11px; color: var(--gray-600); margin-bottom: 0;">Elektronik</p>
                                 </div>
                             </div>
-                            <p style="font-size: 13px; margin-bottom: 8px;"><i class="fas fa-check-circle text-success mr-2"></i> Data DTSEN Kemensos RI</p>
-                            <p style="font-size: 13px; margin-bottom: 8px;"><i class="fas fa-check-circle text-success mr-2"></i> Kriteria: >500 (Tinggi), 300-500 (Sedang), <300 (Rendah)</p>
-                            <p style="font-size: 13px; margin-bottom: 0;"><i class="fas fa-check-circle text-success mr-2"></i> ID: ${verificationId}</p>
+                            <p style="font-size: 12px; margin-bottom: 5px;"><i class="fas fa-check-circle text-success mr-2"></i> Data DTSEN Kemensos RI</p>
+                            <p style="font-size: 12px; margin-bottom: 5px;"><i class="fas fa-check-circle text-success mr-2"></i> Kriteria: >500, 300-500, <300</p>
+                            <p style="font-size: 12px; margin-bottom: 0;"><i class="fas fa-check-circle text-success mr-2"></i> ID: ${verificationId}</p>
                         </div>
                         
                         <div class="signature-right-premium">
                             <div id="qrcodeLPJ" class="qrcode-premium"></div>
                             <div class="signature-name-premium">SHIDIQ HASANUDIN, S.IP</div>
-                            <div class="signature-title-premium">Koordinator TKSK Kecamatan Sumber</div>
-                            <div style="font-size: 14px; color: var(--gray-600); margin-top: 20px; background: var(--gold-light); padding: 12px 25px; border-radius: 50px;">
+                            <div class="signature-title-premium">Koordinator TKSK</div>
+                            <div style="font-size: 13px; color: var(--gray-600); margin-top: 15px; background: var(--gold-light); padding: 10px 20px; border-radius: 50px;">
                                 <i class="fas fa-calendar mr-2"></i> Sumber, ${formatDate()}
                             </div>
                         </div>
                     </div>
                     
-                    <div class="footer-halaman" style="margin-top: 60px;">
-                        <span>⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻</span><br>
-                        <span class="mt-2 d-block">LPJ Strategis DTSEN · TKSK & Forum Puskesos Kecamatan Sumber</span>
-                        <span class="mt-1 d-block"><i class="fas fa-fingerprint"></i> ${laporanID}</span>
+                    <div class="footer-halaman" style="margin-top: 40px;">
+                        <span>⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻</span><br>
+                        <span class="mt-2 d-block">LPJ Strategis DTSEN · TKSK & Puskesos Kecamatan Sumber</span>
+                        <span class="mt-1 d-block">${laporanID}</span>
                     </div>
                 </div>
             `;
         }
 
         // ============================================================
-        // FITUR CETAK & EXPORT PDF
+        // SATU TOMBOL UNTUK PRINT & EXPORT PDF
         // ============================================================
-        window.printLPJ = function() {
-            generateQRCode('qrcodeLPJ', verificationId);
-            setTimeout(() => {
-                window.print();
-            }, 500);
-        };
-
-        window.exportPDF = function() {
-            const element = document.getElementById('lpjContainer');
+        window.handlePrintExport = function() {
+            // Generate QR code dulu
             generateQRCode('qrcodeLPJ', verificationId);
             
             setTimeout(() => {
-                const opt = {
-                    margin: [15, 15, 15, 15],
-                    filename: `LPJ_Strategis_DTSEN_${new Date().toISOString().split('T')[0]}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { 
-                        scale: 2, 
-                        useCORS: true,
-                        letterRendering: true,
-                        allowTaint: false
-                    },
-                    jsPDF: { 
-                        unit: 'mm', 
-                        format: 'a4', 
-                        orientation: 'portrait',
-                        compress: true
-                    },
-                    pagebreak: { 
-                        mode: ['css', 'legacy'],
-                        before: '.halaman-2, .halaman-3, .halaman-4, .halaman-5, .halaman-6, .halaman-7',
-                        after: '.lpj-cover'
-                    }
-                };
-                html2pdf().set(opt).from(element).save();
-            }, 700);
+                // Tampilkan dialog pilihan
+                const action = confirm("Pilih:\n• OK untuk CETAK\n• Batal untuk EXPORT PDF");
+                
+                if (action) {
+                    // CETAK
+                    window.print();
+                } else {
+                    // EXPORT PDF
+                    const element = document.getElementById('lpjContainer');
+                    const opt = {
+                        margin: [15, 15, 15, 15],
+                        filename: `LPJ_Strategis_DTSEN_${new Date().toISOString().split('T')[0]}.pdf`,
+                        image: { type: 'jpeg', quality: 0.95 },
+                        html2canvas: { scale: 1.5, useCORS: true, letterRendering: true },
+                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                        pagebreak: { mode: ['css', 'legacy'] }
+                    };
+                    html2pdf().set(opt).from(element).save();
+                }
+            }, 500);
         };
 
         window.generateLPJ = function() {
@@ -1587,7 +1041,6 @@
                 div.style.display = 'flex';
                 div.style.alignItems = 'center';
                 div.style.justifyContent = 'center';
-                div.style.fontSize = '10px';
                 div.innerHTML = '<i class="fas fa-qrcode" style="font-size:36px;color:#666;"></i>';
                 container.appendChild(div);
             };
