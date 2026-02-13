@@ -1,6 +1,6 @@
 // unduh.js
 // Sistem Cetak Dokumen DTSEN - TKSK & Puskesos Kecamatan Sumber
-// Version: 2.4.1 - QR CODE & TTD DI HALAMAN 1 + BANTUAN SOSIAL DARI FIREBASE
+// Version: 2.4.2 - QR CODE & TTD DI HALAMAN 1 + BANTUAN SOSIAL DARI FIREBASE
 // Fitur: SHOW ALL DATA + PRIORITAS >500/300-500/<300 + RASIO DTSEN
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
@@ -184,11 +184,9 @@ async function loadDataFromFirebase() {
                 d4: desilArray[3] || 0,
                 d5_10: desilArray.slice(4).reduce((a, b) => (a || 0) + (b || 0), 0),
                 // Ambil data bantuan sosial dari Firebase
-                bantuan: {
-                    pkh: parseInt(docData.pkh) || 0,
-                    bpnt: parseInt(docData.bpnt) || 0,
-                    pbi: parseInt(docData.pbi) || 0
-                }
+                pkh: parseInt(docData.pkh) || 0,
+                bpnt: parseInt(docData.bpnt) || 0,
+                pbi: parseInt(docData.pbi) || 0
             });
         });
         
@@ -201,59 +199,9 @@ async function loadDataFromFirebase() {
         
     } catch (error) {
         console.error('Error loading from Firebase:', error);
-        return generateSampleData();
+        showNotification('Gagal memuat data dari Firebase', 'danger');
+        return [];
     }
-}
-
-/**
- * Generate sample data (fallback)
- */
-function generateSampleData() {
-    const desaList = [
-        'Sumbergedang', 'Sumberduren', 'Sumbersari', 'Sumberrejo', 'Sumberagung',
-        'Sumberpucung', 'Sumberejo Kidul', 'Sumberwono', 'Sumberpatut', 'Sumberkembar',
-        'Sumberjaya', 'Sumbermulya', 'Sumberbendo', 'Sumbertengah', 'Sumberkarang',
-        'Sumberasih', 'Sumberbaru', 'Sumbercangkring', 'Sumberdadi', 'Sumberejo',
-        'Sumbergondo', 'Sumberharjo', 'Sumberijo', 'Sumberkerto', 'Sumbermadu',
-        'Sumbernanas', 'Sumberombo', 'Sumberpandan', 'Sumberranti', 'Sumbertaman'
-    ];
-    
-    return desaList.map((nama, index) => {
-        let d1, d2, totalD12;
-        
-        if (index < 5) {
-            // Prioritas Tinggi >500 KK
-            d1 = Math.floor(Math.random() * 200) + 350; // 350-550
-            d2 = Math.floor(Math.random() * 150) + 200; // 200-350
-        } else if (index < 12) {
-            // Prioritas Sedang 300-500 KK
-            d1 = Math.floor(Math.random() * 150) + 200; // 200-350
-            d2 = Math.floor(Math.random() * 100) + 100; // 100-200
-        } else {
-            // Prioritas Rendah <300 KK
-            d1 = Math.floor(Math.random() * 100) + 50;  // 50-150
-            d2 = Math.floor(Math.random() * 80) + 30;   // 30-110
-        }
-        
-        totalD12 = d1 + d2;
-        const d3 = Math.floor(Math.random() * 100) + 30;
-        const d4 = Math.floor(Math.random() * 80) + 20;
-        const d5_10 = Math.floor(Math.random() * 200) + 50;
-        
-        return {
-            id: `sample-${index + 1}`,
-            nama: nama,
-            kecamatan: 'Sumber',
-            desil: [d1, d2, d3, d4, ...Array(6).fill(Math.floor(Math.random() * 30) + 10)],
-            total_kk: d1 + d2 + d3 + d4 + d5_10,
-            d1, d2, d3, d4, d5_10,
-            bantuan: {
-                pkh: Math.floor(Math.random() * 200) + 50,
-                bpnt: Math.floor(Math.random() * 300) + 100,
-                pbi: Math.floor(Math.random() * 400) + 200
-            }
-        };
-    }).sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
 }
 
 /**
@@ -528,90 +476,164 @@ function renderHalaman2(data) {
 
 /**
  * ============================================================
- * HALAMAN 3 - REKAP BANTUAN SOSIAL PER DESA (DARI FIREBASE)
- * PERUBAHAN: Mengambil data real PKH, BPNT, PBI dari Firebase
+ * HALAMAN 3 - REKAP BANTUAN SOSIAL PER DESA (BPNT, PKH, PBI)
+ * DATA LANGSUNG DARI FIREBASE - TANPA FALLBACK
  * ============================================================
  */
 function renderHalaman3(data) {
     if (!kontenHal3) return;
-
- // Ambil data layanan dari Firebase
-    const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
-            
+    
+    // Hitung total bansos per program
     let totalPKH = 0;
     let totalBPNT = 0;
     let totalPBI = 0;
-    let totalAll = 0;
+    let totalSemuaBansos = 0;
     
+    // Buat rows untuk setiap desa
     let rows = '';
     data.forEach((item, index) => {
-        // Ambil data bantuan dari Firebase (real data)
-        const pkh = item.bantuan?.pkh || 0;
-        const bpnt = item.bantuan?.bpnt || 0;
-        const pbi = item.bantuan?.pbi || 0;
+        // Ambil data bansos langsung dari Firebase (dari loadDataFromFirebase)
+        const pkh = item.pkh || 0;
+        const bpnt = item.bpnt || 0;
+        const pbi = item.pbi || 0;
         const total = pkh + bpnt + pbi;
         
+        // Akumulasi total
         totalPKH += pkh;
         totalBPNT += bpnt;
         totalPBI += pbi;
-        totalAll += total;
+        totalSemuaBansos += total;
         
         rows += `
             <tr>
                 <td style="text-align: center;">${index + 1}</td>
                 <td>${item.nama}</td>
-                <td style="text-align: right;">${formatNumber(pkh)}</td>
-                <td style="text-align: right;">${formatNumber(bpnt)}</td>
-                <td style="text-align: right;">${formatNumber(pbi)}</td>
-                <td style="text-align: right; font-weight: 700;">${formatNumber(total)}</td>
+                <td style="text-align: right; ${pkh > 0 ? 'font-weight: 600;' : ''}">${formatNumber(pkh)}</td>
+                <td style="text-align: right; ${bpnt > 0 ? 'font-weight: 600;' : ''}">${formatNumber(bpnt)}</td>
+                <td style="text-align: right; ${pbi > 0 ? 'font-weight: 600;' : ''}">${formatNumber(pbi)}</td>
+                <td style="text-align: right; font-weight: 700; background: #e8f4f8;">${formatNumber(total)}</td>
             </tr>
         `;
     });
     
     const html = `
         <div>
-            <h5 style="font-size: 14px; font-weight: 700; margin: 10px 0;">REKAP BANTUAN SOSIAL PER DESA</h5>
+            <!-- HEADER INFORMASI -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h5 style="font-size: 14px; font-weight: 700; margin: 10px 0;">REKAP BANTUAN SOSIAL PER DESA</h5>
+                <span style="background: #28a745; color: white; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 600;">
+                    <i class="fas fa-database mr-1"></i> Data Real Firebase
+                </span>
+            </div>
+            
             <p style="font-size: 11px; margin-bottom: 10px;">
-                <em>Data real penerima manfaat dari database Firebase (${data.length} desa/kelurahan)</em>
+                <em>Data real penerima manfaat program bansos dari database Firebase (${data.length} desa/kelurahan se-Kecamatan Sumber)</em>
             </p>
             
-            <table class="tabel-data">
+            <!-- INFORMASI TOTAL KK DTSEN -->
+            <div style="background: #e3f2fd; padding: 8px 12px; border-radius: 5px; margin-bottom: 15px; border-left: 4px solid #0d6efd; font-size: 11px;">
+                <i class="fas fa-info-circle mr-1" style="color: #0d6efd;"></i> 
+                <strong>Total Keluarga DTSEN (Desil 1-10):</strong> ${formatNumber(data.reduce((sum, item) => sum + item.total_kk, 0))} KK
+            </div>
+            
+            <!-- TABEL UTAMA -->
+            <table class="tabel-data" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                 <thead>
-                    <tr>
-                        <th width="5%">No</th>
-                        <th width="30%">Desa/Kelurahan</th>
-                        <th width="15%">PKH</th>
-                        <th width="15%">BPNT</th>
-                        <th width="15%">PBI</th>
-                        <th width="20%">Total</th>
+                    <tr style="background: #343a40; color: white;">
+                        <th width="5%" style="padding: 8px; border: 1px solid #454d55; text-align: center;">No</th>
+                        <th width="30%" style="padding: 8px; border: 1px solid #454d55; text-align: left;">Desa/Kelurahan</th>
+                        <th width="15%" style="padding: 8px; border: 1px solid #454d55; text-align: center;">PKH</th>
+                        <th width="15%" style="padding: 8px; border: 1px solid #454d55; text-align: center;">BPNT</th>
+                        <th width="15%" style="padding: 8px; border: 1px solid #454d55; text-align: center;">PBI</th>
+                        <th width="20%" style="padding: 8px; border: 1px solid #454d55; text-align: center;">Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${rows}
                 </tbody>
-                <tfoot style="font-weight: 700; background: #f5f5f5;">
+                <tfoot style="font-weight: 700; background: #f8f9fa; border-top: 2px solid #343a40;">
                     <tr>
-                        <td colspan="2" style="text-align: right;">TOTAL KESELURUHAN</td>
-                        <td style="text-align: right;">${formatNumber(totalPKH)}</td>
-                        <td style="text-align: right;">${formatNumber(totalBPNT)}</td>
-                        <td style="text-align: right;">${formatNumber(totalPBI)}</td>
-                        <td style="text-align: right;">${formatNumber(totalAll)}</td>
+                        <td colspan="2" style="padding: 10px; border: 1px solid #dee2e6; text-align: right; font-size: 12px;">TOTAL KESELURUHAN</td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right; color: #0d6efd;">${formatNumber(totalPKH)}</td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right; color: #0d6efd;">${formatNumber(totalBPNT)}</td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right; color: #0d6efd;">${formatNumber(totalPBI)}</td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right; font-weight: 800; background: #cfe2ff;">${formatNumber(totalSemuaBansos)}</td>
                     </tr>
                 </tfoot>
             </table>
-            
-            <div style="margin-top: 20px; font-size: 11px;">
-                <div style="background: #f0f7ff; padding: 12px; border-left: 4px solid #4361ee;">
-                    <p style="margin-bottom: 5px;"><strong>Informasi Program Bantuan Sosial:</strong></p>
-                    <ul style="margin-bottom: 0;">
-                        <li>PKH (Program Keluarga Harapan) - Bantuan tunai bersyarat</li>
-                        <li>BPNT (Bantuan Pangan Non Tunai) - Bantuan sembako</li>
-                        <li>PBI (Penerima Bantuan Iuran) - Bantuan Iuran untuk Jaminan Kesehatan Masyarakat</li>
-                    </ul>
-                    <p style="margin-top: 8px; margin-bottom: 0; font-style: italic; color: #555;">
-                        <i class="fas fa-database mr-1"></i> Sumber: Database Bantuan Sosial Firebase (Update: ${formatDate(new Date())})
+
+            <!-- CARD STATISTIK BANSOS -->
+            <div style="display: flex; gap: 15px; margin: 25px 0;">
+                <div style="flex: 1; border: 1px solid #0d6efd; border-radius: 8px; padding: 12px; background: #f0f7ff;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 40px; height: 40px; background: #0d6efd; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <p style="font-size: 11px; color: #666; margin-bottom: 2px;">PKH</p>
+                            <p style="font-size: 18px; font-weight: 700; color: #0d6efd; margin: 0;">${formatNumber(totalPKH)}</p>
+                        </div>
+                    </div>
+                    <p style="font-size: 10px; color: #666; margin-top: 8px; margin-bottom: 0;">
+                        <i class="fas fa-chart-line mr-1"></i> Keluarga Penerima Manfaat
                     </p>
                 </div>
+                
+                <div style="flex: 1; border: 1px solid #ffc107; border-radius: 8px; padding: 12px; background: #fff9e6;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 40px; height: 40px; background: #ffc107; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-shopping-basket"></i>
+                        </div>
+                        <div>
+                            <p style="font-size: 11px; color: #666; margin-bottom: 2px;">BPNT</p>
+                            <p style="font-size: 18px; font-weight: 700; color: #ffc107; margin: 0;">${formatNumber(totalBPNT)}</p>
+                        </div>
+                    </div>
+                    <p style="font-size: 10px; color: #666; margin-top: 8px; margin-bottom: 0;">
+                        <i class="fas fa-chart-line mr-1"></i> Keluarga Penerima Manfaat
+                    </p>
+                </div>
+                
+                <div style="flex: 1; border: 1px solid #28a745; border-radius: 8px; padding: 12px; background: #f0f9f0;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 40px; height: 40px; background: #28a745; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div>
+                            <p style="font-size: 11px; color: #666; margin-bottom: 2px;">PBI</p>
+                            <p style="font-size: 18px; font-weight: 700; color: #28a745; margin: 0;">${formatNumber(totalPBI)}</p>
+                        </div>
+                    </div>
+                    <p style="font-size: 10px; color: #666; margin-top: 8px; margin-bottom: 0;">
+                        <i class="fas fa-chart-line mr-1"></i> Penerima Bantuan Iuran
+                    </p>
+                </div>
+            </div>
+
+            <!-- INFORMASI PROGRAM -->
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; margin-top: 20px;">
+                <p style="font-weight: 700; margin-bottom: 10px; font-size: 12px;">📋 INFORMASI PROGRAM BANTUAN SOSIAL:</p>
+                <table style="width: 100%; font-size: 11px;">
+                    <tr>
+                        <td style="padding: 5px; width: 30%;"><strong>PKH</strong></td>
+                        <td style="padding: 5px;">Program Keluarga Harapan - Bantuan tunai bersyarat untuk keluarga miskin</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;"><strong>BPNT</strong></td>
+                        <td style="padding: 5px;">Bantuan Pangan Non Tunai - Bantuan sembako melalui mekanisme non tunai</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;"><strong>PBI</strong></td>
+                        <td style="padding: 5px;">Penerima Bantuan Iuran - Bantuan iuran JKN-KIS bagi masyarakat tidak mampu</td>
+                    </tr>
+                </table>
+                <p style="margin-top: 10px; margin-bottom: 0; font-size: 10px; color: #666; font-style: italic;">
+                    <i class="fas fa-database mr-1"></i> 
+                    Sumber: Database Bantuan Sosial Firebase Kecamatan Sumber | Update: ${formatDate(new Date())}
+                </p>
+                <p style="margin-top: 5px; margin-bottom: 0; font-size: 9px; color: #999;">
+                    *Data diambil langsung dari Firebase tanpa estimasi/fallback
+                </p>
             </div>
         </div>
     `;
@@ -923,61 +945,17 @@ async function renderHalaman4(dataWilayah) {
         
     } catch (error) {
         console.error('Error rendering halaman 4:', error);
+        showNotification('Gagal memuat data layanan sosial', 'danger');
         
-        // FALLBACK: Tetap gunakan TOTAL DTSEN untuk perhitungan rasio
-        const totalKKDTSEN = dataWilayah.reduce((sum, item) => sum + item.total_kk, 0);
-        
+        // Tampilkan pesan error
         kontenHal4.innerHTML = `
-            <div style="margin-top: 10px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h5 style="font-size: 14px; font-weight: 700; margin: 0;">REKAPITULASI LAYANAN SOSIAL (ESTIMASI)</h5>
-                    <span style="background: #6c757d; color: white; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 600;">
-                        <i class="fas fa-exclamation-triangle mr-1"></i> Mode Offline
-                    </span>
-                </div>
-                
-                <!-- INFORMASI TOTAL DTSEN -->
-                <div style="background: #e8f5e9; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 5px solid #28a745;">
-                    <span style="font-weight: 700; font-size: 13px;">📋 TOTAL KELUARGA DTSEN (DESIL 1-10):</span>
-                    <span style="font-size: 20px; font-weight: 800; color: #28a745; margin-left: 10px;">${formatNumber(totalKKDTSEN)} KK</span>
-                    <p style="margin-top: 8px; margin-bottom: 0; font-size: 11px; color: #555;">
-                        <i class="fas fa-info-circle mr-1"></i> Data layanan real-time tidak tersedia. Menampilkan estimasi berdasarkan proporsi DTSEN.
-                    </p>
-                </div>
-                
-                <table style="width: 100%; margin-bottom: 25px; font-size: 12px; border: 1px solid #000; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background: #f0f0f0;">
-                            <th style="padding: 10px; border: 1px solid #000; text-align: left;">Kategori Layanan</th>
-                            <th style="padding: 10px; border: 1px solid #000; text-align: right;">Estimasi</th>
-                            <th style="padding: 10px; border: 1px solid #000; text-align: right;">Rasio (vs DTSEN)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 10px; border: 1px solid #000;"><strong>Pembaruan DTSEN</strong> (Data Terpadu Kesejahteraan Sosial)</td>
-                            <td style="padding: 10px; border: 1px solid #000; text-align: right; font-weight: 700;">${formatNumber(totalKKDTSEN)} KK</td>
-                            <td style="padding: 10px; border: 1px solid #000; text-align: right;">100%</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 10px; border: 1px solid #000;"><strong>SKTM</strong> (Surat Keterangan Tidak Mampu)</td>
-                            <td style="padding: 10px; border: 1px solid #000; text-align: right;">${formatNumber(Math.floor(totalKKDTSEN * 0.3))} Penerbitan</td>
-                            <td style="padding: 10px; border: 1px solid #000; text-align: right;">30.0%</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 10px; border: 1px solid #000;"><strong>Pengaduan Masyarakat</strong></td>
-                            <td style="padding: 10px; border: 1px solid #000; text-align: right;">${formatNumber(Math.floor(totalKKDTSEN * 0.03))} Kasus</td>
-                            <td style="padding: 10px; border: 1px solid #000; text-align: right;">3.0%</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div style="background: #fff3cd; border: 1px solid #ffeeba; padding: 12px 15px; border-radius: 5px;">
-                    <i class="fas fa-info-circle mr-2" style="color: #856404;"></i>
-                    <span style="font-size: 11px; color: #856404;">
-                        <strong>Perhitungan Rasio:</strong> Semua rasio dihitung berdasarkan TOTAL KELUARGA DTSEN (${formatNumber(totalKKDTSEN)} KK) sesuai kebijakan baru.
-                    </span>
-                </div>
+            <div style="margin-top: 10px; padding: 20px; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px; color: #721c24;">
+                <h5 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">
+                    <i class="fas fa-exclamation-triangle mr-2"></i> Gagal Memuat Data Layanan Sosial
+                </h5>
+                <p style="font-size: 12px; margin-bottom: 0;">
+                    Tidak dapat mengambil data layanan sosial dari Firebase. Silakan coba lagi nanti.
+                </p>
             </div>
         `;
     }
@@ -1110,7 +1088,7 @@ async function generateDokumen() {
         // Render semua halaman
         renderHalaman1(wilayahData);     // Halaman 1: Agregasi + TTD + QR
         renderHalaman2(wilayahData);     // Halaman 2: Prioritas Intervensi
-        renderHalaman3(wilayahData);     // Halaman 3: Bantuan Sosial (real data dari Firebase)
+        renderHalaman3(wilayahData);     // Halaman 3: Bantuan Sosial (real data dari Firebase - tanpa fallback)
         await renderHalaman4(wilayahData); // Halaman 4: Layanan Sosial (tanpa TTD/QR)
         
         // Generate SATU nomor surat untuk semua halaman
@@ -1178,8 +1156,8 @@ async function init() {
     try {
         setLoading(true);
         
-        console.log('🚀 Initializing DTSEN Document Generator v2.4.1');
-        console.log('📌 Fitur: QR Code & TTD di Halaman 1 + Data Bantuan Sosial Real dari Firebase');
+        console.log('🚀 Initializing DTSEN Document Generator v2.4.2');
+        console.log('📌 Fitur: QR Code & TTD di Halaman 1 + Data Bantuan Sosial Real dari Firebase (Tanpa Fallback)');
         
         // Load data awal
         wilayahData = await loadDataFromFirebase();
@@ -1197,7 +1175,7 @@ async function init() {
         
         console.log(`✅ Aplikasi siap dengan ${wilayahData.length} desa`);
         console.log(`📋 Kriteria Prioritas: >500 (Tinggi), 300-500 (Sedang), <300 (Rendah)`);
-        console.log(`📊 Data Bantuan Sosial: Menggunakan data real dari Firebase (PKH, BPNT, PBI)`);
+        console.log(`📊 Data Bantuan Sosial: Menggunakan data real dari Firebase (PKH, BPNT, PBI) - TANPA FALLBACK`);
         console.log(`📊 Rasio Layanan: Berdasarkan Total DTSEN (Desil 1-10)`);
         console.log(`📍 QR Code & Tanda Tangan: Halaman 1`);
         
