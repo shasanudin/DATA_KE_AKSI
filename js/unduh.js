@@ -1,6 +1,6 @@
 // unduh.js
 // Sistem Cetak Dokumen DTSEN - TKSK & Puskesos Kecamatan Sumber
-// Version: 2.4.0 - QR CODE & TTD DI HALAMAN 1
+// Version: 2.4.1 - QR CODE & TTD DI HALAMAN 1 + BANTUAN SOSIAL DARI FIREBASE
 // Fitur: SHOW ALL DATA + PRIORITAS >500/300-500/<300 + RASIO DTSEN
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
@@ -182,7 +182,13 @@ async function loadDataFromFirebase() {
                 d2: desilArray[1] || 0,
                 d3: desilArray[2] || 0,
                 d4: desilArray[3] || 0,
-                d5_10: desilArray.slice(4).reduce((a, b) => (a || 0) + (b || 0), 0)
+                d5_10: desilArray.slice(4).reduce((a, b) => (a || 0) + (b || 0), 0),
+                // Ambil data bantuan sosial dari Firebase
+                bantuan: {
+                    pkh: parseInt(docData.pkh) || 0,
+                    bpnt: parseInt(docData.bpnt) || 0,
+                    pbi: parseInt(docData.pbi) || 0
+                }
             });
         });
         
@@ -240,7 +246,12 @@ function generateSampleData() {
             kecamatan: 'Sumber',
             desil: [d1, d2, d3, d4, ...Array(6).fill(Math.floor(Math.random() * 30) + 10)],
             total_kk: d1 + d2 + d3 + d4 + d5_10,
-            d1, d2, d3, d4, d5_10
+            d1, d2, d3, d4, d5_10,
+            bantuan: {
+                pkh: Math.floor(Math.random() * 200) + 50,
+                bpnt: Math.floor(Math.random() * 300) + 100,
+                pbi: Math.floor(Math.random() * 400) + 200
+            }
         };
     }).sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
 }
@@ -516,7 +527,10 @@ function renderHalaman2(data) {
 }
 
 /**
- * Render halaman 3 - Bantuan Sosial Per Desa
+ * ============================================================
+ * HALAMAN 3 - REKAP BANTUAN SOSIAL PER DESA (DARI FIREBASE)
+ * PERUBAHAN: Mengambil data real PKH, BPNT, PBI dari Firebase
+ * ============================================================
  */
 function renderHalaman3(data) {
     if (!kontenHal3) return;
@@ -528,9 +542,10 @@ function renderHalaman3(data) {
     
     let rows = '';
     data.forEach((item, index) => {
-        const pkh = Math.floor(item.d1 * 0.8 + item.d2 * 0.3);
-        const bpnt = Math.floor(item.d1 * 0.7 + item.d2 * 0.4);
-        const pbi = Math.floor(item.d1 * 0.5 + item.d2 * 0.2);
+        // Ambil data bantuan dari Firebase (real data)
+        const pkh = item.bantuan?.pkh || 0;
+        const bpnt = item.bantuan?.bpnt || 0;
+        const pbi = item.bantuan?.pbi || 0;
         const total = pkh + bpnt + pbi;
         
         totalPKH += pkh;
@@ -554,7 +569,7 @@ function renderHalaman3(data) {
         <div>
             <h5 style="font-size: 14px; font-weight: 700; margin: 10px 0;">REKAP BANTUAN SOSIAL PER DESA</h5>
             <p style="font-size: 11px; margin-bottom: 10px;">
-                <em>Estimasi penerima manfaat berdasarkan data DTSEN Desil 1-2 (${data.length} desa/kelurahan)</em>
+                <em>Data real penerima manfaat dari database Firebase (${data.length} desa/kelurahan)</em>
             </p>
             
             <table class="tabel-data">
@@ -590,6 +605,9 @@ function renderHalaman3(data) {
                         <li>BPNT (Bantuan Pangan Non Tunai) - Bantuan sembako</li>
                         <li>PBI (Penerima Bantuan Iuran) - Bantuan Iuran untuk Jaminan Kesehatan Masyarakat</li>
                     </ul>
+                    <p style="margin-top: 8px; margin-bottom: 0; font-style: italic; color: #555;">
+                        <i class="fas fa-database mr-1"></i> Sumber: Database Bantuan Sosial Firebase (Update: ${formatDate(new Date())})
+                    </p>
                 </div>
             </div>
         </div>
@@ -1089,7 +1107,7 @@ async function generateDokumen() {
         // Render semua halaman
         renderHalaman1(wilayahData);     // Halaman 1: Agregasi + TTD + QR
         renderHalaman2(wilayahData);     // Halaman 2: Prioritas Intervensi
-        renderHalaman3(wilayahData);     // Halaman 3: Bantuan Sosial
+        renderHalaman3(wilayahData);     // Halaman 3: Bantuan Sosial (real data dari Firebase)
         await renderHalaman4(wilayahData); // Halaman 4: Layanan Sosial (tanpa TTD/QR)
         
         // Generate SATU nomor surat untuk semua halaman
@@ -1157,8 +1175,8 @@ async function init() {
     try {
         setLoading(true);
         
-        console.log('🚀 Initializing DTSEN Document Generator v2.4.0');
-        console.log('📌 Fitur: QR Code & TTD di Halaman 1');
+        console.log('🚀 Initializing DTSEN Document Generator v2.4.1');
+        console.log('📌 Fitur: QR Code & TTD di Halaman 1 + Data Bantuan Sosial Real dari Firebase');
         
         // Load data awal
         wilayahData = await loadDataFromFirebase();
@@ -1176,6 +1194,7 @@ async function init() {
         
         console.log(`✅ Aplikasi siap dengan ${wilayahData.length} desa`);
         console.log(`📋 Kriteria Prioritas: >500 (Tinggi), 300-500 (Sedang), <300 (Rendah)`);
+        console.log(`📊 Data Bantuan Sosial: Menggunakan data real dari Firebase (PKH, BPNT, PBI)`);
         console.log(`📊 Rasio Layanan: Berdasarkan Total DTSEN (Desil 1-10)`);
         console.log(`📍 QR Code & Tanda Tangan: Halaman 1`);
         
