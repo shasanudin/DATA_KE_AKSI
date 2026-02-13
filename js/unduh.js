@@ -587,7 +587,7 @@ async function renderHalaman3(dataWilayah) {
                 <!-- TABEL UTAMA -->
                 <table class="tabel-data" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                     <thead>
-                        <tr style="background: #343a40; color: white;">
+                        <tr style="background: #343a40; color: black;">
                             <th width="5%" style="padding: 8px; border: 1px solid #454d55; text-align: center;">No</th>
                             <th width="30%" style="padding: 8px; border: 1px solid #454d55; text-align: left;">Desa/Kelurahan</th>
                             <th width="15%" style="padding: 8px; border: 1px solid #454d55; text-align: center;">PKH</th>
