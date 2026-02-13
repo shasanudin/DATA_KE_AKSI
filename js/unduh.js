@@ -534,7 +534,10 @@ function renderHalaman2(data) {
  */
 function renderHalaman3(data) {
     if (!kontenHal3) return;
-    
+
+ // Ambil data layanan dari Firebase
+    const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
+            
     let totalPKH = 0;
     let totalBPNT = 0;
     let totalPBI = 0;
