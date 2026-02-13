@@ -523,19 +523,19 @@ function renderHalaman3(data) {
     
     let totalPKH = 0;
     let totalBPNT = 0;
-    let totalBLT = 0;
+    let totalPBI = 0;
     let totalAll = 0;
     
     let rows = '';
     data.forEach((item, index) => {
         const pkh = Math.floor(item.d1 * 0.8 + item.d2 * 0.3);
         const bpnt = Math.floor(item.d1 * 0.7 + item.d2 * 0.4);
-        const blt = Math.floor(item.d1 * 0.5 + item.d2 * 0.2);
-        const total = pkh + bpnt + blt;
+        const pbi = Math.floor(item.d1 * 0.5 + item.d2 * 0.2);
+        const total = pkh + bpnt + pbi;
         
         totalPKH += pkh;
         totalBPNT += bpnt;
-        totalBLT += blt;
+        totalPBI += pbi;
         totalAll += total;
         
         rows += `
@@ -544,7 +544,7 @@ function renderHalaman3(data) {
                 <td>${item.nama}</td>
                 <td style="text-align: right;">${formatNumber(pkh)}</td>
                 <td style="text-align: right;">${formatNumber(bpnt)}</td>
-                <td style="text-align: right;">${formatNumber(blt)}</td>
+                <td style="text-align: right;">${formatNumber(pbi)}</td>
                 <td style="text-align: right; font-weight: 700;">${formatNumber(total)}</td>
             </tr>
         `;
@@ -564,7 +564,7 @@ function renderHalaman3(data) {
                         <th width="30%">Desa/Kelurahan</th>
                         <th width="15%">PKH</th>
                         <th width="15%">BPNT</th>
-                        <th width="15%">BLT</th>
+                        <th width="15%">PBI</th>
                         <th width="20%">Total</th>
                     </tr>
                 </thead>
@@ -576,7 +576,7 @@ function renderHalaman3(data) {
                         <td colspan="2" style="text-align: right;">TOTAL KESELURUHAN</td>
                         <td style="text-align: right;">${formatNumber(totalPKH)}</td>
                         <td style="text-align: right;">${formatNumber(totalBPNT)}</td>
-                        <td style="text-align: right;">${formatNumber(totalBLT)}</td>
+                        <td style="text-align: right;">${formatNumber(totalPBI)}</td>
                         <td style="text-align: right;">${formatNumber(totalAll)}</td>
                     </tr>
                 </tfoot>
@@ -588,7 +588,7 @@ function renderHalaman3(data) {
                     <ul style="margin-bottom: 0;">
                         <li>PKH (Program Keluarga Harapan) - Bantuan tunai bersyarat</li>
                         <li>BPNT (Bantuan Pangan Non Tunai) - Bantuan sembako</li>
-                        <li>BLT (Bantuan Langsung Tunai) - Bantuan tunai tanpa syarat</li>
+                        <li>PBI (Penerima Bantuan Iuran) - Bantuan Iuran untuk Jaminan Kesehatan Masyarakat</li>
                     </ul>
                 </div>
             </div>
