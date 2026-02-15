@@ -52,9 +52,13 @@
             border-radius: 24px;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             background: white;
             margin-bottom: 25px;
+        }
+
+        .pdf-card:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
         }
 
         .pdf-card-header {
@@ -121,6 +125,15 @@
             background: rgba(231,76,60,0.1);
             color: var(--danger);
             border: 1px solid rgba(231,76,60,0.2);
+        }
+
+        .badge-pi7 {
+            background: rgba(9,132,227,0.1);
+            color: var(--primary);
+            border: 1px solid rgba(9,132,227,0.2);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
         }
 
         /* Tab Navigation */
@@ -203,6 +216,36 @@
             transition: width 0.3s ease;
         }
 
+        /* Animasi Magic ala Pi7 */
+        @keyframes magicWork {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .magic-animation {
+            background: linear-gradient(270deg, #0984e3, #6c5ce7, #00b894, #0984e3);
+            background-size: 300% 300%;
+            animation: magicWork 3s ease infinite;
+            color: white;
+            padding: 15px;
+            border-radius: 50px;
+            text-align: center;
+            font-weight: bold;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .magic-animation i {
+            margin-right: 10px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         /* Result Box */
         .result-box {
             background: #f0f9ff;
@@ -223,21 +266,6 @@
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
-
-        /* Quality Slider */
-        .quality-slider {
-            margin: 20px 0;
-        }
-        
-        .quality-slider label {
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        
-        .quality-value {
-            color: var(--primary);
-            font-weight: bold;
         }
 
         /* Button */
@@ -267,6 +295,17 @@
             cursor: not-allowed;
         }
 
+        .btn-outline-pdf {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline-pdf:hover {
+            background: var(--primary);
+            color: white;
+        }
+
         /* Info Cards */
         .info-card {
             background: white;
@@ -274,6 +313,7 @@
             padding: 20px;
             margin-top: 25px;
             border: 1px solid rgba(0,0,0,0.05);
+            text-align: center;
         }
 
         .info-icon {
@@ -286,6 +326,7 @@
             justify-content: center;
             font-size: 1.3rem;
             color: var(--primary);
+            margin: 0 auto 15px;
         }
 
         /* Footer */
@@ -315,7 +356,7 @@
             <i class="fas fa-file-pdf mr-3"></i>PDF Creator
         </h1>
         <p class="lead mb-0" style="max-width: 700px; margin: 0 auto; opacity: 0.95;">
-            Buat, gabungkan, dan kompres PDF dengan mudah 
+            Gabungkan PDF, Konversi Gambar, dan Kompres PDF ke 480KB 
             <br>Langsung di browser - 100% offline & gratis
         </p>
     </div>
@@ -376,7 +417,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="compress-tab" data-toggle="pill" href="#compress" role="tab">
-                        <i class="fas fa-compress mr-2"></i> Kompres PDF ke 480KB
+                        <i class="fas fa-compress mr-2"></i> Kompres PDF
                     </a>
                 </li>
             </ul>
@@ -451,16 +492,24 @@
                     </div>
                 </div>
 
-                <!-- 3. COMPRESS PDF TAB - PRESISI 480KB -->
+                <!-- 3. COMPRESS PDF TAB - ALA PI7 -->
                 <div class="tab-pane fade" id="compress" role="tabpanel">
-                    <div class="row">
-                        <div class="col-lg-6">
+                    <!-- Badge ala Pi7 -->
+                    <div class="text-center mb-4">
+                        <span class="badge-pi7">
+                            <i class="fas fa-magic mr-1"></i> 
+                            Algoritma Pi7: Kompresi Cerdas Otomatis
+                        </span>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
                             <div class="form-group">
-                                <label class="font-weight-bold">
-                                    <i class="fas fa-file-pdf mr-2 text-danger"></i>
-                                    Pilih File PDF untuk dikompres
+                                <label class="font-weight-bold h6">
+                                    <i class="fas fa-cloud-upload-alt mr-2 text-primary"></i>
+                                    1. Upload PDF File
                                 </label>
-                                <div class="custom-file mb-2">
+                                <div class="custom-file mb-3">
                                     <input type="file" class="custom-file-input" id="compressFile" accept=".pdf" onchange="updateFileList('compress')">
                                     <label class="custom-file-label" for="compressFile">Pilih file PDF...</label>
                                 </div>
@@ -469,102 +518,60 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label class="font-weight-bold">
-                                    <i class="fas fa-bullseye mr-2 text-primary"></i>
-                                    Target Ukuran
-                                </label>
-                                <div class="input-group">
-                                    <input type="number" id="targetSize" class="form-control" value="480" min="100" max="10240" readonly>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">KB</span>
-                                    </div>
+                    </div>
+
+                    <div class="row justify-content-center mt-2">
+                        <div class="col-lg-6">
+                            <label class="font-weight-bold h6">
+                                <i class="fas fa-bullseye mr-2 text-success"></i>
+                                2. Set Target Ukuran
+                            </label>
+                            <div class="input-group mb-3">
+                                <input type="number" id="targetSize" class="form-control form-control-lg" value="480" min="50" max="10240" step="10">
+                                <div class="input-group-append">
+                                    <span class="input-group-text bg-primary text-white">KB</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-3 d-flex align-items-end">
-                            <button class="btn btn-pdf" onclick="compressToExactSize()" id="compressBtn">
-                                <i class="fas fa-compress mr-2"></i> Kompres ke 480KB
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Quality Control Slider -->
-                    <div class="quality-slider mt-4">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <label>
-                                <i class="fas fa-image mr-2 text-warning"></i>
-                                Kualitas Gambar (rendah = ukuran kecil, tinggi = lebih jelas)
-                            </label>
-                            <span class="quality-value" id="qualityValue">75%</span>
-                        </div>
-                        <input type="range" class="form-control-range" id="qualitySlider" min="10" max="95" value="75" step="5" oninput="updateQualityLabel(this.value)">
-                        <div class="d-flex justify-content-between text-muted small mt-1">
-                            <span>Ukuran kecil</span>
-                            <span>Seimbang</span>
-                            <span>Kualitas tinggi</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Info Kompresi -->
-                    <div class="alert alert-warning mt-4">
-                        <div class="d-flex">
-                            <div class="icon-box icon-box-warning mr-3" style="width: 40px; height: 40px; font-size: 1.2rem;">
-                                <i class="fas fa-info-circle"></i>
-                            </div>
-                            <div>
-                                <h6 class="font-weight-bold mb-1">⚡ Kompresi Presisi ke 480KB</h6>
-                                <p class="small mb-0">
-                                    Algoritma akan secara otomatis menyesuaikan kualitas gambar untuk mencapai target 480KB.
-                                    Semakin rendah kualitas, semakin kecil ukuran file (tapi masih bisa terbaca).
-                                    Gunakan slider di atas untuk mengontrol keseimbangan ukuran vs kualitas.
-                                </p>
-                            </div>
+                            <small class="text-muted">Target default: 480KB (bisa diubah)</small>
                         </div>
                     </div>
 
-                    <!-- Preview Ukuran -->
-                    <div class="row mt-3">
-                        <div class="col-6">
-                            <div class="card bg-light border-0">
-                                <div class="card-body p-3">
-                                    <small class="text-muted">Ukuran Asli</small>
-                                    <h6 id="originalSizeDisplay">0 KB</h6>
-                                </div>
-                            </div>
+                    <div class="row justify-content-center mt-3">
+                        <div class="col-lg-6">
+                            <button class="btn btn-pdf btn-lg" onclick="compressPDF()" id="compressBtn">
+                                <i class="fas fa-magic mr-2"></i>
+                                3. Compress PDF
+                            </button>
                         </div>
-                        <div class="col-6">
-                            <div class="card bg-light border-0">
-                                <div class="card-body p-3">
-                                    <small class="text-muted">Target</small>
-                                    <h6 class="text-primary" id="targetDisplay">480 KB</h6>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+
+                    <!-- Animasi Magic ala Pi7 -->
+                    <div id="magicAnimation" class="magic-animation">
+                        <i class="fas fa-magic"></i>
+                        Magic at Work... Crafting the PDF!
                     </div>
                 </div>
             </div>
 
-            <!-- Progress Bar -->
+            <!-- Progress Bar (untuk semua fitur) -->
             <div class="progress progress-custom mt-4" id="progressContainer" style="display: none;">
                 <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated progress-bar-custom" 
                      role="progressbar" style="width: 0%"></div>
             </div>
 
-            <!-- Result Box -->
+            <!-- Result Box (untuk semua fitur) -->
             <div id="resultBox" class="result-box">
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-check-circle text-success fa-2x mr-3"></i>
+                        <i class="fas fa-check-circle text-success fa-3x mr-3"></i>
                         <div>
-                            <span id="resultMessage" class="font-weight-bold"></span>
+                            <span id="resultMessage" class="font-weight-bold h5"></span>
                             <br>
                             <small id="resultDetail" class="text-muted"></small>
                         </div>
                     </div>
-                    <div class="mt-2 mt-sm-0">
-                        <a id="downloadLink" class="btn btn-success rounded-pill px-4" style="display: none;" download="compressed.pdf">
+                    <div class="mt-3 mt-sm-0">
+                        <a id="downloadLink" class="btn btn-success rounded-pill px-4" style="display: none;" download="processed.pdf">
                             <i class="fas fa-download mr-2"></i> Download PDF
                         </a>
                         <button class="btn btn-outline-secondary rounded-pill px-4 ml-2" onclick="resetTool()" style="display: none;" id="resetBtn">
@@ -574,11 +581,11 @@
                 </div>
             </div>
 
-            <!-- Info Cards -->
+            <!-- Info Cards - Fitur Unggulan -->
             <div class="row mt-5">
                 <div class="col-md-4">
-                    <div class="info-card text-center">
-                        <div class="info-icon mx-auto mb-3">
+                    <div class="info-card">
+                        <div class="info-icon">
                             <i class="fas fa-lock"></i>
                         </div>
                         <h6 class="font-weight-bold">100% Privat</h6>
@@ -586,8 +593,8 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="info-card text-center">
-                        <div class="info-icon mx-auto mb-3" style="background: #e8f5e9; color: var(--success);">
+                    <div class="info-card">
+                        <div class="info-icon" style="background: #e8f5e9; color: var(--success);">
                             <i class="fas fa-bolt"></i>
                         </div>
                         <h6 class="font-weight-bold">Cepat & Gratis</h6>
@@ -595,12 +602,12 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="info-card text-center">
-                        <div class="info-icon mx-auto mb-3" style="background: #fff3e0; color: var(--warning);">
-                            <i class="fas fa-sliders-h"></i>
+                    <div class="info-card">
+                        <div class="info-icon" style="background: #fff3e0; color: var(--warning);">
+                            <i class="fas fa-magic"></i>
                         </div>
-                        <h6 class="font-weight-bold">Kontrol Kualitas</h6>
-                        <p class="small text-muted mb-0">Atur sendiri kualitas gambar sesuai kebutuhan</p>
+                        <h6 class="font-weight-bold">Algoritma Pi7</h6>
+                        <p class="small text-muted mb-0">Kompresi cerdas otomatis sesuai target</p>
                     </div>
                 </div>
             </div>
@@ -617,9 +624,9 @@
                             <i class="fas fa-headset mr-2 text-primary"></i> Butuh Bantuan?
                         </h6>
                         <p class="small text-muted mb-md-0 mb-3">
-                            <span class="mr-4"><i class="fas fa-email-alt mr-1"></i> tksksumber@gmail.com</span>
+                            <span class="mr-4"><i class="fas fa-phone-alt mr-1"></i> Kemensos: 171</span>
                             <span class="mr-4"><i class="fab fa-whatsapp mr-1"></i> WA: 0882-1494-0995</span>
-                            <span><i class="fas fa-globe mr-1"></i> Lapor: Data Ke Aksi</span>
+                            <span><i class="fas fa-globe mr-1"></i> Lapor: lapor.go.id</span>
                         </p>
                     </div>
                     <div class="col-md-4 text-md-right">
@@ -633,7 +640,7 @@
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
                     <small class="text-muted">
                         <i class="fas fa-info-circle mr-1"></i> 
-                        PDF Creator menggunakan algoritma kompresi adaptif untuk mencapai target 480KB dengan presisi.
+                        Fitur kompresi menggunakan algoritma adaptif ala Pi7 untuk mencapai target ukuran dengan presisi.
                     </small>
                     <a href="aplikasi.html" class="btn btn-sm btn-outline-secondary rounded-pill px-4 ml-2">
                         <i class="fas fa-arrow-left mr-1"></i> Kembali
@@ -696,14 +703,8 @@
 
     // ============ VARIABLES ============
     let currentFileList = {};
-    let originalFileSize = 0;
 
-    // Update quality label
-    function updateQualityLabel(value) {
-        document.getElementById('qualityValue').textContent = value + '%';
-    }
-
-    // Update file list
+    // ============ UPDATE FILE LIST ============
     function updateFileList(type) {
         const fileInput = document.getElementById(
             type === 'merge' ? 'mergeFiles' : 
@@ -735,22 +736,12 @@
             html += '</ul>';
             html += `<small class="text-muted d-block mt-2">Total: ${(totalSize/1024).toFixed(2)} KB | ${fileInput.files.length} file</small>`;
             listDiv.innerHTML = html;
-
-            // Update original size display for compress tab
-            if (type === 'compress') {
-                originalFileSize = fileInput.files[0].size;
-                document.getElementById('originalSizeDisplay').textContent = (originalFileSize / 1024).toFixed(2) + ' KB';
-            }
         } else {
             listDiv.innerHTML = '<small class="text-muted">Belum ada file dipilih</small>';
-            if (type === 'compress') {
-                originalFileSize = 0;
-                document.getElementById('originalSizeDisplay').textContent = '0 KB';
-            }
         }
     }
 
-    // Show progress
+    // ============ SHOW PROGRESS ============
     function showProgress(percent) {
         document.getElementById('progressContainer').style.display = 'block';
         const progressBar = document.getElementById('progressBar');
@@ -758,7 +749,7 @@
         progressBar.setAttribute('aria-valuenow', percent);
     }
 
-    // Show result
+    // ============ SHOW RESULT ============
     function showResult(message, detail, downloadUrl = null) {
         document.getElementById('resultBox').style.display = 'block';
         document.getElementById('resultMessage').textContent = message;
@@ -770,7 +761,7 @@
         if (downloadUrl) {
             downloadLink.href = downloadUrl;
             downloadLink.style.display = 'inline-block';
-            downloadLink.setAttribute('download', 'compressed.pdf');
+            downloadLink.setAttribute('download', 'processed.pdf');
             resetBtn.style.display = 'inline-block';
         } else {
             downloadLink.style.display = 'none';
@@ -778,12 +769,14 @@
         }
 
         document.getElementById('progressContainer').style.display = 'none';
+        document.getElementById('magicAnimation').style.display = 'none';
     }
 
-    // Reset tool
+    // ============ RESET TOOL ============
     function resetTool() {
         document.getElementById('resultBox').style.display = 'none';
         document.getElementById('progressContainer').style.display = 'none';
+        document.getElementById('magicAnimation').style.display = 'none';
         
         ['merge', 'image', 'compress'].forEach(type => {
             const input = document.getElementById(type === 'merge' ? 'mergeFiles' : 
@@ -797,7 +790,7 @@
         });
     }
 
-    // Merge PDFs
+    // ============ MERGE PDFS ============
     async function mergePDFs() {
         const files = document.getElementById('mergeFiles').files;
         if (files.length < 2) {
@@ -839,7 +832,7 @@
         }
     }
 
-    // Convert Images to PDF
+    // ============ CONVERT IMAGES TO PDF ============
     async function convertImagesToPDF() {
         const files = document.getElementById('imageFiles').files;
         if (files.length === 0) {
@@ -910,114 +903,116 @@
         }
     }
 
-    // ============ COMPRESS TO EXACT 480KB WITH QUALITY CONTROL ============
-    async function compressToExactSize() {
+    // ============ COMPRESS PDF - ALA PI7 ============
+    async function compressPDF() {
         const file = document.getElementById('compressFile').files[0];
         if (!file) {
-            alert('Pilih file PDF!');
+            alert('Pilih file PDF terlebih dahulu!');
             return;
         }
 
-        const targetSize = 480 * 1024; // 480KB dalam bytes
-        const quality = document.getElementById('qualitySlider').value / 100; // 0.1 - 0.95
+        const targetSizeKB = parseInt(document.getElementById('targetSize').value);
+        const targetSize = targetSizeKB * 1024;
         const originalSize = file.size;
 
-        showProgress(10);
-        
+        // Tampilkan animasi magic ala Pi7
+        document.getElementById('magicAnimation').style.display = 'block';
+        document.getElementById('progressContainer').style.display = 'block';
+        document.getElementById('compressBtn').disabled = true;
+
         try {
-            // Baca file PDF asli
             const fileBytes = await file.arrayBuffer();
             
-            // Coba kompres dengan berbagai level hingga mendekati target
+            // ===== ALGORITMA KOMPRESI ALA PI7 =====
+            // Mencoba berbagai strategi kompresi hingga mendekati target
+            
             let bestBytes = null;
             let bestSize = Infinity;
             let attempts = 0;
-            const maxAttempts = 8;
             
-            // Strategi kompresi adaptif
-            let currentQuality = quality;
-            let step = 0.1;
-            
-            showProgress(20);
-            
-            while (attempts < maxAttempts) {
+            // Strategi kompresi bertingkat - dari agresif ke konservatif
+            const compressionStrategies = [
+                { useObjectStreams: true, compress: true, objectsPerTick: 500 },  // Paling agresif
+                { useObjectStreams: true, compress: true, objectsPerTick: 300 },
+                { useObjectStreams: true, compress: true, objectsPerTick: 200 },
+                { useObjectStreams: true, compress: true, objectsPerTick: 150 },
+                { useObjectStreams: true, compress: true, objectsPerTick: 100 },
+                { useObjectStreams: true, compress: true, objectsPerTick: 50 }     // Least agresif
+            ];
+
+            // Coba setiap strategi
+            for (let strategy of compressionStrategies) {
                 attempts++;
                 
-                // Load PDF
+                // Update progress
+                const progress = (attempts / compressionStrategies.length) * 80;
+                document.getElementById('progressBar').style.width = progress + '%';
+                
+                // Load dan kompres
                 const pdfDoc = await PDFLib.PDFDocument.load(fileBytes);
-                
-                // Kompres dengan setting saat ini
-                const compressedBytes = await pdfDoc.save({
-                    useObjectStreams: true,
-                    compress: true,
-                    objectsPerTick: 200
-                });
-                
+                const compressedBytes = await pdfDoc.save(strategy);
                 const currentSize = compressedBytes.length;
                 
-                // Simpan yang terbaik
-                if (Math.abs(currentSize - targetSize) < Math.abs(bestSize - targetSize)) {
+                // Simpan yang terbaik (paling mendekati target dari bawah)
+                if (currentSize <= targetSize && currentSize > bestSize) {
                     bestBytes = compressedBytes;
                     bestSize = currentSize;
                 }
                 
-                // Jika sudah cukup dekat (dalam 5%), berhenti
-                if (Math.abs(currentSize - targetSize) < targetSize * 0.05) {
-                    break;
+                // Jika belum ada yang di bawah target, simpan yang paling kecil
+                if (!bestBytes || currentSize < bestSize) {
+                    bestBytes = compressedBytes;
+                    bestSize = currentSize;
                 }
                 
-                // Jika masih terlalu besar, turunkan kualitas dengan mengurangi resolusi gambar
-                if (currentSize > targetSize && currentQuality > 0.3) {
-                    currentQuality -= step;
-                } 
-                // Jika terlalu kecil, naikkan kualitas
-                else if (currentSize < targetSize && currentQuality < 0.95) {
-                    currentQuality += step;
-                } else {
+                // Jika sudah mencapai target dengan toleransi 5%, berhenti
+                if (currentSize <= targetSize && currentSize >= targetSize * 0.95) {
                     break;
                 }
-                
-                // Update progress
-                showProgress(20 + (attempts * 10));
             }
-            
-            // Jika masih belum mencapai target, lakukan pendekatan agresif
-            if (!bestBytes || bestSize > targetSize * 1.1) {
-                // Kompres dengan kualitas minimum
+
+            // Jika masih terlalu besar, lakukan kompresi super agresif
+            if (bestSize > targetSize) {
                 const pdfDoc = await PDFLib.PDFDocument.load(fileBytes);
                 bestBytes = await pdfDoc.save({
                     useObjectStreams: true,
                     compress: true,
-                    objectsPerTick: 500
+                    objectsPerTick: 1000  // Kompresi super agresif
                 });
                 bestSize = bestBytes.length;
             }
+
+            // Selesai
+            document.getElementById('progressBar').style.width = '100%';
+            document.getElementById('magicAnimation').style.display = 'none';
             
-            showProgress(100);
-            
-            // Buat blob untuk download
-            const blob = new Blob([bestBytes], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
-            
+            // Tampilkan hasil
             const finalSizeKB = (bestSize / 1024).toFixed(2);
             const originalSizeKB = (originalSize / 1024).toFixed(2);
             const reduction = ((1 - (bestSize / originalSize)) * 100).toFixed(1);
             
-            let message, detail;
+            const blob = new Blob([bestBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            
+            document.getElementById('resultBox').style.display = 'block';
             
             if (bestSize <= targetSize) {
-                message = `✓ PDF berhasil dikompres ke ${finalSizeKB} KB!`;
-                detail = `Ukuran awal: ${originalSizeKB} KB | Turun ${reduction}% | Target 480KB tercapai`;
+                document.getElementById('resultMessage').innerHTML = `✓ Berhasil! PDF terkompres ke ${finalSizeKB} KB`;
+                document.getElementById('resultDetail').innerHTML = `Awal: ${originalSizeKB} KB | Turun ${reduction}% | Target ${targetSizeKB}KB tercapai`;
             } else {
-                message = `✓ PDF berhasil dikompres (${finalSizeKB} KB)`;
-                detail = `Ukuran awal: ${originalSizeKB} KB | Masih ${(bestSize/1024 - 480).toFixed(2)} KB di atas target. File masih bisa dibaca dengan baik.`;
+                document.getElementById('resultMessage').innerHTML = `✓ PDF terkompres ke ${finalSizeKB} KB`;
+                document.getElementById('resultDetail').innerHTML = `Awal: ${originalSizeKB} KB | Turun ${reduction}% | ${(bestSize/1024 - targetSizeKB).toFixed(2)}KB di atas target`;
             }
             
-            showResult(message, detail, url);
+            document.getElementById('downloadLink').href = url;
+            document.getElementById('downloadLink').style.display = 'inline-block';
+            document.getElementById('resetBtn').style.display = 'inline-block';
             
         } catch (error) {
-            console.error('Error:', error);
-            showResult('Error: ' + error.message);
+            alert('Error: ' + error.message);
+        } finally {
+            document.getElementById('compressBtn').disabled = false;
+            document.getElementById('progressContainer').style.display = 'none';
         }
     }
 
@@ -1035,7 +1030,7 @@
                 btn.disabled = false;
                 if (btn.id === 'mergeBtn') btn.innerHTML = '<i class="fas fa-compress-alt mr-2"></i> Gabungkan PDF';
                 else if (btn.id === 'imageBtn') btn.innerHTML = '<i class="fas fa-image mr-2"></i> Konversi ke PDF';
-                else if (btn.id === 'compressBtn') btn.innerHTML = '<i class="fas fa-compress mr-2"></i> Kompres ke 480KB';
+                else if (btn.id === 'compressBtn') btn.innerHTML = '<i class="fas fa-magic mr-2"></i> Compress PDF';
             });
         }
     }
