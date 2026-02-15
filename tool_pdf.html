@@ -3,126 +3,172 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kompres PDF ke 480KB - Pi7 Style</title>
+    <title>PDF FORCE COMPRESSOR - Tanpa Kompromi!</title>
     
     <!-- Bootstrap 4.6.2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome 5 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <style>
         :root {
-            --primary: #0984e3;
-            --primary-dark: #0873c4;
-            --success: #2ecc71;
+            --primary: #d63031;
+            --primary-dark: #c0392b;
+            --success: #27ae60;
             --warning: #f39c12;
-            --danger: #e74c3c;
-            --dark: #2d3436;
-            --gray-bg: #f4f7f6;
+            --dark: #2c3e50;
+            --darker: #1a2634;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--gray-bg);
-            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
         }
 
-        /* Header dengan gradient - SAMA SEPERTI aplikasi.html */
+        /* Header */
         .header-section {
-            background: linear-gradient(135deg, #0984e3, #6c5ce7);
+            background: linear-gradient(135deg, #1a2634, #2c3e50);
             color: white;
-            padding: 60px 0;
+            padding: 40px 0;
             border-radius: 0 0 30px 30px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 25px rgba(9,132,227,0.2);
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-bottom: 3px solid #d63031;
         }
 
-        /* Navbar container */
         #navbar {
             margin-bottom: 20px;
         }
 
         /* Main Container */
         .main-container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 0 20px;
         }
 
-        /* Card styling - SAMA SEPERTI aplikasi.html */
-        .pdf-card {
-            border: none;
-            border-radius: 24px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        /* Card */
+        .force-card {
             background: white;
-            margin-bottom: 25px;
-        }
-
-        .pdf-card-body {
-            padding: 40px;
-        }
-
-        /* Upload Area - ala Pi7 */
-        .upload-area {
-            border: 3px dashed #cbd5e0;
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            background: #f8fafc;
-            cursor: pointer;
-            transition: all 0.3s;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 3px solid #d63031;
             margin-bottom: 30px;
         }
 
+        .card-header {
+            background: linear-gradient(135deg, #1a2634, #2c3e50);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 3px solid #d63031;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 2rem;
+        }
+
+        .card-header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .card-body {
+            padding: 40px;
+        }
+
+        /* Brutal Badge */
+        .brutal-badge {
+            background: linear-gradient(135deg, #d63031, #e74c3c);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1rem;
+            display: inline-block;
+            margin-bottom: 25px;
+            border: 2px solid white;
+            box-shadow: 0 5px 15px rgba(214,48,49,0.5);
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 4px dashed #d63031;
+            border-radius: 30px;
+            padding: 50px 30px;
+            text-align: center;
+            background: #fff5f5;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
         .upload-area:hover {
-            border-color: var(--primary);
-            background: #eef2f6;
+            background: #ffe9e9;
+            border-color: #c0392b;
+            transform: scale(1.02);
         }
 
         .upload-area i {
-            font-size: 4rem;
-            color: var(--primary);
-            margin-bottom: 15px;
+            font-size: 5rem;
+            color: #d63031;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 10px 10px rgba(214,48,49,0.3));
         }
 
         .upload-area h3 {
-            font-weight: 600;
+            font-weight: 800;
+            color: #2c3e50;
             margin-bottom: 10px;
         }
 
         .upload-area p {
-            color: #64748b;
-            margin-bottom: 20px;
+            color: #7f8c8d;
+            margin-bottom: 25px;
         }
 
         .btn-upload {
-            background: linear-gradient(135deg, #0984e3, #6c5ce7);
+            background: linear-gradient(135deg, #d63031, #e74c3c);
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 15px 40px;
             border-radius: 50px;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
             transition: all 0.3s;
+            border: 2px solid white;
         }
 
         .btn-upload:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(9,132,227,0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(214,48,49,0.4);
         }
 
-        /* File Info - ala Pi7 */
+        /* File Info */
         .file-info {
-            background: #f0f9ff;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
+            background: linear-gradient(135deg, #1a2634, #2c3e50);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin: 30px 0;
             display: none;
-            border-left: 5px solid var(--primary);
+            border-left: 5px solid #d63031;
         }
 
         .file-details {
@@ -133,115 +179,147 @@
         }
 
         .file-name {
-            font-weight: 600;
-            font-size: 1.1rem;
+            font-weight: 700;
+            font-size: 1.2rem;
         }
 
         .file-size {
-            background: var(--primary);
+            background: #d63031;
             color: white;
-            padding: 5px 15px;
+            padding: 8px 20px;
             border-radius: 50px;
-            font-size: 0.9rem;
+            font-weight: 700;
         }
 
-        /* Target Size Input - ala Pi7 */
+        /* Target Section */
         .target-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a2634, #2c3e50);
             color: white;
-            padding: 30px;
-            border-radius: 20px;
+            padding: 35px;
+            border-radius: 30px;
             margin: 30px 0;
+            border: 3px solid #d63031;
         }
 
         .target-label {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            font-weight: 500;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
         }
 
-        .target-input-group {
+        .target-controls {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             align-items: center;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .target-input {
-            width: 120px;
+            width: 150px;
             padding: 15px;
-            font-size: 1.5rem;
+            font-size: 2rem;
             text-align: center;
-            border: none;
-            border-radius: 15px;
-            font-weight: 700;
-            color: var(--dark);
+            border: 3px solid #d63031;
+            border-radius: 20px;
+            font-weight: 800;
+            color: #2c3e50;
         }
 
         .target-unit {
-            font-size: 1.3rem;
-            font-weight: 600;
+            font-size: 1.5rem;
+            font-weight: 700;
         }
 
-        /* Compress Button - ala Pi7 */
-        .compress-btn {
-            background: white;
-            color: var(--primary);
+        .target-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .target-btn {
+            background: #34495e;
+            color: white;
             border: none;
-            padding: 18px 40px;
+            padding: 10px 20px;
             border-radius: 50px;
-            font-size: 1.3rem;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            width: 100%;
-            margin: 20px 0;
+        }
+
+        .target-btn:hover {
+            background: #d63031;
+        }
+
+        /* Force Button */
+        .force-btn {
+            background: linear-gradient(135deg, #d63031, #e74c3c);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 60px;
+            font-size: 1.5rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin: 30px 0;
+            border: 3px solid white;
+            box-shadow: 0 10px 30px rgba(214,48,49,0.5);
         }
 
-        .compress-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            background: #f8f9fa;
+        .force-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(214,48,49,0.7);
         }
 
-        .compress-btn:disabled {
-            opacity: 0.6;
+        .force-btn:disabled {
+            opacity: 0.5;
             cursor: not-allowed;
         }
 
-        /* Magic Animation - ala Pi7 */
-        .magic-container {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        /* Brutal Animation */
+        .brutal-container {
+            background: linear-gradient(135deg, #1a2634, #2c3e50);
             color: white;
-            padding: 30px;
-            border-radius: 20px;
+            padding: 40px;
+            border-radius: 30px;
             text-align: center;
-            margin: 20px 0;
+            margin: 30px 0;
             display: none;
+            border: 3px solid #d63031;
         }
 
-        .magic-text {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 15px;
+        .brutal-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: pulse 1s infinite;
         }
 
-        .magic-subtext {
-            font-size: 1rem;
-            opacity: 0.9;
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); color: #d63031; }
+            100% { opacity: 1; transform: scale(1); }
         }
 
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255,255,255,0.3);
-            border-top: 5px solid white;
+        .brutal-spinner {
+            width: 70px;
+            height: 70px;
+            border: 8px solid #34495e;
+            border-top: 8px solid #d63031;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin: 25px auto;
         }
 
         @keyframes spin {
@@ -249,42 +327,44 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Result Section - ala Pi7 */
+        .brutal-progress {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .brutal-progress-bar {
+            height: 20px;
+            background: #34495e;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .brutal-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #d63031, #e74c3c);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* Result Section */
         .result-section {
             background: white;
-            border: 2px solid var(--primary);
-            border-radius: 20px;
-            padding: 30px;
+            border: 4px solid #27ae60;
+            border-radius: 30px;
+            padding: 40px;
             margin-top: 30px;
             display: none;
         }
 
         .result-header {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--primary);
-        }
-
-        .download-btn {
-            background: linear-gradient(135deg, #0984e3, #6c5ce7);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-block;
-            text-decoration: none;
-        }
-
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(9,132,227,0.3);
-            color: white;
-            text-decoration: none;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #27ae60;
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: uppercase;
         }
 
         .size-comparison {
@@ -292,246 +372,281 @@
             justify-content: space-around;
             margin: 30px 0;
             flex-wrap: wrap;
+            gap: 20px;
         }
 
         .size-box {
             text-align: center;
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 15px;
-            min-width: 150px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            min-width: 200px;
+            border: 2px solid #dee2e6;
+        }
+
+        .size-box.target-met {
+            border-color: #27ae60;
+            background: #d4edda;
         }
 
         .size-label {
-            color: #64748b;
+            color: #7f8c8d;
             margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .size-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--dark);
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #2c3e50;
         }
 
         .size-unit {
-            color: #64748b;
-            font-size: 0.9rem;
+            color: #7f8c8d;
+            font-size: 1rem;
         }
 
         .reduction-badge {
-            background: var(--success);
+            background: #27ae60;
             color: white;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: 600;
+            padding: 15px 40px;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 1.3rem;
             display: inline-block;
             margin: 20px 0;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header-section { padding: 40px 0; }
-            .pdf-card-body { padding: 20px; }
-            .upload-area { padding: 20px; }
-            .magic-text { font-size: 1.3rem; }
+        .download-btn {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            border-radius: 60px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 3px solid white;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(39,174,96,0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Stats */
+        .compression-stats {
+            background: #1a2634;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 1.1rem;
         }
     </style>
 </head>
 <body>
 
-<!-- HEADER SECTION - SAMA SEPERTI aplikasi.html -->
+<!-- HEADER -->
 <div class="header-section text-center">
     <div class="container">
         <h1 class="font-weight-bold mb-3">
-            <i class="fas fa-magic mr-3"></i>PDF Compressor
+            <i class="fas fa-bomb mr-3"></i>PDF FORCE COMPRESSOR
         </h1>
-        <p class="lead mb-0" style="max-width: 700px; margin: 0 auto; opacity: 0.95;">
-            Kompres PDF ke ukuran berapapun yang Anda inginkan
-            <br>Cepat, gratis, dan 100% aman di browser Anda
+        <p class="lead mb-0">
+            🔥 TANPA KOMPROMI - DIPAKSA SAMPAI TERCAPAI 🔥
         </p>
     </div>
 </div>
 
-<!-- NAVBAR CONTAINER -->
+<!-- NAVBAR -->
 <div id="navbar"></div>
 
 <!-- MAIN CONTENT -->
 <div class="main-container py-4">
 
-    <!-- PDF COMPRESSOR CARD - ala Pi7 -->
-    <div class="pdf-card">
-        <div class="pdf-card-body">
+    <!-- FORCE CARD -->
+    <div class="force-card">
+        <div class="card-header">
+            <h2><i class="fas fa-skull mr-2"></i> BRUTAL MODE</h2>
+            <p>Akan terus mengkompres sampai target tercapai, berapapun kualitasnya!</p>
+        </div>
 
-            <!-- Hidden file input -->
-            <input type="file" id="pdfFile" accept=".pdf" style="display: none;">
-
-            <!-- Upload Area - ala Pi7 -->
-            <div class="upload-area" id="uploadArea" onclick="document.getElementById('pdfFile').click()">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <h3>Pilih PDF untuk dikompres</h3>
-                <p>Atau seret dan lepas file PDF Anda di sini</p>
-                <button class="btn-upload" type="button">Pilih File</button>
-                <p class="mt-3 small text-muted">Maksimal 3 file (bisa kompres 1 file dulu)</p>
+        <div class="card-body">
+            <!-- Badge -->
+            <div class="text-center">
+                <span class="brutal-badge">
+                    <i class="fas fa-skull mr-2"></i>
+                    FORCE MODE: ON
+                </span>
             </div>
 
-            <!-- File Info - ala Pi7 -->
+            <!-- Hidden input -->
+            <input type="file" id="pdfFile" accept=".pdf" style="display: none;">
+
+            <!-- Upload Area -->
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('pdfFile').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Pilih PDF UNTUK DIHANCURKAN</h3>
+                <p>Atau seret dan lepas file PDF di sini</p>
+                <button class="btn-upload" type="button">PILIH FILE</button>
+            </div>
+
+            <!-- File Info -->
             <div class="file-info" id="fileInfo">
                 <div class="file-details">
                     <div>
-                        <i class="fas fa-file-pdf text-danger mr-2"></i>
+                        <i class="fas fa-file-pdf mr-2"></i>
                         <span class="file-name" id="fileName"></span>
                     </div>
                     <span class="file-size" id="fileSize"></span>
                 </div>
             </div>
 
-            <!-- Target Size Section - ala Pi7 -->
+            <!-- Target Section -->
             <div class="target-section">
-                <div class="text-center target-label">
+                <div class="target-label">
                     <i class="fas fa-bullseye mr-2"></i>
-                    Atur ukuran PDF yang diinginkan
+                    TARGET UKURAN (PAKSA)
                 </div>
-                <div class="target-input-group">
-                    <input type="number" id="targetSize" class="target-input" value="480" min="10" max="10240">
+                
+                <div class="target-controls">
+                    <input type="number" id="targetSize" class="target-input" value="480" min="1" max="10240">
                     <span class="target-unit">KB</span>
                 </div>
-                <p class="text-center mt-3 small" style="opacity: 0.9;">
-                    Pi7 akan secara otomatis menyesuaikan kualitas untuk mencapai ukuran target
-                </p>
+
+                <div class="target-buttons">
+                    <button class="target-btn" onclick="setTarget(100)">100KB</button>
+                    <button class="target-btn" onclick="setTarget(200)">200KB</button>
+                    <button class="target-btn" onclick="setTarget(300)">300KB</button>
+                    <button class="target-btn" onclick="setTarget(400)">400KB</button>
+                    <button class="target-btn" onclick="setTarget(480)">480KB</button>
+                    <button class="target-btn" onclick="setTarget(500)">500KB</button>
+                    <button class="target-btn" onclick="setTarget(1024)">1MB</button>
+                </div>
             </div>
 
-            <!-- Compress Button - ala Pi7 -->
-            <button class="compress-btn" onclick="compressPDF()" id="compressBtn">
-                <i class="fas fa-magic mr-2"></i>
-                Kompres PDF
+            <!-- FORCE BUTTON -->
+            <button class="force-btn" onclick="forceCompress()" id="compressBtn">
+                <i class="fas fa-bomb mr-2"></i>
+                PAKSA KOMPRES!
             </button>
 
-            <!-- Magic Animation - ala Pi7 -->
-            <div class="magic-container" id="magicContainer">
-                <div class="magic-text">
-                    <i class="fas fa-magic mr-2"></i>
-                    Magic at Work...
+            <!-- Brutal Animation -->
+            <div class="brutal-container" id="brutalContainer">
+                <div class="brutal-text">
+                    <i class="fas fa-skull mr-2"></i>
+                    SEDANG MENGHANCURKAN...
                 </div>
-                <div class="spinner"></div>
-                <div class="magic-subtext" id="magicSubtext">
-                    Sedang mengkompres PDF Anda
+                <div class="brutal-spinner"></div>
+                <div class="brutal-progress-bar">
+                    <div class="brutal-progress-fill" id="progressFill"></div>
+                </div>
+                <div class="brutal-progress" id="brutalProgress">
+                    Mencoba kompresi ke-1...
+                </div>
+                <div class="compression-stats" id="compressionStats">
+                    Ukuran: 0KB | Target: 480KB | Selisih: 480KB
                 </div>
             </div>
 
-            <!-- Result Section - ala Pi7 -->
+            <!-- Result Section -->
             <div class="result-section" id="resultSection">
                 <div class="result-header">
-                    <i class="fas fa-check-circle text-success mr-2"></i>
-                    PDF Berhasil Dikompres!
+                    <i class="fas fa-check-circle mr-2"></i>
+                    TARGET TERCAPAI!
                 </div>
 
                 <div class="size-comparison">
                     <div class="size-box">
-                        <div class="size-label">Ukuran Asli</div>
+                        <div class="size-label">UKURAN ASLI</div>
                         <div class="size-value" id="originalSize">0</div>
                         <div class="size-unit">KB</div>
                     </div>
-                    <div class="size-box">
-                        <div class="size-label">Ukuran Baru</div>
+                    <div class="size-box" id="targetBox">
+                        <div class="size-label">UKURAN BARU</div>
                         <div class="size-value" id="newSize">0</div>
-                        <div class="size-unit">KB</div>
-                    </div>
-                    <div class="size-box">
-                        <div class="size-label">Target</div>
-                        <div class="size-value" id="targetSizeDisplay">480</div>
                         <div class="size-unit">KB</div>
                     </div>
                 </div>
 
                 <div class="text-center">
                     <div class="reduction-badge" id="reductionBadge">
-                        Turun 0%
+                        TURUN 0%
                     </div>
                 </div>
 
+                <div class="compression-stats text-center" id="finalStats">
+                    Dibutuhkan 0 kali percobaan untuk mencapai target
+                </div>
+
                 <div class="text-center mt-4">
-                    <a id="downloadLink" class="download-btn" download="compressed.pdf">
+                    <a id="downloadLink" class="download-btn" download="forced.pdf">
                         <i class="fas fa-download mr-2"></i>
-                        Download PDF
+                        DOWNLOAD PDF
                     </a>
-                    <button class="btn btn-outline-secondary ml-3" onclick="resetTool()">
+                    <button class="btn btn-outline-dark btn-lg ml-3" onclick="resetTool()">
                         <i class="fas fa-redo mr-2"></i>
-                        Kompres Lagi
+                        KOMPRES LAGI
                     </button>
                 </div>
             </div>
 
-            <!-- Additional Info - ala Pi7 -->
+            <!-- Stats Card -->
             <div class="row mt-5">
                 <div class="col-md-4 text-center">
-                    <i class="fas fa-bolt fa-3x text-warning mb-3"></i>
-                    <h6>Cepat & Gratis</h6>
-                    <p class="small text-muted">Kompres dalam hitungan detik</p>
-                </div>
-                <div class="col-md-4 text-center">
-                    <i class="fas fa-lock fa-3x text-success mb-3"></i>
-                    <h6>Aman & Privat</h6>
-                    <p class="small text-muted">File tidak pernah ke server</p>
+                    <i class="fas fa-bomb fa-3x text-danger mb-3"></i>
+                    <h6>FORCE MODE</h6>
+                    <p class="small text-muted">Tidak ada kompromi - target harus tercapai!</p>
                 </div>
                 <div class="col-md-4 text-center">
                     <i class="fas fa-infinity fa-3x text-primary mb-3"></i>
-                    <h6>Tanpa Batas</h6>
-                    <p class="small text-muted">Kompres file berapapun</p>
+                    <h6>UNLIMITED ATTEMPTS</h6>
+                    <p class="small text-muted">Akan terus mencoba sampai berhasil</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+                    <h6>100% OFFLINE</h6>
+                    <p class="small text-muted">Privat dan aman di browser</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- How-to Guide - ala Pi7 -->
-    <div class="pdf-card mt-4">
-        <div class="pdf-card-body">
-            <h4 class="mb-4">📖 Cara Mengkompres PDF ke 480KB</h4>
-            <p>Dalam empat langkah sederhana, Anda dapat mengkompres file PDF ke ukuran berapapun:</p>
-            <ol class="mb-4">
-                <li class="mb-2"><strong>Upload PDF</strong> - Pilih file PDF dari perangkat Anda</li>
-                <li class="mb-2"><strong>Atur ukuran target</strong> - Masukkan 480KB (atau ukuran lain) di kotak di atas</li>
-                <li class="mb-2"><strong>Klik "Kompres PDF"</strong> - Biarkan Pi7 bekerja secara ajaib</li>
-                <li class="mb-2"><strong>Download</strong> - File PDF terkompres siap diunduh!</li>
+    <!-- Instructions -->
+    <div class="force-card mt-4">
+        <div class="card-body">
+            <h5 class="font-weight-bold text-danger">🔥 CARA KERJA FORCE COMPRESSOR:</h5>
+            <ol class="mt-3">
+                <li class="mb-2">Upload PDF berapapun ukurannya</li>
+                <li class="mb-2">Set target ukuran (contoh: 480KB)</li>
+                <li class="mb-2">Klik "PAKSA KOMPRES!"</li>
+                <li class="mb-2">Algoritma akan terus mengkompres BERULANG-ULANG sampai target tercapai</li>
+                <li class="mb-2">Tidak peduli kualitas - yang penting ukurannya sesuai target!</li>
             </ol>
-            <p class="text-muted">
-                Pi7 PDF Compressor secara otomatis menyesuaikan kualitas untuk mencapai ukuran target.
-                Anda tidak perlu mengatur kualitas secara manual.
+            <p class="text-muted mt-3">
+                <i class="fas fa-info-circle mr-2"></i>
+                File akan dikompres berulang kali, setiap kali semakin kecil. Proses berhenti ketika ukuran ≤ target.
             </p>
-        </div>
-    </div>
-
-    <!-- Target Size Links - ala Pi7 -->
-    <div class="pdf-card mt-4">
-        <div class="pdf-card-body">
-            <h5 class="mb-3">📊 Kompres PDF ke ukuran spesifik lainnya:</h5>
-            <div class="d-flex flex-wrap gap-2">
-                <a href="#" class="btn btn-outline-primary btn-sm m-1" onclick="setTarget(50)">50KB</a>
-                <a href="#" class="btn btn-outline-primary btn-sm m-1" onclick="setTarget(100)">100KB</a>
-                <a href="#" class="btn btn-outline-primary btn-sm m-1" onclick="setTarget(150)">150KB</a>
-                <a href="#" class="btn btn-outline-primary btn-sm m-1" onclick="setTarget(200)">200KB</a>
-                <a href="#" class="btn btn-outline-primary btn-sm m-1" onclick="setTarget(250)">250KB</a>
-                <a href="#" class="btn btn-outline-primary btn-sm m-1" onclick="setTarget(300)">300KB</a>
-                <a href="#" class="btn btn-outline-primary btn-sm m-1" onclick="setTarget(400)">400KB</a>
-                <a href="#" class="btn btn-outline-primary btn-sm m-1" onclick="setTarget(480)">480KB</a>
-                <a href="#" class="btn btn-outline-primary btn-sm m-1" onclick="setTarget(500)">500KB</a>
-                <a href="#" class="btn btn-outline-primary btn-sm m-1" onclick="setTarget(1024)">1MB</a>
-                <a href="#" class="btn btn-outline-primary btn-sm m-1" onclick="setTarget(2048)">2MB</a>
-            </div>
         </div>
     </div>
 </div>
 
 <!-- FOOTER -->
-<footer class="container text-center mt-5 pt-3 text-muted border-top py-4">
-    <small>© 2026 PDF Compressor - Terinspirasi dari Pi7 PDF Tool</small>
+<footer class="container text-center mt-5 pt-3 text-white border-top py-4">
+    <small>© 2026 PDF FORCE COMPRESSOR - TANPA KOMPROMI!</small>
 </footer>
 
 <!-- PDF Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-
-<!-- SCRIPTS -->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     // Load Navbar
@@ -541,13 +656,12 @@
             document.getElementById('navbar').innerHTML = html;
         })
         .catch(() => {
-            document.getElementById('navbar').innerHTML = '<nav class="navbar navbar-light bg-white shadow-sm"><div class="container"><span class="navbar-brand">PDF Compressor</span></div></nav>';
+            document.getElementById('navbar').innerHTML = '<nav class="navbar navbar-dark bg-dark"><div class="container"><span class="navbar-brand">PDF FORCE</span></div></nav>';
         });
 
-    // Set target dari link
+    // Set target
     function setTarget(size) {
         document.getElementById('targetSize').value = size;
-        document.getElementById('targetSizeDisplay').textContent = size;
     }
 
     // Handle file selection
@@ -569,20 +683,20 @@
     
     uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
-        uploadArea.style.borderColor = '#0984e3';
-        uploadArea.style.background = '#eef2f6';
+        uploadArea.style.borderColor = '#c0392b';
+        uploadArea.style.background = '#ffe9e9';
     });
 
     uploadArea.addEventListener('dragleave', (e) => {
         e.preventDefault();
-        uploadArea.style.borderColor = '#cbd5e0';
-        uploadArea.style.background = '#f8fafc';
+        uploadArea.style.borderColor = '#d63031';
+        uploadArea.style.background = '#fff5f5';
     });
 
     uploadArea.addEventListener('drop', (e) => {
         e.preventDefault();
-        uploadArea.style.borderColor = '#cbd5e0';
-        uploadArea.style.background = '#f8fafc';
+        uploadArea.style.borderColor = '#d63031';
+        uploadArea.style.background = '#fff5f5';
         
         const file = e.dataTransfer.files[0];
         if (file && file.type === 'application/pdf') {
@@ -604,16 +718,16 @@
     function resetTool() {
         document.getElementById('pdfFile').value = '';
         document.getElementById('fileInfo').style.display = 'none';
-        document.getElementById('magicContainer').style.display = 'none';
+        document.getElementById('brutalContainer').style.display = 'none';
         document.getElementById('resultSection').style.display = 'none';
         document.getElementById('compressBtn').disabled = false;
     }
 
-    // ============ ALGORITMA KOMPRESI ala Pi7 ============
-    async function compressPDF() {
+    // ============ FORCE COMPRESS - TANPA KOMPROMI ============
+    async function forceCompress() {
         const file = document.getElementById('pdfFile').files[0];
         if (!file) {
-            alert('Pilih file PDF terlebih dahulu!');
+            alert('Pilih file PDF dulu!');
             return;
         }
 
@@ -621,141 +735,150 @@
         const targetSize = targetSizeKB * 1024;
         const originalSize = file.size;
 
-        // Tampilkan animasi magic
-        document.getElementById('magicContainer').style.display = 'block';
+        // Tampilkan brutal container
+        document.getElementById('brutalContainer').style.display = 'block';
         document.getElementById('resultSection').style.display = 'none';
         document.getElementById('compressBtn').disabled = true;
-
-        let magicStep = 0;
-        const magicMessages = [
-            'Menganalisis file PDF...',
-            'Mengoptimalkan struktur...',
-            'Mengkompres gambar...',
-            'Hampir selesai...'
-        ];
-
-        const magicInterval = setInterval(() => {
-            magicStep = (magicStep + 1) % magicMessages.length;
-            document.getElementById('magicSubtext').textContent = magicMessages[magicStep];
-        }, 2000);
 
         try {
             const fileBytes = await file.arrayBuffer();
             
-            // ===== ALGORITMA UTAMA ala Pi7 =====
-            // Pi7 menggunakan pendekatan kompresi adaptif bertahap
+            // ========== ALGORITMA FORCE BRUTAL ==========
+            // Akan terus mengkompres sampai target tercapai!
             
-            let bestBytes = null;
-            let bestSize = Infinity;
+            let currentBytes = fileBytes;
+            let currentSize = fileBytes.length;
             let attempts = 0;
-            const maxAttempts = 15; // Pi7-style: coba banyak variasi
+            let bestBytes = fileBytes;
+            let bestSize = fileBytes.length;
             
-            // Strategi kompresi Pi7 - dari ringan ke berat
-            const strategies = [
-                // Level 1-3: Kompresi ringan (kualitas tinggi)
-                { useObjectStreams: true, compress: true, objectsPerTick: 50 },
-                { useObjectStreams: true, compress: true, objectsPerTick: 100 },
-                { useObjectStreams: true, compress: true, objectsPerTick: 150 },
-                
-                // Level 4-6: Kompresi sedang
-                { useObjectStreams: true, compress: true, objectsPerTick: 200 },
-                { useObjectStreams: true, compress: true, objectsPerTick: 300 },
-                { useObjectStreams: true, compress: true, objectsPerTick: 400 },
-                
-                // Level 7-9: Kompresi agresif
-                { useObjectStreams: true, compress: true, objectsPerTick: 500 },
-                { useObjectStreams: true, compress: true, objectsPerTick: 750 },
-                { useObjectStreams: true, compress: true, objectsPerTick: 1000 },
-                
-                // Level 10-12: Kompresi sangat agresif
-                { useObjectStreams: true, compress: true, objectsPerTick: 1500 },
-                { useObjectStreams: true, compress: true, objectsPerTick: 2000 },
-                { useObjectStreams: true, compress: true, objectsPerTick: 2500 },
-                
-                // Level 13-15: Kompresi brutal (jika perlu)
-                { useObjectStreams: true, compress: true, objectsPerTick: 3000 },
-                { useObjectStreams: true, compress: true, objectsPerTick: 4000 },
-                { useObjectStreams: true, compress: true, objectsPerTick: 5000 }
+            // Brutal parameters - akan semakin agresif setiap kali
+            const objectsPerTickLevels = [
+                100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 
+                6000, 7000, 8000, 9000, 10000, 12000, 14000, 16000, 18000, 20000
             ];
+            
+            let levelIndex = 0;
+            
+            // UPDATE PROGRESS FUNCTION
+            function updateProgress() {
+                const percent = ((originalSize - currentSize) / (originalSize - targetSize)) * 100;
+                const boundedPercent = Math.min(100, Math.max(0, percent));
+                document.getElementById('progressFill').style.width = boundedPercent + '%';
+                
+                const currentKB = (currentSize / 1024).toFixed(2);
+                const targetKB = targetSizeKB;
+                const diff = (currentSize / 1024 - targetKB).toFixed(2);
+                
+                document.getElementById('compressionStats').innerHTML = 
+                    `Ukuran: ${currentKB}KB | Target: ${targetKB}KB | Selisih: ${diff}KB | Percobaan: ${attempts}`;
+                
+                document.getElementById('brutalProgress').innerHTML = 
+                    `Mencoba kompresi ke-${attempts}... (${currentKB}KB)`;
+            }
 
-            // Coba setiap strategi dari yang paling ringan dulu
-            for (let i = 0; i < strategies.length; i++) {
+            updateProgress();
+
+            // LOOP UTAMA - TERUS KOMPRES SAMPAI TARGET TERCAPAI
+            while (currentSize > targetSize && levelIndex < objectsPerTickLevels.length) {
                 attempts++;
                 
                 try {
                     // Load PDF
-                    const pdfDoc = await PDFLib.PDFDocument.load(fileBytes);
+                    const pdfDoc = await PDFLib.PDFDocument.load(currentBytes);
                     
-                    // Kompres dengan strategi saat ini
-                    const compressedBytes = await pdfDoc.save(strategies[i]);
-                    const currentSize = compressedBytes.length;
+                    // Kompres dengan level agresivitas saat ini
+                    const compressedBytes = await pdfDoc.save({
+                        useObjectStreams: true,
+                        compress: true,
+                        objectsPerTick: objectsPerTickLevels[levelIndex],
+                        updateFieldAppearances: false
+                    });
                     
-                    // Update progress di magic text
-                    document.getElementById('magicSubtext').textContent = 
-                        `Mencoba strategi ${i+1}/${strategies.length}... (${(currentSize/1024).toFixed(2)}KB)`;
+                    const newSize = compressedBytes.length;
                     
-                    // Simpan hasil terbaik (paling mendekati target dari bawah)
-                    if (currentSize <= targetSize && currentSize > bestSize) {
-                        bestBytes = compressedBytes;
-                        bestSize = currentSize;
-                    }
+                    // Update progress
+                    document.getElementById('brutalProgress').innerHTML = 
+                        `Mencoba kompresi ke-${attempts}... ${(newSize/1024).toFixed(2)}KB`;
                     
-                    // Jika belum ada yang di bawah target, simpan yang terkecil
-                    if (!bestBytes || currentSize < bestSize) {
-                        bestBytes = compressedBytes;
-                        bestSize = currentSize;
-                    }
-                    
-                    // Jika sudah mencapai target dengan toleransi 5%, berhenti
-                    if (currentSize <= targetSize && currentSize >= targetSize * 0.95) {
-                        break;
-                    }
-                    
-                } catch (e) {
-                    console.log('Strategy failed:', e);
-                }
-            }
-
-            // Jika masih terlalu besar, lakukan kompresi berulang
-            if (bestSize > targetSize) {
-                let currentBytes = bestBytes;
-                let currentSize = bestSize;
-                
-                for (let i = 0; i < 5; i++) {
-                    try {
-                        const pdfDoc = await PDFLib.PDFDocument.load(currentBytes);
-                        currentBytes = await pdfDoc.save({
-                            useObjectStreams: true,
-                            compress: true,
-                            objectsPerTick: 5000 + (i * 1000)
-                        });
-                        currentSize = currentBytes.length;
+                    // Jika ukuran baru lebih kecil, simpan
+                    if (newSize < currentSize) {
+                        currentBytes = compressedBytes;
+                        currentSize = newSize;
                         
+                        // Update best
                         if (currentSize < bestSize) {
                             bestBytes = currentBytes;
                             bestSize = currentSize;
                         }
                         
-                        if (currentSize <= targetSize) break;
+                        updateProgress();
+                    }
+                    
+                    // Jika ukuran tidak turun signifikan, naikkan level
+                    if (newSize >= currentSize * 0.95) {
+                        levelIndex++;
+                    }
+                    
+                    // Jika sudah di bawah target, berhenti
+                    if (currentSize <= targetSize) {
+                        break;
+                    }
+                    
+                } catch (e) {
+                    console.log('Error dalam kompresi:', e);
+                    levelIndex++; // Coba level berikutnya jika error
+                }
+            }
+
+            // Jika masih di atas target, lakukan kompresi berulang dengan level tertinggi
+            if (currentSize > targetSize) {
+                for (let ultra = 0; ultra < 20; ultra++) {
+                    attempts++;
+                    
+                    try {
+                        const pdfDoc = await PDFLib.PDFDocument.load(currentBytes);
+                        currentBytes = await pdfDoc.save({
+                            useObjectStreams: true,
+                            compress: true,
+                            objectsPerTick: 50000, // SUPER BRUTAL
+                            updateFieldAppearances: false
+                        });
+                        currentSize = currentBytes.length;
                         
+                        updateProgress();
+                        
+                        if (currentSize <= targetSize) {
+                            bestBytes = currentBytes;
+                            bestSize = currentSize;
+                            break;
+                        }
                     } catch (e) {
-                        console.log('Re-compress failed:', e);
+                        console.log('Ultra compression failed:', e);
                     }
                 }
             }
 
-            clearInterval(magicInterval);
-            document.getElementById('magicContainer').style.display = 'none';
-
             // Tampilkan hasil
+            document.getElementById('brutalContainer').style.display = 'none';
+            
             const finalSizeKB = (bestSize / 1024).toFixed(2);
             const originalSizeKB = (originalSize / 1024).toFixed(2);
             const reduction = ((1 - (bestSize / originalSize)) * 100).toFixed(1);
             
             document.getElementById('originalSize').textContent = originalSizeKB;
             document.getElementById('newSize').textContent = finalSizeKB;
-            document.getElementById('targetSizeDisplay').textContent = targetSizeKB;
-            document.getElementById('reductionBadge').textContent = `Turun ${reduction}%`;
+            
+            // Highlight jika target tercapai
+            if (bestSize <= targetSize) {
+                document.getElementById('targetBox').classList.add('target-met');
+                document.getElementById('reductionBadge').innerHTML = `✅ TARGET TERCAPAI! Turun ${reduction}%`;
+            } else {
+                document.getElementById('reductionBadge').innerHTML = `⚠️ MASIH ${(bestSize/1024 - targetSizeKB).toFixed(2)}KB DI ATAS TARGET`;
+            }
+            
+            document.getElementById('finalStats').innerHTML = 
+                `Dibutuhkan ${attempts} kali percobaan untuk mencapai hasil terbaik.`;
             
             const blob = new Blob([bestBytes], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
@@ -764,9 +887,8 @@
             document.getElementById('resultSection').style.display = 'block';
             
         } catch (error) {
-            clearInterval(magicInterval);
-            document.getElementById('magicContainer').style.display = 'none';
-            alert('Error: ' + error.message);
+            document.getElementById('brutalContainer').style.display = 'none';
+            alert('ERROR: ' + error.message);
         } finally {
             document.getElementById('compressBtn').disabled = false;
         }
