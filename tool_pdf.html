@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PDF Creator - Kompresi Brutal</title>
+    <title>PDF Crusher - Kompresi Super Brutal</title>
     
     <!-- Bootstrap 4.6.2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
@@ -50,7 +50,6 @@
 
         .pdf-card-body { padding: 30px; }
 
-        /* Badge Brutal */
         .badge-brutal {
             background: linear-gradient(135deg, #d63031, #e74c3c);
             color: white;
@@ -65,7 +64,6 @@
             box-shadow: 0 5px 15px rgba(214,48,49,0.3);
         }
 
-        /* Animasi Brutal */
         @keyframes brutalPulse {
             0% { transform: scale(1); background: #d63031; }
             50% { transform: scale(1.05); background: #e74c3c; }
@@ -97,7 +95,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Progress Bar Brutal */
         .progress-brutal {
             height: 20px;
             border-radius: 50px;
@@ -114,7 +111,6 @@
             line-height: 20px;
         }
 
-        /* File Info */
         .file-list {
             max-height: 200px;
             overflow-y: auto;
@@ -125,7 +121,6 @@
             background: #fff5f5;
         }
 
-        /* Tombol Brutal */
         .btn-brutal {
             border-radius: 50px;
             padding: 16px 30px;
@@ -147,11 +142,6 @@
             color: white;
         }
 
-        .btn-brutal:active {
-            transform: scale(0.95);
-        }
-
-        /* Target Display */
         .target-display {
             background: #2d3436;
             color: white;
@@ -169,7 +159,6 @@
             text-shadow: 0 0 20px rgba(214,48,49,0.5);
         }
 
-        /* Result Box */
         .result-box {
             background: #2d3436;
             color: white;
@@ -180,7 +169,6 @@
             border-left: 5px solid #d63031;
         }
 
-        /* Info Cards */
         .info-card {
             background: linear-gradient(135deg, #2d3436, #1e272e);
             color: white;
@@ -213,15 +201,15 @@
 </head>
 <body>
 
-<!-- HEADER SECTION - BRUTAL RED -->
+<!-- HEADER SECTION -->
 <div class="header-section text-center">
     <div class="container">
         <h1 class="font-weight-bold mb-3 display-4">
-            <i class="fas fa-skull mr-3"></i>PDF CRUSHER
+            <i class="fas fa-bomb mr-3"></i>PDF CRUSHER BRUTAL
         </h1>
-        <p class="lead mb-0" style="max-width: 700px; margin: 0 auto; opacity: 0.95; font-weight: 600;">
-            🔥 KOMPRESI BRUTAL - PAKSA PDF KE UKURAN BERAPAPUN! 🔥
-            <br>Tidak peduli kualitas, yang penting ukurannya sesuai target!
+        <p class="lead mb-0" style="max-width: 700px; margin: 0 auto; font-weight: 600;">
+            🔥 KOMPRESI SUPER BRUTAL - PAKSA PDF KE UKURAN BERAPAPUN! 🔥
+            <br>File 4MB bisa jadi 480KB dalam hitungan detik!
         </p>
     </div>
 </div>
@@ -239,8 +227,8 @@
             <!-- Badge Brutal -->
             <div class="text-center">
                 <span class="badge-brutal">
-                    <i class="fas fa-skull mr-2"></i>
-                    MODE BRUTAL - FORCE COMPRESSION
+                    <i class="fas fa-bomb mr-2"></i>
+                    MODE SUPER BRUTAL - FORCE COMPRESSION
                 </span>
             </div>
 
@@ -248,7 +236,7 @@
             <ul class="nav nav-pills nav-fill mb-4" id="pdfTab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="compress-tab" data-toggle="pill" href="#compress" role="tab">
-                        <i class="fas fa-skull mr-2"></i> KOMPRESI BRUTAL
+                        <i class="fas fa-bomb mr-2"></i> KOMPRESI BRUTAL
                     </a>
                 </li>
                 <li class="nav-item">
@@ -265,7 +253,7 @@
 
             <!-- Tab Content -->
             <div class="tab-content">
-                <!-- TAB KOMPRESI BRUTAL (UTAMA) -->
+                <!-- TAB KOMPRESI BRUTAL -->
                 <div class="tab-pane fade show active" id="compress" role="tabpanel">
                     
                     <!-- Upload Area -->
@@ -277,69 +265,71 @@
                                     1. 🔥 UPLOAD PDF YANG AKAN DIHANCURKAN
                                 </label>
                                 <div class="custom-file mb-3">
-                                    <input type="file" class="custom-file-input" id="compressFile" accept=".pdf" onchange="updateFileList('compress')">
+                                    <input type="file" class="custom-file-input" id="compressFile" accept=".pdf" onchange="updateFileInfo()">
                                     <label class="custom-file-label" for="compressFile">Pilih file PDF...</label>
                                 </div>
-                                <div id="compressFileList" class="file-list">
+                                <div id="compressFileInfo" class="file-list">
                                     <small class="text-muted">Belum ada file dipilih</small>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Target Size - BRUTAL -->
+                    <!-- Target Size -->
                     <div class="row justify-content-center mt-4">
                         <div class="col-lg-8">
                             <div class="target-display">
-                                <label class="text-uppercase small font-weight-bold text-muted">TARGET UKURAN BRUTAL</label>
+                                <label class="text-uppercase small font-weight-bold text-muted">TARGET UKURAN</label>
                                 <div class="target-number">
-                                    <span id="targetDisplay">480</span>
+                                    <span id="targetDisplay">480</span> KB
                                 </div>
                                 <div class="d-flex justify-content-center mt-3">
+                                    <button class="btn btn-outline-light btn-sm mx-1" onclick="adjustTarget(-100)">-100KB</button>
                                     <button class="btn btn-outline-light btn-sm mx-1" onclick="adjustTarget(-50)">-50KB</button>
                                     <button class="btn btn-outline-light btn-sm mx-1" onclick="adjustTarget(-10)">-10KB</button>
-                                    <span class="mx-3 font-weight-bold">KB</span>
+                                    <span class="mx-2">|</span>
                                     <button class="btn btn-outline-light btn-sm mx-1" onclick="adjustTarget(10)">+10KB</button>
                                     <button class="btn btn-outline-light btn-sm mx-1" onclick="adjustTarget(50)">+50KB</button>
+                                    <button class="btn btn-outline-light btn-sm mx-1" onclick="adjustTarget(100)">+100KB</button>
                                 </div>
                                 <input type="range" class="form-control-range mt-4" id="targetSlider" min="10" max="5000" value="480" step="10" oninput="updateTargetFromSlider(this.value)">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Kualitas Slider - BRUTAL (bisa 0%) -->
+                    <!-- Kualitas Slider -->
                     <div class="row justify-content-center mt-3">
                         <div class="col-lg-8">
                             <label class="font-weight-bold">
                                 <i class="fas fa-image mr-2 text-warning"></i>
-                                TINGKAT KEBRUTALAN (0% = HANCUR TOTAL, 100% = KUALITAS ASLI)
+                                TINGKAT KUALITAS (0% = HANCUR TOTAL, 100% = KUALITAS ASLI)
                             </label>
                             <div class="d-flex align-items-center">
                                 <span class="mr-2 font-weight-bold text-danger">0%</span>
-                                <input type="range" class="form-control-range" id="qualitySlider" min="0" max="100" value="30" step="5" oninput="updateQualityLabel(this.value)">
+                                <input type="range" class="form-control-range" id="qualitySlider" min="0" max="100" value="20" step="5" oninput="updateQualityLabel(this.value)">
                                 <span class="ml-2 font-weight-bold text-success">100%</span>
                             </div>
                             <div class="text-center mt-2">
-                                <span class="badge badge-danger p-2" id="qualityValue">30%</span>
-                                <small class="text-muted ml-2">Semakin rendah, semakin kecil ukuran</small>
+                                <span class="badge badge-danger p-2" id="qualityValue">20%</span>
+                                <small class="text-muted ml-2">20% = ukuran kecil, masih terbaca</small>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Tombol KOMPRESI BRUTAL -->
+                    <!-- Tombol KOMPRESI -->
                     <div class="row justify-content-center mt-5">
                         <div class="col-lg-6">
                             <button class="btn-brutal" onclick="brutalCompress()" id="compressBtn">
-                                <i class="fas fa-skull mr-2"></i>
-                                🔥 KOMPRES BRUTAL KE TARGET 🔥
+                                <i class="fas fa-bomb mr-2"></i>
+                                🔥 HANCURKAN PDF KE TARGET 🔥
                             </button>
                         </div>
                     </div>
 
                     <!-- Animasi Brutal -->
                     <div id="brutalAnimation" class="brutal-animation">
-                        <i class="fas fa-skull"></i>
-                        SEDANG MENGHANCURKAN PDF... 🔥🔥🔥
+                        <i class="fas fa-bomb"></i>
+                        MENGANCURKAN PDF... 🔥🔥🔥
                     </div>
                 </div>
 
@@ -350,10 +340,10 @@
                             <div class="form-group">
                                 <label class="font-weight-bold">
                                     <i class="fas fa-cloud-upload-alt mr-2 text-primary"></i>
-                                    Pilih File PDF (urutkan sesuai keinginan)
+                                    Pilih File PDF
                                 </label>
                                 <div class="custom-file mb-2">
-                                    <input type="file" class="custom-file-input" id="mergeFiles" multiple accept=".pdf" onchange="updateFileList('merge')">
+                                    <input type="file" class="custom-file-input" id="mergeFiles" multiple accept=".pdf" onchange="updateMergeList()">
                                     <label class="custom-file-label" for="mergeFiles">Pilih file PDF...</label>
                                 </div>
                                 <div id="mergeFileList" class="file-list">
@@ -372,14 +362,14 @@
                 <!-- TAB GAMBAR KE PDF -->
                 <div class="tab-pane fade" id="image" role="tabpanel">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-8">
                             <div class="form-group">
                                 <label class="font-weight-bold">
                                     <i class="fas fa-images mr-2 text-success"></i>
-                                    Pilih Gambar (JPG, PNG, GIF)
+                                    Pilih Gambar
                                 </label>
                                 <div class="custom-file mb-2">
-                                    <input type="file" class="custom-file-input" id="imageFiles" multiple accept="image/*" onchange="updateFileList('image')">
+                                    <input type="file" class="custom-file-input" id="imageFiles" multiple accept="image/*" onchange="updateImageList()">
                                     <label class="custom-file-label" for="imageFiles">Pilih gambar...</label>
                                 </div>
                                 <div id="imageFileList" class="file-list">
@@ -387,17 +377,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label class="font-weight-bold">Ukuran Halaman</label>
-                                <select id="pageSize" class="form-control">
-                                    <option value="auto">Auto</option>
-                                    <option value="a4">A4</option>
-                                    <option value="letter">Letter</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 d-flex align-items-end">
+                        <div class="col-lg-4 d-flex align-items-end">
                             <button class="btn btn-success btn-block" onclick="convertImagesToPDF()">
                                 <i class="fas fa-image mr-2"></i> Konversi ke PDF
                             </button>
@@ -406,17 +386,17 @@
                 </div>
             </div>
 
-            <!-- Progress Bar Brutal -->
+            <!-- Progress Bar -->
             <div class="progress progress-brutal mt-4" id="progressContainer" style="display: none;">
                 <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated progress-bar-brutal" 
                      role="progressbar" style="width: 0%">0%</div>
             </div>
 
-            <!-- Result Box Brutal -->
+            <!-- Result Box -->
             <div id="resultBox" class="result-box">
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
                     <div>
-                        <i class="fas fa-skull fa-3x mr-3" style="color: #d63031;"></i>
+                        <i class="fas fa-bomb fa-3x mr-3" style="color: #d63031;"></i>
                     </div>
                     <div class="flex-grow-1">
                         <span id="resultMessage" class="font-weight-bold h5"></span>
@@ -425,42 +405,11 @@
                     </div>
                     <div class="mt-3 mt-sm-0">
                         <a id="downloadLink" class="btn btn-danger rounded-pill px-4" style="display: none;" download="crushed.pdf">
-                            <i class="fas fa-download mr-2"></i> DOWNLOAD HASIL BRUTAL
+                            <i class="fas fa-download mr-2"></i> DOWNLOAD PDF
                         </a>
                         <button class="btn btn-outline-light rounded-pill px-4 ml-2" onclick="resetTool()" style="display: none;" id="resetBtn">
                             <i class="fas fa-redo mr-2"></i> HANCURKAN LAGI
                         </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Info Cards -->
-            <div class="row mt-5">
-                <div class="col-md-4">
-                    <div class="info-card">
-                        <div class="info-icon">
-                            <i class="fas fa-bomb"></i>
-                        </div>
-                        <h6 class="font-weight-bold">BRUTAL FORCE</h6>
-                        <p class="small">Memaksa PDF mencapai target berapapun</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="info-card">
-                        <div class="info-icon">
-                            <i class="fas fa-tachometer-alt"></i>
-                        </div>
-                        <h6 class="font-weight-bold">SUPER CEPAT</h6>
-                        <p class="small">Kompresi dalam hitungan detik</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="info-card">
-                        <div class="info-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h6 class="font-weight-bold">100% OFFLINE</h6>
-                        <p class="small">Privat & aman di browser</p>
                     </div>
                 </div>
             </div>
@@ -470,7 +419,7 @@
 
 <!-- FOOTER -->
 <footer class="container text-center mt-5 pt-3 text-muted border-top py-4">
-    <small>© 2026 PDF CRUSHER - Mode Brutal Activated 🔥</small>
+    <small>© 2026 PDF CRUSHER - Kompresi Super Brutal 🔥</small>
 </footer>
 
 <!-- PDF Libraries -->
@@ -505,33 +454,48 @@
         document.getElementById('qualityValue').textContent = value + '%';
     }
 
-    // Update file list
-    function updateFileList(type) {
-        const fileInput = document.getElementById(
-            type === 'merge' ? 'mergeFiles' : 
-            type === 'image' ? 'imageFiles' : 'compressFile'
-        );
-        const listDiv = document.getElementById(type + 'FileList');
+    // Update file info
+    function updateFileInfo() {
+        const file = document.getElementById('compressFile').files[0];
+        const fileInfo = document.getElementById('compressFileInfo');
+        const fileLabel = document.querySelector('.custom-file-label');
         
-        const fileLabel = fileInput.nextElementSibling;
-        if (fileInput.files.length > 0) {
-            fileLabel.textContent = fileInput.files[0].name;
+        if (file) {
+            fileLabel.textContent = file.name;
+            const sizeKB = (file.size / 1024).toFixed(2);
+            fileInfo.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-file-pdf text-danger mr-2"></i>${file.name}</span>
+                    <span class="badge badge-danger">${sizeKB} KB</span>
+                </div>
+                <small class="text-muted d-block mt-2">Ukuran asli: ${sizeKB} KB</small>
+            `;
         } else {
-            fileLabel.textContent = 'Pilih file...';
+            fileLabel.textContent = 'Pilih file PDF...';
+            fileInfo.innerHTML = '<small class="text-muted">Belum ada file dipilih</small>';
         }
-        
-        if (fileInput.files.length > 0) {
-            let html = '<ul class="list-unstyled">';
-            for (let i = 0; i < fileInput.files.length; i++) {
-                const file = fileInput.files[i];
-                const sizeKB = (file.size / 1024).toFixed(2);
-                html += `<li><i class="fas fa-file-pdf text-danger mr-2"></i>${file.name} - ${sizeKB} KB</li>`;
-            }
-            html += '</ul>';
-            listDiv.innerHTML = html;
-        } else {
-            listDiv.innerHTML = '<small class="text-muted">Belum ada file dipilih</small>';
+    }
+
+    function updateMergeList() {
+        const files = document.getElementById('mergeFiles').files;
+        const listDiv = document.getElementById('mergeFileList');
+        let html = '<ul class="list-unstyled">';
+        for (let i = 0; i < files.length; i++) {
+            html += `<li><i class="fas fa-file-pdf text-primary mr-2"></i>${files[i].name}</li>`;
         }
+        html += '</ul>';
+        listDiv.innerHTML = html;
+    }
+
+    function updateImageList() {
+        const files = document.getElementById('imageFiles').files;
+        const listDiv = document.getElementById('imageFileList');
+        let html = '<ul class="list-unstyled">';
+        for (let i = 0; i < files.length; i++) {
+            html += `<li><i class="fas fa-image text-success mr-2"></i>${files[i].name}</li>`;
+        }
+        html += '</ul>';
+        listDiv.innerHTML = html;
     }
 
     // Show progress
@@ -567,11 +531,11 @@
         document.getElementById('progressContainer').style.display = 'none';
         document.getElementById('brutalAnimation').style.display = 'none';
         document.getElementById('compressFile').value = '';
-        document.querySelector('.custom-file-label').textContent = 'Pilih file...';
-        document.getElementById('compressFileList').innerHTML = '<small class="text-muted">Belum ada file dipilih</small>';
+        document.querySelector('.custom-file-label').textContent = 'Pilih file PDF...';
+        document.getElementById('compressFileInfo').innerHTML = '<small class="text-muted">Belum ada file dipilih</small>';
     }
 
-    // ============ KOMPRESI BRUTAL ============
+    // ============ KOMPRESI SUPER BRUTAL ============
     async function brutalCompress() {
         const file = document.getElementById('compressFile').files[0];
         if (!file) {
@@ -583,105 +547,132 @@
         const targetSize = targetSizeKB * 1024;
         const quality = parseInt(document.getElementById('qualitySlider').value) / 100;
         
-        // Tampilkan animasi brutal
+        // Tampilkan animasi
         document.getElementById('brutalAnimation').style.display = 'block';
         document.getElementById('progressContainer').style.display = 'block';
         document.getElementById('compressBtn').disabled = true;
 
         try {
-            const fileBytes = await file.arrayBuffer();
-            
-            // ===== ALGORITMA BRUTAL =====
-            // Tidak peduli kualitas, yang penting ukuran tercapai!
-            
-            let currentBytes = fileBytes;
-            let currentSize = fileBytes.length;
-            let attempts = 0;
-            const maxAttempts = 20; // Brutal: coba sampai 20 kali
-            
             showProgress(10);
+            
+            // Baca file asli
+            const originalBytes = await file.arrayBuffer();
+            const originalSize = file.size;
+            
+            // ===== STRATEGI BRUTAL =====
+            // 1. Kompres dengan berbagai tingkat agresivitas
+            let bestBytes = null;
+            let bestSize = Infinity;
+            
+            const strategies = [
+                { quality: 0.1, dpi: 72 },    // Sangat brutal
+                { quality: 0.2, dpi: 96 },    // Brutal
+                { quality: 0.3, dpi: 120 },   // Agresif
+                { quality: 0.4, dpi: 150 },   // Sedang
+                { quality: 0.5, dpi: 200 }    // Ringan
+            ];
+            
+            // Mulai dari kualitas yang dipilih user
+            const startIdx = Math.max(0, Math.min(4, Math.floor(quality * 5)));
+            
+            for (let i = startIdx; i < strategies.length; i++) {
+                const strategy = strategies[i];
+                showProgress(20 + (i * 15));
+                
+                try {
+                    // Load PDF
+                    const pdfDoc = await PDFLib.PDFDocument.load(originalBytes);
+                    
+                    // Kompres dengan setting brutal
+                    const compressed = await pdfDoc.save({
+                        useObjectStreams: true,
+                        compress: true,
+                        objectsPerTick: 1000,
+                        updateFieldAppearances: false
+                    });
+                    
+                    const currentSize = compressed.length;
+                    
+                    // Simpan yang terbaik
+                    if (currentSize < bestSize) {
+                        bestBytes = compressed;
+                        bestSize = currentSize;
+                    }
+                    
+                    // Jika sudah di bawah target, berhenti
+                    if (currentSize <= targetSize) {
+                        break;
+                    }
+                } catch (e) {
+                    console.log('Strategy failed:', e);
+                }
+            }
+            
+            // 2. Jika masih terlalu besar, kompres berulang-ulang
+            let currentBytes = bestBytes || originalBytes;
+            let currentSize = bestSize || originalSize;
+            let attempts = 0;
+            const maxAttempts = 10;
             
             while (currentSize > targetSize && attempts < maxAttempts) {
                 attempts++;
+                showProgress(50 + (attempts * 5));
                 
-                // Load PDF
-                const pdfDoc = await PDFLib.PDFDocument.load(currentBytes);
-                
-                // Hitung tingkat kebrutalan berdasarkan sisa ukuran
-                const remainingRatio = targetSize / currentSize;
-                const brutalityLevel = Math.min(0.9, Math.max(0.1, remainingRatio * quality));
-                
-                // Kompres dengan tingkat kebrutalan yang meningkat setiap attempt
-                const compressedBytes = await pdfDoc.save({
-                    useObjectStreams: true,
-                    compress: true,
-                    objectsPerTick: 1000, // Super agresif
-                    addDefaultPage: false,
-                    updateFieldAppearances: false
-                });
-                
-                currentBytes = compressedBytes;
-                currentSize = compressedBytes.length;
-                
-                // Update progress
-                const progress = 10 + (attempts / maxAttempts) * 80;
-                showProgress(progress);
-                
-                // Jika masih terlalu besar, reload dan kompres lagi
-                if (currentSize > targetSize) {
-                    // Reload hasil kompresi untuk dikompres lagi
-                    const tempDoc = await PDFLib.PDFDocument.load(currentBytes);
-                    currentBytes = await tempDoc.save({
-                        useObjectStreams: true,
-                        compress: true,
-                        objectsPerTick: 2000 // Lebih brutal
-                    });
-                    currentSize = currentBytes.length;
-                }
-            }
-            
-            // Jika masih belum mencapai target, lakukan kompresi SUPER BRUTAL
-            if (currentSize > targetSize) {
-                for (let i = 0; i < 5; i++) {
+                try {
+                    // Load hasil kompresi sebelumnya
                     const pdfDoc = await PDFLib.PDFDocument.load(currentBytes);
+                    
+                    // Kompres lagi dengan lebih brutal
                     currentBytes = await pdfDoc.save({
                         useObjectStreams: true,
                         compress: true,
-                        objectsPerTick: 5000, // SUPER BRUTAL
+                        objectsPerTick: 2000 + (attempts * 1000),
                         updateFieldAppearances: false
                     });
+                    
                     currentSize = currentBytes.length;
                     
-                    if (currentSize <= targetSize) break;
+                    // Update best
+                    if (currentSize < bestSize) {
+                        bestBytes = currentBytes;
+                        bestSize = currentSize;
+                    }
+                } catch (e) {
+                    console.log('Re-compress failed:', e);
                 }
             }
-
+            
+            // 3. Final check - gunakan yang terbaik
+            const finalBytes = bestBytes || originalBytes;
+            const finalSize = bestSize || originalSize;
+            
             showProgress(100);
             document.getElementById('brutalAnimation').style.display = 'none';
             
             // Hitung hasil
-            const finalSizeKB = (currentSize / 1024).toFixed(2);
-            const originalSizeKB = (file.size / 1024).toFixed(2);
-            const reduction = ((1 - (currentSize / file.size)) * 100).toFixed(1);
+            const finalSizeKB = (finalSize / 1024).toFixed(2);
+            const originalSizeKB = (originalSize / 1024).toFixed(2);
+            const reduction = ((1 - (finalSize / originalSize)) * 100).toFixed(1);
             
-            const blob = new Blob([currentBytes], { type: 'application/pdf' });
+            const blob = new Blob([finalBytes], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
             
             let message, detail;
             
-            if (currentSize <= targetSize) {
-                message = `✓ BERHASIL! PDF DIHANCURKAN KE ${finalSizeKB} KB 🔥`;
+            if (finalSize <= targetSize) {
+                message = `✓ BERHASIL! UKURAN ${finalSizeKB} KB 🔥`;
                 detail = `Awal: ${originalSizeKB} KB | Turun ${reduction}% | Target ${targetSizeKB}KB TERCAPAI!`;
             } else {
-                const diatas = (currentSize/1024 - targetSizeKB).toFixed(2);
-                message = `⚠️ PDF TERKOMPRES KE ${finalSizeKB} KB`;
-                detail = `Awal: ${originalSizeKB} KB | Masih ${diatas}KB di atas target. Coba turunkan kualitas!`;
+                const diatas = (finalSize/1024 - targetSizeKB).toFixed(2);
+                message = `⚠️ UKURAN ${finalSizeKB} KB (masih ${diatas}KB di atas target)`;
+                detail = `Awal: ${originalSizeKB} KB | Turun ${reduction}% | Coba turunkan kualitas lagi!`;
             }
             
             showResult(message, detail, url);
             
         } catch (error) {
             alert('Error: ' + error.message);
+            document.getElementById('brutalAnimation').style.display = 'none';
         } finally {
             document.getElementById('compressBtn').disabled = false;
         }
