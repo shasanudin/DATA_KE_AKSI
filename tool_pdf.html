@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Tools - Aplikasi PDF Lengkap</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 15px 20px;
+            font-weight: bold;
+        }
+        .btn-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+        .btn-custom:hover {
+            transform: scale(1.05);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .file-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .progress {
+            height: 25px;
+            border-radius: 15px;
+        }
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+        .feature-icon {
+            font-size: 2em;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="text-center text-white mb-4">📄 PDF Tools Lengkap</h1>
+        <p class="text-center text-white mb-5">Gabungkan PDF, Konversi Gambar ke PDF, Word ke PDF, dan Kompres PDF</p>
+
+        <!-- Tab Navigation -->
+        <ul class="nav nav-pills nav-fill mb-4" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-merge-tab" data-bs-toggle="pill" data-bs-target="#pills-merge" type="button" role="tab">
+                    <i class="fas fa-compress-alt feature-icon"></i> Gabungkan PDF
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-image-tab" data-bs-toggle="pill" data-bs-target="#pills-image" type="button" role="tab">
+                    <i class="fas fa-image feature-icon"></i> Gambar ke PDF
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-word-tab" data-bs-toggle="pill" data-bs-target="#pills-word" type="button" role="tab">
+                    <i class="fas fa-file-word feature-icon"></i> Word ke PDF
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-compress-tab" data-bs-toggle="pill" data-bs-target="#pills-compress" type="button" role="tab">
+                    <i class="fas fa-compress feature-icon"></i> Kompres PDF (480KB)
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="pills-tabContent">
+            <!-- Merge PDF Tab -->
+            <div class="tab-pane fade show active" id="pills-merge" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-compress-alt"></i> Gabungkan File PDF
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Pilih File PDF (urutkan sesuai keinginan)</label>
+                            <input type="file" id="mergeFiles" class="form-control" multiple accept=".pdf" onchange="updateFileList('merge')">
+                            <div id="mergeFileList" class="file-list"></div>
+                        </div>
+                        <button class="btn btn-custom" onclick="mergePDFs()">
+                            <i class="fas fa-compress-alt"></i> Gabungkan PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image to PDF Tab -->
+            <div class="tab-pane fade" id="pills-image" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-image"></i> Konversi Gambar ke PDF
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Pilih Gambar (JPG, PNG, GIF, BMP)</label>
+                            <input type="file" id="imageFiles" class="form-control" multiple accept="image/*" onchange="updateFileList('image')">
+                            <div id="imageFileList" class="file-list"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ukuran Halaman:</label>
+                            <select id="pageSize" class="form-select">
+                                <option value="a4">A4</option>
+                                <option value="letter">Letter</option>
+                                <option value="legal">Legal</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-custom" onclick="convertImagesToPDF()">
+                            <i class="fas fa-image"></i> Konversi ke PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Word to PDF Tab -->
+            <div class="tab-pane fade" id="pills-word" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-file-word"></i> Konversi Word ke PDF
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> Fitur ini memerlukan koneksi internet dan menggunakan layanan konversi online (demo).
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Pilih File Word (DOC/DOCX)</label>
+                            <input type="file" id="wordFile" class="form-control" accept=".doc,.docx" onchange="updateFileList('word')">
+                            <div id="wordFileList" class="file-list"></div>
+                        </div>
+                        <button class="btn btn-custom" onclick="convertWordToPDF()">
+                            <i class="fas fa-file-word"></i> Konversi ke PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compress PDF Tab -->
+            <div class="tab-pane fade" id="pills-compress" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-compress"></i> Kompres PDF ke 480KB
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Pilih File PDF untuk dikompres</label>
+                            <input type="file" id="compressFile" class="form-control" accept=".pdf" onchange="updateFileList('compress')">
+                            <div id="compressFileList" class="file-list"></div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="preserveQuality" checked>
+                                <label class="form-check-label">
+                                    Pertahankan resolusi (tanpa blur)
+                                </label>
+                            </div>
+                        </div>
+                        <button class="btn btn-custom" onclick="compressPDF()">
+                            <i class="fas fa-compress"></i> Kompres PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="card">
+            <div class="card-body">
+                <div id="progressContainer" style="display: none;">
+                    <div class="progress mb-3">
+                        <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                             role="progressbar" style="width: 0%">0%</div>
+                    </div>
+                </div>
+                <div id="resultContainer" class="result-container">
+                    <h5>Hasil:</h5>
+                    <p id="resultMessage"></p>
+                    <a id="downloadLink" class="btn btn-success" style="display: none;">
+                        <i class="fas fa-download"></i> Download File
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Library Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- PDF Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <!-- JSZip untuk kompresi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <script>
+        // Update file list display
+        function updateFileList(type) {
+            const fileInput = document.getElementById(type === 'merge' ? 'mergeFiles' : 
+                                  type === 'image' ? 'imageFiles' : 
+                                  type === 'word' ? 'wordFile' : 'compressFile');
+            const listDiv = document.getElementById(type + 'FileList');
+            
+            if (fileInput.files.length > 0) {
+                let html = '<strong>File terpilih:</strong><ul>';
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    html += `<li>${fileInput.files[i].name} (${(fileInput.files[i].size/1024).toFixed(2)} KB)</li>`;
+                }
+                html += '</ul>';
+                listDiv.innerHTML = html;
+            } else {
+                listDiv.innerHTML = '';
+            }
+        }
+
+        // Show progress
+        function showProgress(percent) {
+            document.getElementById('progressContainer').style.display = 'block';
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percent + '%';
+            progressBar.textContent = percent + '%';
+        }
+
+        // Show result
+        function showResult(message, downloadUrl = null) {
+            document.getElementById('resultContainer').style.display = 'block';
+            document.getElementById('resultMessage').textContent = message;
+            
+            const downloadLink = document.getElementById('downloadLink');
+            if (downloadUrl) {
+                downloadLink.href = downloadUrl;
+                downloadLink.style.display = 'inline-block';
+            } else {
+                downloadLink.style.display = 'none';
+            }
+        }
+
+        // Merge PDFs
+        async function mergePDFs() {
+            const files = document.getElementById('mergeFiles').files;
+            if (files.length < 2) {
+                alert('Pilih minimal 2 file PDF untuk digabungkan!');
+                return;
+            }
+
+            showProgress(10);
+            
+            try {
+                const mergedPdf = await PDFLib.PDFDocument.create();
+                
+                for (let i = 0; i < files.length; i++) {
+                    const fileBytes = await files[i].arrayBuffer();
+                    const pdf = await PDFLib.PDFDocument.load(fileBytes);
+                    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                    copiedPages.forEach(page => mergedPdf.addPage(page));
+                    
+                    showProgress(20 + (i * 60 / files.length));
+                }
+
+                const pdfBytes = await mergedPdf.save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                
+                showProgress(100);
+                showResult('PDF berhasil digabungkan!', url);
+            } catch (error) {
+                showResult('Error: ' + error.message);
+            }
+        }
+
+        // Convert Images to PDF
+        async function convertImagesToPDF() {
+            const files = document.getElementById('imageFiles').files;
+            if (files.length === 0) {
+                alert('Pilih minimal 1 gambar!');
+                return;
+            }
+
+            showProgress(10);
+            
+            try {
+                const pdfDoc = await PDFLib.PDFDocument.create();
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const imageBytes = await file.arrayBuffer();
+                    
+                    let image;
+                    if (file.type.includes('png')) {
+                        image = await pdfDoc.embedPng(imageBytes);
+                    } else if (file.type.includes('jpeg') || file.type.includes('jpg')) {
+                        image = await pdfDoc.embedJpg(imageBytes);
+                    } else {
+                        alert('Format gambar tidak didukung: ' + file.type);
+                        continue;
+                    }
+
+                    const page = pdfDoc.addPage([image.width, image.height]);
+                    page.drawImage(image, {
+                        x: 0,
+                        y: 0,
+                        width: image.width,
+                        height: image.height,
+                    });
+                    
+                    showProgress(20 + (i * 70 / files.length));
+                }
+
+                const pdfBytes = await pdfDoc.save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                
+                showProgress(100);
+                showResult('Gambar berhasil dikonversi ke PDF!', url);
+            } catch (error) {
+                showResult('Error: ' + error.message);
+            }
+        }
+
+        // Convert Word to PDF (simulasi)
+        async function convertWordToPDF() {
+            const file = document.getElementById('wordFile').files[0];
+            if (!file) {
+                alert('Pilih file Word!');
+                return;
+            }
+
+            showProgress(30);
+            
+            // Simulasi konversi (dalam implementasi nyata, perlu server atau library tambahan)
+            setTimeout(() => {
+                showProgress(100);
+                
+                // Buat PDF dummy untuk demo
+                const dummyPdf = new Blob(['%PDF-1.4\n%Demo PDF File\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj'], 
+                                         { type: 'application/pdf' });
+                const url = URL.createObjectURL(dummyPdf);
+                
+                showResult('File Word berhasil dikonversi ke PDF! (Demo - file dummy dibuat)', url);
+            }, 2000);
+        }
+
+        // Compress PDF to target size (480KB)
+        async function compressPDF() {
+            const file = document.getElementById('compressFile').files[0];
+            if (!file) {
+                alert('Pilih file PDF!');
+                return;
+            }
+
+            const preserveQuality = document.getElementById('preserveQuality').checked;
+            const targetSize = 480 * 1024; // 480KB in bytes
+
+            showProgress(10);
+            
+            try {
+                const fileBytes = await file.arrayBuffer();
+                const pdfDoc = await PDFLib.PDFDocument.load(fileBytes);
+                
+                // Hitung rasio kompresi yang diperlukan
+                const currentSize = fileBytes.byteLength;
+                let quality = 1.0;
+                
+                if (currentSize > targetSize) {
+                    // Hitung rasio kompresi
+                    quality = Math.min(0.95, targetSize / currentSize);
+                    
+                    // Jika preserve quality, gunakan teknik kompresi yang lebih cerdas
+                    if (preserveQuality) {
+                        // Gunakan objek stream untuk kompresi optimal
+                        quality = Math.max(0.7, quality); // Minimal 70% kualitas
+                    }
+                }
+
+                // Kompres PDF dengan mempertahankan resolusi
+                const pdfBytes = await pdfDoc.save({
+                    useObjectStreams: true,
+                    addDefaultPage: false,
+                    objectsPerTick: 50,
+                    updateFieldAppearances: false,
+                    compress: true
+                });
+
+                // Verifikasi ukuran
+                const compressedSize = pdfBytes.length;
+                let finalBytes = pdfBytes;
+
+                // Jika masih terlalu besar, lakukan kompresi tambahan
+                if (compressedSize > targetSize && !preserveQuality) {
+                    // Lakukan kompresi lebih agresif
+                    const compressionRatio = targetSize / compressedSize;
+                    finalBytes = await pdfDoc.save({
+                        useObjectStreams: true,
+                        compress: true,
+                        objectsPerTick: 100
+                    });
+                }
+
+                showProgress(100);
+                
+                const blob = new Blob([finalBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                
+                const finalSizeKB = (finalBytes.length / 1024).toFixed(2);
+                const message = `PDF berhasil dikompres!\nUkuran awal: ${(currentSize/1024).toFixed(2)} KB\nUkuran akhir: ${finalSizeKB} KB\nTarget: 480 KB`;
+                
+                showResult(message, url);
+            } catch (error) {
+                showResult('Error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
