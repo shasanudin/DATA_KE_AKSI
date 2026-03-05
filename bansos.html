@@ -741,19 +741,38 @@
     // GLOBAL VARIABLES
     // ============================================================
     let bansosChart = null;
-    let allData = []; // Menyimpan semua data dari Firebase
-    let filteredData = []; // Data setelah difilter
+    let allData = [];
+    let filteredData = [];
     let currentPeriode = { bulan: null, tahun: null };
 
     // ============================================================
-    // DOM ELEMENTS
+    // DOM ELEMENTS - DENGAN PENGECEKAN
     // ============================================================
-    const bulanSelect = document.getElementById('periodeBulan');
-    const tahunSelect = document.getElementById('periodeTahun');
-    const btnTerapkan = document.getElementById('btnTerapkanPeriode');
-    const heroPeriode = document.getElementById('heroPeriode');
-    const tablePeriode = document.getElementById('tablePeriode');
-    const chartPeriode = document.getElementById('chartPeriode');
+    const getElement = (id) => {
+        const el = document.getElementById(id);
+        if (!el) console.warn(`Element with id "${id}" not found`);
+        return el;
+    };
+
+    const bulanSelect = getElement('periodeBulan');
+    const tahunSelect = getElement('periodeTahun');
+    const btnTerapkan = getElement('btnTerapkanPeriode');
+    const heroPeriode = getElement('heroPeriode');
+    const tablePeriode = getElement('tablePeriode');
+    const chartPeriode = getElement('chartPeriode');
+    
+    // Stats elements
+    const totalDesaHeader = getElement('totalDesaHeader');
+    const totalKKHeader = getElement('totalKKHeader');
+    const totalBansosHeader = getElement('totalBansosHeader');
+    const updateTimeHeader = getElement('updateTimeHeader');
+    const totalKK = getElement('totalKK');
+    const totalPKH = getElement('totalPKH');
+    const totalBPNT = getElement('totalBPNT');
+    const totalPBI = getElement('totalPBI');
+    const bansosTable = getElement('bansosTable');
+    const updateTime = getElement('updateTime');
+    const lastUpdate = getElement('lastUpdate');
 
     // ============================================================
     // INITIALIZE AOS
@@ -769,10 +788,16 @@
     // ============================================================
     fetch('navbar.html')
         .then(r => r.ok ? r.text() : Promise.reject())
-        .then(html => document.getElementById('navbar').innerHTML = html)
+        .then(html => {
+            const navbar = document.getElementById('navbar');
+            if (navbar) navbar.innerHTML = html;
+        })
         .catch(() => {
             console.log('Navbar not loaded');
-            document.getElementById('navbar').innerHTML = '<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2"><div class="container"><span class="navbar-text">TKSK - Puskesos Sumber</span></div></nav>';
+            const navbar = document.getElementById('navbar');
+            if (navbar) {
+                navbar.innerHTML = '<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2"><div class="container"><span class="navbar-text">TKSK - Puskesos Sumber</span></div></nav>';
+            }
         });
 
     // ============================================================
@@ -789,11 +814,11 @@
     // UPDATE PERIODE INFO
     // ============================================================
     function updatePeriodeInfo() {
-        const bulan = bulanSelect.value;
-        const tahun = tahunSelect.value;
+        const bulan = bulanSelect?.value;
+        const tahun = tahunSelect?.value;
         
         let text = 'Semua Periode';
-        if (bulan && tahun) {
+        if (bulan && tahun && bulanSelect && tahunSelect) {
             const bulanNama = bulanSelect.options[bulanSelect.selectedIndex]?.text || '';
             text = `${bulanNama} ${tahun}`;
             currentPeriode = { bulan: parseInt(bulan), tahun: parseInt(tahun) };
@@ -801,7 +826,7 @@
             currentPeriode = { bulan: null, tahun: null };
         }
         
-        // Update semua elemen periode
+        // Update semua elemen periode dengan pengecekan
         if (heroPeriode) heroPeriode.innerHTML = `<i class="fas fa-calendar-alt"></i> <span>Periode: ${text}</span>`;
         if (tablePeriode) tablePeriode.innerHTML = `<i class="fas fa-calendar-alt"></i> ${text}`;
         if (chartPeriode) chartPeriode.innerText = text;
@@ -811,8 +836,8 @@
     // FILTER DATA BY PERIODE
     // ============================================================
     function filterDataByPeriode() {
-        const bulan = parseInt(bulanSelect.value);
-        const tahun = parseInt(tahunSelect.value);
+        const bulan = bulanSelect ? parseInt(bulanSelect.value) : null;
+        const tahun = tahunSelect ? parseInt(tahunSelect.value) : null;
         
         if (!bulan || !tahun) {
             // Jika tidak ada filter, tampilkan semua data
@@ -834,15 +859,24 @@
     }
 
     // ============================================================
+    // SAFE TEXT UPDATE - Fungsi untuk update text dengan aman
+    // ============================================================
+    function safeSetText(element, value, defaultValue = '0') {
+        if (element) {
+            element.innerText = value !== undefined && value !== null ? value : defaultValue;
+        }
+    }
+
+    // ============================================================
     // PROCESS BANSOS DATA
     // ============================================================
     function processBansosData() {
         // Reset aggregator
-        let totalKK = 0;
-        let totalPKH = 0;
-        let totalBPNT = 0;
-        let totalPBI = 0;
-        let totalDesa = 0;
+        let totalKKValue = 0;
+        let totalPKHValue = 0;
+        let totalBPNTValue = 0;
+        let totalPBIValue = 0;
+        let totalDesaValue = 0;
         
         // Map untuk mengelompokkan data per wilayah (ambil yang terbaru)
         const wilayahMap = new Map();
@@ -894,11 +928,11 @@
             }
             
             // Akumulasi
-            totalKK += totalKKWilayah;
-            totalPKH += pkh;
-            totalBPNT += bpnt;
-            totalPBI += pbi;
-            totalDesa++;
+            totalKKValue += totalKKWilayah;
+            totalPKHValue += pkh;
+            totalBPNTValue += bpnt;
+            totalPBIValue += pbi;
+            totalDesaValue++;
             
             // Hitung total bansos dan cakupan
             const totalBansos = pkh + bpnt + pbi;
@@ -925,36 +959,41 @@
             dataPBI.push(pbi);
         });
 
-        // ===== UPDATE UI =====
+        // ===== UPDATE UI DENGAN PENGECEKAN =====
         // Update header stats
-        document.getElementById('totalDesaHeader').innerText = totalDesa;
-        document.getElementById('totalKKHeader').innerText = totalKK.toLocaleString('id-ID');
-        document.getElementById('totalBansosHeader').innerText = (totalPKH + totalBPNT + totalPBI).toLocaleString('id-ID');
+        safeSetText(totalDesaHeader, totalDesaValue);
+        safeSetText(totalKKHeader, totalKKValue.toLocaleString('id-ID'));
+        safeSetText(totalBansosHeader, (totalPKHValue + totalBPNTValue + totalPBIValue).toLocaleString('id-ID'));
         
         // Update cards
-        document.getElementById('totalKK').innerText = totalKK.toLocaleString('id-ID');
-        document.getElementById('totalPKH').innerText = totalPKH.toLocaleString('id-ID');
-        document.getElementById('totalBPNT').innerText = totalBPNT.toLocaleString('id-ID');
-        document.getElementById('totalPBI').innerText = totalPBI.toLocaleString('id-ID');
+        safeSetText(totalKK, totalKKValue.toLocaleString('id-ID'));
+        safeSetText(totalPKH, totalPKHValue.toLocaleString('id-ID'));
+        safeSetText(totalBPNT, totalBPNTValue.toLocaleString('id-ID'));
+        safeSetText(totalPBI, totalPBIValue.toLocaleString('id-ID'));
         
         // Update table
-        if (rows) {
-            document.getElementById('bansosTable').innerHTML = rows;
-        } else {
-            document.getElementById('bansosTable').innerHTML = `
-                <tr><td colspan="6" class="text-center py-4 text-muted">
-                    <i class="fas fa-info-circle mr-2"></i>
-                    Tidak ada data bansos untuk periode yang dipilih
-                </td></tr>`;
+        if (bansosTable) {
+            if (rows) {
+                bansosTable.innerHTML = rows;
+            } else {
+                bansosTable.innerHTML = `
+                    <tr><td colspan="6" class="text-center py-4 text-muted">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Tidak ada data bansos untuk periode yang dipilih
+                    </td></tr>`;
+            }
         }
         
         // Update timestamp
         const now = new Date();
         const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
         const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-        document.getElementById('updateTime').innerText = `${dateStr}, ${timeStr}`;
-        document.getElementById('updateTimeHeader').innerText = timeStr;
-        document.getElementById('lastUpdate').innerHTML = `<i class="fas fa-clock mr-1"></i> Update: ${dateStr}, ${timeStr}`;
+        
+        safeSetText(updateTime, `${dateStr}, ${timeStr}`);
+        safeSetText(updateTimeHeader, timeStr);
+        if (lastUpdate) {
+            lastUpdate.innerHTML = `<i class="fas fa-clock mr-1"></i> Update: ${dateStr}, ${timeStr}`;
+        }
 
         // Render chart
         renderChart(labels, dataPKH, dataBPNT, dataPBI);
@@ -964,7 +1003,10 @@
     // RENDER CHART BANSOS
     // ============================================================
     function renderChart(labels, pkh, bpnt, pbi) {
-        const ctx = document.getElementById('bansosChart').getContext('2d');
+        const chartCanvas = document.getElementById('bansosChart');
+        if (!chartCanvas) return;
+        
+        const ctx = chartCanvas.getContext('2d');
         
         // Destroy existing chart
         if (bansosChart) {
@@ -1066,21 +1108,25 @@
             
         }, (error) => {
             console.error("Firebase Error:", error);
-            document.getElementById('bansosTable').innerHTML = `
-                <tr><td colspan="6" class="text-center py-4 text-danger">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
-                    Gagal memuat data bansos. Silakan refresh halaman.
-                </td></tr>`;
+            if (bansosTable) {
+                bansosTable.innerHTML = `
+                    <tr><td colspan="6" class="text-center py-4 text-danger">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        Gagal memuat data bansos. Silakan refresh halaman.
+                    </td></tr>`;
+            }
         });
     }
 
     // ============================================================
     // EVENT LISTENERS
     // ============================================================
-    btnTerapkan?.addEventListener('click', (e) => {
-        e.preventDefault();
-        filterDataByPeriode();
-    });
+    if (btnTerapkan) {
+        btnTerapkan.addEventListener('click', (e) => {
+            e.preventDefault();
+            filterDataByPeriode();
+        });
+    }
 
     // ============================================================
     // START MONITORING
@@ -1091,7 +1137,10 @@
 
 <!-- Fallback for non-module browsers -->
 <script nomodule>
-    document.getElementById('bansosTable').innerHTML = '<tr><td colspan="6" class="text-center py-4 text-warning">Browser Anda tidak mendukung fitur modern. Silakan gunakan Chrome, Firefox, atau Edge terbaru.</td></tr>';
+    const bansosTable = document.getElementById('bansosTable');
+    if (bansosTable) {
+        bansosTable.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-warning">Browser Anda tidak mendukung fitur modern. Silakan gunakan Chrome, Firefox, atau Edge terbaru.</td></tr>';
+    }
 </script>
 
 </body>
