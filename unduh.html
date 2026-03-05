@@ -525,7 +525,7 @@
             </h3>
             <p class="text-muted">
                 Generate laporan lengkap dengan kop surat resmi - 
-                <span class="text-primary font-weight-bold">MENAMPILKAN SEMUA DATA TANPA BATASAN</span>
+                <span class="text-primary font-weight-bold">Klik "Generate" untuk menampilkan data</span>
             </p>
         </div>
     </div>
@@ -536,7 +536,7 @@
             <i class="fas fa-calendar-alt mr-2"></i>
             <span>Periode Data:</span>
             <span class="periode-info-badge" id="periodeInfo">
-                <i class="fas fa-calendar-check"></i> Februari 2026
+                <i class="fas fa-calendar-check"></i> Belum dipilih
             </span>
         </div>
         <div class="periode-controls">
@@ -708,7 +708,10 @@
 
         <!-- KONTEN HALAMAN 1 - AGREGASI KECAMATAN -->
         <div id="kontenHal1" style="min-height: 100px;">
-            <p style="text-align: center; color: #666; font-size: 11px;">Memuat data agregasi kecamatan...</p>
+            <div class="text-center p-5" style="background: #f8f9fa; border-radius: 8px;">
+                <i class="fas fa-chart-bar fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Belum ada data. Klik tombol <strong>"Generate"</strong> untuk menampilkan data.</p>
+            </div>
         </div>
 
         <!-- BAGIAN PENUTUP -->
@@ -791,7 +794,10 @@
         </div>
         
         <div id="kontenHal2" style="min-height: 200px;">
-            <p style="text-align: center; color: #666;">Memuat data prioritas intervensi...</p>
+            <div class="text-center p-5" style="background: #f8f9fa; border-radius: 8px;">
+                <i class="fas fa-list-ol fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Belum ada data. Klik tombol <strong>"Generate"</strong> untuk menampilkan data prioritas.</p>
+            </div>
         </div>
     </div>
 
@@ -810,7 +816,10 @@
         </p>
         
         <div id="kontenHal3" style="min-height: 200px;">
-            <p style="text-align: center; color: #666;">Memuat data bantuan sosial...</p>
+            <div class="text-center p-5" style="background: #f8f9fa; border-radius: 8px;">
+                <i class="fas fa-hand-holding-heart fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Belum ada data. Klik tombol <strong>"Generate"</strong> untuk menampilkan data bansos.</p>
+            </div>
         </div>
     </div>
 
@@ -829,7 +838,10 @@
         </p>
         
         <div id="kontenHal4" style="min-height: 200px;">
-            <p style="text-align: center; color: #666;">Memuat data layanan sosial...</p>
+            <div class="text-center p-5" style="background: #f8f9fa; border-radius: 8px;">
+                <i class="fas fa-headset fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Belum ada data. Klik tombol <strong>"Generate"</strong> untuk menampilkan data layanan.</p>
+            </div>
         </div>
     </div>
 </div> <!-- Tutup paper -->
@@ -1008,12 +1020,18 @@
         if (bulan && tahun && bulanSelect) {
             const bulanNama = bulanSelect.options[bulanSelect.selectedIndex]?.text || '';
             periodeText = `${bulanNama} ${tahun}`;
+        } else if (bulanSelect?.value && !tahunSelect?.value) {
+            periodeText = `${bulanSelect.options[bulanSelect.selectedIndex]?.text || 'Bulan terpilih'} (Tahun belum dipilih)`;
+        } else if (!bulanSelect?.value && tahunSelect?.value) {
+            periodeText = `Semua Bulan ${tahun}`;
         }
         
         if (periodeInfo) periodeInfo.innerHTML = `<i class="fas fa-calendar-check"></i> ${periodeText}`;
         if (periodeHal2) periodeHal2.textContent = periodeText;
         if (periodeHal3) periodeHal3.textContent = periodeText;
         if (periodeHal4) periodeHal4.textContent = periodeText;
+        if (periodeData) periodeData.textContent = tahun || new Date().getFullYear();
+        if (periodeDataTahun) periodeDataTahun.textContent = tahun || new Date().getFullYear();
         
         return { bulan, tahun, periodeText };
     }
@@ -1088,6 +1106,16 @@
 
     function renderHalaman1(data) {
         if (!kontenHal1) return;
+        
+        if (data.length === 0) {
+            kontenHal1.innerHTML = `
+                <div class="text-center p-5" style="background: #f8f9fa; border-radius: 8px;">
+                    <i class="fas fa-exclamation-circle fa-3x text-warning mb-3"></i>
+                    <p class="text-muted">Tidak ada data untuk periode yang dipilih.</p>
+                </div>
+            `;
+            return;
+        }
         
         const totalKK = data.reduce((sum, item) => sum + item.total_kk, 0);
         const totalD1 = data.reduce((sum, item) => sum + item.d1, 0);
@@ -1171,6 +1199,16 @@
 
     function renderHalaman2(data) {
         if (!kontenHal2) return;
+        
+        if (data.length === 0) {
+            kontenHal2.innerHTML = `
+                <div class="text-center p-5" style="background: #f8f9fa; border-radius: 8px;">
+                    <i class="fas fa-exclamation-circle fa-3x text-warning mb-3"></i>
+                    <p class="text-muted">Tidak ada data untuk periode yang dipilih.</p>
+                </div>
+            `;
+            return;
+        }
         
         const totalD12Kecamatan = data.reduce((sum, item) => sum + item.d1 + item.d2, 0);
         
@@ -1319,6 +1357,16 @@
 
     async function renderHalaman3(dataWilayah) {
         if (!kontenHal3) return;
+        
+        if (dataWilayah.length === 0) {
+            kontenHal3.innerHTML = `
+                <div class="text-center p-5" style="background: #f8f9fa; border-radius: 8px;">
+                    <i class="fas fa-exclamation-circle fa-3x text-warning mb-3"></i>
+                    <p class="text-muted">Tidak ada data untuk periode yang dipilih.</p>
+                </div>
+            `;
+            return;
+        }
         
         try {
             const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
@@ -1509,6 +1557,16 @@
 
     async function renderHalaman4(dataWilayah) {
         if (!kontenHal4) return;
+        
+        if (dataWilayah.length === 0) {
+            kontenHal4.innerHTML = `
+                <div class="text-center p-5" style="background: #f8f9fa; border-radius: 8px;">
+                    <i class="fas fa-exclamation-circle fa-3x text-warning mb-3"></i>
+                    <p class="text-muted">Tidak ada data untuk periode yang dipilih.</p>
+                </div>
+            `;
+            return;
+        }
         
         try {
             const totalKKDTSEN = dataWilayah.reduce((sum, item) => sum + item.total_kk, 0);
@@ -1782,9 +1840,9 @@
             
             console.log(`📅 Generate dokumen untuk periode: ${periodeText}`);
             
-            let dataToRender = wilayahData;
+            let dataToRender = allData;
             if (bulan && tahun) {
-                dataToRender = filterDataByPeriode(wilayahData, bulan, tahun);
+                dataToRender = filterDataByPeriode(allData, bulan, tahun);
             }
             
             if (dataToRender.length === 0) {
@@ -1809,6 +1867,7 @@
             console.log(`📊 Menampilkan ${dataToRender.length} desa untuk periode ${periodeText}`);
             
             dataToRender.sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
+            wilayahData = dataToRender;
             
             renderHalaman1(dataToRender);
             renderHalaman2(dataToRender);
@@ -1894,22 +1953,32 @@
             setLoading(true);
             
             console.log('🚀 Initializing DTSEN Document Generator v2.5.0');
-            console.log('📌 Fitur: Periode Bulan/Tahun + QR Code & TTD di Halaman 1');
+            console.log('📌 Fitur: Periode Bulan/Tahun + Generate Manual');
             
+            // Load data awal
             allData = await loadDataFromFirebase();
-            wilayahData = [...allData];
             
-            wilayahData.sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
+            if (allData.length === 0) {
+                showNotification('Tidak ada data dari Firebase', 'warning');
+            } else {
+                console.log(`✅ Loaded ${allData.length} desa dari Firebase`);
+                
+                // Tampilkan preview jumlah data tanpa generate otomatis
+                const periodeInfo = updatePeriodeInfo();
+                showNotification(`📊 ${allData.length} desa tersedia. Pilih periode dan klik Generate untuk menampilkan data.`, 'info');
+            }
             
-            updateInfoPanel(wilayahData);
-            populateDesaSelect(wilayahData);
+            // Update info panel dengan data awal
+            if (dataCountInfo) {
+                dataCountInfo.innerHTML = `<i class="fas fa-map-marked-alt mr-1"></i> ${allData.length} wilayah tersedia`;
+            }
+            if (lastUpdateInfo) lastUpdateInfo.textContent = formatDate();
+            if (tglSekarang) tglSekarang.textContent = formatDate();
             
-            await generateDokumen();
-            
+            // Setup event listeners
             initEventListeners();
             
-            console.log(`✅ Aplikasi siap dengan ${wilayahData.length} desa`);
-            console.log(`📋 Kriteria Prioritas: >500 (Tinggi), 300-500 (Sedang), <300 (Rendah)`);
+            console.log('✅ Aplikasi siap - menunggu interaksi pengguna');
             
         } catch (error) {
             console.error('❌ Initialization error:', error);
@@ -1919,15 +1988,21 @@
         }
     }
 
+    // Start the application
     init();
 
-    // Auto refresh data setiap 5 menit
+    // Auto refresh data setiap 5 menit (hanya update data, tidak generate)
     setInterval(async () => {
         if (!isLoading) {
             console.log('🔄 Auto-refreshing data...');
-            allData = await loadDataFromFirebase();
-            wilayahData = [...allData];
-            await generateDokumen();
+            const newData = await loadDataFromFirebase();
+            if (newData.length > 0) {
+                allData = newData;
+                console.log(`✅ Data refreshed: ${allData.length} desa tersedia`);
+                if (dataCountInfo) {
+                    dataCountInfo.innerHTML = `<i class="fas fa-map-marked-alt mr-1"></i> ${allData.length} wilayah tersedia`;
+                }
+            }
         }
     }, 5 * 60 * 1000);
 
