@@ -1,7 +1,7 @@
 // unduh.js
 // Sistem Cetak Dokumen DTSEN - TKSK & Puskesos Kecamatan Sumber
-// Version: 2.4.4 - QR CODE & TTD DI HALAMAN 1 + BANTUAN SOSIAL DARI FIREBASE (FIX: AMBIL DARI MAP BANSOS)
-// Fitur: SHOW ALL DATA + PRIORITAS >500/300-500/<300 + RASIO DTSEN
+// Version: 2.5.0 - DENGAN FITUR PERIODE BULAN
+// Fitur: SHOW ALL DATA + PRIORITAS >500/300-500/<300 + RASIO DTSEN + PERIODE BULAN/TAHUN
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { 
@@ -32,6 +32,7 @@ try {
 
 // ============ GLOBAL VARIABLES ============
 let wilayahData = [];
+let allData = []; // Menyimpan semua data dari Firebase
 let isLoading = false;
 let qrcode = null;
 let nomorSurat = '';
@@ -60,6 +61,15 @@ const periodeDataTahun = document.getElementById('periodeDataTahun');
 const lampiranCount = document.getElementById('lampiranCount1');
 const totalDesaInfo = document.getElementById('totalDesaInfo');
 
+// Periode elements
+const bulanSelect = document.getElementById('periodeBulan');
+const tahunSelect = document.getElementById('periodeTahun');
+const btnTerapkan = document.getElementById('btnTerapkanPeriode');
+const periodeInfo = document.getElementById('periodeInfo');
+const periodeHal2 = document.getElementById('periodeHal2');
+const periodeHal3 = document.getElementById('periodeHal3');
+const periodeHal4 = document.getElementById('periodeHal4');
+
 // ============ UTILITY FUNCTIONS ============
 
 /**
@@ -83,6 +93,16 @@ function formatDate(date = new Date()) {
     const year = date.getFullYear();
     
     return `${dayName}, ${day} ${month} ${year}`;
+}
+
+/**
+ * Format periode untuk tampilan
+ */
+function formatPeriode(bulan, tahun) {
+    if (!bulan || !tahun) return 'Semua Periode';
+    
+    const bulanNama = bulanSelect?.options[bulanSelect.selectedIndex]?.text || '';
+    return `${bulanNama} ${tahun}`;
 }
 
 /**
@@ -146,6 +166,45 @@ function showNotification(message, type = 'info') {
     setTimeout(() => alertDiv.remove(), 5000);
 }
 
+// ============ FILTER DATA BY PERIODE ============
+
+/**
+ * Filter data berdasarkan periode yang dipilih
+ */
+function filterDataByPeriode(data, bulan, tahun) {
+    if (!bulan || !tahun) {
+        return data; // Kembalikan semua data jika tidak ada filter
+    }
+    
+    return data.filter(item => {
+        const itemBulan = item.periode?.bulan;
+        const itemTahun = item.periode?.tahun;
+        return itemBulan === bulan && itemTahun === tahun;
+    });
+}
+
+/**
+ * Update periode info di berbagai elemen
+ */
+function updatePeriodeInfo() {
+    const bulan = bulanSelect ? parseInt(bulanSelect.value) : null;
+    const tahun = tahunSelect ? parseInt(tahunSelect.value) : null;
+    
+    let periodeText = 'Semua Periode';
+    if (bulan && tahun && bulanSelect) {
+        const bulanNama = bulanSelect.options[bulanSelect.selectedIndex]?.text || '';
+        periodeText = `${bulanNama} ${tahun}`;
+    }
+    
+    // Update semua elemen periode
+    if (periodeInfo) periodeInfo.innerHTML = `<i class="fas fa-calendar-check"></i> ${periodeText}`;
+    if (periodeHal2) periodeHal2.textContent = periodeText;
+    if (periodeHal3) periodeHal3.textContent = periodeText;
+    if (periodeHal4) periodeHal4.textContent = periodeText;
+    
+    return { bulan, tahun, periodeText };
+}
+
 // ============ DATA LOADING FUNCTIONS ============
 
 /**
@@ -177,12 +236,15 @@ async function loadDataFromFirebase() {
                 nama: docData.nama_wilayah || docData.nama || doc.id,
                 kecamatan: 'Sumber',
                 desil: desilArray,
+                periode: docData.periode || null, // Simpan data periode
                 total_kk: desilArray.reduce((a, b) => (a || 0) + (b || 0), 0),
                 d1: desilArray[0] || 0,
                 d2: desilArray[1] || 0,
                 d3: desilArray[2] || 0,
                 d4: desilArray[3] || 0,
-                d5_10: desilArray.slice(4).reduce((a, b) => (a || 0) + (b || 0), 0)
+                d5_10: desilArray.slice(4).reduce((a, b) => (a || 0) + (b || 0), 0),
+                bansos: docData.bansos || null, // Simpan data bansos
+                layanan: docData.layanan || null // Simpan data layanan
             });
         });
         
@@ -480,7 +542,7 @@ async function renderHalaman3(dataWilayah) {
     if (!kontenHal3) return;
     
     try {
-        // Ambil data bansos langsung dari Firebase
+        // Ambil data bansos langsung dari Firebase (tanpa filter periode untuk bansos)
         const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
         
         // Buat map untuk menyimpan data bansos per desa
@@ -523,7 +585,7 @@ async function renderHalaman3(dataWilayah) {
         let totalPBI = 0;
         let totalSemuaBansos = 0;
         
-        // Buat rows untuk setiap desa (berdasarkan dataWilayah)
+        // Buat rows untuk setiap desa (berdasarkan dataWilayah yang sudah difilter)
         let rows = '';
         dataWilayah.forEach((item, index) => {
             // Ambil data bansos dari map
@@ -587,7 +649,7 @@ async function renderHalaman3(dataWilayah) {
                 <!-- TABEL UTAMA -->
                 <table class="tabel-data" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                     <thead>
-                        <tr style="background: #343a40; color: black;">
+                        <tr style="background: #343a40; color: white;">
                             <th width="5%" style="padding: 8px; border: 1px solid #454d55; text-align: center;">No</th>
                             <th width="30%" style="padding: 8px; border: 1px solid #454d55; text-align: left;">Desa/Kelurahan</th>
                             <th width="15%" style="padding: 8px; border: 1px solid #454d55; text-align: center;">PKH</th>
@@ -735,10 +797,10 @@ async function renderHalaman4(dataWilayah) {
     if (!kontenHal4) return;
     
     try {
-        // Hitung TOTAL KK DTSEN (Desil 1-10) dari data wilayah
+        // Hitung TOTAL KK DTSEN (Desil 1-10) dari data wilayah yang sudah difilter
         const totalKKDTSEN = dataWilayah.reduce((sum, item) => sum + item.total_kk, 0);
         
-        // Ambil data layanan dari Firebase
+        // Ambil data layanan dari Firebase (tanpa filter periode untuk layanan)
         const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
         
         let totalLayananKec = {
@@ -1119,11 +1181,6 @@ function updateDocumentNumbers() {
     if (lampiranCount) {
         lampiranCount.textContent = '4';
     }
-    
-    // Update periode
-    const tahun = new Date().getFullYear();
-    if (periodeData) periodeData.textContent = tahun;
-    if (periodeDataTahun) periodeDataTahun.textContent = tahun;
 }
 
 /**
@@ -1150,29 +1207,53 @@ function updateInfoPanel(data) {
 // ============ MAIN GENERATE FUNCTION ============
 
 /**
- * Generate seluruh dokumen
- * QR CODE DAN TTD DIHASILKAN DI HALAMAN 1
+ * Generate seluruh dokumen dengan filter periode
  */
 async function generateDokumen() {
     try {
         setLoading(true);
         
-        // Load data dari Firebase
-        wilayahData = await loadDataFromFirebase();
+        // Update periode info
+        const { bulan, tahun, periodeText } = updatePeriodeInfo();
         
-        if (wilayahData.length === 0) {
-            showNotification('Tidak ada data yang tersedia', 'warning');
+        console.log(`📅 Generate dokumen untuk periode: ${periodeText}`);
+        
+        // Filter data berdasarkan periode
+        let dataToRender = wilayahData;
+        if (bulan && tahun) {
+            dataToRender = filterDataByPeriode(wilayahData, bulan, tahun);
+        }
+        
+        if (dataToRender.length === 0) {
+            showNotification(`Tidak ada data untuk periode ${periodeText}`, 'warning');
+            
+            // Tampilkan pesan di semua halaman
+            const pesanKosong = `
+                <div style="margin: 50px auto; text-align: center; color: #666;">
+                    <i class="fas fa-calendar-times fa-3x mb-3" style="color: #dc3545;"></i>
+                    <h5>Tidak Ada Data untuk Periode ${periodeText}</h5>
+                    <p>Silakan pilih periode lain atau pastikan data sudah diinput.</p>
+                </div>
+            `;
+            
+            if (kontenHal1) kontenHal1.innerHTML = pesanKosong;
+            if (kontenHal2) kontenHal2.innerHTML = pesanKosong;
+            if (kontenHal3) kontenHal3.innerHTML = pesanKosong;
+            if (kontenHal4) kontenHal4.innerHTML = pesanKosong;
+            
             return;
         }
         
-        // Sort data by D1+D2 descending
-        wilayahData.sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
+        console.log(`📊 Menampilkan ${dataToRender.length} desa untuk periode ${periodeText}`);
         
-        // Render semua halaman
-        renderHalaman1(wilayahData);     // Halaman 1: Agregasi + TTD + QR
-        renderHalaman2(wilayahData);     // Halaman 2: Prioritas Intervensi
-        await renderHalaman3(wilayahData); // Halaman 3: Bantuan Sosial (dari map bansos)
-        await renderHalaman4(wilayahData); // Halaman 4: Layanan Sosial (tanpa TTD/QR)
+        // Sort data by D1+D2 descending
+        dataToRender.sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
+        
+        // Render semua halaman dengan data yang sudah difilter
+        renderHalaman1(dataToRender);     // Halaman 1: Agregasi + TTD + QR
+        renderHalaman2(dataToRender);     // Halaman 2: Prioritas Intervensi
+        await renderHalaman3(dataToRender); // Halaman 3: Bantuan Sosial (dari map bansos)
+        await renderHalaman4(dataToRender); // Halaman 4: Layanan Sosial (tanpa TTD/QR)
         
         // Generate SATU nomor surat untuk semua halaman
         updateDocumentNumbers();
@@ -1181,10 +1262,10 @@ async function generateDokumen() {
         generateQRCode();
         
         // Update info panel
-        updateInfoPanel(wilayahData);
-        populateDesaSelect(wilayahData);
+        updateInfoPanel(dataToRender);
+        populateDesaSelect(dataToRender);
         
-        showNotification(`✅ Dokumen berhasil digenerate! Menampilkan ${wilayahData.length} desa/kelurahan`, 'success');
+        showNotification(`✅ Dokumen berhasil digenerate! Menampilkan ${dataToRender.length} desa/kelurahan untuk periode ${periodeText}`, 'success');
         
     } catch (error) {
         console.error('❌ Error generating document:', error);
@@ -1228,6 +1309,13 @@ function initEventListeners() {
     if (btnPrint) {
         btnPrint.addEventListener('click', cetakDokumen);
     }
+    
+    if (btnTerapkan) {
+        btnTerapkan.addEventListener('click', function(e) {
+            e.preventDefault();
+            generateDokumen(); // Generate ulang dengan periode baru
+        });
+    }
 }
 
 // ============ INITIALIZATION ============
@@ -1239,11 +1327,14 @@ async function init() {
     try {
         setLoading(true);
         
-        console.log('🚀 Initializing DTSEN Document Generator v2.4.4');
-        console.log('📌 Fitur: QR Code & TTD di Halaman 1 + Data Bantuan Sosial dari Map Bansos Firebase');
+        console.log('🚀 Initializing DTSEN Document Generator v2.5.0');
+        console.log('📌 Fitur: Periode Bulan/Tahun + QR Code & TTD di Halaman 1 + Data Bantuan Sosial dari Map Bansos Firebase');
         
         // Load data awal
-        wilayahData = await loadDataFromFirebase();
+        allData = await loadDataFromFirebase();
+        wilayahData = [...allData]; // Simpan semua data
+        
+        // Sort data awal
         wilayahData.sort((a, b) => (b.d1 + b.d2) - (a.d1 + a.d2));
         
         // Update UI
@@ -1258,9 +1349,7 @@ async function init() {
         
         console.log(`✅ Aplikasi siap dengan ${wilayahData.length} desa`);
         console.log(`📋 Kriteria Prioritas: >500 (Tinggi), 300-500 (Sedang), <300 (Rendah)`);
-        console.log(`📊 Data Bantuan Sosial: Mengambil dari map/objek 'bansos' di Firebase`);
-        console.log(`📊 Rasio Layanan: Berdasarkan Total DTSEN (Desil 1-10)`);
-        console.log(`📍 QR Code & Tanda Tangan: Halaman 1`);
+        console.log(`📅 Fitur periode bulan/tahun aktif`);
         
     } catch (error) {
         console.error('❌ Initialization error:', error);
@@ -1277,6 +1366,8 @@ init();
 setInterval(async () => {
     if (!isLoading) {
         console.log('🔄 Auto-refreshing data...');
+        allData = await loadDataFromFirebase();
+        wilayahData = [...allData];
         await generateDokumen();
     }
 }, 5 * 60 * 1000);
