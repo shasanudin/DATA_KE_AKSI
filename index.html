@@ -143,7 +143,7 @@
     /* ===== HERO SECTION ===== */
     .hero {
       background: linear-gradient(145deg, #ffffff 0%, #f5faff 100%);
-      padding: 60px 0 100px;
+      padding: 60px 0 120px; /* Ditambah padding bottom */
       position: relative;
       overflow: hidden;
       margin-top: 0;
@@ -240,11 +240,94 @@
       transform: translateY(-3px);
     }
 
+    /* ===== PERIODE SELECTOR ===== */
+    .periode-wrapper {
+      margin-top: -60px; /* Naik ke atas menimpa hero */
+      position: relative;
+      z-index: 20;
+      margin-bottom: 40px; /* Jarak ke bawah */
+    }
+
+    .periode-selector {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 20px 30px;
+      box-shadow: var(--hover-shadow);
+      border: 1px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      flex-wrap: wrap;
+    }
+
+    .periode-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 1rem;
+      background: var(--primary-light);
+      padding: 8px 18px;
+      border-radius: 50px;
+    }
+
+    .periode-label i {
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+
+    .periode-controls {
+      display: flex;
+      gap: 15px;
+      flex: 1;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .periode-select {
+      min-width: 160px;
+      flex: 1;
+    }
+
+    .periode-select .custom-select {
+      width: 100%;
+      border-radius: 50px;
+      border: 2px solid #dee2e6;
+      padding: 10px 20px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .periode-select .custom-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px var(--primary-light);
+    }
+
+    .btn-periode {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      padding: 10px 30px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(10,88,202,0.2);
+    }
+
+    .btn-periode:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(10,88,202,0.3);
+    }
+
     /* ===== STATS CARDS ===== */
     .stats-grid {
-      margin-top: -60px;
-      position: relative;
-      z-index: 15;
+      margin-bottom: 50px;
     }
 
     .stat-card {
@@ -299,6 +382,14 @@
       margin-bottom: 5px;
     }
 
+    .stat-trend {
+      font-size: 0.75rem;
+      color: #6c757d;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
     /* ===== CHART CARD ===== */
     .chart-card {
       background: white;
@@ -335,94 +426,13 @@
 
     .custom-select {
       width: auto;
-      min-width: 200px;
+      min-width: 220px;
       border-radius: 12px;
       border: 2px solid #dee2e6;
       padding: 8px 16px;
       font-size: 0.9rem;
       font-weight: 500;
-    }
-
-    /* ===== PERIODE SELECTOR ===== */
-    .periode-selector {
-      background: white;
-      border-radius: var(--border-radius-sm);
-      padding: 15px 20px;
-      margin-bottom: 25px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      border: 1px solid var(--primary-light);
-      box-shadow: var(--card-shadow);
-    }
-
-    .periode-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--primary-dark);
-      font-weight: 700;
-    }
-
-    .periode-label i {
-      font-size: 1.2rem;
-    }
-
-    .periode-controls {
-      display: flex;
-      gap: 15px;
-      flex: 1;
-      flex-wrap: wrap;
-    }
-
-    .periode-select {
-      min-width: 150px;
-    }
-
-    .btn-periode {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 50px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .btn-periode:hover {
-      background: var(--primary-dark);
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 991px) {
-      .hero-title { font-size: 2.5rem; }
-      .hero-title span { font-size: 2rem; }
-      .hero-subtitle { max-width: 100%; }
-      .hero-stats { gap: 20px; flex-wrap: wrap; }
-    }
-
-    @media (max-width: 768px) {
-      .hero { padding: 40px 0 80px; }
-      .hero-title { font-size: 2rem; }
-      .hero-title span { font-size: 1.8rem; }
-      .stats-grid { margin-top: -40px; }
-      .stat-number { font-size: 1.8rem; }
-      .top-header .logo-item span { display: none !important; }
-      .header-logo { gap: 10px; }
-      .chart-header { flex-direction: column; align-items: flex-start; }
-      .custom-select { width: 100%; }
-      .periode-controls { width: 100%; }
-    }
-
-    @media (max-width: 576px) {
-      .hero-title { font-size: 1.8rem; }
-      .btn-gradient, .btn-outline-gradient { width: 100%; margin-bottom: 10px; }
-      .hero-stats { justify-content: space-between; }
-      .hero-stat-value { font-size: 1.6rem; }
-      .live-badge span:not(.live-dot) { display: none; }
-      .live-badge { padding: 6px 10px; }
+      background-color: white;
     }
 
     /* ===== CONTACT CARD ===== */
@@ -431,6 +441,7 @@
       border-radius: var(--border-radius);
       padding: 25px;
       box-shadow: var(--card-shadow);
+      margin-bottom: 25px;
     }
 
     .contact-header {
@@ -576,6 +587,39 @@
     .footer-copyright i {
       color: #ff6b6b;
     }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 991px) {
+      .hero-title { font-size: 2.5rem; }
+      .hero-title span { font-size: 2rem; }
+      .hero-subtitle { max-width: 100%; }
+      .hero-stats { gap: 20px; flex-wrap: wrap; }
+    }
+
+    @media (max-width: 768px) {
+      .hero { padding: 40px 0 100px; }
+      .hero-title { font-size: 2rem; }
+      .hero-title span { font-size: 1.8rem; }
+      .stats-grid { margin-bottom: 30px; }
+      .stat-number { font-size: 1.8rem; }
+      .top-header .logo-item span { display: none !important; }
+      .header-logo { gap: 10px; }
+      .chart-header { flex-direction: column; align-items: flex-start; }
+      .custom-select { width: 100%; }
+      .periode-wrapper { margin-top: -40px; }
+      .periode-selector { padding: 15px 20px; }
+    }
+
+    @media (max-width: 576px) {
+      .hero-title { font-size: 1.8rem; }
+      .btn-gradient, .btn-outline-gradient { width: 100%; margin-bottom: 10px; }
+      .hero-stats { justify-content: space-between; }
+      .hero-stat-value { font-size: 1.6rem; }
+      .live-badge span:not(.live-dot) { display: none; }
+      .live-badge { padding: 6px 10px; }
+      .periode-label { width: 100%; justify-content: center; }
+      .btn-periode { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -658,43 +702,45 @@
   </div>
 </section>
 
-<!-- ===== PERIODE SELECTOR ===== -->
-<div class="container mt-4">
-  <div class="periode-selector" data-aos="fade-up">
-    <div class="periode-label">
-      <i class="fas fa-calendar-alt"></i>
-      <span>Periode Data:</span>
-    </div>
-    <div class="periode-controls">
-      <div class="periode-select">
-        <select id="periodeBulan" class="custom-select">
-          <option value="">Semua Bulan</option>
-          <option value="1">Januari</option>
-          <option value="2">Februari</option>
-          <option value="3">Maret</option>
-          <option value="4">April</option>
-          <option value="5">Mei</option>
-          <option value="6">Juni</option>
-          <option value="7">Juli</option>
-          <option value="8">Agustus</option>
-          <option value="9">September</option>
-          <option value="10">Oktober</option>
-          <option value="11">November</option>
-          <option value="12">Desember</option>
-        </select>
+<!-- ===== PERIODE SELECTOR (DINAICKAN) ===== -->
+<div class="periode-wrapper">
+  <div class="container">
+    <div class="periode-selector" data-aos="fade-up" data-aos-delay="100">
+      <div class="periode-label">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Periode Data:</span>
       </div>
-      <div class="periode-select">
-        <select id="periodeTahun" class="custom-select">
-          <option value="">Semua Tahun</option>
-          <option value="2023">2023</option>
-          <option value="2024">2024</option>
-          <option value="2025">2025</option>
-          <option value="2026">2026</option>
-        </select>
+      <div class="periode-controls">
+        <div class="periode-select">
+          <select id="periodeBulan" class="custom-select">
+            <option value="">Semua Bulan</option>
+            <option value="1">Januari</option>
+            <option value="2">Februari</option>
+            <option value="3">Maret</option>
+            <option value="4">April</option>
+            <option value="5">Mei</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">Agustus</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+        </div>
+        <div class="periode-select">
+          <select id="periodeTahun" class="custom-select">
+            <option value="">Semua Tahun</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
+        </div>
+        <button class="btn-periode" id="btnTerapkanPeriode">
+          <i class="fas fa-filter"></i> Terapkan
+        </button>
       </div>
-      <button class="btn-periode" id="btnTerapkanPeriode">
-        <i class="fas fa-filter"></i> Terapkan
-      </button>
     </div>
   </div>
 </div>
@@ -702,7 +748,7 @@
 <!-- ===== STATS CARDS ===== -->
 <div class="container stats-grid">
   <div class="row g-4">
-    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="100">
+    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="200">
       <div class="stat-card">
         <div class="stat-icon">
           <i class="fas fa-home"></i>
@@ -715,7 +761,7 @@
       </div>
     </div>
     
-    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="200">
+    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="300">
       <div class="stat-card">
         <div class="stat-icon">
           <i class="fas fa-exclamation-triangle"></i>
@@ -728,7 +774,7 @@
       </div>
     </div>
     
-    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="300">
+    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="400">
       <div class="stat-card">
         <div class="stat-icon">
           <i class="fas fa-headset"></i>
@@ -741,7 +787,7 @@
       </div>
     </div>
     
-    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="400">
+    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="500">
       <div class="stat-card">
         <div class="stat-icon">
           <i class="fas fa-file-invoice"></i>
@@ -757,7 +803,7 @@
 </div>
 
 <!-- ===== MAIN CONTENT ===== -->
-<main class="container py-5">
+<main class="container py-4">
   <div class="row g-4">
     <!-- CHART SECTION -->
     <div class="col-lg-8">
@@ -784,7 +830,7 @@
     <!-- RIGHT SIDEBAR -->
     <div class="col-lg-4">
       <!-- CONTACT CARD -->
-      <div class="contact-card mb-4" data-aos="fade-up" data-aos-delay="300">
+      <div class="contact-card" data-aos="fade-up" data-aos-delay="300">
         <div class="contact-header">
           <div class="contact-header-icon">
             <i class="fab fa-whatsapp"></i>
