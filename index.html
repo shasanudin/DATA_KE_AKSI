@@ -299,6 +299,102 @@
       margin-bottom: 5px;
     }
 
+    /* ===== CHART CARD ===== */
+    .chart-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 25px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(0,0,0,0.02);
+      margin-bottom: 25px;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .chart-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+
+    .custom-select {
+      width: auto;
+      min-width: 200px;
+      border-radius: 12px;
+      border: 2px solid var(--gray-200);
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    /* ===== PERIODE SELECTOR ===== */
+    .periode-selector {
+      background: white;
+      border-radius: var(--border-radius-sm);
+      padding: 15px 20px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      border: 1px solid var(--primary-light);
+      box-shadow: var(--card-shadow);
+    }
+
+    .periode-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .periode-label i {
+      font-size: 1.2rem;
+    }
+
+    .periode-controls {
+      display: flex;
+      gap: 15px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+
+    .periode-select {
+      min-width: 150px;
+    }
+
+    .btn-periode {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-periode:hover {
+      background: var(--primary-dark);
+    }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 991px) {
       .hero-title { font-size: 2.5rem; }
@@ -315,6 +411,9 @@
       .stat-number { font-size: 1.8rem; }
       .top-header .logo-item span { display: none !important; }
       .header-logo { gap: 10px; }
+      .chart-header { flex-direction: column; align-items: flex-start; }
+      .custom-select { width: 100%; }
+      .periode-controls { width: 100%; }
     }
 
     @media (max-width: 576px) {
@@ -324,6 +423,158 @@
       .hero-stat-value { font-size: 1.6rem; }
       .live-badge span:not(.live-dot) { display: none; }
       .live-badge { padding: 6px 10px; }
+    }
+
+    /* ===== CONTACT CARD ===== */
+    .contact-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 25px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .contact-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .contact-header-icon {
+      width: 50px;
+      height: 50px;
+      background: #25d366;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+    }
+
+    .contact-phone {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--gray-100);
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+
+    .contact-phone-number {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .btn-wa {
+      background: #25d366;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .btn-wa:hover {
+      background: #128C7E;
+      color: white;
+    }
+
+    .btn-light {
+      background: var(--gray-100);
+      border: none;
+      padding: 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .quick-links {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 25px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .quick-links-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .quick-links-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--warning);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+    }
+
+    .quick-link-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--gray-200);
+      color: var(--dark);
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .quick-link-item:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      text-decoration: none;
+      transform: translateX(5px);
+    }
+
+    .quick-link-item i:first-child {
+      width: 20px;
+      color: var(--primary);
+    }
+
+    /* ===== FOOTER ===== */
+    .main-footer {
+      background: var(--dark);
+      color: white;
+      padding: 60px 0 30px;
+      margin-top: 60px;
+    }
+
+    .footer-brand {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-text {
+      color: rgba(255,255,255,0.7);
+      line-height: 1.8;
+    }
+
+    .footer-divider {
+      border-color: rgba(255,255,255,0.1);
+      margin: 30px 0;
+    }
+
+    .footer-copyright {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.9rem;
+    }
+
+    .footer-copyright i {
+      color: #ff6b6b;
     }
   </style>
 </head>
@@ -408,6 +659,47 @@
   </div>
 </section>
 
+<!-- ===== PERIODE SELECTOR ===== -->
+<div class="container mt-4">
+  <div class="periode-selector" data-aos="fade-up">
+    <div class="periode-label">
+      <i class="fas fa-calendar-alt"></i>
+      <span>Periode Data:</span>
+    </div>
+    <div class="periode-controls">
+      <div class="periode-select">
+        <select id="periodeBulan" class="custom-select">
+          <option value="">Semua Bulan</option>
+          <option value="1">Januari</option>
+          <option value="2">Februari</option>
+          <option value="3">Maret</option>
+          <option value="4">April</option>
+          <option value="5">Mei</option>
+          <option value="6">Juni</option>
+          <option value="7">Juli</option>
+          <option value="8">Agustus</option>
+          <option value="9">September</option>
+          <option value="10">Oktober</option>
+          <option value="11">November</option>
+          <option value="12">Desember</option>
+        </select>
+      </div>
+      <div class="periode-select">
+        <select id="periodeTahun" class="custom-select">
+          <option value="">Semua Tahun</option>
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+        </select>
+      </div>
+      <button class="btn-periode" id="btnTerapkanPeriode">
+        <i class="fas fa-filter"></i> Terapkan
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== STATS CARDS ===== -->
 <div class="container stats-grid">
   <div class="row g-4">
@@ -445,7 +737,7 @@
         <span class="stat-label">Total Layanan</span>
         <span class="stat-number text-info" id="totalLayanan">0</span>
         <span class="stat-trend text-info">
-          <i class="fas fa-clock mr-1"></i> Tahun 2026
+          <i class="fas fa-clock mr-1"></i> Periode Terpilih
         </span>
       </div>
     </div>
@@ -617,7 +909,7 @@
   // FIREBASE INITIALIZATION
   // ============================================================
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+  import { getFirestore, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
@@ -635,6 +927,8 @@
   // GLOBAL VARIABLES
   // ============================================================
   let desilChart = null;
+  let allData = [];
+  let filteredData = [];
   let wilayahData = [];
 
   // ============================================================
@@ -691,104 +985,249 @@
   setInterval(updateClock, 60000);
 
   // ============================================================
-  // FIREBASE REAL-TIME LISTENER
+  // SET DEFAULT PERIODE
   // ============================================================
-  function startDashboard() {
-    onSnapshot(collection(db, "wilayah_desa"), (snapshot) => {
-      let totalKK = 0;
-      let totalD12 = 0;
-      let totalLayanan = 0;
-      let totalSktm = 0;
-      
-      wilayahData = [];
-      const select = document.getElementById('wilayahSelect');
-      if (select) select.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentYear = currentDate.getFullYear();
+  
+  const bulanSelect = document.getElementById('periodeBulan');
+  const tahunSelect = document.getElementById('periodeTahun');
+  
+  // Set default ke bulan dan tahun berjalan
+  if (bulanSelect) bulanSelect.value = currentMonth;
+  if (tahunSelect) tahunSelect.value = currentYear;
 
-      snapshot.forEach((doc) => {
-        const item = doc.data();
-        const id = doc.id;
-        
-        let desilArray = item.desil || [];
-        if (!Array.isArray(desilArray)) {
-          desilArray = Object.values(desilArray);
-        }
-        while (desilArray.length < 10) desilArray.push(0);
-        desilArray = desilArray.map(v => parseInt(v) || 0);
-        
-        const totalKKWilayah = desilArray.reduce((a, b) => a + b, 0);
-        
-        wilayahData.push({
-          id: id,
-          nama: item.nama_wilayah || item.nama || id,
-          desil: desilArray,
-          total_kk: totalKKWilayah
-        });
-        
-        totalKK += totalKKWilayah;
-        totalD12 += (desilArray[0] + desilArray[1]);
-        
-        if (item.layanan) {
-          const lay = item.layanan;
-          totalSktm += parseInt(lay.sktm || 0);
-          totalLayanan += parseInt(lay.dtks || 0) + parseInt(lay.sktm || 0) + parseInt(lay.pengaduan || 0);
-        }
+  // ============================================================
+  // FILTER DATA BY PERIODE
+  // ============================================================
+  function filterDataByPeriode() {
+    const bulan = parseInt(bulanSelect.value);
+    const tahun = parseInt(tahunSelect.value);
+    
+    if (!bulan || !tahun) {
+      // Jika tidak ada filter, tampilkan semua data
+      filteredData = [...allData];
+    } else {
+      // Filter berdasarkan bulan dan tahun
+      filteredData = allData.filter(item => {
+        const itemBulan = item.periode?.bulan;
+        const itemTahun = item.periode?.tahun;
+        return itemBulan === bulan && itemTahun === tahun;
       });
+    }
+    
+    // Jika tidak ada data untuk periode yang dipilih, tampilkan pesan
+    if (filteredData.length === 0) {
+      console.log('Tidak ada data untuk periode yang dipilih');
+      // Reset semua stat ke 0
+      resetStats();
+      return;
+    }
+    
+    // Proses data yang sudah difilter
+    processFilteredData();
+  }
 
-      // Update UI Cards
-      const elKK = document.getElementById('totalKK');
-      const elD12 = document.getElementById('totalD12');
-      const elLayanan = document.getElementById('totalLayanan');
-      const elSktm = document.getElementById('totalSktm');
+  // ============================================================
+  // RESET STATS
+  // ============================================================
+  function resetStats() {
+    document.getElementById('totalKK').innerText = '0';
+    document.getElementById('totalD12').innerText = '0';
+    document.getElementById('totalLayanan').innerText = '0';
+    document.getElementById('totalSktm').innerText = '0';
+    
+    // Reset hero stats
+    document.getElementById('heroStats').innerHTML = `
+      <div class="hero-stat-item">
+        <span class="hero-stat-value">0</span>
+        <span class="hero-stat-label">Desa/Kelurahan</span>
+      </div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-value">0%</span>
+        <span class="hero-stat-label">% Prioritas</span>
+      </div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-value">${currentYear}</span>
+        <span class="hero-stat-label">Periode</span>
+      </div>
+    `;
+    
+    // Reset wilayah data
+    wilayahData = [];
+    updateWilayahSelect();
+  }
+
+  // ============================================================
+  // PROCESS FILTERED DATA
+  // ============================================================
+  function processFilteredData() {
+    let totalKK = 0;
+    let totalD12 = 0;
+    let totalLayanan = 0;
+    let totalSktm = 0;
+    
+    // Map untuk mengelompokkan data per wilayah (ambil yang terbaru jika ada multiple)
+    const wilayahMap = new Map();
+    
+    filteredData.forEach((item) => {
+      const namaWilayah = item.nama || item.nama_wilayah;
+      if (!namaWilayah) return;
       
-      if (elKK) elKK.innerText = totalKK.toLocaleString('id-ID');
-      if (elD12) elD12.innerText = totalD12.toLocaleString('id-ID');
-      if (elLayanan) elLayanan.innerText = totalLayanan.toLocaleString('id-ID');
-      if (elSktm) elSktm.innerText = totalSktm.toLocaleString('id-ID');
-      
-      // Update Hero Stats
-      const heroStats = document.getElementById('heroStats');
-      if (heroStats) {
-        heroStats.innerHTML = `
-          <div class="hero-stat-item">
-            <span class="hero-stat-value">${wilayahData.length}</span>
-            <span class="hero-stat-label">Desa/Kelurahan</span>
-          </div>
-          <div class="hero-stat-item">
-            <span class="hero-stat-value">${totalKK > 0 ? ((totalD12 / totalKK) * 100).toFixed(1) : '0'}%</span>
-            <span class="hero-stat-label">% Prioritas</span>
-          </div>
-          <div class="hero-stat-item">
-            <span class="hero-stat-value">${new Date().getFullYear()}</span>
-            <span class="hero-stat-label">Periode</span>
-          </div>
-        `;
+      // Jika sudah ada data untuk wilayah ini, bandingkan createdAt
+      if (wilayahMap.has(namaWilayah)) {
+        const existing = wilayahMap.get(namaWilayah);
+        if (item.createdAt?.seconds > existing.createdAt?.seconds) {
+          wilayahMap.set(namaWilayah, item);
+        }
+      } else {
+        wilayahMap.set(namaWilayah, item);
       }
-
-      // Populate dropdown
-      if (select) {
-        wilayahData.sort((a, b) => a.nama.localeCompare(b.nama));
-        wilayahData.forEach((w, index) => {
-          const opt = document.createElement('option');
-          opt.value = index;
-          opt.textContent = `${w.nama} (${w.total_kk.toLocaleString('id-ID')} KK)`;
-          select.appendChild(opt);
-        });
-
-        if (wilayahData.length > 0) {
-          updateDesilChart(0);
+    });
+    
+    // Konversi map ke array untuk diproses
+    const latestData = Array.from(wilayahMap.values());
+    
+    // Reset wilayahData
+    wilayahData = [];
+    
+    latestData.forEach((item) => {
+      let desilArray = item.desil || [];
+      
+      // Handle desil jika bukan array
+      if (!Array.isArray(desilArray)) {
+        if (typeof desilArray === 'object') {
+          desilArray = Object.values(desilArray);
+        } else {
+          desilArray = [];
         }
       }
       
-    }, (error) => {
-      console.error("Firebase Error:", error);
+      // Pastikan array memiliki 10 elemen
+      while (desilArray.length < 10) desilArray.push(0);
+      desilArray = desilArray.map(v => parseInt(v) || 0);
+      
+      const totalKKWilayah = desilArray.reduce((a, b) => a + b, 0);
+      
+      wilayahData.push({
+        nama: namaWilayah,
+        desil: desilArray,
+        total_kk: totalKKWilayah,
+        periode: item.periode
+      });
+      
+      totalKK += totalKKWilayah;
+      totalD12 += (desilArray[0] + desilArray[1]);
+      
+      if (item.layanan) {
+        const lay = item.layanan;
+        totalSktm += parseInt(lay.sktm || 0);
+        totalLayanan += parseInt(lay.dtks || 0) + parseInt(lay.sktm || 0) + parseInt(lay.pengaduan || 0);
+      }
     });
+
+    // Update UI Cards
+    document.getElementById('totalKK').innerText = totalKK.toLocaleString('id-ID');
+    document.getElementById('totalD12').innerText = totalD12.toLocaleString('id-ID');
+    document.getElementById('totalLayanan').innerText = totalLayanan.toLocaleString('id-ID');
+    document.getElementById('totalSktm').innerText = totalSktm.toLocaleString('id-ID');
+    
+    // Update Hero Stats
+    const heroStats = document.getElementById('heroStats');
+    const persenPrioritas = totalKK > 0 ? ((totalD12 / totalKK) * 100).toFixed(1) : '0';
+    const periodeText = bulanSelect.value && tahunSelect.value ? 
+      `${bulanSelect.options[bulanSelect.selectedIndex].text} ${tahunSelect.value}` : 
+      'Semua Periode';
+    
+    heroStats.innerHTML = `
+      <div class="hero-stat-item">
+        <span class="hero-stat-value">${wilayahData.length}</span>
+        <span class="hero-stat-label">Desa/Kelurahan</span>
+      </div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-value">${persenPrioritas}%</span>
+        <span class="hero-stat-label">% Prioritas</span>
+      </div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-value">${periodeText}</span>
+        <span class="hero-stat-label">Periode Aktif</span>
+      </div>
+    `;
+
+    // Update wilayah select
+    updateWilayahSelect();
+  }
+
+  // ============================================================
+  // UPDATE WILAYAH SELECT
+  // ============================================================
+  function updateWilayahSelect() {
+    const select = document.getElementById('wilayahSelect');
+    if (!select) return;
+    
+    if (wilayahData.length === 0) {
+      select.innerHTML = '<option value="" disabled selected>Tidak ada data wilayah</option>';
+      return;
+    }
+    
+    select.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
+    
+    wilayahData.sort((a, b) => a.nama.localeCompare(b.nama));
+    wilayahData.forEach((w, index) => {
+      const opt = document.createElement('option');
+      opt.value = index;
+      opt.textContent = `${w.nama} (${w.total_kk.toLocaleString('id-ID')} KK)`;
+      select.appendChild(opt);
+    });
+
+    // Pilih item pertama secara default
+    if (wilayahData.length > 0) {
+      select.value = 0;
+      updateDesilChart(0);
+    }
   }
 
   // ============================================================
   // UPDATE DESIL CHART
   // ============================================================
   function updateDesilChart(index) {
-    if (wilayahData.length === 0 || !wilayahData[index]) return;
+    if (wilayahData.length === 0 || !wilayahData[index]) {
+      // Jika tidak ada data, kosongkan chart
+      const ctx = document.getElementById('desilChart')?.getContext('2d');
+      if (!ctx) return;
+      
+      if (desilChart) desilChart.destroy();
+      
+      desilChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Desil 1', 'Desil 2', 'Desil 3', 'Desil 4', 'Desil 5', 'Desil 6-10'],
+          datasets: [{
+            label: 'Jumlah Keluarga (KK)',
+            data: [0, 0, 0, 0, 0, 0],
+            backgroundColor: [
+              'rgba(220, 53, 69, 0.9)',
+              'rgba(253, 126, 20, 0.9)',
+              'rgba(255, 193, 7, 0.9)',
+              'rgba(255, 224, 130, 0.9)',
+              'rgba(23, 162, 184, 0.9)',
+              'rgba(40, 167, 69, 0.9)'
+            ],
+            borderWidth: 0,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+      return;
+    }
     
     const data = wilayahData[index];
     const dv = data.desil;
@@ -842,10 +1281,38 @@
   }
 
   // ============================================================
+  // FIREBASE REAL-TIME LISTENER
+  // ============================================================
+  function startDashboard() {
+    onSnapshot(collection(db, "wilayah_desa"), (snapshot) => {
+      allData = [];
+      
+      snapshot.forEach((doc) => {
+        const item = doc.data();
+        allData.push({
+          id: doc.id,
+          ...item
+        });
+      });
+
+      // Terapkan filter periode
+      filterDataByPeriode();
+      
+    }, (error) => {
+      console.error("Firebase Error:", error);
+    });
+  }
+
+  // ============================================================
   // EVENT LISTENERS
   // ============================================================
   document.getElementById('wilayahSelect')?.addEventListener('change', (e) => {
     updateDesilChart(parseInt(e.target.value));
+  });
+
+  document.getElementById('btnTerapkanPeriode')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    filterDataByPeriode();
   });
 
   // ============================================================
@@ -862,10 +1329,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
