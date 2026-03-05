@@ -73,7 +73,7 @@
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     }
 
-    /* ===== HEADER - DIPERBAIKI TIDAK BENTROK DENGAN NAVBAR ===== */
+    /* ===== HEADER ===== */
     .top-header {
       background: white;
       padding: 10px 0;
@@ -133,7 +133,7 @@
       100% { opacity: 1; transform: scale(1); }
     }
 
-    /* ===== NAVBAR CONTAINER - PASTI DI BAWAH HEADER ===== */
+    /* ===== NAVBAR CONTAINER ===== */
     #navbar {
       position: sticky;
       top: 0;
@@ -580,7 +580,7 @@
 </head>
 <body>
 
-<!-- ===== TOP HEADER - DIPISAH DARI NAVBAR ===== -->
+<!-- ===== TOP HEADER ===== -->
 <header class="top-header">
   <div class="container">
     <div class="d-flex justify-content-between align-items-center">
@@ -648,7 +648,6 @@
       </div>
       
       <div class="col-lg-5 d-none d-lg-block" data-aos="fade-left" data-aos-duration="1000">
-        <!-- FIX: Gunakan SVG inline, bukan placeholder eksternal -->
         <div style="background: linear-gradient(145deg, #e7f1ff, #d0e2ff); border-radius: 30px; padding: 30px; text-align: center;">
           <i class="fas fa-chart-pie" style="font-size: 80px; color: var(--primary); opacity: 0.8;"></i>
           <h4 style="color: var(--primary); margin-top: 20px; font-weight: 700;">DARI DATA KE AKSI</h4>
@@ -909,7 +908,7 @@
   // FIREBASE INITIALIZATION
   // ============================================================
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+  import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
@@ -1072,6 +1071,7 @@
     const wilayahMap = new Map();
     
     filteredData.forEach((item) => {
+      // Perbaikan: Gunakan item.nama (bukan namaWilayah)
       const namaWilayah = item.nama || item.nama_wilayah;
       if (!namaWilayah) return;
       
@@ -1093,6 +1093,9 @@
     wilayahData = [];
     
     latestData.forEach((item) => {
+      // Perbaikan: Gunakan item.nama (bukan namaWilayah)
+      const namaWilayah = item.nama || item.nama_wilayah || 'Tidak Diketahui';
+      
       let desilArray = item.desil || [];
       
       // Handle desil jika bukan array
@@ -1136,9 +1139,12 @@
     // Update Hero Stats
     const heroStats = document.getElementById('heroStats');
     const persenPrioritas = totalKK > 0 ? ((totalD12 / totalKK) * 100).toFixed(1) : '0';
-    const periodeText = bulanSelect.value && tahunSelect.value ? 
-      `${bulanSelect.options[bulanSelect.selectedIndex].text} ${tahunSelect.value}` : 
-      'Semua Periode';
+    
+    let periodeText = 'Semua Periode';
+    if (bulanSelect.value && tahunSelect.value) {
+      const bulanNama = bulanSelect.options[bulanSelect.selectedIndex]?.text || '';
+      periodeText = `${bulanNama} ${tahunSelect.value}`;
+    }
     
     heroStats.innerHTML = `
       <div class="hero-stat-item">
@@ -1168,6 +1174,9 @@
     
     if (wilayahData.length === 0) {
       select.innerHTML = '<option value="" disabled selected>Tidak ada data wilayah</option>';
+      
+      // Kosongkan chart
+      updateDesilChart(null);
       return;
     }
     
@@ -1192,59 +1201,31 @@
   // UPDATE DESIL CHART
   // ============================================================
   function updateDesilChart(index) {
-    if (wilayahData.length === 0 || !wilayahData[index]) {
-      // Jika tidak ada data, kosongkan chart
-      const ctx = document.getElementById('desilChart')?.getContext('2d');
-      if (!ctx) return;
-      
-      if (desilChart) desilChart.destroy();
-      
-      desilChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Desil 1', 'Desil 2', 'Desil 3', 'Desil 4', 'Desil 5', 'Desil 6-10'],
-          datasets: [{
-            label: 'Jumlah Keluarga (KK)',
-            data: [0, 0, 0, 0, 0, 0],
-            backgroundColor: [
-              'rgba(220, 53, 69, 0.9)',
-              'rgba(253, 126, 20, 0.9)',
-              'rgba(255, 193, 7, 0.9)',
-              'rgba(255, 224, 130, 0.9)',
-              'rgba(23, 162, 184, 0.9)',
-              'rgba(40, 167, 69, 0.9)'
-            ],
-            borderWidth: 0,
-            borderRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false }
-          }
-        }
-      });
-      return;
-    }
-    
-    const data = wilayahData[index];
-    const dv = data.desil;
-    const d6_10 = dv.slice(5).reduce((a, b) => a + b, 0);
-
     const ctx = document.getElementById('desilChart')?.getContext('2d');
     if (!ctx) return;
     
+    // Hapus chart lama
     if (desilChart) desilChart.destroy();
+    
+    // Data default (kosong)
+    let chartData = [0, 0, 0, 0, 0, 0];
+    let chartLabels = ['Desil 1', 'Desil 2', 'Desil 3', 'Desil 4', 'Desil 5', 'Desil 6-10'];
+    
+    // Jika ada data dan index valid
+    if (index !== null && wilayahData.length > 0 && wilayahData[index]) {
+      const data = wilayahData[index];
+      const dv = data.desil;
+      const d6_10 = dv.slice(5).reduce((a, b) => a + b, 0);
+      chartData = [dv[0], dv[1], dv[2], dv[3], dv[4], d6_10];
+    }
 
     desilChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Desil 1', 'Desil 2', 'Desil 3', 'Desil 4', 'Desil 5', 'Desil 6-10'],
+        labels: chartLabels,
         datasets: [{
           label: 'Jumlah Keluarga (KK)',
-          data: [dv[0], dv[1], dv[2], dv[3], dv[4], d6_10],
+          data: chartData,
           backgroundColor: [
             'rgba(220, 53, 69, 0.9)',
             'rgba(253, 126, 20, 0.9)',
@@ -1307,7 +1288,12 @@
   // EVENT LISTENERS
   // ============================================================
   document.getElementById('wilayahSelect')?.addEventListener('change', (e) => {
-    updateDesilChart(parseInt(e.target.value));
+    const index = e.target.value;
+    if (index && index !== '') {
+      updateDesilChart(parseInt(index));
+    } else {
+      updateDesilChart(null);
+    }
   });
 
   document.getElementById('btnTerapkanPeriode')?.addEventListener('click', (e) => {
