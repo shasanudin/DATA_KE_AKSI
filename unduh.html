@@ -184,6 +184,83 @@
             padding-top: 5px;
         }
 
+        /* ============ PERIODE SELECTOR ============ */
+        .periode-wrapper {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-top: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .periode-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .periode-label i {
+            color: #007bff;
+        }
+
+        .periode-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .periode-select {
+            min-width: 140px;
+            flex: 1;
+        }
+
+        .periode-select select {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #ced4da;
+            font-size: 14px;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .periode-select select:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+
+        .btn-periode {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-periode:hover {
+            background: #0056b3;
+        }
+
+        .periode-info-badge {
+            background: #e7f1ff;
+            color: #0056b3;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 10px;
+        }
+
         /* ============ INFO PANEL ============ */
         .info-badge {
             font-size: 11px;
@@ -312,7 +389,7 @@
             line-height: 1.3;
         }
         
-        /* ============ TANDA TANGAN AREA - DIPERBAIKI UNTUK MUAT ID VERIFIKASI ============ */
+        /* ============ TANDA TANGAN AREA ============ */
         .ttd-wrapper {
             display: flex;
             margin-top: 12px;
@@ -398,6 +475,24 @@
             max-width: 100%;
             margin-top: 2px;
         }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .periode-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .periode-select {
+                min-width: 100%;
+            }
+            .btn-periode {
+                width: 100%;
+            }
+            .periode-info-badge {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -432,6 +527,48 @@
                 Generate laporan lengkap dengan kop surat resmi - 
                 <span class="text-primary font-weight-bold">MENAMPILKAN SEMUA DATA TANPA BATASAN</span>
             </p>
+        </div>
+    </div>
+    
+    <!-- PERIODE SELECTOR -->
+    <div class="periode-wrapper mb-3">
+        <div class="periode-label">
+            <i class="fas fa-calendar-alt mr-2"></i>
+            <span>Periode Data:</span>
+            <span class="periode-info-badge" id="periodeInfo">
+                <i class="fas fa-calendar-check"></i> Februari 2026
+            </span>
+        </div>
+        <div class="periode-controls">
+            <div class="periode-select">
+                <select id="periodeBulan" class="form-control">
+                    <option value="">Pilih Bulan</option>
+                    <option value="1">Januari</option>
+                    <option value="2" selected>Februari</option>
+                    <option value="3">Maret</option>
+                    <option value="4">April</option>
+                    <option value="5">Mei</option>
+                    <option value="6">Juni</option>
+                    <option value="7">Juli</option>
+                    <option value="8">Agustus</option>
+                    <option value="9">September</option>
+                    <option value="10">Oktober</option>
+                    <option value="11">November</option>
+                    <option value="12">Desember</option>
+                </select>
+            </div>
+            <div class="periode-select">
+                <select id="periodeTahun" class="form-control">
+                    <option value="">Pilih Tahun</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026" selected>2026</option>
+                </select>
+            </div>
+            <button id="btnTerapkanPeriode" class="btn-periode">
+                <i class="fas fa-filter mr-1"></i> Terapkan
+            </button>
         </div>
     </div>
     
@@ -581,7 +718,7 @@
             </p>
         </div>
 
-        <!-- ======= TANDA TANGAN DAN QR CODE - DIPERBAIKI UNTUK MUAT ID VERIFIKASI ======= -->
+        <!-- ======= TANDA TANGAN DAN QR CODE ======= -->
         <div class="ttd-wrapper">
             <!-- KIRI: VERIFIKASI DATA -->
             <div class="verifikasi-col">
@@ -618,7 +755,7 @@
                     SHIDIQ HASANUDIN, S.IP
                 </p>
                 
-                <!-- ID Verifikasi - DIPASTIKAN TIDAK TERPOTONG -->
+                <!-- ID Verifikasi -->
                 <div class="id-verifikasi">
                     <span style="font-weight: 600;">ID Verifikasi:</span><br>
                     <span id="hashID" class="font-weight-bold" style="background: #f0f0f0; padding: 2px 4px; display: inline-block; border-radius: 3px; font-size: 9px; word-break: break-all; max-width: 100%;"></span>
@@ -643,7 +780,7 @@
 
         <h4 class="judul-surat">PRIORITAS INTERVENSI DTSEN</h4>
         <p style="font-size: 11px; text-align: center; margin-bottom: 12px;">
-            <em>Prioritas Berdasarkan Jumlah Desil 1 dan 2</em>
+            <em>Prioritas Berdasarkan Jumlah Desil 1 dan 2 - Periode <span id="periodeHal2"></span></em>
         </p>
         
         <div style="background: #e3f2fd; padding: 6px; margin-bottom: 12px; border-left: 4px solid #0d6efd; font-size: 10px;">
@@ -669,7 +806,7 @@
 
         <h4 class="judul-surat">REKAP BANTUAN SOSIAL PER DESA</h4>
         <p style="font-size: 11px; text-align: center; margin-bottom: 12px;">
-            <em>Estimasi Distribusi Bantuan Sosial Berdasarkan Wilayah</em>
+            <em>Estimasi Distribusi Bantuan Sosial Berdasarkan Wilayah - Periode <span id="periodeHal3"></span></em>
         </p>
         
         <div id="kontenHal3" style="min-height: 200px;">
@@ -688,7 +825,7 @@
 
         <h4 class="judul-surat">REKAPITULASI LAYANAN SOSIAL</h4>
         <p style="font-size: 11px; text-align: center; margin-bottom: 12px;">
-            <em>Data Layanan Sosial, Pengaduan, dan SKTM</em>
+            <em>Data Layanan Sosial, Pengaduan, dan SKTM - Periode <span id="periodeHal4"></span></em>
         </p>
         
         <div id="kontenHal4" style="min-height: 200px;">
@@ -804,60 +941,73 @@
 <!-- MAIN SCRIPT - unduh.js (MODULE) -->
 <script type="module" src="js/unduh.js"></script>
 
-<!-- FALLBACK SCRIPT DENGAN DATA CONTOH YANG DIPERKECIL -->
+<!-- SCRIPT PERIODE DAN GENERATE -->
 <script>
-    window.addEventListener('error', function(e) {
-        if (e.target && e.target.tagName === 'SCRIPT' && e.target.src && e.target.src.includes('unduh.js')) {
-            
-            // Data contoh yang lebih ringkas untuk halaman 1
-            const sampleDataRingkas = `
-                <table class="tabel-data">
-                    <thead>
-                        <tr>
-                            <th>Desa</th>
-                            <th>Total KK DTSEN</th>
-                            <th>D1+D2</th>
-                            <th>Prioritas</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Sumber</td><td>1,250</td><td>580</td><td><span class="priority-high">TINGGI</span></td></tr>
-                        <tr><td>Pasalaran</td><td>980</td><td>520</td><td><span class="priority-high">TINGGI</span></td></tr>
-                        <tr><td>Pekalangan</td><td>750</td><td>450</td><td><span class="priority-medium">SEDANG</span></td></tr>
-                        <tr><td>Kaliwadas</td><td>620</td><td>380</td><td><span class="priority-medium">SEDANG</span></td></tr>
-                        <tr><td>Watubelah</td><td>410</td><td>250</td><td><span class="priority-low">RENDAH</span></td></tr>
-                    </tbody>
-                    <tfoot>
-                        <tr><td><strong>TOTAL</strong></td><td><strong>4,010</strong></td><td><strong>2,180</strong></td><td></td></tr>
-                    </tfoot>
-                </table>
-            `;
-            
-            const kontenHal1 = document.getElementById('kontenHal1');
-            if (kontenHal1) kontenHal1.innerHTML = sampleDataRingkas;
-            
-            const prioritasRingkas = `
-                <table class="tabel-data">
-                    <thead>
-                        <tr>
-                            <th>Prioritas</th>
-                            <th>Desa</th>
-                            <th>KK D1+D2</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><span class="priority-high">TINGGI</span></td><td>2 Desa</td><td>1,100 KK</td></tr>
-                        <tr><td><span class="priority-medium">SEDANG</span></td><td>2 Desa</td><td>830 KK</td></tr>
-                        <tr><td><span class="priority-low">RENDAH</span></td><td>1 Desa</td><td>250 KK</td></tr>
-                    </tbody>
-                </table>
-            `;
-            
-            const kontenHal2 = document.getElementById('kontenHal2');
-            if (kontenHal2) kontenHal2.innerHTML = prioritasRingkas;
-        }
-    }, true);
+    // DOM Elements
+    const bulanSelect = document.getElementById('periodeBulan');
+    const tahunSelect = document.getElementById('periodeTahun');
+    const btnTerapkan = document.getElementById('btnTerapkanPeriode');
+    const periodeInfo = document.getElementById('periodeInfo');
+    const periodeData = document.getElementById('periodeData');
+    const periodeDataTahun = document.getElementById('periodeDataTahun');
+    const periodeHal2 = document.getElementById('periodeHal2');
+    const periodeHal3 = document.getElementById('periodeHal3');
+    const periodeHal4 = document.getElementById('periodeHal4');
+    const btnGenerate = document.getElementById('btnGenerate');
+    const btnPrint = document.getElementById('btnPrint');
+    const modeSelect = document.getElementById('mode');
+    const desaWrap = document.getElementById('desaWrap');
+    const desaSelect = document.getElementById('desaSelect');
+    const lastUpdateInfo = document.getElementById('lastUpdateInfo');
+    const dataCountInfo = document.getElementById('dataCountInfo');
+
+    // Set default periode ke bulan dan tahun berjalan
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
     
+    if (bulanSelect) {
+        // Set selected bulan ke bulan berjalan
+        Array.from(bulanSelect.options).forEach(opt => {
+            if (parseInt(opt.value) === currentMonth) {
+                opt.selected = true;
+            }
+        });
+    }
+    
+    if (tahunSelect) {
+        // Set selected tahun ke tahun berjalan
+        Array.from(tahunSelect.options).forEach(opt => {
+            if (parseInt(opt.value) === currentYear) {
+                opt.selected = true;
+            }
+        });
+    }
+
+    // Update periode info
+    function updatePeriodeInfo() {
+        const bulan = bulanSelect?.value;
+        const tahun = tahunSelect?.value;
+        
+        if (bulan && tahun) {
+            const bulanNama = bulanSelect.options[bulanSelect.selectedIndex]?.text || '';
+            const periodeText = `${bulanNama} ${tahun}`;
+            
+            if (periodeInfo) periodeInfo.innerHTML = `<i class="fas fa-calendar-check"></i> ${periodeText}`;
+            if (periodeData) periodeData.textContent = tahun;
+            if (periodeDataTahun) periodeDataTahun.textContent = tahun;
+            if (periodeHal2) periodeHal2.textContent = periodeText;
+            if (periodeHal3) periodeHal3.textContent = periodeText;
+            if (periodeHal4) periodeHal4.textContent = periodeText;
+            
+            // Update timestamp info
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            if (lastUpdateInfo) lastUpdateInfo.textContent = timeStr;
+        }
+    }
+
+    // Toggle loading
     window.toggleLoading = function(show) {
         const overlay = document.getElementById('loadingOverlay');
         if (overlay) {
@@ -865,27 +1015,164 @@
             else overlay.classList.remove('show');
         }
     };
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        const btnPrint = document.getElementById('btnPrint');
-        if (btnPrint) btnPrint.addEventListener('click', () => window.print());
+
+    // Generate laporan (sementara dengan sample data)
+    function generateReport() {
+        toggleLoading(true);
         
-        const btnGenerate = document.getElementById('btnGenerate');
-        if (btnGenerate) {
-            btnGenerate.addEventListener('click', function() {
-                if (typeof window.generateReport === 'function') window.generateReport();
-                else window.dispatchEvent(new ErrorEvent('error', { filename: 'js/unduh.js' }));
-            });
+        setTimeout(() => {
+            // Data contoh untuk halaman 1 (Agregasi)
+            const kontenHal1 = document.getElementById('kontenHal1');
+            if (kontenHal1) {
+                kontenHal1.innerHTML = `
+                    <table class="tabel-data">
+                        <thead>
+                            <tr>
+                                <th>Desa/Kelurahan</th>
+                                <th>Total KK DTSEN</th>
+                                <th>D1+D2 (Prioritas)</th>
+                                <th>% Prioritas</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Sumber</td><td>3,450</td><td>950</td><td>27.5%</td><td><span class="priority-high">TINGGI</span></td></tr>
+                            <tr><td>Babakan</td><td>2,890</td><td>780</td><td>27.0%</td><td><span class="priority-high">TINGGI</span></td></tr>
+                            <tr><td>Pasalakan</td><td>2,450</td><td>650</td><td>26.5%</td><td><span class="priority-high">TINGGI</span></td></tr>
+                            <tr><td>Kaliwadas</td><td>2,100</td><td>520</td><td>24.8%</td><td><span class="priority-high">TINGGI</span></td></tr>
+                            <tr><td>Watubelah</td><td>1,980</td><td>450</td><td>22.7%</td><td><span class="priority-medium">SEDANG</span></td></tr>
+                            <tr><td>Kenanga</td><td>1,850</td><td>380</td><td>20.5%</td><td><span class="priority-medium">SEDANG</span></td></tr>
+                            <tr><td>Perbutulan</td><td>1,720</td><td>310</td><td>18.0%</td><td><span class="priority-medium">SEDANG</span></td></tr>
+                            <tr><td>Pekalangan</td><td>1,650</td><td>280</td><td>17.0%</td><td><span class="priority-low">RENDAH</span></td></tr>
+                        </tbody>
+                        <tfoot>
+                            <tr><td><strong>TOTAL</strong></td><td><strong>18,090</strong></td><td><strong>4,320</strong></td><td><strong>23.9%</strong></td><td></td></tr>
+                        </tfoot>
+                    </table>
+                `;
+            }
+
+            // Data contoh untuk halaman 2 (Prioritas)
+            const kontenHal2 = document.getElementById('kontenHal2');
+            if (kontenHal2) {
+                kontenHal2.innerHTML = `
+                    <table class="tabel-data">
+                        <thead>
+                            <tr>
+                                <th>Prioritas</th>
+                                <th>Jumlah Desa</th>
+                                <th>Total KK D1+D2</th>
+                                <th>Rata-rata per Desa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><span class="priority-high">TINGGI (>500 KK)</span></td><td>4 Desa</td><td>2,900 KK</td><td>725 KK</td></tr>
+                            <tr><td><span class="priority-medium">SEDANG (300-500 KK)</span></td><td>3 Desa</td><td>1,140 KK</td><td>380 KK</td></tr>
+                            <tr><td><span class="priority-low">RENDAH (<300 KK)</span></td><td>1 Desa</td><td>280 KK</td><td>280 KK</td></tr>
+                        </tbody>
+                        <tfoot>
+                            <tr><td><strong>TOTAL</strong></td><td><strong>8 Desa</strong></td><td><strong>4,320 KK</strong></td><td><strong>540 KK</strong></td></tr>
+                        </tfoot>
+                    </table>
+                `;
+            }
+
+            // Data contoh untuk halaman 3 (Bansos)
+            const kontenHal3 = document.getElementById('kontenHal3');
+            if (kontenHal3) {
+                kontenHal3.innerHTML = `
+                    <table class="tabel-data">
+                        <thead>
+                            <tr>
+                                <th>Desa/Kelurahan</th>
+                                <th>PKH</th>
+                                <th>BPNT</th>
+                                <th>PBI</th>
+                                <th>Total Bansos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Sumber</td><td>450</td><td>520</td><td>890</td><td>1,860</td></tr>
+                            <tr><td>Babakan</td><td>380</td><td>440</td><td>760</td><td>1,580</td></tr>
+                            <tr><td>Pasalakan</td><td>320</td><td>380</td><td>650</td><td>1,350</td></tr>
+                            <tr><td>Kaliwadas</td><td>280</td><td>310</td><td>540</td><td>1,130</td></tr>
+                            <tr><td>Watubelah</td><td>220</td><td>260</td><td>450</td><td>930</td></tr>
+                        </tbody>
+                        <tfoot>
+                            <tr><td><strong>TOTAL</strong></td><td><strong>1,650</strong></td><td><strong>1,910</strong></td><td><strong>3,290</strong></td><td><strong>6,850</strong></td></tr>
+                        </tfoot>
+                    </table>
+                `;
+            }
+
+            // Data contoh untuk halaman 4 (Layanan)
+            const kontenHal4 = document.getElementById('kontenHal4');
+            if (kontenHal4) {
+                kontenHal4.innerHTML = `
+                    <table class="tabel-data">
+                        <thead>
+                            <tr>
+                                <th>Desa/Kelurahan</th>
+                                <th>Update DTSEN</th>
+                                <th>Pengaduan</th>
+                                <th>SKTM</th>
+                                <th>Total Layanan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Sumber</td><td>120</td><td>45</td><td>35</td><td>200</td></tr>
+                            <tr><td>Babakan</td><td>95</td><td>38</td><td>28</td><td>161</td></tr>
+                            <tr><td>Pasalakan</td><td>82</td><td>32</td><td>24</td><td>138</td></tr>
+                            <tr><td>Kaliwadas</td><td>68</td><td>28</td><td>20</td><td>116</td></tr>
+                            <tr><td>Watubelah</td><td>55</td><td>22</td><td>16</td><td>93</td></tr>
+                        </tbody>
+                        <tfoot>
+                            <tr><td><strong>TOTAL</strong></td><td><strong>420</strong></td><td><strong>165</strong></td><td><strong>123</strong></td><td><strong>708</strong></td></tr>
+                        </tfoot>
+                    </table>
+                `;
+            }
+
+            // Update info
+            if (dataCountInfo) dataCountInfo.innerHTML = '<i class="fas fa-map-marked-alt mr-1"></i> 8 Desa - 18,090 KK';
+            
+            toggleLoading(false);
+        }, 1000);
+    }
+
+    // Event Listeners
+    if (btnTerapkan) {
+        btnTerapkan.addEventListener('click', function(e) {
+            e.preventDefault();
+            updatePeriodeInfo();
+            generateReport();
+        });
+    }
+
+    if (btnGenerate) {
+        btnGenerate.addEventListener('click', generateReport);
+    }
+
+    if (btnPrint) {
+        btnPrint.addEventListener('click', () => window.print());
+    }
+
+    if (modeSelect && desaWrap) {
+        modeSelect.addEventListener('change', function() {
+            desaWrap.style.display = this.value === 'desa' ? 'block' : 'none';
+        });
+    }
+
+    // Initial update
+    updatePeriodeInfo();
+    generateReport();
+
+    // Error handler untuk unduh.js
+    window.addEventListener('error', function(e) {
+        if (e.target && e.target.tagName === 'SCRIPT' && e.target.src && e.target.src.includes('unduh.js')) {
+            console.log('unduh.js tidak ditemukan, menggunakan fallback');
         }
-        
-        const mode = document.getElementById('mode');
-        const desaWrap = document.getElementById('desaWrap');
-        if (mode && desaWrap) {
-            mode.addEventListener('change', function() {
-                desaWrap.style.display = this.value === 'desa' ? 'block' : 'none';
-            });
-        }
-    });
+    }, true);
 </script>
 
 </body>
