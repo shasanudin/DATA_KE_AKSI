@@ -47,8 +47,8 @@
         .pelayanan-header {
             background: linear-gradient(135deg, #17a2b8 0%, #0056b3 100%);
             color: white;
-            padding: 40px 0 60px;
-            margin-bottom: 30px;
+            padding: 40px 0 100px;
+            margin-bottom: 0;
             border-radius: 0 0 30px 30px;
             position: relative;
             overflow: hidden;
@@ -106,6 +106,103 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             opacity: 0.8;
+        }
+
+        /* ===== PERIODE SELECTOR ===== */
+        .periode-wrapper {
+            margin-top: -60px;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .periode-selector {
+            background: white;
+            border-radius: 60px;
+            padding: 15px 25px;
+            box-shadow: 0 15px 40px rgba(23,162,184,0.15);
+            border: 1px solid rgba(23,162,184,0.2);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .periode-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #0056b3;
+            font-weight: 700;
+            font-size: 0.95rem;
+            background: rgba(23,162,184,0.1);
+            padding: 8px 20px;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+
+        .periode-label i {
+            color: #17a2b8;
+        }
+
+        .periode-controls {
+            display: flex;
+            gap: 15px;
+            flex: 1;
+            flex-wrap: wrap;
+        }
+
+        .periode-select {
+            min-width: 150px;
+            flex: 1;
+        }
+
+        .periode-select select {
+            width: 100%;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 2px solid #e9ecef;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .periode-select select:focus {
+            border-color: #17a2b8;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(23,162,184,0.1);
+        }
+
+        .btn-periode {
+            background: linear-gradient(135deg, #17a2b8, #0056b3);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(23,162,184,0.3);
+        }
+
+        .btn-periode:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(23,162,184,0.4);
+        }
+
+        .periode-info {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 15px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
         }
 
         /* ===== STATS CARD PELAYANAN ===== */
@@ -241,6 +338,18 @@
             display: inline-block;
         }
 
+        /* ===== PERIODE BADGE ===== */
+        .periode-badge {
+            background: rgba(255,255,255,0.15);
+            padding: 4px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 15px;
+        }
+
         /* ===== CHART CARD ===== */
         .chart-card {
             background: white;
@@ -372,6 +481,10 @@
             .table-header { flex-direction: column; align-items: flex-start; gap: 10px; }
             .chart-header { flex-direction: column; align-items: flex-start; gap: 15px; }
             .chart-container { height: 250px; }
+            .periode-wrapper { margin-top: -40px; }
+            .periode-selector { border-radius: 20px; }
+            .periode-label { width: 100%; justify-content: center; }
+            .btn-periode { width: 100%; }
         }
 
         @media (max-width: 576px) {
@@ -413,8 +526,59 @@
                 <div class="header-stat-label">Update</div>
             </div>
         </div>
+
+        <!-- PERIODE INFO DI HEADER -->
+        <div class="mt-3" data-aos="fade-up" data-aos-delay="250">
+            <span class="periode-info" id="heroPeriode">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Periode: Memuat...</span>
+            </span>
+        </div>
     </div>
 </section>
+
+<!-- ===== PERIODE SELECTOR ===== -->
+<div class="periode-wrapper">
+    <div class="container">
+        <div class="periode-selector" data-aos="fade-up">
+            <div class="periode-label">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Periode Data:</span>
+            </div>
+            <div class="periode-controls">
+                <div class="periode-select">
+                    <select id="periodeBulan" class="form-control">
+                        <option value="">Semua Bulan</option>
+                        <option value="1">Januari</option>
+                        <option value="2">Februari</option>
+                        <option value="3">Maret</option>
+                        <option value="4">April</option>
+                        <option value="5">Mei</option>
+                        <option value="6">Juni</option>
+                        <option value="7">Juli</option>
+                        <option value="8">Agustus</option>
+                        <option value="9">September</option>
+                        <option value="10">Oktober</option>
+                        <option value="11">November</option>
+                        <option value="12">Desember</option>
+                    </select>
+                </div>
+                <div class="periode-select">
+                    <select id="periodeTahun" class="form-control">
+                        <option value="">Semua Tahun</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                    </select>
+                </div>
+                <button class="btn-periode" id="btnTerapkanPeriode">
+                    <i class="fas fa-filter mr-1"></i> Terapkan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- ===== MAIN CONTENT ===== -->
 <main class="container my-5">
@@ -473,9 +637,14 @@
                         <i class="fas fa-table mr-2"></i>
                         Rincian Pelayanan Per Desa/Kelurahan
                     </h6>
-                    <span class="badge badge-light px-3 py-2">
-                        <i class="fas fa-sync-alt mr-1"></i> Real-time
-                    </span>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="periode-badge" id="tablePeriode">
+                            <i class="fas fa-calendar-alt"></i> Memuat...
+                        </span>
+                        <span class="badge badge-light px-3 py-2">
+                            <i class="fas fa-sync-alt mr-1"></i> Real-time
+                        </span>
+                    </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
@@ -529,7 +698,7 @@
                         </div>
                         <div>
                             <h5 class="mb-0">Distribusi Layanan Per Desa</h5>
-                            <small class="text-muted">10 desa dengan layanan tertinggi</small>
+                            <small class="text-muted" id="chartSubtitle">10 desa dengan layanan tertinggi</small>
                         </div>
                     </div>
                     <div class="d-flex gap-3 flex-wrap">
@@ -540,6 +709,10 @@
                 </div>
                 <div class="chart-container">
                     <canvas id="pelayananChart"></canvas>
+                </div>
+                <div class="mt-3 text-center text-muted small">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Periode: <span id="chartPeriode">Periode terpilih</span>
                 </div>
             </div>
         </div>
@@ -561,7 +734,7 @@
                 </div>
             </div>
             
-            <!-- CARD KONTAK LAYANAN - DIAMBIL DARI KONTAK.HTML -->
+            <!-- CARD KONTAK LAYANAN -->
             <div class="sidebar-card">
                 <div class="d-flex align-items-center mb-3">
                     <div class="sidebar-icon mr-3">
@@ -688,7 +861,7 @@
 <!-- Firebase Module -->
 <script type="module">
     // ============================================================
-    // FIREBASE INITIALIZATION - KHUSUS DATA PELAYANAN
+    // FIREBASE INITIALIZATION
     // ============================================================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
     import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
@@ -709,7 +882,36 @@
     // GLOBAL VARIABLES
     // ============================================================
     let pelayananChart = null;
-    let pelayananData = [];
+    let allData = [];
+    let filteredData = [];
+    let currentPeriode = { bulan: null, tahun: null };
+
+    // ============================================================
+    // DOM ELEMENTS - DENGAN PENGECEKAN
+    // ============================================================
+    const getElement = (id) => {
+        const el = document.getElementById(id);
+        if (!el) console.warn(`Element with id "${id}" not found`);
+        return el;
+    };
+
+    const bulanSelect = getElement('periodeBulan');
+    const tahunSelect = getElement('periodeTahun');
+    const btnTerapkan = getElement('btnTerapkanPeriode');
+    const heroPeriode = getElement('heroPeriode');
+    const tablePeriode = getElement('tablePeriode');
+    const chartPeriode = getElement('chartPeriode');
+    const chartSubtitle = getElement('chartSubtitle');
+    
+    // Stats elements
+    const totalDesaHeader = getElement('totalDesaHeader');
+    const totalLayananHeader = getElement('totalLayananHeader');
+    const updateTimeHeader = getElement('updateTimeHeader');
+    const totalDTKS = getElement('totalDTKS');
+    const totalPengaduan = getElement('totalPengaduan');
+    const totalSKTM = getElement('totalSKTM');
+    const pelayananTable = getElement('pelayananTable');
+    const updateTime = getElement('updateTime');
 
     // ============================================================
     // INITIALIZE AOS
@@ -725,134 +927,232 @@
     // ============================================================
     fetch('navbar.html')
         .then(r => r.ok ? r.text() : Promise.reject())
-        .then(html => document.getElementById('navbar').innerHTML = html)
+        .then(html => {
+            const navbar = document.getElementById('navbar');
+            if (navbar) navbar.innerHTML = html;
+        })
         .catch(() => {
             console.log('Navbar not loaded');
-            document.getElementById('navbar').innerHTML = '<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2"><div class="container"><span class="navbar-text">TKSK - Puskesos Sumber</span></div></nav>';
+            const navbar = document.getElementById('navbar');
+            if (navbar) {
+                navbar.innerHTML = '<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2"><div class="container"><span class="navbar-text">TKSK - Puskesos Sumber</span></div></nav>';
+            }
         });
 
     // ============================================================
-    // MONITOR PELAYANAN REAL-TIME
+    // SET DEFAULT PERIODE
     // ============================================================
-    function initPelayananMonitor() {
-        onSnapshot(collection(db, "wilayah_desa"), (snapshot) => {
-            // Reset aggregator
-            let totalDTKS = 0;
-            let totalPengaduan = 0;
-            let totalSKTM = 0;
-            let totalDesa = 0;
-            
-            let rows = "";
-            let labels = [];
-            let dataDTKS = [];
-            let dataPengaduan = [];
-            let dataSKTM = [];
-            
-            // Simpan data untuk diurutkan berdasarkan total layanan
-            let desaList = [];
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+    
+    if (bulanSelect) bulanSelect.value = currentMonth;
+    if (tahunSelect) tahunSelect.value = currentYear;
 
-            // Sort by nama desa
-            const dataDesa = snapshot.docs
-                .map(doc => ({ id: doc.id, ...doc.data() }))
-                .filter(item => item.nama_wilayah || item.nama)
-                .sort((a, b) => (a.nama_wilayah || a.nama || '').localeCompare(b.nama_wilayah || b.nama || ''));
+    // ============================================================
+    // UPDATE PERIODE INFO
+    // ============================================================
+    function updatePeriodeInfo() {
+        const bulan = bulanSelect?.value;
+        const tahun = tahunSelect?.value;
+        
+        let text = 'Semua Periode';
+        if (bulan && tahun && bulanSelect && tahunSelect) {
+            const bulanNama = bulanSelect.options[bulanSelect.selectedIndex]?.text || '';
+            text = `${bulanNama} ${tahun}`;
+            currentPeriode = { bulan: parseInt(bulan), tahun: parseInt(tahun) };
+        } else {
+            currentPeriode = { bulan: null, tahun: null };
+        }
+        
+        // Update semua elemen periode dengan pengecekan
+        if (heroPeriode) heroPeriode.innerHTML = `<i class="fas fa-calendar-alt"></i> <span>Periode: ${text}</span>`;
+        if (tablePeriode) tablePeriode.innerHTML = `<i class="fas fa-calendar-alt"></i> ${text}`;
+        if (chartPeriode) chartPeriode.innerText = text;
+        if (chartSubtitle) chartSubtitle.innerText = `10 desa dengan layanan tertinggi - ${text}`;
+    }
 
-            dataDesa.forEach((w) => {
-                const namaDesa = w.nama_wilayah || w.nama || w.id;
-                
-                // ===== AMBIL DATA PELAYANAN =====
-                const layanan = w.layanan || {};
-                
-                // Parse integer
-                const dtks = parseInt(layanan.dtks) || 0;
-                const pengaduan = parseInt(layanan.pengaduan) || 0;
-                const sktm = parseInt(layanan.sktm) || 0;
-                const total = dtks + pengaduan + sktm;
-                
-                // Akumulasi
-                totalDTKS += dtks;
-                totalPengaduan += pengaduan;
-                totalSKTM += sktm;
-                totalDesa++;
-                
-                // Simpan untuk sorting
-                desaList.push({
-                    nama: namaDesa,
-                    dtks: dtks,
-                    pengaduan: pengaduan,
-                    sktm: sktm,
-                    total: total
-                });
-                
-                // Row table
-                rows += `<tr>
-                    <td class="pl-4 font-weight-bold">${namaDesa}</td>
-                    <td class="text-center">
-                        <span class="badge-dtks px-3 py-2">
-                            <i class="fas fa-address-card mr-1"></i> ${dtks.toLocaleString('id-ID')}
-                        </span>
-                    </td>
-                    <td class="text-center">
-                        <span class="badge-pengaduan px-3 py-2">
-                            <i class="fas fa-comments mr-1"></i> ${pengaduan.toLocaleString('id-ID')}
-                        </span>
-                    </td>
-                    <td class="text-center">
-                        <span class="badge-sktm px-3 py-2">
-                            <i class="fas fa-file-invoice mr-1"></i> ${sktm.toLocaleString('id-ID')}
-                        </span>
-                    </td>
-                    <td class="text-center">
-                        <a href="#" class="text-info" onclick="alert('Total layanan ${namaDesa}: ${total.toLocaleString('id-ID')}\\nDTKS: ${dtks.toLocaleString('id-ID')}\\nPengaduan: ${pengaduan.toLocaleString('id-ID')}\\nSKTM: ${sktm.toLocaleString('id-ID')}'); return false;">
-                            <i class="fas fa-info-circle"></i>
-                        </a>
-                    </td>
-                </tr>`;
+    // ============================================================
+    // FILTER DATA BY PERIODE
+    // ============================================================
+    function filterDataByPeriode() {
+        const bulan = bulanSelect ? parseInt(bulanSelect.value) : null;
+        const tahun = tahunSelect ? parseInt(tahunSelect.value) : null;
+        
+        if (!bulan || !tahun) {
+            // Jika tidak ada filter, tampilkan semua data
+            filteredData = [...allData];
+        } else {
+            // Filter berdasarkan bulan dan tahun
+            filteredData = allData.filter(item => {
+                const itemBulan = item.periode?.bulan;
+                const itemTahun = item.periode?.tahun;
+                return itemBulan === bulan && itemTahun === tahun;
             });
+        }
+        
+        // Update periode info
+        updatePeriodeInfo();
+        
+        // Proses data yang sudah difilter
+        processPelayananData();
+    }
 
-            // ===== AMBIL 10 DESA DENGAN TOTAL LAYANAN TERTINGGI UNTUK CHART =====
-            const top10Desa = [...desaList]
-                .sort((a, b) => b.total - a.total)
-                .slice(0, 10);
-            
-            labels = top10Desa.map(d => d.nama.length > 15 ? d.nama.substring(0, 12) + '...' : d.nama);
-            dataDTKS = top10Desa.map(d => d.dtks);
-            dataPengaduan = top10Desa.map(d => d.pengaduan);
-            dataSKTM = top10Desa.map(d => d.sktm);
+    // ============================================================
+    // SAFE TEXT UPDATE
+    // ============================================================
+    function safeSetText(element, value, defaultValue = '0') {
+        if (element) {
+            element.innerText = value !== undefined && value !== null ? value : defaultValue;
+        }
+    }
 
-            // ===== UPDATE UI =====
-            document.getElementById('totalDesaHeader').innerText = totalDesa;
-            document.getElementById('totalLayananHeader').innerText = (totalDTKS + totalPengaduan + totalSKTM).toLocaleString('id-ID');
-            document.getElementById('totalDTKS').innerText = totalDTKS.toLocaleString('id-ID');
-            document.getElementById('totalPengaduan').innerText = totalPengaduan.toLocaleString('id-ID');
-            document.getElementById('totalSKTM').innerText = totalSKTM.toLocaleString('id-ID');
-            document.getElementById('pelayananTable').innerHTML = rows;
+    // ============================================================
+    // PROCESS PELAYANAN DATA
+    // ============================================================
+    function processPelayananData() {
+        // Reset aggregator
+        let totalDTKSValue = 0;
+        let totalPengaduanValue = 0;
+        let totalSKTMValue = 0;
+        let totalDesaValue = 0;
+        
+        // Map untuk mengelompokkan data per wilayah (ambil yang terbaru)
+        const wilayahMap = new Map();
+        
+        filteredData.forEach((item) => {
+            const namaWilayah = item.nama;
+            if (!namaWilayah) return;
             
-            // Update timestamp
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-            const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-            document.getElementById('updateTime').innerText = `${dateStr}, ${timeStr}`;
-            document.getElementById('updateTimeHeader').innerText = timeStr;
-
-            // Render chart
-            renderChart(labels, dataDTKS, dataPengaduan, dataSKTM);
-            
-        }, (error) => {
-            console.error("Firebase Error:", error);
-            document.getElementById('pelayananTable').innerHTML = `
-                <tr><td colspan="5" class="text-center py-4 text-danger">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
-                    Gagal memuat data pelayanan.
-                </td></tr>`;
+            // Jika sudah ada data untuk wilayah ini, bandingkan createdAt
+            if (wilayahMap.has(namaWilayah)) {
+                const existing = wilayahMap.get(namaWilayah);
+                if (item.createdAt?.seconds > existing.createdAt?.seconds) {
+                    wilayahMap.set(namaWilayah, item);
+                }
+            } else {
+                wilayahMap.set(namaWilayah, item);
+            }
         });
+        
+        // Konversi map ke array
+        const latestData = Array.from(wilayahMap.values());
+        
+        let rows = "";
+        let labels = [];
+        let dataDTKS = [];
+        let dataPengaduan = [];
+        let dataSKTM = [];
+        
+        // Simpan data untuk diurutkan berdasarkan total layanan
+        let desaList = [];
+
+        // Sort by nama desa
+        latestData.sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+
+        latestData.forEach((w) => {
+            const namaDesa = w.nama || 'Tidak Diketahui';
+            
+            // ===== AMBIL DATA PELAYANAN =====
+            const layanan = w.layanan || {};
+            
+            // Parse integer
+            const dtks = parseInt(layanan.dtks) || 0;
+            const pengaduan = parseInt(layanan.pengaduan) || 0;
+            const sktm = parseInt(layanan.sktm) || 0;
+            const total = dtks + pengaduan + sktm;
+            
+            // Akumulasi
+            totalDTKSValue += dtks;
+            totalPengaduanValue += pengaduan;
+            totalSKTMValue += sktm;
+            totalDesaValue++;
+            
+            // Simpan untuk sorting
+            desaList.push({
+                nama: namaDesa,
+                dtks: dtks,
+                pengaduan: pengaduan,
+                sktm: sktm,
+                total: total
+            });
+            
+            // Row table
+            rows += `<tr>
+                <td class="pl-4 font-weight-bold">${namaDesa}</td>
+                <td class="text-center">
+                    <span class="badge-dtks px-3 py-2">
+                        <i class="fas fa-address-card mr-1"></i> ${dtks.toLocaleString('id-ID')}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span class="badge-pengaduan px-3 py-2">
+                        <i class="fas fa-comments mr-1"></i> ${pengaduan.toLocaleString('id-ID')}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span class="badge-sktm px-3 py-2">
+                        <i class="fas fa-file-invoice mr-1"></i> ${sktm.toLocaleString('id-ID')}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <a href="#" class="text-info" onclick="alert('Total layanan ${namaDesa}: ${total.toLocaleString('id-ID')}\\nDTKS: ${dtks.toLocaleString('id-ID')}\\nPengaduan: ${pengaduan.toLocaleString('id-ID')}\\nSKTM: ${sktm.toLocaleString('id-ID')}'); return false;">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                </td>
+            </tr>`;
+        });
+
+        // ===== AMBIL 10 DESA DENGAN TOTAL LAYANAN TERTINGGI UNTUK CHART =====
+        const top10Desa = [...desaList]
+            .sort((a, b) => b.total - a.total)
+            .slice(0, 10);
+        
+        labels = top10Desa.map(d => d.nama.length > 15 ? d.nama.substring(0, 12) + '...' : d.nama);
+        dataDTKS = top10Desa.map(d => d.dtks);
+        dataPengaduan = top10Desa.map(d => d.pengaduan);
+        dataSKTM = top10Desa.map(d => d.sktm);
+
+        // ===== UPDATE UI DENGAN PENGECEKAN =====
+        safeSetText(totalDesaHeader, totalDesaValue);
+        safeSetText(totalLayananHeader, (totalDTKSValue + totalPengaduanValue + totalSKTMValue).toLocaleString('id-ID'));
+        safeSetText(totalDTKS, totalDTKSValue.toLocaleString('id-ID'));
+        safeSetText(totalPengaduan, totalPengaduanValue.toLocaleString('id-ID'));
+        safeSetText(totalSKTM, totalSKTMValue.toLocaleString('id-ID'));
+        
+        // Update table
+        if (pelayananTable) {
+            if (rows) {
+                pelayananTable.innerHTML = rows;
+            } else {
+                pelayananTable.innerHTML = `
+                    <tr><td colspan="5" class="text-center py-4 text-muted">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Tidak ada data pelayanan untuk periode yang dipilih
+                    </td></tr>`;
+            }
+        }
+        
+        // Update timestamp
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+        
+        safeSetText(updateTime, `${dateStr}, ${timeStr}`);
+        safeSetText(updateTimeHeader, timeStr);
+
+        // Render chart
+        renderChart(labels, dataDTKS, dataPengaduan, dataSKTM);
     }
 
     // ============================================================
     // RENDER CHART PELAYANAN
     // ============================================================
     function renderChart(labels, dtks, pengaduan, sktm) {
-        const ctx = document.getElementById('pelayananChart').getContext('2d');
+        const chartCanvas = document.getElementById('pelayananChart');
+        if (!chartCanvas) return;
+        
+        const ctx = chartCanvas.getContext('2d');
         
         if (pelayananChart) {
             pelayananChart.destroy();
@@ -920,6 +1220,49 @@
     }
 
     // ============================================================
+    // MONITOR PELAYANAN REAL-TIME
+    // ============================================================
+    function initPelayananMonitor() {
+        onSnapshot(collection(db, "wilayah_desa"), (snapshot) => {
+            // Reset allData
+            allData = [];
+            
+            snapshot.forEach((doc) => {
+                const item = doc.data();
+                allData.push({
+                    id: doc.id,
+                    ...item
+                });
+            });
+
+            console.log('Data pelayanan loaded:', allData.length, 'records');
+            
+            // Terapkan filter periode
+            filterDataByPeriode();
+            
+        }, (error) => {
+            console.error("Firebase Error:", error);
+            if (pelayananTable) {
+                pelayananTable.innerHTML = `
+                    <tr><td colspan="5" class="text-center py-4 text-danger">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        Gagal memuat data pelayanan.
+                    </td></tr>`;
+            }
+        });
+    }
+
+    // ============================================================
+    // EVENT LISTENERS
+    // ============================================================
+    if (btnTerapkan) {
+        btnTerapkan.addEventListener('click', (e) => {
+            e.preventDefault();
+            filterDataByPeriode();
+        });
+    }
+
+    // ============================================================
     // START MONITORING
     // ============================================================
     initPelayananMonitor();
@@ -928,7 +1271,10 @@
 
 <!-- Fallback for non-module browsers -->
 <script nomodule>
-    document.getElementById('pelayananTable').innerHTML = '<tr><td colspan="5" class="text-center py-4 text-warning">Browser tidak mendukung fitur modern.</td></tr>';
+    const pelayananTable = document.getElementById('pelayananTable');
+    if (pelayananTable) {
+        pelayananTable.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-warning">Browser tidak mendukung fitur modern.</td></tr>';
+    }
 </script>
 
 </body>
