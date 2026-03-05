@@ -136,6 +136,90 @@
             margin-top: 20px;
         }
 
+        /* ===== PERIODE SELECTOR ===== */
+        .periode-wrapper {
+            margin-top: -40px;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .periode-selector {
+            background: white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .periode-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: var(--primary-light);
+            padding: 6px 16px;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+
+        .periode-label i {
+            color: var(--primary);
+        }
+
+        .periode-controls {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            flex-wrap: wrap;
+        }
+
+        .periode-select {
+            min-width: 140px;
+            flex: 1;
+        }
+
+        .periode-select select {
+            width: 100%;
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 2px solid #e9ecef;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .periode-select select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(10,88,202,0.1);
+        }
+
+        .btn-periode {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-periode:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(10,88,202,0.3);
+        }
+
         /* ===== STATS CARD ===== */
         .stats-card {
             background: white;
@@ -179,6 +263,12 @@
             color: var(--dark);
             line-height: 1;
             margin-bottom: 5px;
+        }
+
+        .stats-periode {
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
         }
 
         /* ===== TABEL KECAMATAN ===== */
@@ -338,6 +428,18 @@
             width: 100%;
         }
 
+        /* ===== PERIODE INFO ===== */
+        .periode-info {
+            display: inline-flex;
+            align-items: center;
+            background: var(--primary-light);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
         /* ===== FOOTER ===== */
         .main-footer {
             background: var(--dark);
@@ -364,6 +466,9 @@
             .custom-select { width: 100%; }
             .desil-card { padding: 15px; }
             .desil-info h4 { font-size: 1.4rem; }
+            .periode-selector { border-radius: 20px; }
+            .periode-label { width: 100%; justify-content: center; }
+            .btn-periode { width: 100%; }
         }
     </style>
 </head>
@@ -428,12 +533,55 @@
             </div>
             <div class="text-muted">•</div>
             <div>
-                <small class="text-muted">Update</small>
-                <strong id="updateDataHero">-</strong>
+                <small class="text-muted">Periode</small>
+                <strong id="periodeHero">-</strong>
             </div>
         </div>
     </div>
 </section>
+
+<!-- ===== PERIODE SELECTOR ===== -->
+<div class="periode-wrapper">
+    <div class="container">
+        <div class="periode-selector" data-aos="fade-up">
+            <div class="periode-label">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Periode Data:</span>
+            </div>
+            <div class="periode-controls">
+                <div class="periode-select">
+                    <select id="periodeBulan" class="form-control">
+                        <option value="">Semua Bulan</option>
+                        <option value="1">Januari</option>
+                        <option value="2">Februari</option>
+                        <option value="3">Maret</option>
+                        <option value="4">April</option>
+                        <option value="5">Mei</option>
+                        <option value="6">Juni</option>
+                        <option value="7">Juli</option>
+                        <option value="8">Agustus</option>
+                        <option value="9">September</option>
+                        <option value="10">Oktober</option>
+                        <option value="11">November</option>
+                        <option value="12">Desember</option>
+                    </select>
+                </div>
+                <div class="periode-select">
+                    <select id="periodeTahun" class="form-control">
+                        <option value="">Semua Tahun</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                    </select>
+                </div>
+                <button class="btn-periode" id="btnTerapkanPeriode">
+                    <i class="fas fa-filter mr-1"></i> Terapkan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- ===== MAIN CONTENT ===== -->
 <main class="container py-4">
@@ -445,8 +593,8 @@
                     <i class="fas fa-map-marked-alt mr-2 text-primary"></i>
                     Ringkasan Kecamatan
                 </h5>
-                <span class="badge badge-light px-3 py-2">
-                    <i class="fas fa-chart-pie mr-1"></i> Desil 1-10
+                <span class="periode-info" id="periodeInfo">
+                    <i class="fas fa-calendar-alt mr-1"></i> Memuat...
                 </span>
             </div>
             
@@ -466,7 +614,7 @@
             
             <div class="mt-3 d-flex align-items-center justify-content-between">
                 <small class="text-muted">
-                    <i class="fas fa-history mr-1"></i> Pembaruan terakhir: 
+                    <i class="fas fa-history mr-1"></i> Pembaruan: 
                     <strong id="updateData">-</strong>
                 </small>
                 <span class="badge badge-success px-3 py-2">
@@ -554,10 +702,8 @@
                         <i class="fas fa-chart-bar mr-2 text-primary"></i>
                         Proporsi Kesejahteraan <span id="selectedWilayahName">-</span>
                     </h5>
-                    <div class="d-flex align-items-center">
-                        <span class="badge badge-light px-3 py-2">
-                            <i class="fas fa-percent mr-1"></i> Persentase
-                        </span>
+                    <div class="periode-info" id="periodeWilayah">
+                        <i class="fas fa-calendar-alt mr-1"></i> Periode terpilih
                     </div>
                 </div>
                 <div class="chart-container">
@@ -635,7 +781,7 @@
 <!-- Firebase Module -->
 <script type="module">
     // ============================================================
-    // FIREBASE INITIALIZATION - KHUSUS DATA DTSEN
+    // FIREBASE INITIALIZATION
     // ============================================================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
@@ -656,10 +802,22 @@
     // GLOBAL VARIABLES
     // ============================================================
     let chart = null;
+    let allData = [];
+    let filteredData = [];
     let wilayahData = [];
     let agregatDesil = Array(10).fill(0);
     let totalKKKecamatan = 0;
     let totalDesa = 0;
+
+    // ============================================================
+    // DOM ELEMENTS
+    // ============================================================
+    const bulanSelect = document.getElementById('periodeBulan');
+    const tahunSelect = document.getElementById('periodeTahun');
+    const btnTerapkan = document.getElementById('btnTerapkanPeriode');
+    const periodeInfo = document.getElementById('periodeInfo');
+    const periodeWilayah = document.getElementById('periodeWilayah');
+    const periodeHero = document.getElementById('periodeHero');
 
     // ============================================================
     // INITIALIZE AOS
@@ -699,77 +857,142 @@
     setInterval(updateClock, 60000);
 
     // ============================================================
-    // LOAD DATA DTSEN DARI FIREBASE
+    // SET DEFAULT PERIODE
     // ============================================================
-    async function loadDataDTSEN() {
-        try {
-            const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
-            
-            const select = document.getElementById('wilayahSelect');
-            const tabelKec = document.getElementById('tabelDesilKecamatan');
-            
-            wilayahData = [];
-            agregatDesil = Array(10).fill(0);
-            totalKKKecamatan = 0;
-            totalDesa = 0;
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+    
+    if (bulanSelect) bulanSelect.value = currentMonth;
+    if (tahunSelect) tahunSelect.value = currentYear;
 
-            querySnapshot.forEach((doc) => {
-                const item = doc.data();
-                const id = doc.id;
-                
-                // Format desil array
-                let desilArray = item.desil || [];
-                if (!Array.isArray(desilArray)) {
-                    desilArray = Object.values(desilArray);
-                }
-                while (desilArray.length < 10) desilArray.push(0);
-                desilArray = desilArray.map(v => parseInt(v) || 0);
-                
-                // Hitung total KK wilayah
-                const totalKKWilayah = desilArray.reduce((a, b) => a + b, 0);
-                
-                // Simpan data
-                wilayahData.push({
-                    id: id,
-                    nama: item.nama_wilayah || item.nama || id,
-                    desil: desilArray,
-                    total_kk: totalKKWilayah
-                });
-                
-                // Agregasi kecamatan
-                desilArray.forEach((val, i) => {
-                    agregatDesil[i] += val;
-                });
-                
-                totalKKKecamatan += totalKKWilayah;
-                totalDesa++;
-            });
-
-            // Update timestamp
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-            document.getElementById('updateData').innerText = dateStr;
-            document.getElementById('updateDataHero').innerText = dateStr;
-            
-            // Update hero stats
-            document.getElementById('totalDesaHero').innerText = totalDesa;
-            document.getElementById('totalKKHero').innerText = totalKKKecamatan.toLocaleString('id-ID');
-
-            // Render tabel kecamatan
-            renderTabelKecamatan();
-            
-            // Populate dropdown
-            renderDropdown();
-            
-            // Render wilayah pertama
-            if (wilayahData.length > 0) {
-                renderWilayah(0);
-            }
-
-        } catch (error) {
-            console.error("Firebase Error:", error);
-            alert("Gagal memuat data DTSEN. Silakan refresh halaman.");
+    // ============================================================
+    // UPDATE PERIODE INFO
+    // ============================================================
+    function updatePeriodeInfo() {
+        const bulan = bulanSelect.value;
+        const tahun = tahunSelect.value;
+        
+        let text = 'Semua Periode';
+        if (bulan && tahun) {
+            const bulanNama = bulanSelect.options[bulanSelect.selectedIndex]?.text || '';
+            text = `${bulanNama} ${tahun}`;
         }
+        
+        if (periodeInfo) periodeInfo.innerHTML = `<i class="fas fa-calendar-alt mr-1"></i> ${text}`;
+        if (periodeWilayah) periodeWilayah.innerHTML = `<i class="fas fa-calendar-alt mr-1"></i> ${text}`;
+        if (periodeHero) periodeHero.innerText = text;
+    }
+
+    // ============================================================
+    // FILTER DATA BY PERIODE
+    // ============================================================
+    function filterDataByPeriode() {
+        const bulan = parseInt(bulanSelect.value);
+        const tahun = parseInt(tahunSelect.value);
+        
+        if (!bulan || !tahun) {
+            // Jika tidak ada filter, tampilkan semua data
+            filteredData = [...allData];
+        } else {
+            // Filter berdasarkan bulan dan tahun
+            filteredData = allData.filter(item => {
+                const itemBulan = item.periode?.bulan;
+                const itemTahun = item.periode?.tahun;
+                return itemBulan === bulan && itemTahun === tahun;
+            });
+        }
+        
+        // Update periode info
+        updatePeriodeInfo();
+        
+        // Proses data yang sudah difilter
+        processFilteredData();
+    }
+
+    // ============================================================
+    // PROCESS FILTERED DATA
+    // ============================================================
+    function processFilteredData() {
+        // Reset agregasi
+        agregatDesil = Array(10).fill(0);
+        totalKKKecamatan = 0;
+        wilayahData = [];
+        
+        // Map untuk mengelompokkan data per wilayah (ambil yang terbaru)
+        const wilayahMap = new Map();
+        
+        filteredData.forEach((item) => {
+            const namaWilayah = item.nama;
+            if (!namaWilayah) return;
+            
+            // Jika sudah ada data untuk wilayah ini, bandingkan createdAt
+            if (wilayahMap.has(namaWilayah)) {
+                const existing = wilayahMap.get(namaWilayah);
+                if (item.createdAt?.seconds > existing.createdAt?.seconds) {
+                    wilayahMap.set(namaWilayah, item);
+                }
+            } else {
+                wilayahMap.set(namaWilayah, item);
+            }
+        });
+        
+        // Konversi map ke array
+        const latestData = Array.from(wilayahMap.values());
+        
+        // Proses setiap data wilayah
+        latestData.forEach((item) => {
+            const namaWilayah = item.nama;
+            
+            // Format desil array
+            let desilArray = item.desil || [];
+            if (!Array.isArray(desilArray)) {
+                if (typeof desilArray === 'object') {
+                    desilArray = Object.values(desilArray);
+                } else {
+                    desilArray = [];
+                }
+            }
+            
+            // Pastikan array memiliki 10 elemen
+            while (desilArray.length < 10) desilArray.push(0);
+            desilArray = desilArray.map(v => parseInt(v) || 0);
+            
+            // Hitung total KK wilayah
+            const totalKKWilayah = desilArray.reduce((a, b) => a + b, 0);
+            
+            // Simpan data
+            wilayahData.push({
+                nama: namaWilayah,
+                desil: desilArray,
+                total_kk: totalKKWilayah,
+                periode: item.periode
+            });
+            
+            // Agregasi kecamatan
+            desilArray.forEach((val, i) => {
+                agregatDesil[i] += val;
+            });
+            
+            totalKKKecamatan += totalKKWilayah;
+        });
+
+        totalDesa = wilayahData.length;
+
+        // Update hero stats
+        document.getElementById('totalDesaHero').innerText = totalDesa;
+        document.getElementById('totalKKHero').innerText = totalKKKecamatan.toLocaleString('id-ID');
+        
+        // Update timestamp
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        document.getElementById('updateData').innerText = dateStr;
+
+        // Render tabel kecamatan
+        renderTabelKecamatan();
+        
+        // Render dropdown
+        renderDropdown();
     }
 
     // ============================================================
@@ -823,6 +1046,13 @@
     // ============================================================
     function renderDropdown() {
         const select = document.getElementById('wilayahSelect');
+        if (!select) return;
+        
+        if (wilayahData.length === 0) {
+            select.innerHTML = '<option value="" disabled selected>Tidak ada data wilayah</option>';
+            return;
+        }
+        
         select.innerHTML = '<option value="" disabled selected>Pilih Desa/Kelurahan</option>';
         
         // Sort by name
@@ -835,12 +1065,11 @@
             select.appendChild(opt);
         });
         
-        // Add event listener
-        select.addEventListener('change', function(e) {
-            if (e.target.value) {
-                renderWilayah(parseInt(e.target.value));
-            }
-        });
+        // Pilih item pertama secara default
+        if (wilayahData.length > 0) {
+            select.value = 0;
+            renderWilayah(0);
+        }
     }
 
     // ============================================================
@@ -925,8 +1154,7 @@
                         callbacks: {
                             label: (context) => {
                                 const value = context.raw;
-                                const total = wilayah.total_kk;
-                                const jumlah = total * value / 100;
+                                const jumlah = totalKK * value / 100;
                                 return `${context.raw}% (${Math.round(jumlah).toLocaleString('id-ID')} KK)`;
                             }
                         }
@@ -952,6 +1180,49 @@
             }
         });
     }
+
+    // ============================================================
+    // LOAD DATA DTSEN DARI FIREBASE
+    // ============================================================
+    async function loadDataDTSEN() {
+        try {
+            const querySnapshot = await getDocs(collection(db, "wilayah_desa"));
+            
+            allData = [];
+            
+            querySnapshot.forEach((doc) => {
+                const item = doc.data();
+                allData.push({
+                    id: doc.id,
+                    ...item
+                });
+            });
+
+            console.log('Data loaded:', allData.length, 'records');
+            
+            // Terapkan filter periode
+            filterDataByPeriode();
+
+        } catch (error) {
+            console.error("Firebase Error:", error);
+            document.getElementById('tabelDesilKecamatan').innerHTML = 
+                '<tr><td colspan="2" class="text-center py-4 text-danger">Gagal memuat data. Silakan refresh halaman.</td></tr>';
+        }
+    }
+
+    // ============================================================
+    // EVENT LISTENERS
+    // ============================================================
+    document.getElementById('wilayahSelect')?.addEventListener('change', function(e) {
+        if (e.target.value) {
+            renderWilayah(parseInt(e.target.value));
+        }
+    });
+
+    btnTerapkan?.addEventListener('click', (e) => {
+        e.preventDefault();
+        filterDataByPeriode();
+    });
 
     // ============================================================
     // START DASHBOARD
