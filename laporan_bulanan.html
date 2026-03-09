@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Bulanan TKSK & Puskesos · RHK Database</title>
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f3f6fc;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 40px -12px rgba(0, 30, 60, 0.25);
+            overflow: hidden;
+            padding: 2rem 2rem 2.5rem 2rem;
+            border: 1px solid rgba(0, 112, 243, 0.1);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            border-bottom: 2px dashed #bdd9ff;
+            padding-bottom: 1.2rem;
+        }
+
+        .header-icon {
+            background: #0047ab;
+            width: 55px;
+            height: 55px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 6px 12px rgba(0,71,171,0.2);
+        }
+
+        .header-text h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            color: #0b2b4f;
+            letter-spacing: -0.02em;
+        }
+
+        .header-text .sub {
+            color: #2e5a9c;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .badge-rhk {
+            background: #e3f0ff;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #0047ab;
+            display: inline-block;
+            margin-left: 8px;
+            border: 1px solid #a0c6ff;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 0.9fr;
+            gap: 2rem;
+            margin: 2rem 0 1.5rem 0;
+        }
+
+        .form-card {
+            background: #f9fcff;
+            border-radius: 24px;
+            padding: 1.8rem 1.5rem;
+            border: 1px solid #d9e9ff;
+            box-shadow: inset 0 2px 4px #00000008, 0 8px 18px -8px #a3c6f0;
+        }
+
+        .preview-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 1.5rem 1.5rem;
+            border: 1px solid #cfdef5;
+            box-shadow: 0 8px 18px -8px #7899c7;
+        }
+
+        .preview-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #0a2f4d;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.4rem;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+            color: #1e4985;
+            display: block;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        label i {
+            width: 20px;
+            color: #2f6ed6;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #d4e0f0;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            background: white;
+            transition: 0.15s;
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #2670e8;
+            box-shadow: 0 0 0 4px rgba(38,112,232,0.15);
+        }
+
+        .file-upload-area {
+            border: 2px dashed #aec9f0;
+            border-radius: 20px;
+            padding: 1.2rem 1rem;
+            background: #f3f9ff;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            background: #e4f0fe;
+            border-color: #3b7fdd;
+        }
+
+        .file-upload-area i {
+            font-size: 32px;
+            color: #1e5bc0;
+            margin-bottom: 6px;
+        }
+
+        .file-upload-area .small {
+            font-size: 0.75rem;
+            color: #496faa;
+        }
+
+        #gambar-name {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            background: #deecfd;
+            padding: 5px 12px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+
+        .btn-submit {
+            background: #0047ab;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 8px 18px -6px #0047ab80;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            background: #002f8c;
+            transform: scale(1.01);
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1.5px solid #0047ab;
+            color: #0047ab;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: #e5f0ff;
+        }
+
+        .preview-item {
+            background: #f4faff;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2f6ed6;
+        }
+
+        .preview-item p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+        }
+
+        .preview-item strong {
+            color: #113e6f;
+            min-width: 110px;
+            display: inline-block;
+        }
+
+        .image-thumb {
+            max-width: 100%;
+            max-height: 130px;
+            border-radius: 16px;
+            border: 2px solid white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-top: 8px;
+        }
+
+        .csv-section {
+            margin-top: 30px;
+            background: #f2f8ff;
+            border-radius: 24px;
+            padding: 1.8rem 2rem;
+            border: 1px solid #bbd6fd;
+        }
+
+        .csv-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .csv-table-wrapper {
+            max-height: 240px;
+            overflow-y: auto;
+            border-radius: 18px;
+            background: white;
+            border: 1px solid #b9d2f0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        th {
+            background: #0047ab;
+            color: white;
+            padding: 10px 6px;
+            position: sticky;
+            top: 0;
+            font-weight: 500;
+        }
+
+        td {
+            padding: 8px 6px;
+            border-bottom: 1px solid #e1ecfe;
+            text-align: center;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge-csv {
+            background: #1f8b4c;
+            color: white;
+            border-radius: 50px;
+            padding: 0.2rem 1rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 20px;
+            color: #5579aa;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-icon">
+            <i class="fas fa-flag-checkered"></i>
+        </div>
+        <div class="header-text">
+            <h1>Laporan Bulanan Terpadu <span style="font-weight:300;">TKSK & Puskesos</span></h1>
+            <div class="sub">
+                <i class="fas fa-database"></i> Format RHK Database 
+                <span class="badge-rhk"><i class="far fa-calendar-alt"></i> Periode: April 2025</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORM + PREVIEW GRID -->
+    <div class="grid-2">
+        <!-- KIRI: FORM LAPORAN (mirip google form) -->
+        <div class="form-card">
+            <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-edit" style="color:#0047ab;"></i> Entri Laporan (RHK)</h3>
+            <form id="reportForm">
+                <div class="form-group">
+                    <label><i class="fas fa-user-tie"></i> Nama Pelapor</label>
+                    <input type="text" id="nama" placeholder="cth: Siti Aminah" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-id-card"></i> Jabatan</label>
+                    <select id="jabatan" required>
+                        <option value="">-- Pilih --</option>
+                        <option value="TKSK">TKSK (Tenaga Kesejahteraan Sosial Kecamatan)</option>
+                        <option value="Puskesos">Puskesos (Pusat Kesejahteraan Sosial)</option>
+                        <option value="Pendamping">Pendamping PKH/KSK</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-map-pin"></i> Lokasi / Desa</label>
+                    <input type="text" id="lokasi" placeholder="Desa/Kelurahan" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-tasks"></i> Kegiatan / RHK</label>
+                    <textarea id="kegiatan" rows="2" placeholder="Rincian kegiatan sesuai RHK ..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-camera"></i> Upload Dokumentasi (wajib gambar)</label>
+                    <div class="file-upload-area" onclick="document.getElementById('gambarInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <div><strong>Klik atau tarik gambar</strong></div>
+                        <div class="small">Mendukung JPG, PNG (maks 2MB)</div>
+                        <input type="file" id="gambarInput" accept="image/png, image/jpeg, image/jpg" style="display: none;" onchange="updateFileName()">
+                    </div>
+                    <div id="gambar-name"><i class="far fa-image"></i> Belum ada gambar dipilih</div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-hashtag"></i> Jumlah Penerima Manfaat</label>
+                    <input type="number" id="jumlah" min="0" value="0" required>
+                </div>
+                <button type="button" class="btn-submit" onclick="tambahLaporan()">
+                    <i class="fas fa-paper-plane"></i> Tambahkan ke Laporan Bulanan
+                </button>
+            </form>
+            <p style="margin-top: 15px; font-size: 0.7rem; color: #5e7fb0;"><i class="fas fa-info-circle"></i> Data akan tersimpan di memori (CSV siap unduh). Sesuai format RHK + gambar (base64 preview).</p>
+        </div>
+
+        <!-- KANAN: PREVIEW LAPORAN TERKINI -->
+        <div class="preview-card">
+            <h3><i class="fas fa-eye" style="color:#0047ab;"></i> Pratinjau Laporan Terakhir</h3>
+            <div id="previewContainer">
+                <div class="preview-item" style="background:#e9f2fe; border-left-color:#6b9cf0;">
+                    <p><strong><i class="fas fa-user"></i> Nama:</strong> <span id="prevNama">-</span></p>
+                    <p><strong><i class="fas fa-briefcase"></i> Jabatan:</strong> <span id="prevJabatan">-</span></p>
+                    <p><strong><i class="fas fa-location-dot"></i> Lokasi:</strong> <span id="prevLokasi">-</span></p>
+                    <p><strong><i class="fas fa-clipboard-list"></i> Kegiatan:</strong> <span id="prevKegiatan">-</span></p>
+                    <p><strong><i class="fas fa-image"></i> Gambar:</strong> </p>
+                    <img id="prevGambar" class="image-thumb" src="https://via.placeholder.com/150/EEF5FF/113e6f?text=Preview" alt="Pratinjau gambar" style="max-width:100%;">
+                    <p style="margin-top:8px"><strong><i class="fas fa-users"></i> Jumlah:</strong> <span id="prevJumlah">0</span> orang</p>
+                </div>
+            </div>
+            <p style="margin-top: 15px; font-style:italic; font-size:0.85rem; color:#2c5282;"><i class="far fa-clock"></i> Menampilkan entri paling baru. Seluruh data ada di tabel CSV.</p>
+        </div>
+    </div>
+
+    <!-- CSV SECTION (HASIL GOOGLE FORM STYLE) -->
+    <div class="csv-section">
+        <div class="csv-header">
+            <div><i class="fas fa-file-csv" style="font-size: 1.8rem; color: #0b3d5f;"></i> <strong style="font-size: 1.4rem;">Ekspor CSV</strong> <span class="badge-csv">Format Google Form</span></div>
+            <div>
+                <button class="btn-secondary" onclick="exportToCSV()"><i class="fas fa-download"></i> Unduh CSV (RHK)</button>
+                <button class="btn-secondary" onclick="resetData()" style="margin-left: 8px; border-color:#bd362f; color:#bd362f;"><i class="fas fa-trash-alt"></i> Reset</button>
+            </div>
+        </div>
+        <div class="csv-table-wrapper" id="csvTableWrapper">
+            <table id="csvTable">
+                <thead>
+                    <tr>
+                        <th>Nama</th><th>Jabatan</th><th>Lokasi</th><th>Kegiatan</th><th>Gambar (Thumb)</th><th>Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody id="csvBody">
+                    <!-- akan diisi javascript -->
+                </tbody>
+            </table>
+        </div>
+        <p class="footer-note"><i class="fas fa-sync"></i> Data tersimpan di localStorage. Setiap entri + gambar (base64) tersedia untuk diunduh dalam CSV. Format sesuai RHK database.</p>
+    </div>
+</div>
+
+<script>
+    // Data laporan disimpan dalam array of object, juga untuk preview
+    let laporanArray = [];
+
+    // Load data dari localStorage jika ada
+    function loadFromStorage() {
+        const stored = localStorage.getItem('laporanRHK');
+        if (stored) {
+            try {
+                laporanArray = JSON.parse(stored);
+            } catch (e) {
+                laporanArray = [];
+            }
+        } else {
+            // data contoh default agar tidak kosong
+            laporanArray = [
+                { nama: 'Budi Santoso', jabatan: 'TKSK', lokasi: 'Sukamaju', kegiatan: 'Verifikasi DTKS', gambar: '', jumlah: 12 },
+                { nama: 'Dewi Lestari', jabatan: 'Puskesos', lokasi: 'Kedungwaringin', kegiatan: 'Rapat koordinasi PKH', gambar: '', jumlah: 8 }
+            ];
+        }
+        renderTable();
+        updatePreviewLastEntry();
+    }
+
+    // Simpan ke localStorage
+    function saveToStorage() {
+        localStorage.setItem('laporanRHK', JSON.stringify(laporanArray));
+    }
+
+    // Update nama file di UI
+    function updateFileName() {
+        const input = document.getElementById('gambarInput');
+        const fileNameSpan = document.getElementById('gambar-name');
+        if (input.files.length > 0) {
+            let name = input.files[0].name;
+            if (name.length > 30) name = name.substr(0, 27) + '...';
+            fileNameSpan.innerHTML = `<i class="fas fa-check-circle" style="color:green"></i> ${name}`;
+        } else {
+            fileNameSpan.innerHTML = '<i class="far fa-image"></i> Belum ada gambar dipilih';
+        }
+    }
+
+    // Konversi file gambar ke base64
+    function getBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    // Tambah laporan baru (tombol)
+    async function tambahLaporan() {
+        // validasi sederhana
+        const nama = document.getElementById('nama').value.trim();
+        const jabatan = document.getElementById('jabatan').value;
+        const lokasi = document.getElementById('lokasi').value.trim();
+        const kegiatan = document.getElementById('kegiatan').value.trim();
+        const jumlah = document.getElementById('jumlah').value;
+        const fileInput = document.getElementById('gambarInput');
+
+        if (!nama || !jabatan || !lokasi || !kegiatan || fileInput.files.length === 0) {
+            alert('Harap isi semua field dan pilih gambar!');
+            return;
+        }
+
+        let gambarBase64 = '';
+        try {
+            gambarBase64 = await getBase64(fileInput.files[0]);
+        } catch (err) {
+            alert('Gagal membaca file gambar');
+            return;
+        }
+
+        const newEntry = {
+            nama: nama,
+            jabatan: jabatan,
+            lokasi: lokasi,
+            kegiatan: kegiatan,
+            gambar: gambarBase64,  // simpan base64 untuk preview & CSV
+            jumlah: parseInt(jumlah) || 0
+        };
+
+        laporanArray.push(newEntry);
+        saveToStorage();
+        renderTable();
+        updatePreviewLastEntry();
+
+        // reset form setelah submit
+        document.getElementById('reportForm').reset();
+        document.getElementById('gambar-name').innerHTML = '<i class="far fa-image"></i> Belum ada gambar dipilih';
+        // preview terakhir akan langsung tergambar
+    }
+
+    // Update preview (menampilkan data terakhir di array)
+    function updatePreviewLastEntry() {
+        if (laporanArray.length === 0) {
+            document.getElementById('prevNama').innerText = '-';
+            document.getElementById('prevJabatan').innerText = '-';
+            document.getElementById('prevLokasi').innerText = '-';
+            document.getElementById('prevKegiatan').innerText = '-';
+            document.getElementById('prevJumlah').innerText = '0';
+            document.getElementById('prevGambar').src = 'https://via.placeholder.com/150/EEF5FF/113e6f?text=No+Image';
+            return;
+        }
+
+        const last = laporanArray[laporanArray.length - 1];
+        document.getElementById('prevNama').innerText = last.nama;
+        document.getElementById('prevJabatan').innerText = last.jabatan;
+        document.getElementById('prevLokasi').innerText = last.lokasi;
+        document.getElementById('prevKegiatan').innerText = last.kegiatan;
+        document.getElementById('prevJumlah').innerText = last.jumlah;
+        if (last.gambar && last.gambar.startsWith('data:image')) {
+            document.getElementById('prevGambar').src = last.gambar;
+        } else {
+            document.getElementById('prevGambar').src = 'https://via.placeholder.com/150/EEF5FF/113e6f?text=Gambar';
+        }
+    }
+
+    // Render tabel CSV (mirip google form response)
+    function renderTable() {
+        const tbody = document.getElementById('csvBody');
+        tbody.innerHTML = '';
+        laporanArray.forEach((item, index) => {
+            const tr = document.createElement('tr');
+
+            // Nama
+            const tdNama = document.createElement('td');
+            tdNama.innerText = item.nama;
+            tr.appendChild(tdNama);
+
+            // Jabatan
+            const tdJab = document.createElement('td');
+            tdJab.innerText = item.jabatan;
+            tr.appendChild(tdJab);
+
+            // Lokasi
+            const tdLok = document.createElement('td');
+            tdLok.innerText = item.lokasi;
+            tr.appendChild(tdLok);
+
+            // Kegiatan
+            const tdKeg = document.createElement('td');
+            tdKeg.innerText = item.kegiatan.length > 20 ? item.kegiatan.substr(0,18)+'…' : item.kegiatan;
+            tr.appendChild(tdKeg);
+
+            // Gambar (thumbnail kecil) jika ada base64
+            const tdGambar = document.createElement('td');
+            if (item.gambar && item.gambar.startsWith('data:image')) {
+                const img = document.createElement('img');
+                img.src = item.gambar;
+                img.style.width = '50px';
+                img.style.height = '40px';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '10px';
+                img.style.border = '1px solid #ccc';
+                tdGambar.appendChild(img);
+            } else {
+                tdGambar.innerText = '📷 tidak ada';
+            }
+            tr.appendChild(tdGambar);
+
+            // Jumlah
+            const tdJumlah = document.createElement('td');
+            tdJumlah.innerText = item.jumlah;
+            tr.appendChild(tdJumlah);
+
+            tbody.appendChild(tr);
+        });
+
+        if (laporanArray.length === 0) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = '<td colspan="6" style="padding:20px; text-align:center; color:#888;">Belum ada laporan. Tambahkan melalui form.</td>';
+            tbody.appendChild(tr);
+        }
+    }
+
+    // Ekspor ke CSV (dengan gambar disertakan sebagai teks base64)
+    function exportToCSV() {
+        if (laporanArray.length === 0) {
+            alert('Tidak ada data untuk diekspor.');
+            return;
+        }
+
+        // header disesuaikan dengan format google form / RHK
+        let csvContent = "\uFEFFNama,Jabatan,Lokasi,Kegiatan,Gambar (base64),Jumlah Penerima\n"; // BOM utf8
+
+        laporanArray.forEach(item => {
+            // Escape tanda koma atau petik sederhana
+            const escape = (str) => {
+                if (str === null || str === undefined) return '';
+                if (typeof str === 'string') return `"${str.replace(/"/g, '""')}"`;
+                return str;
+            };
+
+            const row = [
+                escape(item.nama),
+                escape(item.jabatan),
+                escape(item.lokasi),
+                escape(item.kegiatan),
+                escape(item.gambar || ''),  // base64 string (panjang, tapi ok untuk CSV)
+                escape(item.jumlah)
+            ].join(',');
+            csvContent += row + '\n';
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'laporan_bulanan_TKSK_Puskesos_RHK.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    // Reset data (dengan konfirmasi)
+    function resetData() {
+        if (confirm('Hapus semua laporan? Data tidak bisa dikembalikan.')) {
+            laporanArray = [];
+            saveToStorage();
+            renderTable();
+            updatePreviewLastEntry();
+            document.getElementById('reportForm').reset();
+            document.getElementById('gambar-name').innerHTML = '<i class="far fa-image"></i> Belum ada gambar dipilih';
+        }
+    }
+
+    // Inisialisasi
+    window.onload = function() {
+        loadFromStorage();
+        // event untuk upload area klik
+        document.querySelector('.file-upload-area').addEventListener('click', function() {
+            document.getElementById('gambarInput').click();
+        });
+    };
+</script>
+
+<!-- catatan tambahan agar fungsi global bisa dipanggil dari onclick -->
+<script>
+    // supaya fungsi dapat dipanggil dari HTML (karena dideklarasikan dengan function)
+</script>
+</body>
+</html>
