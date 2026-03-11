@@ -15,6 +15,7 @@
             background: #eef2f7;
             padding: 20px 0 50px;
         }
+        /* FORM STYLE */
         .card-form {
             border: none;
             border-radius: 20px;
@@ -36,7 +37,7 @@
             padding: 8px 16px;
             font-size: 13px;
         }
-        /* KERTAS A4 dengan kop persis contoh */
+        /* KERTAS A4 DENGAN KOP RESMI (SESUAI CONTOH) */
         .paper-a4 {
             background: white;
             width: 210mm;
@@ -48,7 +49,7 @@
             color: #000;
             page-break-after: always;
         }
-        /* Kop surat persis contoh: TKSK & Puskesos, "DARI DATA KE AKSI" */
+        /* KOP SURAT STANDAR PEMERINTAH (PERSIS CONTOH) */
         .kop-surat-container {
             display: flex;
             align-items: center;
@@ -65,13 +66,6 @@
             width: 100%;
             max-height: 75px;
             object-fit: contain;
-            background: #f0f4fa; /* placeholder logo */
-            border: 1px dashed #888;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 9px;
-            color: #1e3a5f;
         }
         .teks-kop {
             text-align: center;
@@ -104,36 +98,34 @@
             font-style: normal;
             line-height: 1.2;
         }
-        /* judul surat */
-        .judul-surat {
-            font-size: 15px;
-            font-weight: 700;
-            text-align: center;
-            text-decoration: underline;
-            margin: 12px 0;
-            text-transform: uppercase;
+        /* NOMOR DAN PERIHAL */
+        .nomor-lampiran {
+            font-size: 12px;
+            margin: 8px 0 5px;
         }
+        /* ISI SURAT FONT SIZE 12 */
         .surat-body {
             font-size: 12px;
             line-height: 1.5;
             text-align: justify;
+            font-family: 'Times New Roman', Times, serif;
         }
-        /* TTD di KIRI, QR di KANAN (sesuai permintaan: tanda tangan di sebelah kiri) */
-        .ttd-qr-wrapper {
+        /* TANDA TANGAN DI SEBELAH KANAN (SESUAI PERMINTAAN) */
+        .ttd-wrapper {
             display: flex;
             margin-top: 40px;
-            align-items: flex-end;
-            justify-content: space-between;
+            justify-content: flex-end; /* TTD di kanan */
         }
-        .ttd-box-left {
-            width: 60%;
+        .ttd-box-right {
+            width: 50%;
+            text-align: center;
         }
-        .qr-box-right {
-            width: 35%;
-            text-align: right;
+        .qr-box-left {
+            width: 50%;
+            text-align: left;
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
+            align-items: flex-start;
         }
         .qr-placeholder {
             width: 100px;
@@ -154,6 +146,14 @@
             margin-top: 20px;
             padding-top: 8px;
         }
+        .footer-hash {
+            font-size: 8px;
+            word-break: break-all;
+            max-width: 200px;
+            background: #f5f5f5;
+            padding: 4px;
+        }
+        /* TABEL ARSIP */
         .tabel-arsip {
             width: 100%;
             border-collapse: collapse;
@@ -178,13 +178,6 @@
         }
         .btn-print:hover {
             background: #102a44;
-        }
-        .footer-hash {
-            font-size: 8px;
-            word-break: break-all;
-            max-width: 200px;
-            background: #f5f5f5;
-            padding: 4px;
         }
         @media print {
             .no-print, .card, .navbar, footer, .btn, .input-section {
@@ -309,12 +302,12 @@
     </div>
 </div>
 
-<!-- ============ AREA CETAK SURAT (KOP RESMI SESUAI CONTOH) ============ -->
+<!-- ============ AREA CETAK SURAT (KOP RESMI SESUAI CONTOH LENGKAP) ============ -->
 <div class="paper-a4" id="suratCetakArea">
-    <!-- KOP SURAT RESMI: TKSK & PUSKESOS, "DARI DATA KE AKSI" persis contoh -->
+    <!-- KOP SURAT STANDAR PEMERINTAH (PERSIS CONTOH YANG DIBERIKAN) -->
     <div class="kop-surat-container">
         <div class="logo-box">
-            <div class="logo-kop"><i class="fas fa-landmark fa-2x"></i><br>Logo TKSK</div>
+            <img src="assets/img/logo/logo-tksk.png" class="logo-kop" alt="Logo TKSK" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fas fa-landmark\'></i>';">
         </div>
         <div class="teks-kop">
             <p class="instansi-utama">TENAGA KESEJAHTERAAN SOSIAL KECAMATAN</p>
@@ -324,47 +317,47 @@
             <p class="alamat-kantor">Telp. (0231) 123456 | Email: tksk.sumber@cirebonkab.go.id</p>
         </div>
         <div class="logo-box text-right">
-            <div class="logo-kop"><i class="fas fa-leaf fa-2x"></i><br>Logo Puskesos</div>
+            <img src="assets/img/logo/logo-puskesos.png" class="logo-kop" alt="Logo Puskesos" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fas fa-leaf\'></i>';">
         </div>
     </div>
 
-    <!-- NOMOR, LAMPIRAN, PERIHAL -->
-    <table width="100%" style="margin-bottom: 6px; font-size: 11px; border-collapse: collapse;">
+    <!-- NOMOR, LAMPIRAN, PERIHAL (FONT 12) -->
+    <table width="100%" style="margin-bottom: 6px; font-size: 12px; border-collapse: collapse;">
         <tr><td width="12%">Nomor</td><td width="2%">:</td><td id="cetakNomorSurat">460 / --- / TKSK-SBR / 2025</td></tr>
         <tr><td>Sifat</td><td>:</td><td>Penting / Segera</td></tr>
         <tr><td>Lampiran</td><td>:</td><td id="cetakLampiran">-</td></tr>
         <tr><td>Perihal</td><td>:</td><td><strong id="cetakPerihal">-</strong></td></tr>
     </table>
 
-    <!-- TUJUAN SURAT (dinamis) -->
-    <p style="font-size: 11px; margin-bottom: 15px;" id="cetakTujuanSurat">Yth. ......... di Tempat</p>
+    <!-- TUJUAN SURAT (dinamis) font 12 -->
+    <p style="font-size: 12px; margin-bottom: 15px;" id="cetakTujuanSurat">Yth. ......... di Tempat</p>
 
-    <!-- ISI SURAT -->
-    <div class="surat-body" id="cetakIsiSurat">
+    <!-- ISI SURAT DENGAN FONT SIZE 12 (SESUAI PERMINTAAN) -->
+    <div class="surat-body" id="cetakIsiSurat" style="font-size: 12px;">
         Dengan hormat, <br> ........... <br> Demikian disampaikan.
     </div>
 
-    <!-- TTD di KIRI, QR di KANAN (TTD kiri sesuai permintaan) -->
-    <div class="ttd-qr-wrapper">
-        <!-- KIRI: TANDA TANGAN + NAMA + ID VERIFIKASI (NIP diganti ID verifikasi) -->
-        <div class="ttd-box-left">
-            <div style="margin-bottom: 5px;">Sumber, <span id="cetakTglSurat">_________________</span></div>
-            <div style="margin: 5px 0 25px;">a.n. Forum Puskesos Kecamatan Sumber,</div>
-            <div style="margin-bottom: 50px;"><u><span id="cetakNamaPenandatangan">SHIDIQ HASANUDIN, S.IP</span></u></div>
-            <!-- ID Verifikasi (menggantikan NIP) -->
-            <div style="font-size: 10px; margin-top: 5px;"><strong>ID Verifikasi:</strong> <span id="cetakIdVerifikasi">TKSK-XXXX-XXXX</span></div>
-        </div>
-        <!-- KANAN: QR CODE -->
-        <div class="qr-box-right">
+    <!-- TANDA TANGAN DI SEBELAH KANAN (SESUAI PERMINTAAN) DAN QR DI KIRI -->
+    <div class="ttd-wrapper">
+        <!-- KIRI: QR CODE -->
+        <div class="qr-box-left">
             <div id="qrCodeSurat" class="qr-placeholder">
                 <i class="fas fa-qrcode fa-2x"></i>
             </div>
             <div class="footer-hash" id="cetakHash">ID: -</div>
         </div>
+        <!-- KANAN: TANDA TANGAN + NAMA + ID VERIFIKASI (NIP DIGANTI ID VERIFIKASI) -->
+        <div class="ttd-box-right">
+            <div style="margin-bottom: 5px; font-size: 12px;">Sumber, <span id="cetakTglSurat">_________________</span></div>
+            <div style="margin: 5px 0 10px; font-size: 12px;">a.n. Forum Puskesos Kecamatan Sumber,</div>
+            <div style="margin-bottom: 40px; font-size: 12px;"><u><span id="cetakNamaPenandatangan">SHIDIQ HASANUDIN, S.IP</span></u></div>
+            <!-- ID Verifikasi (menggantikan NIP) dengan font 12 -->
+            <div style="font-size: 12px; margin-top: 5px;"><strong>ID Verifikasi:</strong> <span id="cetakIdVerifikasi">TKSK-XXXX-XXXX</span></div>
+        </div>
     </div>
 
     <!-- FOOTER ARSIP -->
-    <div class="arsip-meta" id="cetakArsipMeta">
+    <div class="arsip-meta" id="cetakArsipMeta" style="font-size: 10px;">
         Dokumen elektronik - sah tanpa tanda tangan basah. Arsip ID: ..................
     </div>
 </div>
@@ -449,7 +442,7 @@
         }
     }
 
-    // Fungsi mengisi area cetak dengan data arsip
+    // Fungsi mengisi area cetak dengan data arsip (semua font size 12)
     function cetakSurat(arsipItem) {
         // Kop sudah statis di HTML
         document.getElementById('cetakNomorSurat').innerText = arsipItem.nomor || '-';
@@ -463,7 +456,7 @@
             document.getElementById('cetakTujuanSurat').innerHTML = `Yang bertanda tangan di bawah ini, <strong>${arsipItem.asalTujuan || '.........'}</strong>`;
         }
 
-        // Isi surat
+        // Isi surat (font 12 via class)
         let isi = arsipItem.isi || 'Dengan hormat, bersama ini disampaikan ...\n\nDemikian, atas perhatiannya diucapkan terima kasih.';
         document.getElementById('cetakIsiSurat').innerHTML = isi.replace(/\n/g, '<br>');
 
@@ -474,7 +467,7 @@
         // Nama penandatangan (sesuai contoh: Shidiq Hasanudin)
         document.getElementById('cetakNamaPenandatangan').innerText = 'SHIDIQ HASANUDIN, S.IP';
 
-        // ID Verifikasi (pengganti NIP) tampil di kolom ttd kiri
+        // ID Verifikasi (pengganti NIP) tampil di kolom ttd kanan
         document.getElementById('cetakIdVerifikasi').innerText = arsipItem.idVerifikasi || 'TKSK-XXXX';
 
         // Arsip meta
@@ -595,5 +588,6 @@
     cetakSurat(arsipSurat[arsipSurat.length - 1]);
 })();
 </script>
+<!-- Fallback logo jika gambar tidak ditemukan -->
 </body>
 </html>
