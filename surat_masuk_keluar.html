@@ -131,30 +131,36 @@
             text-align: justify;
             font-family: 'Times New Roman', Times, serif;
         }
-        /* TTD dan QR - QR di kanan bawah nama */
+        /* TTD dan QR - PROPORIONAL DI KANAN RATA TENGAH */
         .ttd-wrapper {
             display: flex;
             margin-top: 40px;
             justify-content: flex-end;
+            align-items: center; /* Rata tengah vertikal */
         }
-        .qr-box-right {
-            width: 50%;
+        .ttd-content {
+            display: flex;
+            align-items: center;
+            gap: 30px; /* Jarak antara teks dan QR */
+        }
+        .ttd-text {
             text-align: right;
+        }
+        .qr-container {
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
+            align-items: center;
         }
         .qr-placeholder {
             width: 100px;
             height: 100px;
             background: #f8f9fc;
             border: 1px dashed #2c3e50;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
             font-size: 10px;
             color: #2c3e50;
-            margin-bottom: 5px;
         }
         .arsip-meta {
             font-size: 9px;
@@ -208,7 +214,7 @@
     </style>
 </head>
 <body>
-<!-- ============ HEADER / NAVBAR (sesuai contoh awal) ============ -->
+<!-- ============ HEADER / NAVBAR ============ -->
 <nav class="navbar navbar-expand-lg navbar-custom no-print">
     <div class="container">
         <a class="navbar-brand" href="index.html">
@@ -233,7 +239,7 @@
     </div>
 </nav>
 
-<!-- ============ HEADER LOGO (seperti contoh awal) ============ -->
+<!-- ============ HEADER LOGO ============ -->
 <header class="container py-3 bg-white no-print" style="border-radius: 12px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
     <div class="row align-items-center">
         <div class="col-md-6">
@@ -352,7 +358,7 @@
     </div>
 </div>
 
-<!-- ============ AREA CETAK SURAT (KOP RESMI + QR DI KANAN BAWAH NAMA) ============ -->
+<!-- ============ AREA CETAK SURAT (KOP RESMI + QR PROPOSIONAL DI KANAN RATA TENGAH) ============ -->
 <div class="paper-a4" id="suratCetakArea">
     <!-- KOP SURAT STANDAR PEMERINTAH -->
     <div class="kop-surat-container">
@@ -387,21 +393,22 @@
         Dengan hormat, <br> ........... <br> Demikian disampaikan.
     </div>
 
-    <!-- TTD DAN QR - QR DI KANAN BAWAH NAMA -->
+    <!-- TTD DAN QR - PROPOSIONAL DI KANAN DENGAN RATA TENGAH -->
     <div class="ttd-wrapper">
-        <div class="qr-box-right">
-            <!-- Tempat dan tanggal -->
-            <div style="margin-bottom: 5px; font-size: 12px; text-align: right;">Sumber, <span id="cetakTglSurat">_________________</span></div>
-            <!-- Jabatan a.n Forum Puskesos -->
-            <div style="margin: 5px 0 5px; font-size: 12px; text-align: right;">a.n. Forum Puskesos Kecamatan Sumber,</div>
-            <!-- Nama penandatangan -->
-            <div style="margin-bottom: 5px; font-size: 12px; text-align: right;"><u><span id="cetakNamaPenandatangan">SHIDIQ HASANUDIN, S.IP</span></u></div>
-            <!-- ID Verifikasi (di bawah nama) -->
-            <div style="font-size: 12px; margin-bottom: 15px; text-align: right;"><strong>ID Verifikasi:</strong> <span id="cetakIdVerifikasi">TKSK-XXXX-XXXX</span></div>
+        <div class="ttd-content">
+            <!-- Teks Tanda Tangan -->
+            <div class="ttd-text">
+                <div style="margin-bottom: 5px; font-size: 12px;">Sumber, <span id="cetakTglSurat">_________________</span></div>
+                <div style="margin: 5px 0 5px; font-size: 12px;">a.n. Forum Puskesos Kecamatan Sumber,</div>
+                <div style="margin-bottom: 5px; font-size: 12px;"><u><span id="cetakNamaPenandatangan">SHIDIQ HASANUDIN, S.IP</span></u></div>
+                <div style="font-size: 12px;"><strong>ID Verifikasi:</strong> <span id="cetakIdVerifikasi">TKSK-XXXX-XXXX</span></div>
+            </div>
             
-            <!-- QR CODE (di bawah ID Verifikasi) -->
-            <div id="qrCodeSurat" class="qr-placeholder" style="margin-right: 0; margin-left: auto;">
-                <i class="fas fa-qrcode fa-2x"></i>
+            <!-- QR CODE (rata tengah dengan teks) -->
+            <div class="qr-container">
+                <div id="qrCodeSurat" class="qr-placeholder">
+                    <i class="fas fa-qrcode fa-2x"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -412,7 +419,7 @@
     </div>
 </div>
 
-<!-- ============ FOOTER (sesuai contoh awal) ============ -->
+<!-- ============ FOOTER ============ -->
 <footer class="footer-custom no-print">
     <div class="container text-center">
         <p class="mb-0">© 2026 TKSK & Forum Puskesos Kecamatan Sumber. All rights reserved.</p>
