@@ -131,26 +131,11 @@
             text-align: justify;
             font-family: 'Times New Roman', Times, serif;
         }
-        /* VERIFIKASI BOX */
-        .verifikasi-box {
-            border: 1px solid #000;
-            padding: 8px;
-            font-size: 10px;
-            background: #fcfcfc;
-            border-radius: 4px;
-            line-height: 1.3;
-            margin: 15px 0;
-        }
-        /* TTD dan QR - SESUAI GAMBAR PERTAMA */
+        /* TTD dan QR - SESUAI GAMBAR PERTAMA (tanpa verifikasi box) */
         .ttd-wrapper {
             display: flex;
-            margin-top: 30px;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-        .verifikasi-col {
-            width: 58%;
-            padding-right: 15px;
+            margin-top: 40px;
+            justify-content: flex-end;
         }
         .ttd-col {
             width: 42%;
@@ -158,6 +143,7 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
+            margin-left: auto;
         }
         .qr-container {
             margin: 2px auto;
@@ -205,6 +191,7 @@
             border-top: 1px dotted #aaa;
             margin-top: 20px;
             padding-top: 8px;
+            text-align: left;
         }
         /* TABEL ARSIP */
         .tabel-arsip {
@@ -231,31 +218,6 @@
         }
         .btn-print:hover {
             background: #102a44;
-        }
-        /* PRIORITY BADGES */
-        .priority-high {
-            background: #dc3545;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-weight: 600;
-            font-size: 10px;
-        }
-        .priority-medium {
-            background: #ffc107;
-            color: black;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-weight: 600;
-            font-size: 10px;
-        }
-        .priority-low {
-            background: #28a745;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-weight: 600;
-            font-size: 10px;
         }
         @media print {
             .no-print, .card, .navbar-custom, .footer-custom, .btn, .input-section {
@@ -420,7 +382,7 @@
     </div>
 </div>
 
-<!-- ============ AREA CETAK SURAT (DENGAN POSISI QR SESUAI GAMBAR PERTAMA) ============ -->
+<!-- ============ AREA CETAK SURAT (TANPA VERIFIKASI BOX) ============ -->
 <div class="paper-a4" id="suratCetakArea">
     <!-- KOP SURAT STANDAR PEMERINTAH -->
     <div class="kop-surat-container">
@@ -450,52 +412,29 @@
     <!-- TUJUAN SURAT -->
     <p style="font-size: 12px; margin-bottom: 15px;" id="cetakTujuanSurat">Yth. ......... di Tempat</p>
 
-    <!-- ISI SURAT FONT 12 -->
+    <!-- ISI SURAT FONT 12 (Undangan Buka Puasa) -->
     <div class="surat-body" id="cetakIsiSurat" style="font-size: 12px;">
-        Dengan hormat, <br> ........... <br> Demikian disampaikan.
+        Dalam rangka meningkatkan koordinasi serta mempererat silaturahmi di bulan suci Ramadan, kami mengundang Bapak/Ibu untuk menghadiri Rapat Koordinasi dan Buka Puasa Bersama yang akan dilaksanakan pada:
+        <br><br>
+        Hari/Tanggal : Kamis, 12 Maret 2026<br>
+        Waktu : 16.30 WIB – Selesai<br>
+        Tempat : Kantor Kelurahan Gegunung, Kecamatan Sumber
+        <br><br>
+        Mengingat pentingnya kegiatan ini, kami mengharapkan kehadiran Bapak/Ibu tepat pada waktu yang tepat.
+        <br><br>
+        Demikian undangan ini kami sampaikan. Atas perhatian dan kehadiran Bapak/Ibu, kami ucapkan terima kasih.
     </div>
 
-    <!-- KESIMPULAN DATA (CONTOH) -->
-    <div style="margin: 20px 0; font-size: 11px; background: #f9f9f9; padding: 10px; border-left: 4px solid #0b2a4f;">
-        <strong>Kesimpulan:</strong>
-        <ul style="margin-top: 5px; margin-bottom: 5px;">
-            <li>Total keluarga dalam prioritas tinggi (Desil 1-2): <strong>6.481 KK</strong> (18.8%)</li>
-            <li>Total keluarga rentan (Desil 3-4): <strong>7.527 KK</strong> (21.8%)</li>
-            <li>Total keluarga mampu (Desil 5-10): <strong>20.462 KK</strong> (59.4%)</li>
-        </ul>
-    </div>
-
-    <!-- PENUTUP -->
-    <p style="font-size: 11px; text-align: justify; margin-bottom: 15px;">
-        Demikian laporan ini kami sampaikan untuk menjadi bahan evaluasi dan tindak lanjut program bantuan sosial di Kecamatan Sumber. Atas perhatian dan kerjasama, kami ucapkan terima kasih.
-    </p>
-
-    <!-- VERIFIKASI BOX DAN TTD + QR (SESUAI GAMBAR PERTAMA) -->
+    <!-- TANDA TANGAN DAN QR (TANPA VERIFIKASI BOX) -->
     <div class="ttd-wrapper">
-        <!-- KIRI: VERIFIKASI DATA -->
-        <div class="verifikasi-col">
-            <div class="verifikasi-box">
-                <strong style="font-size: 10px;">⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻</strong><br>
-                <strong style="font-size: 11px;">VERIFIKASI DAN VALIDASI DATA:</strong><br>
-                ✓ Data dari Database DTSEN Kemensos RI<br>
-                ✓ Diverifikasi oleh TKSK Kecamatan Sumber<br>
-                ✓ Kriteria Prioritas: <strong class="priority-high">Tinggi >500</strong> | <strong class="priority-medium">Sedang 300-500</strong> | <strong class="priority-low">Rendah <300</strong><br>
-                ✓ Rasio layanan berdasarkan <strong>Total KK DTSEN (Desil 1-10)</strong><br>
-                ✓ Periode <span id="periodeData">Februari 2026</span><br>
-                <span style="color: #666; font-size: 9px;">* Dokumen ini ditandatangani secara elektronik</span>
-            </div>
-        </div>
-        
-        <!-- KANAN: TANDA TANGAN DAN QR (SESUAI GAMBAR PERTAMA) -->
         <div class="ttd-col">
             <!-- Tempat dan Tanggal -->
             <div style="margin-bottom: 3px;">
-                <p style="font-size: 11px; margin-bottom: 1px;">Ditetapkan di : Sumber</p>
-                <p style="font-size: 11px; margin-bottom: 2px;">Pada tanggal : <span id="cetakTglSurat" class="font-weight-bold">11 Maret 2026</span></p>
+                <p style="font-size: 11px; margin-bottom: 1px;">Sumber, <span id="cetakTglSurat" class="font-weight-bold">11 Maret 2026</span></p>
             </div>
             
-            <!-- TKSK - PUSKESOS KEC. SUMBER -->
-            <p style="font-size: 11px; margin-bottom: 1px; font-weight: 600;">TKSK - PUSKESOS KEC. SUMBER</p>
+            <!-- a.n. Forum Puskesos -->
+            <p style="font-size: 11px; margin-bottom: 1px;">a.n. Forum Puskesos Kecamatan Sumber,</p>
             
             <!-- Nama Lengkap dan Gelar -->
             <p class="nama-ttd" id="cetakNamaPenandatangan">
@@ -510,7 +449,7 @@
             <!-- ID Verifikasi -->
             <div class="id-verifikasi">
                 <span style="font-weight: 600;">ID Verifikasi:</span><br>
-                <span id="cetakIdVerifikasi" class="font-weight-bold" style="background: #f0f0f0; padding: 2px 4px; display: inline-block; border-radius: 3px; font-size: 9px; word-break: break-all; max-width: 100%;">DTSEN-SBR-20260311-EJL92F</span>
+                <span id="cetakIdVerifikasi" class="font-weight-bold" style="background: #f0f0f0; padding: 2px 4px; display: inline-block; border-radius: 3px; font-size: 9px; word-break: break-all; max-width: 100%;">VFR-20260311-3X42SE</span>
             </div>
         </div>
     </div>
@@ -547,7 +486,7 @@
     function generateIdVerifikasi() {
         const rand = Math.random().toString(36).substring(2, 8).toUpperCase();
         const date = new Date();
-        return `DTSEN-SBR-${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2,'0')}${date.getDate().toString().padStart(2,'0')}-${rand}`;
+        return `VFR-${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2,'0')}${date.getDate().toString().padStart(2,'0')}-${rand}`;
     }
 
     function renderTabelArsip() {
@@ -621,13 +560,27 @@
             document.getElementById('cetakTujuanSurat').innerHTML = `Yang bertanda tangan di bawah ini, <strong>${arsipItem.asalTujuan || '.........'}</strong>`;
         }
 
-        let isi = arsipItem.isi || 'Dengan hormat, bersama ini disampaikan ...\n\nDemikian, atas perhatiannya diucapkan terima kasih.';
-        document.getElementById('cetakIsiSurat').innerHTML = isi.replace(/\n/g, '<br>');
+        // Untuk surat undangan, kita gunakan template undangan buka puasa
+        let isi = `Dalam rangka meningkatkan koordinasi serta mempererat silaturahmi di bulan suci Ramadan, kami mengundang Bapak/Ibu untuk menghadiri Rapat Koordinasi dan Buka Puasa Bersama yang akan dilaksanakan pada:
+        <br><br>
+        Hari/Tanggal : Kamis, 12 Maret 2026<br>
+        Waktu : 16.30 WIB – Selesai<br>
+        Tempat : Kantor Kelurahan Gegunung, Kecamatan Sumber
+        <br><br>
+        Mengingat pentingnya kegiatan ini, kami mengharapkan kehadiran Bapak/Ibu tepat pada waktu yang tepat.
+        <br><br>
+        Demikian undangan ini kami sampaikan. Atas perhatian dan kehadiran Bapak/Ibu, kami ucapkan terima kasih.`;
+        
+        if (arsipItem.isi && arsipItem.isi.trim() !== '') {
+            isi = arsipItem.isi.replace(/\n/g, '<br>');
+        }
+        
+        document.getElementById('cetakIsiSurat').innerHTML = isi;
 
         const tgl = arsipItem.tanggal ? new Date(arsipItem.tanggal).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' }) : '11 Maret 2026';
         document.getElementById('cetakTglSurat').innerText = tgl;
         document.getElementById('cetakNamaPenandatangan').innerText = 'SHIDIQ HASANUDIN, S.IP';
-        document.getElementById('cetakIdVerifikasi').innerText = arsipItem.idVerifikasi || 'DTSEN-SBR-20260311-EJL92F';
+        document.getElementById('cetakIdVerifikasi').innerText = arsipItem.idVerifikasi || 'VFR-20260311-3X42SE';
         document.getElementById('cetakArsipMeta').innerHTML = `Dokumen elektronik - sah tanpa tanda tangan basah. Arsip tersimpan otomatis.`;
 
         const qrData = {
@@ -646,7 +599,7 @@
         const tgl = document.getElementById('tglKeluar').value;
         const tujuan = document.getElementById('tujuanKeluar').value.trim();
         const perihal = document.getElementById('perihalKeluar').value.trim();
-        const isi = document.getElementById('isiKeluar').value.trim() || 'Dengan hormat, bersama ini kami sampaikan surat keluar.';
+        const isi = document.getElementById('isiKeluar').value.trim();
         const dataArsip = { nomor, tanggal: tgl, asalTujuan: tujuan, perihal, isi };
         const baru = tambahArsip('keluar', dataArsip);
         cetakSurat(baru);
@@ -660,7 +613,7 @@
         const tgl = document.getElementById('tglMasuk').value;
         const asal = document.getElementById('asalMasuk').value.trim();
         const perihal = document.getElementById('perihalMasuk').value.trim();
-        const isi = document.getElementById('isiMasuk').value.trim() || 'Diterima dan didisposisikan.';
+        const isi = document.getElementById('isiMasuk').value.trim();
         const dataArsip = { nomor, tanggal: tgl, asalTujuan: asal, perihal, isi };
         const baru = tambahArsip('masuk', dataArsip);
         cetakSurat(baru);
@@ -688,8 +641,8 @@
                 nomor: '460/101/TKSK-SBR/III/2025',
                 tanggal: '2025-03-10',
                 asalTujuan: 'Dinas Sosial Kab. Cirebon',
-                perihal: 'Penyampaian Data DTSEN',
-                isi: 'Berdasarkan pendataan DTSEN, bersama ini kami kirimkan rekapitulasi tingkat kecamatan.',
+                perihal: 'Undangan Buka Puasa Bersama',
+                isi: '',
                 timestamp: new Date().toISOString()
             };
             const demo2 = {
@@ -716,8 +669,8 @@
             nomor: '460/101/TKSK-SBR/III/2025',
             tanggal: '2025-03-10',
             asalTujuan: 'Dinas Sosial Kab. Cirebon',
-            perihal: 'Penyampaian Data DTSEN',
-            isi: 'Berdasarkan pendataan DTSEN, bersama ini kami kirimkan rekapitulasi tingkat kecamatan.',
+            perihal: 'Undangan Buka Puasa Bersama',
+            isi: '',
             timestamp: new Date().toISOString()
         };
         const d2 = {
