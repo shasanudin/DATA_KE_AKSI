@@ -1,681 +1,948 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Bulanan TKSK & Puskesos · RHK Database</title>
-    <!-- Font Awesome & Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        body {
-            background: #f3f6fc;
-            padding: 2rem 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .container {
-            max-width: 1100px;
-            width: 100%;
-            background: white;
-            border-radius: 2rem;
-            box-shadow: 0 20px 40px -12px rgba(0, 30, 60, 0.25);
-            overflow: hidden;
-            padding: 2rem 2rem 2.5rem 2rem;
-            border: 1px solid rgba(0, 112, 243, 0.1);
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            border-bottom: 2px dashed #bdd9ff;
-            padding-bottom: 1.2rem;
-        }
-
-        .header-icon {
-            background: #0047ab;
-            width: 55px;
-            height: 55px;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 28px;
-            box-shadow: 0 6px 12px rgba(0,71,171,0.2);
-        }
-
-        .header-text h1 {
-            font-size: 1.9rem;
-            font-weight: 600;
-            color: #0b2b4f;
-            letter-spacing: -0.02em;
-        }
-
-        .header-text .sub {
-            color: #2e5a9c;
-            font-weight: 500;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 4px;
-        }
-
-        .badge-rhk {
-            background: #e3f0ff;
-            padding: 0.3rem 1rem;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #0047ab;
-            display: inline-block;
-            margin-left: 8px;
-            border: 1px solid #a0c6ff;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 0.9fr;
-            gap: 2rem;
-            margin: 2rem 0 1.5rem 0;
-        }
-
-        .form-card {
-            background: #f9fcff;
-            border-radius: 24px;
-            padding: 1.8rem 1.5rem;
-            border: 1px solid #d9e9ff;
-            box-shadow: inset 0 2px 4px #00000008, 0 8px 18px -8px #a3c6f0;
-        }
-
-        .preview-card {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 1.5rem 1.5rem;
-            border: 1px solid #cfdef5;
-            box-shadow: 0 8px 18px -8px #7899c7;
-        }
-
-        .preview-card h3 {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            color: #0a2f4d;
-            margin-bottom: 1.5rem;
-            font-size: 1.3rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.4rem;
-        }
-
-        label {
-            font-weight: 600;
-            font-size: 0.85rem;
-            letter-spacing: 0.3px;
-            color: #1e4985;
-            display: block;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-        }
-
-        label i {
-            width: 20px;
-            color: #2f6ed6;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1.5px solid #d4e0f0;
-            border-radius: 18px;
-            font-size: 0.95rem;
-            background: white;
-            transition: 0.15s;
-            outline: none;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: #2670e8;
-            box-shadow: 0 0 0 4px rgba(38,112,232,0.15);
-        }
-
-        .file-upload-area {
-            border: 2px dashed #aec9f0;
-            border-radius: 20px;
-            padding: 1.2rem 1rem;
-            background: #f3f9ff;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-            position: relative;
-        }
-
-        .file-upload-area:hover {
-            background: #e4f0fe;
-            border-color: #3b7fdd;
-        }
-
-        .file-upload-area i {
-            font-size: 32px;
-            color: #1e5bc0;
-            margin-bottom: 6px;
-        }
-
-        .file-upload-area .small {
-            font-size: 0.75rem;
-            color: #496faa;
-        }
-
-        #gambar-name {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            background: #deecfd;
-            padding: 5px 12px;
-            border-radius: 40px;
-            display: inline-block;
-        }
-
-        .btn-submit {
-            background: #0047ab;
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 50px;
-            width: 100%;
-            cursor: pointer;
-            transition: 0.15s;
-            box-shadow: 0 8px 18px -6px #0047ab80;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .btn-submit:hover {
-            background: #002f8c;
-            transform: scale(1.01);
-        }
-
-        .btn-secondary {
-            background: white;
-            border: 1.5px solid #0047ab;
-            color: #0047ab;
-            font-weight: 600;
-            padding: 10px 18px;
-            border-radius: 40px;
-            cursor: pointer;
-            transition: 0.15s;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-secondary:hover {
-            background: #e5f0ff;
-        }
-
-        .preview-item {
-            background: #f4faff;
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #2f6ed6;
-        }
-
-        .preview-item p {
-            margin: 5px 0;
-            font-size: 0.95rem;
-        }
-
-        .preview-item strong {
-            color: #113e6f;
-            min-width: 110px;
-            display: inline-block;
-        }
-
-        .image-thumb {
-            max-width: 100%;
-            max-height: 130px;
-            border-radius: 16px;
-            border: 2px solid white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-top: 8px;
-        }
-
-        .csv-section {
-            margin-top: 30px;
-            background: #f2f8ff;
-            border-radius: 24px;
-            padding: 1.8rem 2rem;
-            border: 1px solid #bbd6fd;
-        }
-
-        .csv-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .csv-table-wrapper {
-            max-height: 240px;
-            overflow-y: auto;
-            border-radius: 18px;
-            background: white;
-            border: 1px solid #b9d2f0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem;
-        }
-
-        th {
-            background: #0047ab;
-            color: white;
-            padding: 10px 6px;
-            position: sticky;
-            top: 0;
-            font-weight: 500;
-        }
-
-        td {
-            padding: 8px 6px;
-            border-bottom: 1px solid #e1ecfe;
-            text-align: center;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        .badge-csv {
-            background: #1f8b4c;
-            color: white;
-            border-radius: 50px;
-            padding: 0.2rem 1rem;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .footer-note {
-            text-align: center;
-            margin-top: 20px;
-            color: #5579aa;
-            font-size: 0.8rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AI Dashboard | TKSK & Puskesos Kecamatan Sumber</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
+  <!-- html2pdf Library untuk Export PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
+  <style>
+    :root {
+      --primary: #0a58ca;
+      --primary-dark: #084298;
+      --primary-light: #e7f1ff;
+      --success: #28a745;
+      --warning: #ffc107;
+      --danger: #dc3545;
+      --dark: #1a2e3f;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f2f5;
+      color: #2c3e50;
+    }
+    
+    h1, h2, h3, h4 {
+      font-family: 'Lora', serif;
+      font-weight: 700;
+    }
+    
+    .navbar-brand {
+      font-weight: 800;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .card-ai {
+      background: white;
+      border-radius: 20px;
+      border: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+      margin-bottom: 25px;
+      overflow: hidden;
+    }
+    
+    .card-ai:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(10,88,202,0.15);
+    }
+    
+    .card-header-ai {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 18px 25px;
+      border: none;
+    }
+    
+    .btn-ai {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .btn-ai:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(10,88,202,0.3);
+      color: white;
+    }
+    
+    .btn-outline-ai {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .btn-outline-ai:hover {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn-success-ai {
+      background: linear-gradient(135deg, #28a745, #1e7e34);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .btn-success-ai:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(40,167,69,0.3);
+      color: white;
+    }
+    
+    .ai-output {
+      background: #f8f9fa;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 20px;
+      border-left: 5px solid var(--primary);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+    
+    /* Style khusus untuk konten PDF */
+    .proposal-pdf-content {
+      font-family: 'Times New Roman', 'Inter', serif;
+      line-height: 1.6;
+      padding: 30px;
+      background: white;
+    }
+    
+    .proposal-pdf-content h1 {
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    
+    .proposal-pdf-content h2 {
+      font-size: 18px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+    
+    .proposal-pdf-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+    
+    .proposal-pdf-content th, .proposal-pdf-content td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    
+    .proposal-pdf-content th {
+      background: #f2f2f2;
+    }
+    
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .stat-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    
+    .filter-section {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .desa-card {
+      background: white;
+      border-radius: 16px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid #e9ecef;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .desa-card:hover, .desa-card.active {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      transform: translateX(5px);
+    }
+    
+    /* Modal untuk preview PDF */
+    .modal-pdf {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 9999;
+      overflow: auto;
+    }
+    
+    .modal-pdf-content {
+      background: white;
+      margin: 30px auto;
+      width: 90%;
+      max-width: 900px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: modalFadeIn 0.3s;
+    }
+    
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .modal-pdf-header {
+      padding: 15px 20px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-pdf-body {
+      padding: 20px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    
+    .modal-pdf-footer {
+      padding: 15px 20px;
+      border-top: 1px solid #dee2e6;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    .close-modal {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+    }
+    
+    footer {
+      background: var(--dark);
+      color: white;
+      padding: 30px 0;
+      margin-top: 50px;
+      text-align: center;
+    }
+    
+    @media (max-width: 768px) {
+      .card-header-ai h3 { font-size: 1.2rem; }
+      .btn-ai, .btn-outline-ai { width: 100%; margin-bottom: 10px; }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-    <!-- HEADER -->
-    <div class="header">
-        <div class="header-icon">
-            <i class="fas fa-flag-checkered"></i>
-        </div>
-        <div class="header-text">
-            <h1>Laporan Bulanan Terpadu <span style="font-weight:300;">TKSK & Puskesos</span></h1>
-            <div class="sub">
-                <i class="fas fa-database"></i> Format RHK Database 
-                <span class="badge-rhk"><i class="far fa-calendar-alt"></i> Periode: April 2025</span>
-            </div>
-        </div>
-    </div>
 
-    <!-- FORM + PREVIEW GRID -->
-    <div class="grid-2">
-        <!-- KIRI: FORM LAPORAN (mirip google form) -->
-        <div class="form-card">
-            <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-edit" style="color:#0047ab;"></i> Entri Laporan (RHK)</h3>
-            <form id="reportForm">
-                <div class="form-group">
-                    <label><i class="fas fa-user-tie"></i> Nama Pelapor</label>
-                    <input type="text" id="nama" placeholder="cth: Siti Aminah" required>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-id-card"></i> Jabatan</label>
-                    <select id="jabatan" required>
-                        <option value="">-- Pilih --</option>
-                        <option value="TKSK">TKSK (Tenaga Kesejahteraan Sosial Kecamatan)</option>
-                        <option value="Puskesos">Puskesos (Pusat Kesejahteraan Sosial)</option>
-                        <option value="Pendamping">Pendamping PKH/KSK</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-map-pin"></i> Lokasi / Desa</label>
-                    <input type="text" id="lokasi" placeholder="Desa/Kelurahan" required>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-tasks"></i> Kegiatan / RHK</label>
-                    <textarea id="kegiatan" rows="2" placeholder="Rincian kegiatan sesuai RHK ..." required></textarea>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-camera"></i> Upload Dokumentasi (wajib gambar)</label>
-                    <div class="file-upload-area" onclick="document.getElementById('gambarInput').click()">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <div><strong>Klik atau tarik gambar</strong></div>
-                        <div class="small">Mendukung JPG, PNG (maks 2MB)</div>
-                        <input type="file" id="gambarInput" accept="image/png, image/jpeg, image/jpg" style="display: none;" onchange="updateFileName()">
-                    </div>
-                    <div id="gambar-name"><i class="far fa-image"></i> Belum ada gambar dipilih</div>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-hashtag"></i> Jumlah Penerima Manfaat</label>
-                    <input type="number" id="jumlah" min="0" value="0" required>
-                </div>
-                <button type="button" class="btn-submit" onclick="tambahLaporan()">
-                    <i class="fas fa-paper-plane"></i> Tambahkan ke Laporan Bulanan
-                </button>
-            </form>
-            <p style="margin-top: 15px; font-size: 0.7rem; color: #5e7fb0;"><i class="fas fa-info-circle"></i> Data akan tersimpan di memori (CSV siap unduh). Sesuai format RHK + gambar (base64 preview).</p>
-        </div>
-
-        <!-- KANAN: PREVIEW LAPORAN TERKINI -->
-        <div class="preview-card">
-            <h3><i class="fas fa-eye" style="color:#0047ab;"></i> Pratinjau Laporan Terakhir</h3>
-            <div id="previewContainer">
-                <div class="preview-item" style="background:#e9f2fe; border-left-color:#6b9cf0;">
-                    <p><strong><i class="fas fa-user"></i> Nama:</strong> <span id="prevNama">-</span></p>
-                    <p><strong><i class="fas fa-briefcase"></i> Jabatan:</strong> <span id="prevJabatan">-</span></p>
-                    <p><strong><i class="fas fa-location-dot"></i> Lokasi:</strong> <span id="prevLokasi">-</span></p>
-                    <p><strong><i class="fas fa-clipboard-list"></i> Kegiatan:</strong> <span id="prevKegiatan">-</span></p>
-                    <p><strong><i class="fas fa-image"></i> Gambar:</strong> </p>
-                    <img id="prevGambar" class="image-thumb" src="https://via.placeholder.com/150/EEF5FF/113e6f?text=Preview" alt="Pratinjau gambar" style="max-width:100%;">
-                    <p style="margin-top:8px"><strong><i class="fas fa-users"></i> Jumlah:</strong> <span id="prevJumlah">0</span> orang</p>
-                </div>
-            </div>
-            <p style="margin-top: 15px; font-style:italic; font-size:0.85rem; color:#2c5282;"><i class="far fa-clock"></i> Menampilkan entri paling baru. Seluruh data ada di tabel CSV.</p>
-        </div>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <i class="fas fa-robot text-primary me-2"></i>
+      AI Dashboard TKSK Sumber
+    </a>
+    <div class="ms-auto">
+      <span class="stat-badge">
+        <i class="fas fa-calendar-alt me-1"></i>
+        <span id="periodeInfo">Memuat...</span>
+      </span>
+      <a href="index.html" class="btn btn-sm btn-outline-primary ms-2">
+        <i class="fas fa-home"></i> Kembali
+      </a>
     </div>
+  </div>
+</nav>
 
-    <!-- CSV SECTION (HASIL GOOGLE FORM STYLE) -->
-    <div class="csv-section">
-        <div class="csv-header">
-            <div><i class="fas fa-file-csv" style="font-size: 1.8rem; color: #0b3d5f;"></i> <strong style="font-size: 1.4rem;">Ekspor CSV</strong> <span class="badge-csv">Format Google Form</span></div>
-            <div>
-                <button class="btn-secondary" onclick="exportToCSV()"><i class="fas fa-download"></i> Unduh CSV (RHK)</button>
-                <button class="btn-secondary" onclick="resetData()" style="margin-left: 8px; border-color:#bd362f; color:#bd362f;"><i class="fas fa-trash-alt"></i> Reset</button>
-            </div>
+<!-- Main Content -->
+<div class="container py-4">
+  
+  <!-- Filter Section -->
+  <div class="filter-section" data-aos="fade-up">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h5 class="mb-2">
+          <i class="fas fa-chart-line text-primary me-2"></i>
+          Data DTKS Kecamatan Sumber
+        </h5>
+        <p class="text-muted small mb-0">Data diurutkan berdasarkan periode (bulan & tahun) terbaru</p>
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex gap-2 justify-content-md-end">
+          <select id="filterBulan" class="form-select w-auto">
+            <option value="">Semua Bulan</option>
+            <option value="1">Januari</option>
+            <option value="2">Februari</option>
+            <option value="3">Maret</option>
+            <option value="4">April</option>
+            <option value="5">Mei</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">Agustus</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+          <select id="filterTahun" class="form-select w-auto">
+            <option value="">Semua Tahun</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
+          <button id="refreshData" class="btn btn-primary">
+            <i class="fas fa-sync-alt"></i> Refresh
+          </button>
         </div>
-        <div class="csv-table-wrapper" id="csvTableWrapper">
-            <table id="csvTable">
-                <thead>
-                    <tr>
-                        <th>Nama</th><th>Jabatan</th><th>Lokasi</th><th>Kegiatan</th><th>Gambar (Thumb)</th><th>Jumlah</th>
-                    </tr>
-                </thead>
-                <tbody id="csvBody">
-                    <!-- akan diisi javascript -->
-                </tbody>
-            </table>
-        </div>
-        <p class="footer-note"><i class="fas fa-sync"></i> Data tersimpan di localStorage. Setiap entri + gambar (base64) tersedia untuk diunduh dalam CSV. Format sesuai RHK database.</p>
+      </div>
     </div>
+  </div>
+  
+  <!-- Daftar Desa -->
+  <div class="row">
+    <div class="col-lg-4" data-aos="fade-right">
+      <div class="card-ai">
+        <div class="card-header-ai">
+          <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i> Desa/Kelurahan</h5>
+        </div>
+        <div class="p-3" id="desaListContainer">
+          <div class="text-center py-4">
+            <div class="loading-spinner"></div> Memuat data desa...
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-8" data-aos="fade-left">
+      <!-- AI Card 1: Kinerja TKSK -->
+      <div class="card-ai">
+        <div class="card-header-ai">
+          <h5 class="mb-0"><i class="fas fa-chart-simple me-2"></i> AI #1: Analisis Kinerja TKSK & Puskesos</h5>
+        </div>
+        <div class="p-4">
+          <p class="text-muted small">Berdasarkan data konsultasi dan pemutakhiran data per bulan</p>
+          <button id="btnKinerja" class="btn-ai">
+            <i class="fas fa-chart-line"></i> Analisis Kinerja Bulanan
+          </button>
+          <div id="outputKinerja" class="ai-output" style="display: none;"></div>
+        </div>
+      </div>
+      
+      <!-- AI Card 2: Rekomendasi Musrembang -->
+      <div class="card-ai">
+        <div class="card-header-ai">
+          <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i> AI #2: Rekomendasi Usulan Program Musrembang</h5>
+        </div>
+        <div class="p-4">
+          <p class="text-muted small">Pilih desa terlebih dahulu, lalu klik untuk mendapatkan rekomendasi program</p>
+          <div class="d-flex flex-wrap gap-2">
+            <button id="btnMusrembang" class="btn-ai">
+              <i class="fas fa-calendar-check"></i> Rekomendasi Program Musrembang
+            </button>
+            <span id="selectedDesaInfo" class="stat-badge ms-2">
+              <i class="fas fa-map-pin"></i> Belum pilih desa
+            </span>
+          </div>
+          <div id="outputMusrembang" class="ai-output" style="display: none;"></div>
+        </div>
+      </div>
+      
+      <!-- AI Card 3: Draft Proposal + Export PDF -->
+      <div class="card-ai">
+        <div class="card-header-ai">
+          <h5 class="mb-0"><i class="fas fa-file-word me-2"></i> AI #3: Draft Proposal Usulan Program</h5>
+        </div>
+        <div class="p-4">
+          <p class="text-muted small">Setelah mendapatkan rekomendasi program, pilih program dan buat draft proposal</p>
+          <div class="row g-3">
+            <div class="col-md-8">
+              <input type="text" id="programName" class="form-control" placeholder="Nama program (contoh: Posyandu Keliling)">
+            </div>
+            <div class="col-md-4">
+              <button id="btnProposal" class="btn-ai w-100">
+                <i class="fas fa-file-alt"></i> Buat Draft Proposal
+              </button>
+            </div>
+          </div>
+          <div id="outputProposal" class="ai-output" style="display: none;"></div>
+          <div class="mt-3 text-end" id="exportButtons" style="display: none;">
+            <button id="btnPreviewPDF" class="btn-outline-ai me-2">
+              <i class="fas fa-eye"></i> Preview PDF
+            </button>
+            <button id="btnExportPDF" class="btn-success-ai">
+              <i class="fas fa-file-pdf"></i> Ekspor ke PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<script>
-    // Data laporan disimpan dalam array of object, juga untuk preview
-    let laporanArray = [];
+<!-- Modal Preview PDF -->
+<div id="pdfModal" class="modal-pdf">
+  <div class="modal-pdf-content">
+    <div class="modal-pdf-header">
+      <h5 class="mb-0"><i class="fas fa-file-pdf me-2"></i> Preview Proposal</h5>
+      <button class="close-modal" id="closeModalBtn">&times;</button>
+    </div>
+    <div class="modal-pdf-body" id="pdfPreviewBody">
+      <!-- Konten proposal akan dimuat di sini -->
+    </div>
+    <div class="modal-pdf-footer">
+      <button id="downloadFromModal" class="btn-success-ai">
+        <i class="fas fa-download"></i> Unduh PDF
+      </button>
+      <button id="closeModalFooterBtn" class="btn-outline-ai">Tutup</button>
+    </div>
+  </div>
+</div>
 
-    // Load data dari localStorage jika ada
-    function loadFromStorage() {
-        const stored = localStorage.getItem('laporanRHK');
-        if (stored) {
-            try {
-                laporanArray = JSON.parse(stored);
-            } catch (e) {
-                laporanArray = [];
-            }
-        } else {
-            // data contoh default agar tidak kosong
-            laporanArray = [
-                { nama: 'Budi Santoso', jabatan: 'TKSK', lokasi: 'Sukamaju', kegiatan: 'Verifikasi DTKS', gambar: '', jumlah: 12 },
-                { nama: 'Dewi Lestari', jabatan: 'Puskesos', lokasi: 'Kedungwaringin', kegiatan: 'Rapat koordinasi PKH', gambar: '', jumlah: 8 }
-            ];
-        }
-        renderTable();
-        updatePreviewLastEntry();
+<footer>
+  <div class="container">
+    <p class="mb-0">
+      <i class="fas fa-robot me-2"></i> AI Dashboard Terintegrasi dengan Firebase DTKS
+    </p>
+    <small>© 2026 TKSK & Forum Puskesos Kecamatan Sumber</small>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script type="module">
+  // ============================================================
+  // FIREBASE INITIALIZATION
+  // ============================================================
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
+    authDomain: "data-ke-aksi-auth.firebaseapp.com",
+    projectId: "data-ke-aksi-auth",
+    storageBucket: "data-ke-aksi-auth.firebasestorage.app",
+    messagingSenderId: "631382692174",
+    appId: "1:631382692174:web:c10a099fb3021849eace1f"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ============================================================
+  // GEMINI API KEY (Ganti dengan API Key Anda)
+  // ============================================================
+  const GEMINI_API_KEY = "AIzaSyBFvcRUrniv1VcKFu3IL6HskUPi-w6QbU4"; // Daftar di https://aistudio.google.com/
+  
+  async function callGemini(prompt) {
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      });
+      const data = await response.json();
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, AI tidak dapat memproses saat ini.";
+    } catch (error) {
+      console.error("Gemini API Error:", error);
+      return "Error: " + error.message;
     }
+  }
 
-    // Simpan ke localStorage
-    function saveToStorage() {
-        localStorage.setItem('laporanRHK', JSON.stringify(laporanArray));
-    }
+  // ============================================================
+  // GLOBAL VARIABLES
+  // ============================================================
+  let allData = [];
+  let filteredData = [];
+  let selectedDesaIndex = null;
+  let wilayahData = [];
+  let currentProposalHTML = "";
 
-    // Update nama file di UI
-    function updateFileName() {
-        const input = document.getElementById('gambarInput');
-        const fileNameSpan = document.getElementById('gambar-name');
-        if (input.files.length > 0) {
-            let name = input.files[0].name;
-            if (name.length > 30) name = name.substr(0, 27) + '...';
-            fileNameSpan.innerHTML = `<i class="fas fa-check-circle" style="color:green"></i> ${name}`;
-        } else {
-            fileNameSpan.innerHTML = '<i class="far fa-image"></i> Belum ada gambar dipilih';
-        }
-    }
-
-    // Konversi file gambar ke base64
-    function getBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
+  // ============================================================
+  // LOAD DATA DARI FIREBASE
+  // ============================================================
+  function loadData() {
+    const q = query(collection(db, "wilayah_desa"), orderBy("periode.tahun", "desc"), orderBy("periode.bulan", "desc"));
+    
+    onSnapshot(q, (snapshot) => {
+      allData = [];
+      snapshot.forEach((doc) => {
+        const item = doc.data();
+        allData.push({
+          id: doc.id,
+          ...item
         });
+      });
+      console.log("Data loaded:", allData.length, "records");
+      applyFilters();
+    }, (error) => {
+      console.error("Firebase Error:", error);
+    });
+  }
+
+  // ============================================================
+  // APPLY FILTERS & GROUP BY WILAYAH
+  // ============================================================
+  function applyFilters() {
+    const bulan = parseInt(document.getElementById('filterBulan')?.value);
+    const tahun = parseInt(document.getElementById('filterTahun')?.value);
+    
+    let tempData = [...allData];
+    if (bulan && tahun) {
+      tempData = tempData.filter(item => item.periode?.bulan === bulan && item.periode?.tahun === tahun);
+    } else if (tahun) {
+      tempData = tempData.filter(item => item.periode?.tahun === tahun);
+    } else if (bulan) {
+      tempData = tempData.filter(item => item.periode?.bulan === bulan);
     }
+    
+    const desaMap = new Map();
+    tempData.forEach(item => {
+      const namaDesa = item.nama;
+      if (!desaMap.has(namaDesa) || (item.periode?.tahun > desaMap.get(namaDesa)?.periode?.tahun) ||
+          (item.periode?.tahun === desaMap.get(namaDesa)?.periode?.tahun && item.periode?.bulan > desaMap.get(namaDesa)?.periode?.bulan)) {
+        desaMap.set(namaDesa, item);
+      }
+    });
+    
+    filteredData = Array.from(desaMap.values());
+    filteredData.sort((a, b) => a.nama?.localeCompare(b.nama));
+    
+    wilayahData = filteredData.map(item => ({
+      nama: item.nama,
+      desil: Array.isArray(item.desil) ? item.desil : [0,0,0,0,0,0,0,0,0,0],
+      total_kk: Array.isArray(item.desil) ? item.desil.reduce((a,b) => a + (b||0), 0) : 0,
+      layanan: item.layanan || { sktm: 0, dtks: 0, pengaduan: 0 },
+      konsultasi_bulan_lalu: item.konsultasi_bulan_lalu || 0,
+      pemutakhiran_data_bulan_lalu: item.pemutakhiran_data_bulan_lalu || 0,
+      periode: item.periode
+    }));
+    
+    updatePeriodeInfo();
+    renderDesaList();
+  }
 
-    // Tambah laporan baru (tombol)
-    async function tambahLaporan() {
-        // validasi sederhana
-        const nama = document.getElementById('nama').value.trim();
-        const jabatan = document.getElementById('jabatan').value;
-        const lokasi = document.getElementById('lokasi').value.trim();
-        const kegiatan = document.getElementById('kegiatan').value.trim();
-        const jumlah = document.getElementById('jumlah').value;
-        const fileInput = document.getElementById('gambarInput');
-
-        if (!nama || !jabatan || !lokasi || !kegiatan || fileInput.files.length === 0) {
-            alert('Harap isi semua field dan pilih gambar!');
-            return;
-        }
-
-        let gambarBase64 = '';
-        try {
-            gambarBase64 = await getBase64(fileInput.files[0]);
-        } catch (err) {
-            alert('Gagal membaca file gambar');
-            return;
-        }
-
-        const newEntry = {
-            nama: nama,
-            jabatan: jabatan,
-            lokasi: lokasi,
-            kegiatan: kegiatan,
-            gambar: gambarBase64,  // simpan base64 untuk preview & CSV
-            jumlah: parseInt(jumlah) || 0
-        };
-
-        laporanArray.push(newEntry);
-        saveToStorage();
-        renderTable();
-        updatePreviewLastEntry();
-
-        // reset form setelah submit
-        document.getElementById('reportForm').reset();
-        document.getElementById('gambar-name').innerHTML = '<i class="far fa-image"></i> Belum ada gambar dipilih';
-        // preview terakhir akan langsung tergambar
+  function updatePeriodeInfo() {
+    const bulan = document.getElementById('filterBulan')?.value;
+    const tahun = document.getElementById('filterTahun')?.value;
+    let infoText = "Semua Data";
+    if (bulan && tahun) {
+      const bulanNama = document.getElementById('filterBulan').options[document.getElementById('filterBulan').selectedIndex]?.text;
+      infoText = `${bulanNama} ${tahun}`;
+    } else if (tahun) {
+      infoText = `Tahun ${tahun}`;
+    } else if (bulan) {
+      const bulanNama = document.getElementById('filterBulan').options[document.getElementById('filterBulan').selectedIndex]?.text;
+      infoText = `Bulan ${bulanNama}`;
     }
+    document.getElementById('periodeInfo').innerHTML = `<i class="fas fa-calendar-alt me-1"></i> ${infoText}`;
+  }
 
-    // Update preview (menampilkan data terakhir di array)
-    function updatePreviewLastEntry() {
-        if (laporanArray.length === 0) {
-            document.getElementById('prevNama').innerText = '-';
-            document.getElementById('prevJabatan').innerText = '-';
-            document.getElementById('prevLokasi').innerText = '-';
-            document.getElementById('prevKegiatan').innerText = '-';
-            document.getElementById('prevJumlah').innerText = '0';
-            document.getElementById('prevGambar').src = 'https://via.placeholder.com/150/EEF5FF/113e6f?text=No+Image';
-            return;
-        }
-
-        const last = laporanArray[laporanArray.length - 1];
-        document.getElementById('prevNama').innerText = last.nama;
-        document.getElementById('prevJabatan').innerText = last.jabatan;
-        document.getElementById('prevLokasi').innerText = last.lokasi;
-        document.getElementById('prevKegiatan').innerText = last.kegiatan;
-        document.getElementById('prevJumlah').innerText = last.jumlah;
-        if (last.gambar && last.gambar.startsWith('data:image')) {
-            document.getElementById('prevGambar').src = last.gambar;
-        } else {
-            document.getElementById('prevGambar').src = 'https://via.placeholder.com/150/EEF5FF/113e6f?text=Gambar';
-        }
+  function renderDesaList() {
+    const container = document.getElementById('desaListContainer');
+    if (!container) return;
+    
+    if (wilayahData.length === 0) {
+      container.innerHTML = '<div class="text-center py-4 text-muted"><i class="fas fa-database"></i> Tidak ada data desa</div>';
+      return;
     }
+    
+    let html = '';
+    wilayahData.forEach((desa, idx) => {
+      const totalD12 = (desa.desil[0] || 0) + (desa.desil[1] || 0);
+      html += `
+        <div class="desa-card ${selectedDesaIndex === idx ? 'active' : ''}" data-index="${idx}">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-1 fw-bold">${desa.nama || 'Tidak ada nama'}</h6>
+              <small class="text-muted">
+                <i class="fas fa-users me-1"></i> ${desa.total_kk.toLocaleString('id-ID')} KK |
+                D1-2: ${totalD12.toLocaleString('id-ID')}
+              </small>
+            </div>
+            <i class="fas fa-chevron-right text-primary"></i>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+    
+    document.querySelectorAll('.desa-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const index = parseInt(card.dataset.index);
+        selectedDesaIndex = index;
+        renderDesaList();
+        document.getElementById('selectedDesaInfo').innerHTML = `<i class="fas fa-map-pin"></i> ${wilayahData[index].nama}`;
+      });
+    });
+  }
 
-    // Render tabel CSV (mirip google form response)
-    function renderTable() {
-        const tbody = document.getElementById('csvBody');
-        tbody.innerHTML = '';
-        laporanArray.forEach((item, index) => {
-            const tr = document.createElement('tr');
-
-            // Nama
-            const tdNama = document.createElement('td');
-            tdNama.innerText = item.nama;
-            tr.appendChild(tdNama);
-
-            // Jabatan
-            const tdJab = document.createElement('td');
-            tdJab.innerText = item.jabatan;
-            tr.appendChild(tdJab);
-
-            // Lokasi
-            const tdLok = document.createElement('td');
-            tdLok.innerText = item.lokasi;
-            tr.appendChild(tdLok);
-
-            // Kegiatan
-            const tdKeg = document.createElement('td');
-            tdKeg.innerText = item.kegiatan.length > 20 ? item.kegiatan.substr(0,18)+'…' : item.kegiatan;
-            tr.appendChild(tdKeg);
-
-            // Gambar (thumbnail kecil) jika ada base64
-            const tdGambar = document.createElement('td');
-            if (item.gambar && item.gambar.startsWith('data:image')) {
-                const img = document.createElement('img');
-                img.src = item.gambar;
-                img.style.width = '50px';
-                img.style.height = '40px';
-                img.style.objectFit = 'cover';
-                img.style.borderRadius = '10px';
-                img.style.border = '1px solid #ccc';
-                tdGambar.appendChild(img);
-            } else {
-                tdGambar.innerText = '📷 tidak ada';
-            }
-            tr.appendChild(tdGambar);
-
-            // Jumlah
-            const tdJumlah = document.createElement('td');
-            tdJumlah.innerText = item.jumlah;
-            tr.appendChild(tdJumlah);
-
-            tbody.appendChild(tr);
-        });
-
-        if (laporanArray.length === 0) {
-            const tr = document.createElement('tr');
-            tr.innerHTML = '<td colspan="6" style="padding:20px; text-align:center; color:#888;">Belum ada laporan. Tambahkan melalui form.</td>';
-            tbody.appendChild(tr);
-        }
+  // ============================================================
+  // AI #1: ANALISIS KINERJA TKSK
+  // ============================================================
+  async function analisisKinerja() {
+    const outputDiv = document.getElementById('outputKinerja');
+    outputDiv.style.display = 'block';
+    outputDiv.innerHTML = '<div class="loading-spinner"></div> Menganalisis kinerja TKSK & Puskesos...';
+    
+    if (wilayahData.length === 0) {
+      outputDiv.innerHTML = '<i class="fas fa-exclamation-triangle text-warning"></i> Tidak ada data untuk dianalisis.';
+      return;
     }
+    
+    const kinerjaData = wilayahData.map(d => ({
+      desa: d.nama,
+      konsultasi: d.konsultasi_bulan_lalu,
+      pemutakhiran: d.pemutakhiran_data_bulan_lalu,
+      total_kk: d.total_kk,
+      d1_d2: (d.desil[0] || 0) + (d.desil[1] || 0)
+    }));
+    
+    const prompt = `Anda adalah asisten AI untuk TKSK Kecamatan Sumber. Analisis kinerja TKSK dan Puskesos berdasarkan data berikut:
+    ${JSON.stringify(kinerjaData, null, 2)}
+    
+    Standar ideal:
+    - Konsultasi warga: minimal 30 kali per bulan per desa
+    - Pemutakhiran data DTKS: minimal 2 kali per bulan per desa
+    
+    Berikan rekomendasi perbaikan kinerja untuk SETIAP desa. Format jawaban:
+    📊 **RINGKASAN UMUM** (1 paragraf)
+    📋 **REKOMENDASI PER DESA** (gunakan bullet point, setiap desa maksimal 2 kalimat)`;
+    
+    const result = await callGemini(prompt);
+    outputDiv.innerHTML = result.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  }
 
-    // Ekspor ke CSV (dengan gambar disertakan sebagai teks base64)
-    function exportToCSV() {
-        if (laporanArray.length === 0) {
-            alert('Tidak ada data untuk diekspor.');
-            return;
-        }
-
-        // header disesuaikan dengan format google form / RHK
-        let csvContent = "\uFEFFNama,Jabatan,Lokasi,Kegiatan,Gambar (base64),Jumlah Penerima\n"; // BOM utf8
-
-        laporanArray.forEach(item => {
-            // Escape tanda koma atau petik sederhana
-            const escape = (str) => {
-                if (str === null || str === undefined) return '';
-                if (typeof str === 'string') return `"${str.replace(/"/g, '""')}"`;
-                return str;
-            };
-
-            const row = [
-                escape(item.nama),
-                escape(item.jabatan),
-                escape(item.lokasi),
-                escape(item.kegiatan),
-                escape(item.gambar || ''),  // base64 string (panjang, tapi ok untuk CSV)
-                escape(item.jumlah)
-            ].join(',');
-            csvContent += row + '\n';
-        });
-
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', 'laporan_bulanan_TKSK_Puskesos_RHK.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+  // ============================================================
+  // AI #2: REKOMENDASI MUSREMBANG
+  // ============================================================
+  async function rekomendasiMusrembang() {
+    const outputDiv = document.getElementById('outputMusrembang');
+    
+    if (selectedDesaIndex === null) {
+      outputDiv.style.display = 'block';
+      outputDiv.innerHTML = '<i class="fas fa-exclamation-triangle text-warning"></i> Silakan pilih desa/kelurahan terlebih dahulu.';
+      return;
     }
-
-    // Reset data (dengan konfirmasi)
-    function resetData() {
-        if (confirm('Hapus semua laporan? Data tidak bisa dikembalikan.')) {
-            laporanArray = [];
-            saveToStorage();
-            renderTable();
-            updatePreviewLastEntry();
-            document.getElementById('reportForm').reset();
-            document.getElementById('gambar-name').innerHTML = '<i class="far fa-image"></i> Belum ada gambar dipilih';
-        }
+    
+    outputDiv.style.display = 'block';
+    outputDiv.innerHTML = '<div class="loading-spinner"></div> Menyusun rekomendasi program untuk Musrembang...';
+    
+    const desa = wilayahData[selectedDesaIndex];
+    const layanan = desa.layanan || {};
+    const d1 = desa.desil[0] || 0;
+    const d2 = desa.desil[1] || 0;
+    const d3_4 = (desa.desil[2] || 0) + (desa.desil[3] || 0);
+    
+    const prompt = `Anda adalah asisten AI untuk perencanaan pembangunan desa. Desa ${desa.nama} memiliki data:
+    - D1 (Sangat Miskin): ${d1} KK
+    - D2 (Miskin): ${d2} KK
+    - D3-4 (Rentan): ${d3_4} KK
+    - Total KK: ${desa.total_kk} KK
+    - SKTM terbit periode ini: ${layanan.sktm || 0}
+    - Pengaduan warga: ${layanan.pengaduan || 0}
+    
+    Berikan 3 rekomendasi program untuk diajukan dalam Musrembang Desa ${desa.nama}.
+    
+    Format setiap program:
+    🎯 **Program 1: [Nama Program]**
+    - Target sasaran: D...
+    - Alasan: (berdasarkan data di atas)
+    - Estimasi dampak: (singkat)`;
+    
+    const result = await callGemini(prompt);
+    outputDiv.innerHTML = result.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    const programMatch = result.match(/\*\*Program \d+: (.*?)\*\*/);
+    if (programMatch && programMatch[1]) {
+      document.getElementById('programName').value = programMatch[1];
     }
+  }
 
-    // Inisialisasi
-    window.onload = function() {
-        loadFromStorage();
-        // event untuk upload area klik
-        document.querySelector('.file-upload-area').addEventListener('click', function() {
-            document.getElementById('gambarInput').click();
-        });
+  // ============================================================
+  // AI #3: DRAFT PROPOSAL
+  // ============================================================
+  async function buatDraftProposal() {
+    const outputDiv = document.getElementById('outputProposal');
+    const programName = document.getElementById('programName').value.trim();
+    
+    if (selectedDesaIndex === null) {
+      outputDiv.style.display = 'block';
+      outputDiv.innerHTML = '<i class="fas fa-exclamation-triangle text-warning"></i> Silakan pilih desa/kelurahan terlebih dahulu.';
+      return;
+    }
+    
+    if (!programName) {
+      outputDiv.style.display = 'block';
+      outputDiv.innerHTML = '<i class="fas fa-exclamation-triangle text-warning"></i> Silakan masukkan nama program.';
+      return;
+    }
+    
+    outputDiv.style.display = 'block';
+    outputDiv.innerHTML = '<div class="loading-spinner"></div> Membuat draft proposal...';
+    
+    const desa = wilayahData[selectedDesaIndex];
+    const d1 = desa.desil[0] || 0;
+    const d2 = desa.desil[1] || 0;
+    const totalKK = desa.total_kk;
+    const tanggal = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    
+    const prompt = `Anda adalah asisten AI untuk pembuatan proposal program sosial. Buatkan draft proposal program dengan detail berikut:
+
+    Nama Program: ${programName}
+    Desa: ${desa.nama}
+    Kecamatan: Sumber
+    Kabupaten: Cirebon
+    Tanggal: ${tanggal}
+    
+    Data Pendukung:
+    - Jumlah Keluarga Miskin Ekstrem (D1-D2): ${d1 + d2} KK
+    - Total KK Desa: ${totalKK} KK
+    
+    Format proposal (lengkap dan profesional) dengan struktur HTML:
+    
+    <div class="proposal-pdf-content">
+    <h1>PROPOSAL PROGRAM</h1>
+    <h2>${programName}</h2>
+    <p style="text-align:center">Desa ${desa.nama}, Kecamatan Sumber, Kabupaten Cirebon</p>
+    <p style="text-align:center">Periode ${tanggal}</p>
+    
+    <h2>A. LATAR BELAKANG</h2>
+    <p>(2-3 paragraf berdasarkan data kemiskinan desa)</p>
+    
+    <h2>B. TUJUAN</h2>
+    <p><strong>Tujuan Umum:</strong> ...</p>
+    <p><strong>Tujuan Khusus:</strong></p>
+    <ul><li>...</li><li>...</li><li>...</li></ul>
+    
+    <h2>C. SASARAN</h2>
+    <p>Target: ${d1 + d2} KK dari desil D1-D2</p>
+    
+    <h2>D. RENCANA KEGIATAN</h2>
+    <table><th>Bulan</th><th>Kegiatan</th></tr>
+    <tr><td>Bulan 1</td><td>...</td></tr>
+    <tr><td>Bulan 2</td><td>...</td></tr>
+    <tr><td>Bulan 3</td><td>...</td></tr>
+    </table>
+    
+    <h2>E. ANGGARAN KASAR</h2>
+    <tr><th>Komponen</th><th>Biaya (Rp)</th></tr>
+    <tr><td>...</td><td>...</td></tr>
+    </table>
+    
+    <h2>F. INDIKATOR KEBERHASILAN</h2>
+    <ul><li>...</li><li>...</li></ul>
+    
+    <h2>G. PENUTUP</h2>
+    <p>...</p>
+    </div>`;
+    
+    const result = await callGemini(prompt);
+    
+    // Ekstrak konten HTML dari response
+    let htmlContent = result;
+    if (!result.includes('<div class="proposal-pdf-content">')) {
+      htmlContent = `<div class="proposal-pdf-content">${result.replace(/\n/g, '<br>')}</div>`;
+    }
+    
+    currentProposalHTML = htmlContent;
+    outputDiv.innerHTML = htmlContent;
+    
+    // Tampilkan tombol export
+    document.getElementById('exportButtons').style.display = 'block';
+  }
+
+  // ============================================================
+  // EXPORT TO PDF FUNCTION
+  // ============================================================
+  async function exportToPDF() {
+    if (!currentProposalHTML) {
+      alert('Tidak ada proposal untuk diekspor. Buat proposal terlebih dahulu.');
+      return;
+    }
+    
+    // Buat elemen sementara untuk PDF
+    const pdfContainer = document.createElement('div');
+    pdfContainer.innerHTML = currentProposalHTML;
+    pdfContainer.style.padding = '30px';
+    pdfContainer.style.backgroundColor = 'white';
+    pdfContainer.style.fontFamily = "'Times New Roman', 'Inter', serif";
+    pdfContainer.style.fontSize = '12pt';
+    pdfContainer.style.lineHeight = '1.6';
+    
+    // Tambahkan kop surat sederhana
+    const header = document.createElement('div');
+    header.style.textAlign = 'center';
+    header.style.marginBottom = '20px';
+    header.style.borderBottom = '2px solid #0a58ca';
+    header.style.paddingBottom = '10px';
+    header.innerHTML = `
+      <h3 style="margin:0; color:#0a58ca;">PEMERINTAH KABUPATEN CIREBON</h3>
+      <h4 style="margin:0;">Kecamatan Sumber</h4>
+      <p style="margin:0;">TKSK & Forum Puskesos Kecamatan Sumber</p>
+    `;
+    pdfContainer.insertBefore(header, pdfContainer.firstChild);
+    
+    // Tambahkan footer
+    const footer = document.createElement('div');
+    footer.style.textAlign = 'center';
+    footer.style.marginTop = '30px';
+    footer.style.paddingTop = '10px';
+    footer.style.borderTop = '1px solid #ddd';
+    footer.style.fontSize = '9pt';
+    footer.style.color = '#666';
+    footer.innerHTML = `Dokumen ini dihasilkan oleh AI Dashboard TKSK Sumber - ${new Date().toLocaleDateString('id-ID')}`;
+    pdfContainer.appendChild(footer);
+    
+    // Konfigurasi html2pdf
+    const opt = {
+      margin: [0.75, 0.75, 0.75, 0.75],
+      filename: `Proposal_${document.getElementById('programName').value.trim().replace(/\s/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, letterRendering: true, useCORS: true },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
     };
+    
+    try {
+      await html2pdf().set(opt).from(pdfContainer).save();
+    } catch (error) {
+      console.error('PDF Export Error:', error);
+      alert('Gagal mengekspor PDF. Silakan coba lagi.');
+    }
+  }
+
+  // ============================================================
+  // PREVIEW PDF IN MODAL
+  // ============================================================
+  function previewPDF() {
+    if (!currentProposalHTML) {
+      alert('Tidak ada proposal untuk dipreview. Buat proposal terlebih dahulu.');
+      return;
+    }
+    
+    const modal = document.getElementById('pdfModal');
+    const previewBody = document.getElementById('pdfPreviewBody');
+    
+    // Tambahkan kop surat untuk preview
+    const previewContent = `
+      <div style="padding:20px; font-family:'Times New Roman', serif;">
+        <div style="text-align:center; margin-bottom:20px; border-bottom:2px solid #0a58ca; padding-bottom:10px;">
+          <h3 style="margin:0; color:#0a58ca;">PEMERINTAH KABUPATEN CIREBON</h3>
+          <h4 style="margin:0;">Kecamatan Sumber</h4>
+          <p style="margin:0;">TKSK & Forum Puskesos Kecamatan Sumber</p>
+        </div>
+        ${currentProposalHTML}
+        <div style="text-align:center; margin-top:30px; padding-top:10px; border-top:1px solid #ddd; font-size:9pt; color:#666;">
+          Dokumen ini dihasilkan oleh AI Dashboard TKSK Sumber - ${new Date().toLocaleDateString('id-ID')}
+        </div>
+      </div>
+    `;
+    
+    previewBody.innerHTML = previewContent;
+    modal.style.display = 'block';
+  }
+
+  function closeModal() {
+    document.getElementById('pdfModal').style.display = 'none';
+  }
+
+  // ============================================================
+  // EVENT LISTENERS
+  // ============================================================
+  document.getElementById('btnKinerja')?.addEventListener('click', analisisKinerja);
+  document.getElementById('btnMusrembang')?.addEventListener('click', rekomendasiMusrembang);
+  document.getElementById('btnProposal')?.addEventListener('click', buatDraftProposal);
+  document.getElementById('btnExportPDF')?.addEventListener('click', exportToPDF);
+  document.getElementById('btnPreviewPDF')?.addEventListener('click', previewPDF);
+  document.getElementById('refreshData')?.addEventListener('click', () => applyFilters());
+  document.getElementById('filterBulan')?.addEventListener('change', applyFilters);
+  document.getElementById('filterTahun')?.addEventListener('change', applyFilters);
+  
+  // Modal event listeners
+  document.getElementById('closeModalBtn')?.addEventListener('click', closeModal);
+  document.getElementById('closeModalFooterBtn')?.addEventListener('click', closeModal);
+  document.getElementById('downloadFromModal')?.addEventListener('click', () => {
+    closeModal();
+    exportToPDF();
+  });
+  
+  // Tutup modal jika klik di luar konten
+  window.addEventListener('click', (e) => {
+    const modal = document.getElementById('pdfModal');
+    if (e.target === modal) closeModal();
+  });
+  
+  // Initialize AOS
+  AOS.init({ duration: 800, once: true });
+  
+  // Start loading data
+  loadData();
 </script>
 
-<!-- catatan tambahan agar fungsi global bisa dipanggil dari onclick -->
-<script>
-    // supaya fungsi dapat dipanggil dari HTML (karena dideklarasikan dengan function)
+<script nomodule>
+  document.body.innerHTML = '<div class="alert alert-danger m-5">Browser Anda tidak mendukung fitur modern. Silakan gunakan Chrome, Firefox, atau Edge terbaru.</div>';
 </script>
+
 </body>
 </html>
