@@ -416,6 +416,1014 @@
         </div>
       </div>
       
+      <!-- AI Card 2: Rekomendasi Musrembang (DIGANTI DARI GROQ KE MISTRAL) -->
+      <div class="card-ai">
+        <div class="card-header-mistral">
+          <h5 class="mb-0">
+            <i class="fas fa-file-alt me-2"></i> 
+            AI #2: Rekomendasi Usulan Program Musrembang
+            <span class="badge bg-light text-dark ms-2">Powered by Mistral AI</span>
+          </h5>
+        </div>
+        <div class="p-4">
+          <p class="text-muted small">Pilih desa terlebih dahulu (proses dengan Mistral AI)</p>
+          <div class="d-flex flex-wrap gap-2">
+            <button id="btnMusrembang" class="btn-mistral">
+              <i class="fas fa-calendar-check"></i> Rekomendasi Program Musrembang
+            </button>
+            <span id="selectedDesaInfo" class="stat-badge ms-2">
+              <i class="fas fa-map-pin"></i> Belum pilih desa
+            </span>
+          </div>
+          <div id="outputMusrembang" class="ai-output mistral-output" style="display: none;"></div>
+        </div>
+      </div>
+      
+      <!-- AI Card 3: Draft Proposal (Mistral) -->
+      <div class="card-ai">
+        <div class="card-header-mistral">
+          <h5 class="mb-0">
+            <i class="fas fa-file-word me-2"></i> 
+            AI #3: Draft Proposal Usulan Program
+            <span class="badge bg-light text-dark ms-2">Powered by Mistral AI</span>
+          </h5>
+        </div>
+        <div class="p-4">
+          <p class="text-muted small">Setelah mendapatkan rekomendasi program, buat draft proposal lengkap</p>
+          <div class="row g-3">
+            <div class="col-md-8">
+              <input type="text" id="programName" class="form-control" placeholder="Nama program (contoh: Posyandu Keliling)">
+            </div>
+            <div class="col-md-4">
+              <button id="btnProposal" class="btn-mistral w-100">
+                <i class="fas fa-file-alt"></i> Buat Draft Proposal
+              </button>
+            </div>
+          </div>
+          <div id="outputProposal" class="ai-output mistral-output" style="display: none;"></div>
+          <div class="mt-3 text-end" id="exportButtons" style="display: none;">
+            <button id="btnPreviewPDF" class="btn-outline-ai me-2">
+              <i class="fas fa-eye"></i> Preview PDF
+            </button>
+            <button id="btnExportPDF" class="btn-success-ai">
+              <i class="fas fa-file-pdf"></i> Ekspor ke PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Preview PDF -->
+<div id="pdfModal" class="modal-pdf">
+  <div class="modal-pdf-content">
+    <div class="modal-pdf-header">
+      <h5 class="mb-0"><i class="fas fa-file-pdf me-2"></i> Preview Proposal</h5>
+      <button class="close-modal" id="closeModalBtn">&times;</button>
+    </div>
+    <div class="modal-pdf-body" id="pdfPreviewBody"></div>
+    <div class="modal-pdf-footer">
+      <button id="downloadFromModal" class="btn-success-ai">
+        <i class="fas fa-download"></i> Unduh PDF
+      </button>
+      <button id="closeModalFooterBtn" class="btn-outline-ai">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p class="mb-0">
+      <i class="fas fa-robot me-2"></i> AI Dashboard Terintegrasi dengan Firebase DTKS
+    </p>
+    <small>© 2026 TKSK & Forum Puskesos Kecamatan Sumber | AI: Mistral (Kinerja, Musrembang, Proposal)</small>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script type="module">
+  // ============================================================
+  // FIREBASE INITIALIZATION
+  // ============================================================
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
+    authDomain: "data-ke-aksi-auth.firebaseapp.com",
+    projectId: "data-ke-aksi-auth",
+    storageBucket: "data-ke-aksi-auth.firebasestorage.app",
+    messagingSenderId: "631382692174",
+    appId: "1:631382692174:web:c10a099fb3021849eace1f"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ============================================================
+  // API KEYS
+  // ============================================================
+  // Groq API Key - Masih digunakan untuk analisis sekunder jika diperlukan
+  const GROQ_API_KEY = "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";
+  // Mistral API Key - Daftar di https://console.mistral.ai
+  const MISTRAL_API_KEY = "E8aPEHw3O87cWJBAKqnJwE4Sd0w8VRms";
+  
+  // Konfigurasi delay antar request (ms)
+  const REQUEST_DELAY_MS = 2000; // 2 detik
+  
+  // Cache untuk menyimpan hasil AI
+  const aiCache = new Map();
+  
+  // ============================================================
+  // FUNGSI PANGGIL MISTRAL API (Untuk semua kebutuhan)
+  // ============================================================
+  async function callMistral(prompt, cacheKey = null) {
+    if (cacheKey && aiCache.has(cacheKey)) {
+      console.log(`[Mistral] Mengambil dari cache: ${cacheKey}`);
+      return aiCache.get(cacheKey);
+    }
+    
+    // Simulasi delay kecil untuk menghindari rate limit berlebihan
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    try {
+      console.log("[Mistral] Memproses prompt...");
+      const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${MISTRAL_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "mistral-large-latest", // Model terbaru untuk hasil lebih baik
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.7,
+          max_tokens: 2000
+        })
+      });
+      
+      if (response.status === 429) {
+        console.warn("[Mistral] Rate limit, tunggu 5 detik...");
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        return callMistral(prompt, cacheKey);
+      }
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Mistral Error Body:", errorText);
+        throw new Error(`Mistral API Error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      const result = data.choices[0].message.content;
+      
+      if (cacheKey) aiCache.set(cacheKey, result);
+      return result;
+      
+    } catch (error) {
+      console.error("[Mistral] Error:", error);
+      return `Error Mistral: ${error.message}. Silakan coba lagi nanti.`;
+    }
+  }
+  
+  // ============================================================
+  // FUNGSI SEQUENTIAL PROCESSOR
+  // ============================================================
+  async function processSequential(items, processor, onProgress) {
+    const results = [];
+    for (let i = 0; i < items.length; i++) {
+      if (onProgress) {
+        onProgress(i + 1, items.length, items[i]);
+      }
+      const result = await processor(items[i], i);
+      results.push(result);
+      
+      if (i < items.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, REQUEST_DELAY_MS));
+      }
+    }
+    return results;
+  }
+
+  // ============================================================
+  // GLOBAL VARIABLES
+  // ============================================================
+  let allData = [];
+  let filteredData = [];
+  let selectedDesaIndex = null;
+  let wilayahData = [];
+  let currentProposalHTML = "";
+
+  // ============================================================
+  // LOAD DATA DARI FIREBASE
+  // ============================================================
+  function loadData() {
+    const q = query(collection(db, "wilayah_desa"), orderBy("periode.tahun", "desc"), orderBy("periode.bulan", "desc"));
+    
+    onSnapshot(q, (snapshot) => {
+      allData = [];
+      snapshot.forEach((doc) => {
+        const item = doc.data();
+        allData.push({ id: doc.id, ...item });
+      });
+      console.log("Data loaded:", allData.length, "records");
+      applyFilters();
+    }, (error) => {
+      console.error("Firebase Error:", error);
+      document.getElementById('desaListContainer').innerHTML = '<div class="text-center py-4 text-danger"><i class="fas fa-database"></i> Gagal memuat data dari Firebase. Periksa koneksi.</div>';
+    });
+  }
+
+  function applyFilters() {
+    const bulan = parseInt(document.getElementById('filterBulan')?.value);
+    const tahun = parseInt(document.getElementById('filterTahun')?.value);
+    
+    let tempData = [...allData];
+    if (bulan && tahun) {
+      tempData = tempData.filter(item => item.periode?.bulan === bulan && item.periode?.tahun === tahun);
+    } else if (tahun) {
+      tempData = tempData.filter(item => item.periode?.tahun === tahun);
+    } else if (bulan) {
+      tempData = tempData.filter(item => item.periode?.bulan === bulan);
+    }
+    
+    const desaMap = new Map();
+    tempData.forEach(item => {
+      const namaDesa = item.nama;
+      if (!desaMap.has(namaDesa) || (item.periode?.tahun > desaMap.get(namaDesa)?.periode?.tahun) ||
+          (item.periode?.tahun === desaMap.get(namaDesa)?.periode?.tahun && item.periode?.bulan > desaMap.get(namaDesa)?.periode?.bulan)) {
+        desaMap.set(namaDesa, item);
+      }
+    });
+    
+    filteredData = Array.from(desaMap.values());
+    filteredData.sort((a, b) => a.nama?.localeCompare(b.nama));
+    
+    wilayahData = filteredData.map(item => ({
+      nama: item.nama,
+      desil: Array.isArray(item.desil) ? item.desil : [0,0,0,0,0,0,0,0,0,0],
+      total_kk: Array.isArray(item.desil) ? item.desil.reduce((a,b) => a + (b||0), 0) : 0,
+      layanan: item.layanan || { sktm: 0, dtks: 0, pengaduan: 0 },
+      konsultasi_bulan_lalu: item.konsultasi_bulan_lalu || 0,
+      pemutakhiran_data_bulan_lalu: item.pemutakhiran_data_bulan_lalu || 0,
+      periode: item.periode
+    }));
+    
+    updatePeriodeInfo();
+    renderDesaList();
+  }
+
+  function updatePeriodeInfo() {
+    const bulan = document.getElementById('filterBulan')?.value;
+    const tahun = document.getElementById('filterTahun')?.value;
+    let infoText = "Semua Data";
+    if (bulan && tahun) {
+      const bulanNama = document.getElementById('filterBulan').options[document.getElementById('filterBulan').selectedIndex]?.text;
+      infoText = `${bulanNama} ${tahun}`;
+    } else if (tahun) {
+      infoText = `Tahun ${tahun}`;
+    } else if (bulan) {
+      const bulanNama = document.getElementById('filterBulan').options[document.getElementById('filterBulan').selectedIndex]?.text;
+      infoText = `Bulan ${bulanNama}`;
+    }
+    document.getElementById('periodeInfo').innerHTML = `<i class="fas fa-calendar-alt me-1"></i> ${infoText}`;
+  }
+
+  function renderDesaList() {
+    const container = document.getElementById('desaListContainer');
+    if (!container) return;
+    
+    if (wilayahData.length === 0) {
+      container.innerHTML = '<div class="text-center py-4 text-muted"><i class="fas fa-database"></i> Tidak ada data desa</div>';
+      return;
+    }
+    
+    let html = '';
+    wilayahData.forEach((desa, idx) => {
+      const totalD12 = (desa.desil[0] || 0) + (desa.desil[1] || 0);
+      html += `
+        <div class="desa-card ${selectedDesaIndex === idx ? 'active' : ''}" data-index="${idx}">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-1 fw-bold">${desa.nama || 'Tidak ada nama'}</h6>
+              <small class="text-muted">
+                <i class="fas fa-users me-1"></i> ${desa.total_kk.toLocaleString('id-ID')} KK |
+                D1-2: ${totalD12.toLocaleString('id-ID')}
+              </small>
+            </div>
+            <i class="fas fa-chevron-right text-primary"></i>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+    
+    document.querySelectorAll('.desa-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const index = parseInt(card.dataset.index);
+        selectedDesaIndex = index;
+        renderDesaList();
+        document.getElementById('selectedDesaInfo').innerHTML = `<i class="fas fa-map-pin"></i> ${wilayahData[index].nama}`;
+      });
+    });
+  }
+
+  // ============================================================
+  // AI #1: ANALISIS KINERJA (Mistral)
+  // ============================================================
+  async function analisisKinerja() {
+    const outputDiv = document.getElementById('outputKinerja');
+    const btn = document.getElementById('btnKinerja');
+    
+    if (wilayahData.length === 0) {
+      outputDiv.style.display = 'block';
+      outputDiv.innerHTML = '<i class="fas fa-exclamation-triangle text-warning"></i> Tidak ada data untuk dianalisis.';
+      return;
+    }
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses dengan Mistral...';
+    outputDiv.style.display = 'block';
+    outputDiv.innerHTML = '<div class="loading-spinner"></div> Menganalisis kinerja ' + wilayahData.length + ' desa dengan Mistral AI...<div class="progress-container mt-3"><div class="progress-bar-custom" style="width:0%"></div><div class="progress-text" id="kinerjaProgressText">Menunggu...</div></div>';
+    
+    const progressBar = outputDiv.querySelector('.progress-bar-custom');
+    const progressText = document.getElementById('kinerjaProgressText');
+    
+    const desaItems = wilayahData.map(desa => ({
+      nama: desa.nama,
+      konsultasi: desa.konsultasi_bulan_lalu,
+      pemutakhiran: desa.pemutakhiran_data_bulan_lalu,
+      total_kk: desa.total_kk,
+      d1_d2: (desa.desil[0] || 0) + (desa.desil[1] || 0)
+    }));
+    
+    const hasilPerDesa = [];
+    
+    await processSequential(
+      desaItems,
+      async (desa, index) => {
+        const prompt = `Analisis singkat kinerja TKSK untuk Desa ${desa.nama} berdasarkan data:
+        - Konsultasi warga: ${desa.konsultasi} kali (standar ideal 30+ per bulan)
+        - Pemutakhiran data DTKS: ${desa.pemutakhiran} kali (standar ideal 2+ per bulan)
+        - Jumlah KK miskin (D1-D2): ${desa.d1_d2} KK
+        
+        Berikan 1 kalimat rekomendasi perbaikan untuk desa ini saja.`;
+        
+        const cacheKey = `kinerja_mistral_${desa.nama}_${desa.konsultasi}_${desa.pemutakhiran}`;
+        const result = await callMistral(prompt, cacheKey);
+        hasilPerDesa.push({ desa: desa.nama, rekomendasi: result });
+        return result;
+      },
+      (current, total, item) => {
+        const percent = (current / total) * 100;
+        if (progressBar) progressBar.style.width = `${percent}%`;
+        if (progressText) progressText.innerHTML = `Memproses ${current} dari ${total} desa: ${item.nama}`;
+      }
+    );
+    
+    let html = '<strong>📊 REKOMENDASI KINERJA PER DESA (Mistral AI)</strong><br><br>';
+    for (const hasil of hasilPerDesa) {
+      html += `<strong>📍 ${hasil.desa}</strong><br>${hasil.rekomendasi}<br><br>`;
+    }
+    
+    outputDiv.innerHTML = html;
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-chart-line"></i> Analisis Kinerja Bulanan';
+  }
+
+  // ============================================================
+  // AI #2: REKOMENDASI MUSREMBANG (SEKARANG MENGGUNAKAN MISTRAL)
+  // ============================================================
+  async function rekomendasiMusrembang() {
+    const outputDiv = document.getElementById('outputMusrembang');
+    const btn = document.getElementById('btnMusrembang');
+    
+    if (selectedDesaIndex === null) {
+      outputDiv.style.display = 'block';
+      outputDiv.innerHTML = '<i class="fas fa-exclamation-triangle text-warning"></i> Silakan pilih desa/kelurahan terlebih dahulu.';
+      return;
+    }
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses dengan Mistral...';
+    outputDiv.style.display = 'block';
+    outputDiv.innerHTML = '<div class="loading-spinner"></div> Menyusun rekomendasi program dengan Mistral AI...';
+    
+    const desa = wilayahData[selectedDesaIndex];
+    const layanan = desa.layanan || {};
+    const d1 = desa.desil[0] || 0;
+    const d2 = desa.desil[1] || 0;
+    const d3_4 = (desa.desil[2] || 0) + (desa.desil[3] || 0);
+    
+    const prompt = `Anda adalah Asisten AI untuk TKSK Kecamatan Sumber. Berdasarkan data kemiskinan desa, berikan rekomendasi program untuk musrembang Desa ${desa.nama}.
+    
+Data desa:
+- D1 (Sangat Miskin): ${d1} KK
+- D2 (Miskin): ${d2} KK
+- D3-4 (Rentan Miskin): ${d3_4} KK
+- Total KK: ${desa.total_kk} KK
+- Jumlah SKTM terbit: ${layanan.sktm || 0}
+- Jumlah pengaduan warga: ${layanan.pengaduan || 0}
+
+Berikan 3 rekomendasi program prioritas untuk diajukan dalam Musrembang Desa.
+Format output:
+**Program 1: [Nama Program]**
+Target: D... (sebutkan desil target)
+Alasan: (jelaskan berdasarkan data di atas)
+
+**Program 2: [Nama Program]**
+Target: D...
+Alasan: ...
+
+**Program 3: [Nama Program]**
+Target: D...
+Alasan: ...`;
+    
+    const cacheKey = `musrembang_mistral_${desa.nama}_${d1}_${d2}_${d3_4}`;
+    const result = await callMistral(prompt, cacheKey);
+    
+    // Format output agar lebih rapi
+    let formattedResult = result.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    outputDiv.innerHTML = formattedResult;
+    
+    // Ekstrak program pertama untuk mengisi field nama program secara otomatis
+    const programMatch = result.match(/\*\*Program 1:\s*(.*?)\*\*/);
+    if (programMatch && programMatch[1]) {
+      document.getElementById('programName').value = programMatch[1].trim();
+    } else {
+      // Fallback: coba ambil teks setelah "Program 1:"
+      const simpleMatch = result.match(/Program 1:\s*(.+?)(\n|$)/);
+      if(simpleMatch) document.getElementById('programName').value = simpleMatch[1].trim();
+    }
+    
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-calendar-check"></i> Rekomendasi Program Musrembang';
+  }
+
+  // ============================================================
+  // AI #3: DRAFT PROPOSAL (Mistral)
+  // ============================================================
+  async function buatDraftProposal() {
+    const outputDiv = document.getElementById('outputProposal');
+    const btn = document.getElementById('btnProposal');
+    const programName = document.getElementById('programName').value.trim();
+    
+    if (selectedDesaIndex === null) {
+      outputDiv.style.display = 'block';
+      outputDiv.innerHTML = '<i class="fas fa-exclamation-triangle text-warning"></i> Silakan pilih desa/kelurahan terlebih dahulu.';
+      return;
+    }
+    
+    if (!programName) {
+      outputDiv.style.display = 'block';
+      outputDiv.innerHTML = '<i class="fas fa-exclamation-triangle text-warning"></i> Silakan masukkan nama program.';
+      return;
+    }
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Membuat proposal dengan Mistral...';
+    outputDiv.style.display = 'block';
+    outputDiv.innerHTML = '<div class="loading-spinner"></div> Membuat draft proposal dengan Mistral AI...';
+    
+    const desa = wilayahData[selectedDesaIndex];
+    const d1 = desa.desil[0] || 0;
+    const d2 = desa.desil[1] || 0;
+    const totalKK = desa.total_kk;
+    const tanggal = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    
+    const prompt = `Buat draft proposal program "${programName}" untuk Desa ${desa.nama}, Kecamatan Sumber, Kabupaten Cirebon.
+Data pendukung: Jumlah KK miskin (Desil 1-2) = ${d1 + d2} KK dari total ${totalKK} KK.
+Tanggal pembuatan: ${tanggal}
+
+Format HTML dengan class "proposal-pdf-content" (jangan sertakan <html> atau <body>):
+<h1 style="text-align:center;">PROPOSAL PROGRAM</h1>
+<h2 style="text-align:center;">${programName}</h2>
+<p style="text-align:center">Desa ${desa.nama}, Kecamatan Sumber, Kabupaten Cirebon</p>
+
+<h2>A. LATAR BELAKANG</h2>
+<p>Desa ${desa.nama} memiliki ${d1+d2} KK yang tergolong dalam kategori sangat miskin dan miskin. Berdasarkan data DTKS, diperlukan intervensi program yang tepat sasaran untuk mengentaskan kemiskinan dan meningkatkan kesejahteraan masyarakat.</p>
+
+<h2>B. TUJUAN</h2>
+<ul>
+  <li>Meningkatkan kesejahteraan masyarakat sasaran.</li>
+  <li>Mengurangi beban ekonomi keluarga miskin.</li>
+  <li>Mendukung program prioritas nasional dan daerah.</li>
+</ul>
+
+<h2>C. SASARAN</h2>
+<p>${d1 + d2} KK dari desil D1-D2 (Sangat Miskin dan Miskin) di Desa ${desa.nama}.</p>
+
+<h2>D. RENCANA KEGIATAN</h2>
+<table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse;">
+  <tr bgcolor="#f2f2f2"><th>Bulan</th><th>Kegiatan</th></tr>
+  <tr><td>Bulan 1</td><td>Sosialisasi dan Pendataan Ulang</td></tr>
+  <tr><td>Bulan 2</td><td>Pelaksanaan Program ${programName}</td></tr>
+  <tr><td>Bulan 3</td><td>Monitoring dan Evaluasi</td></tr>
+</table>
+
+<h2>E. ANGGARAN KASAR</h2>
+<table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse;">
+  <tr bgcolor="#f2f2f2"><th>Komponen</th><th>Biaya (Rp)</th></tr>
+  <tr><td>Biaya Operasional</td><td>5,000,000</td></tr>
+  <tr><td>Biaya Barang/Jasa</td><td>10,000,000</td></tr>
+  <tr><td>Total</td><td>15,000,000</td></tr>
+</table>
+
+<h2>F. INDIKATOR KEBERHASILAN</h2>
+<ul>
+  <li>100% keluarga sasaran menerima manfaat program.</li>
+  <li>Peningkatan pendapatan atau kesejahteraan minimal 10%.</li>
+  <li>Partisipasi aktif masyarakat dalam pelaksanaan.</li>
+</ul>
+
+<h2>G. PENUTUP</h2>
+<p>Demikian proposal ini dibuat untuk dapat dipergunakan sebagaimana mestinya. Atas perhatian dan kerjasamanya, kami ucapkan terima kasih.</p>`;
+    
+    const cacheKey = `proposal_mistral_${desa.nama}_${programName}`;
+    let result = await callMistral(prompt, cacheKey);
+    
+    // Bersihkan potensi markdown atau tag tidak perlu
+    result = result.replace(/```html/g, '').replace(/```/g, '');
+    currentProposalHTML = result;
+    outputDiv.innerHTML = currentProposalHTML;
+    
+    document.getElementById('exportButtons').style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-file-alt"></i> Buat Draft Proposal';
+  }
+
+  // ============================================================
+  // EXPORT TO PDF
+  // ============================================================
+  async function exportToPDF() {
+    if (!currentProposalHTML) {
+      alert('Tidak ada proposal untuk diekspor.');
+      return;
+    }
+    
+    const pdfContainer = document.createElement('div');
+    pdfContainer.innerHTML = currentProposalHTML;
+    pdfContainer.style.padding = '30px';
+    pdfContainer.style.backgroundColor = 'white';
+    pdfContainer.style.fontFamily = "'Times New Roman', serif";
+    
+    const header = document.createElement('div');
+    header.style.textAlign = 'center';
+    header.style.marginBottom = '20px';
+    header.style.borderBottom = '2px solid #0a58ca';
+    header.style.paddingBottom = '10px';
+    header.innerHTML = `<h3>PEMERINTAH KABUPATEN CIREBON</h3><h4>Kecamatan Sumber</h4><p>TKSK & Forum Puskesos Kecamatan Sumber</p>`;
+    pdfContainer.insertBefore(header, pdfContainer.firstChild);
+    
+    const opt = {
+      margin: [0.75, 0.75, 0.75, 0.75],
+      filename: `Proposal_${document.getElementById('programName').value.replace(/\s/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+    
+    await html2pdf().set(opt).from(pdfContainer).save();
+  }
+
+  function previewPDF() {
+    if (!currentProposalHTML) {
+      alert('Tidak ada proposal untuk dipreview.');
+      return;
+    }
+    
+    const modal = document.getElementById('pdfModal');
+    const previewBody = document.getElementById('pdfPreviewBody');
+    previewBody.innerHTML = `
+      <div style="padding:20px">
+        <div style="text-align:center; margin-bottom:20px; border-bottom:2px solid #0a58ca;">
+          <h3>PEMERINTAH KABUPATEN CIREBON</h3>
+          <h4>Kecamatan Sumber</h4>
+        </div>
+        ${currentProposalHTML}
+      </div>
+    `;
+    modal.style.display = 'block';
+  }
+
+  function closeModal() {
+    document.getElementById('pdfModal').style.display = 'none';
+  }
+
+  // ============================================================
+  // EVENT LISTENERS
+  // ============================================================
+  document.getElementById('btnKinerja')?.addEventListener('click', analisisKinerja);
+  document.getElementById('btnMusrembang')?.addEventListener('click', rekomendasiMusrembang);
+  document.getElementById('btnProposal')?.addEventListener('click', buatDraftProposal);
+  document.getElementById('btnExportPDF')?.addEventListener('click', exportToPDF);
+  document.getElementById('btnPreviewPDF')?.addEventListener('click', previewPDF);
+  document.getElementById('refreshData')?.addEventListener('click', () => applyFilters());
+  document.getElementById('filterBulan')?.addEventListener('change', applyFilters);
+  document.getElementById('filterTahun')?.addEventListener('change', applyFilters);
+  
+  document.getElementById('closeModalBtn')?.addEventListener('click', closeModal);
+  document.getElementById('closeModalFooterBtn')?.addEventListener('click', closeModal);
+  document.getElementById('downloadFromModal')?.addEventListener('click', () => {
+    closeModal();
+    exportToPDF();
+  });
+  
+  window.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('pdfModal')) closeModal();
+  });
+  
+  AOS.init({ duration: 800, once: true });
+  loadData();
+</script>
+
+</body>
+</html>      font-family: 'Inter', sans-serif;
+      background: #f0f2f5;
+      color: #2c3e50;
+    }
+    
+    h1, h2, h3, h4 {
+      font-family: 'Lora', serif;
+      font-weight: 700;
+    }
+    
+    .navbar-brand {
+      font-weight: 800;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, var(--groq), var(--mistral));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .card-ai {
+      background: white;
+      border-radius: 20px;
+      border: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+      margin-bottom: 25px;
+      overflow: hidden;
+    }
+    
+    .card-ai:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(10,88,202,0.15);
+    }
+    
+    .card-header-groq {
+      background: linear-gradient(135deg, var(--groq), #d43f1a);
+      color: white;
+      padding: 18px 25px;
+      border: none;
+    }
+    
+    .card-header-mistral {
+      background: linear-gradient(135deg, var(--mistral), #e04848);
+      color: white;
+      padding: 18px 25px;
+      border: none;
+    }
+    
+    .btn-groq {
+      background: linear-gradient(135deg, var(--groq), #d43f1a);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .btn-mistral {
+      background: linear-gradient(135deg, var(--mistral), #e04848);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .btn-groq:disabled, .btn-mistral:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .btn-groq:hover:not(:disabled), .btn-mistral:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      color: white;
+    }
+    
+    .btn-outline-ai {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .btn-outline-ai:hover {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn-success-ai {
+      background: linear-gradient(135deg, #28a745, #1e7e34);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .ai-output {
+      background: #f8f9fa;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 20px;
+      border-left: 5px solid;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    .groq-output {
+      border-left-color: var(--groq);
+    }
+    
+    .mistral-output {
+      border-left-color: var(--mistral);
+    }
+    
+    .progress-container {
+      margin-top: 15px;
+      padding: 10px;
+      background: #e9ecef;
+      border-radius: 12px;
+    }
+    
+    .progress-bar-custom {
+      height: 8px;
+      background: var(--primary);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    
+    .progress-text {
+      font-size: 0.8rem;
+      color: #6c757d;
+      margin-top: 8px;
+    }
+    
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .stat-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    
+    .filter-section {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .desa-card {
+      background: white;
+      border-radius: 16px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid #e9ecef;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .desa-card:hover, .desa-card.active {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      transform: translateX(5px);
+    }
+    
+    .badge-groq {
+      background: var(--groq);
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    
+    .badge-mistral {
+      background: var(--mistral);
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    
+    .modal-pdf {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 9999;
+      overflow: auto;
+    }
+    
+    .modal-pdf-content {
+      background: white;
+      margin: 30px auto;
+      width: 90%;
+      max-width: 900px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: modalFadeIn 0.3s;
+    }
+    
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .modal-pdf-header {
+      padding: 15px 20px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-pdf-body {
+      padding: 20px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    
+    .modal-pdf-footer {
+      padding: 15px 20px;
+      border-top: 1px solid #dee2e6;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    .close-modal {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+    }
+    
+    footer {
+      background: var(--dark);
+      color: white;
+      padding: 30px 0;
+      margin-top: 50px;
+      text-align: center;
+    }
+    
+    @media (max-width: 768px) {
+      .card-header-groq h3, .card-header-mistral h3 { font-size: 1.2rem; }
+      .btn-groq, .btn-mistral, .btn-outline-ai { width: 100%; margin-bottom: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <i class="fas fa-robot me-2"></i>
+      AI Dashboard TKSK Sumber
+      <span class="badge-groq ms-2">Groq</span>
+      <span class="badge-mistral ms-1">Mistral</span>
+    </a>
+    <div class="ms-auto">
+      <span class="stat-badge">
+        <i class="fas fa-calendar-alt me-1"></i>
+        <span id="periodeInfo">Memuat...</span>
+      </span>
+      <a href="index.html" class="btn btn-sm btn-outline-primary ms-2">
+        <i class="fas fa-home"></i> Kembali
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container py-4">
+  
+  <!-- Filter Section -->
+  <div class="filter-section" data-aos="fade-up">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h5 class="mb-2">
+          <i class="fas fa-chart-line text-primary me-2"></i>
+          Data DTKS Kecamatan Sumber
+        </h5>
+        <p class="text-muted small mb-0">Data diurutkan berdasarkan periode (bulan & tahun) terbaru</p>
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex gap-2 justify-content-md-end">
+          <select id="filterBulan" class="form-select w-auto">
+            <option value="">Semua Bulan</option>
+            <option value="1">Januari</option>
+            <option value="2">Februari</option>
+            <option value="3">Maret</option>
+            <option value="4">April</option>
+            <option value="5">Mei</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">Agustus</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+          <select id="filterTahun" class="form-select w-auto">
+            <option value="">Semua Tahun</option>
+            <option value="2026">2026</option>
+          </select>
+          <button id="refreshData" class="btn btn-primary">
+            <i class="fas fa-sync-alt"></i> Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Daftar Desa -->
+  <div class="row">
+    <div class="col-lg-4" data-aos="fade-right">
+      <div class="card-ai">
+        <div class="card-header-ai" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
+          <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i> Desa/Kelurahan</h5>
+        </div>
+        <div class="p-3" id="desaListContainer">
+          <div class="text-center py-4">
+            <div class="loading-spinner"></div> Memuat data desa...
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-8" data-aos="fade-left">
+      
+      <!-- AI Card 1: Analisis Kinerja (Mistral) -->
+      <div class="card-ai">
+        <div class="card-header-mistral">
+          <h5 class="mb-0">
+            <i class="fas fa-chart-simple me-2"></i> 
+            AI #1: Analisis Kinerja TKSK & Puskesos
+            <span class="badge bg-light text-dark ms-2">Powered by Mistral AI</span>
+          </h5>
+        </div>
+        <div class="p-4">
+          <p class="text-muted small">Berdasarkan data konsultasi dan pemutakhiran data per bulan (diproses 1 per 1 desa)</p>
+          <button id="btnKinerja" class="btn-mistral">
+            <i class="fas fa-chart-line"></i> Analisis Kinerja Bulanan
+          </button>
+          <div id="outputKinerja" class="ai-output mistral-output" style="display: none;"></div>
+        </div>
+      </div>
+      
       <!-- AI Card 2: Rekomendasi Musrembang (Groq) -->
       <div class="card-ai">
         <div class="card-header-groq">
