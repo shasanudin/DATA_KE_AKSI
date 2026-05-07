@@ -13,8 +13,8 @@
   <!-- Bootstrap 4.6.2 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
   
-  <!-- Google Fonts Inter & Lora -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts Plus Jakarta Sans & DM Serif Display -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
   
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -25,21 +25,31 @@
   <style>
     /* ===== VARIABLES & RESET ===== */
     :root {
-      --primary: #0a58ca;
-      --primary-dark: #084298;
-      --primary-light: #e7f1ff;
-      --secondary: #6c757d;
-      --success: #28a745;
-      --danger: #dc3545;
-      --warning: #ffc107;
-      --info: #17a2b8;
-      --dark: #1a2e3f;
-      --dark-light: #2c3e50;
-      --gray-bg: #f8fafc;
-      --card-shadow: 0 15px 35px rgba(0,0,0,0.05);
-      --hover-shadow: 0 20px 40px rgba(10,88,202,0.12);
-      --border-radius: 20px;
+      --primary: #1a56db;
+      --primary-dark: #1e40af;
+      --primary-light: #eff6ff;
+      --primary-50: #f0f5ff;
+      --secondary: #475569;
+      --success: #059669;
+      --danger: #dc2626;
+      --danger-light: #fef2f2;
+      --warning: #d97706;
+      --warning-light: #fffbeb;
+      --info: #0284c7;
+      --dark: #0f172a;
+      --dark-light: #334155;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --card-shadow-hover: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.05);
+      --card-shadow-lg: 0 20px 40px rgba(0,0,0,0.08);
+      --border-radius: 16px;
       --border-radius-sm: 12px;
+      --border-radius-xs: 8px;
     }
 
     * {
@@ -49,88 +59,94 @@
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #ffffff;
-      color: #2c3e50;
-      line-height: 1.7;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--gray-50);
+      color: var(--dark);
+      line-height: 1.6;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     h1, h2, h3, h4, h5, h6 {
-      font-family: 'Lora', serif;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      letter-spacing: -0.01em;
     }
 
-    /* ===== CUSTOM UTILITIES ===== */
-    .text-gradient {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .bg-gradient-primary {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    }
-
-    /* ===== HEADER ===== */
+    /* ===== TOP HEADER ===== */
     .top-header {
       background: white;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-200);
       position: relative;
       z-index: 1030;
     }
 
-    .header-logo {
+    .header-brand {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
     }
 
-    .logo-item {
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: var(--border-radius-xs);
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(26,86,219,0.2);
     }
 
-    .logo-item img {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
+    .brand-text {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--dark);
+      line-height: 1.2;
     }
 
-    .logo-divider {
-      width: 1px;
-      height: 30px;
-      background: linear-gradient(to bottom, transparent, #dee2e6, transparent);
+    .brand-subtext {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .live-badge {
-      background: rgba(220, 53, 69, 0.1);
-      color: var(--danger);
-      padding: 6px 14px;
+      background: var(--primary-50);
+      color: var(--primary);
+      padding: 8px 16px;
       border-radius: 50px;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      border: 1px solid rgba(26,86,219,0.15);
     }
 
     .live-dot {
       width: 8px;
       height: 8px;
-      background: var(--danger);
+      background: var(--success);
       border-radius: 50%;
       display: inline-block;
       animation: pulse 2s infinite;
+      box-shadow: 0 0 0 3px rgba(5,150,105,0.15);
     }
 
     @keyframes pulse {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.2); }
-      100% { opacity: 1; transform: scale(1); }
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.7; }
     }
 
     /* ===== NAVBAR CONTAINER ===== */
@@ -141,122 +157,255 @@
     }
 
     /* ===== HERO SECTION ===== */
-    .hero {
-      background: linear-gradient(145deg, #ffffff 0%, #f5faff 100%);
-      padding: 60px 0 120px; /* Ditambah padding bottom */
+    .hero-section {
+      background: linear-gradient(180deg, #ffffff 0%, var(--gray-50) 100%);
+      padding: 60px 0 140px;
       position: relative;
       overflow: hidden;
-      margin-top: 0;
     }
 
-    .hero::before {
-      content: '';
+    .hero-pattern {
       position: absolute;
-      top: -50%;
-      right: -10%;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(10,88,202,0.03) 0%, rgba(10,88,202,0) 70%);
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 100%;
+      background: radial-gradient(ellipse at 70% 30%, rgba(26,86,219,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-pattern-dots {
+      position: absolute;
+      top: 10%;
+      right: 10%;
+      width: 200px;
+      height: 200px;
+      background-image: radial-gradient(rgba(26,86,219,0.1) 2px, transparent 2px);
+      background-size: 20px 20px;
       border-radius: 50%;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-50);
+      color: var(--primary);
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      border: 1px solid rgba(26,86,219,0.15);
+    }
+
+    .hero-badge i {
+      font-size: 0.9rem;
     }
 
     .hero-title {
-      font-size: 2.2rem;
-      font-weight: 600;
-      line-height: 1.2;
+      font-family: 'DM Serif Display', serif;
+      font-size: 3rem;
+      font-weight: 400;
+      line-height: 1.15;
       margin-bottom: 20px;
       color: var(--dark);
+      letter-spacing: -0.02em;
     }
 
-    .hero-title span {
-      color: var(--primary);
-      display: block;
-      font-size: 2.8rem;
+    .hero-title-highlight {
+      background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    .hero-subtitle {
+    .hero-description {
       font-size: 1.1rem;
-      color: #5d6d7e;
-      margin-bottom: 30px;
-      max-width: 90%;
+      color: var(--gray-500);
+      margin-bottom: 32px;
+      max-width: 520px;
+      line-height: 1.7;
     }
 
-    .hero-stats {
+    .hero-actions {
       display: flex;
-      gap: 30px;
-      margin-top: 30px;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
     }
 
-    .hero-stat-item {
+    .btn-primary-modern {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(26,86,219,0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary-modern:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(26,86,219,0.35);
+      color: white;
+      text-decoration: none;
+    }
+
+    .btn-outline-modern {
+      background: white;
+      border: 2px solid var(--gray-200);
+      color: var(--dark);
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-outline-modern:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      text-decoration: none;
+    }
+
+    .hero-metrics {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .hero-metric {
       display: flex;
       flex-direction: column;
+      gap: 4px;
     }
 
-    .hero-stat-value {
+    .hero-metric-value {
+      font-family: 'DM Serif Display', serif;
       font-size: 2rem;
-      font-weight: 800;
-      color: var(--primary);
+      color: var(--dark);
       line-height: 1;
     }
 
-    .hero-stat-label {
+    .hero-metric-label {
       font-size: 0.8rem;
-      color: #6c757d;
+      color: var(--gray-400);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .btn-gradient {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      border: none;
-      padding: 12px 28px;
-      border-radius: 50px;
+      letter-spacing: 1px;
       font-weight: 600;
-      letter-spacing: 0.5px;
-      transition: all 0.3s;
-      box-shadow: 0 8px 20px rgba(10,88,202,0.2);
     }
 
-    .btn-gradient:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 15px 30px rgba(10,88,202,0.3);
-      color: white;
+    .hero-illustration {
+      position: relative;
     }
 
-    .btn-outline-gradient {
-      background: transparent;
-      border: 2px solid var(--primary);
+    .hero-card-float {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 30px;
+      box-shadow: var(--card-shadow-lg);
+      border: 1px solid var(--gray-100);
+      position: relative;
+    }
+
+    .hero-card-float .stat-display {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .stat-display-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--primary-50);
+      border-radius: var(--border-radius-xs);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: var(--primary);
-      padding: 10px 26px;
-      border-radius: 50px;
-      font-weight: 600;
-      transition: all 0.3s;
+      font-size: 24px;
     }
 
-    .btn-outline-gradient:hover {
+    .stat-display-info h4 {
+      font-size: 2rem;
+      color: var(--dark);
+      margin: 0;
+      line-height: 1;
+    }
+
+    .stat-display-info span {
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      font-weight: 500;
+    }
+
+    .hero-progress-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .mini-progress {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mini-progress-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--gray-100);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .mini-progress-fill {
+      height: 100%;
+      border-radius: 10px;
       background: var(--primary);
-      color: white;
-      transform: translateY(-3px);
+    }
+
+    .mini-progress-label {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      min-width: 70px;
+      font-weight: 500;
     }
 
     /* ===== PERIODE SELECTOR ===== */
     .periode-wrapper {
-      margin-top: -60px; /* Naik ke atas menimpa hero */
+      margin-top: -70px;
       position: relative;
       z-index: 20;
-      margin-bottom: 40px; /* Jarak ke bawah */
+      margin-bottom: 32px;
     }
 
-    .periode-selector {
+    .periode-card {
       background: white;
       border-radius: var(--border-radius);
-      padding: 20px 30px;
-      box-shadow: var(--hover-shadow);
-      border: 1px solid var(--primary-light);
+      padding: 24px 28px;
+      box-shadow: var(--card-shadow-hover);
+      border: 1px solid var(--gray-100);
       display: flex;
       align-items: center;
-      gap: 25px;
+      gap: 24px;
       flex-wrap: wrap;
     }
 
@@ -264,292 +413,473 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      color: var(--primary-dark);
+      color: var(--primary);
       font-weight: 700;
-      font-size: 1rem;
-      background: var(--primary-light);
-      padding: 8px 18px;
+      font-size: 0.9rem;
+      background: var(--primary-50);
+      padding: 10px 20px;
       border-radius: 50px;
+      white-space: nowrap;
     }
 
     .periode-label i {
-      font-size: 1.2rem;
-      color: var(--primary);
+      font-size: 1.1rem;
     }
 
     .periode-controls {
       display: flex;
-      gap: 15px;
+      gap: 12px;
       flex: 1;
       flex-wrap: wrap;
       align-items: center;
     }
 
     .periode-select {
-      min-width: 160px;
+      min-width: 150px;
       flex: 1;
     }
 
     .periode-select .custom-select {
       width: 100%;
       border-radius: 50px;
-      border: 2px solid #dee2e6;
+      border: 2px solid var(--gray-200);
       padding: 10px 20px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 500;
       background-color: white;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
+      color: var(--dark);
     }
 
     .periode-select .custom-select:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 4px var(--primary-light);
+      box-shadow: 0 0 0 4px rgba(26,86,219,0.08);
+      outline: none;
     }
 
-    .btn-periode {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    .btn-filter {
+      background: var(--primary);
       color: white;
       border: none;
-      padding: 10px 30px;
+      padding: 10px 24px;
       border-radius: 50px;
       font-weight: 600;
+      font-size: 0.9rem;
       cursor: pointer;
       transition: all 0.3s;
       white-space: nowrap;
-      box-shadow: 0 4px 12px rgba(10,88,202,0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .btn-periode:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(10,88,202,0.3);
+    .btn-filter:hover {
+      background: var(--primary-dark);
+      box-shadow: 0 4px 15px rgba(26,86,219,0.3);
+      transform: translateY(-1px);
     }
 
     /* ===== STATS CARDS ===== */
     .stats-grid {
-      margin-bottom: 50px;
+      margin-bottom: 32px;
     }
 
-    .stat-card {
+    .stat-card-modern {
       background: white;
       border-radius: var(--border-radius);
-      padding: 25px 20px;
+      padding: 24px 20px;
       box-shadow: var(--card-shadow);
-      transition: all 0.3s;
-      border: 1px solid rgba(0,0,0,0.02);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid var(--gray-100);
       height: 100%;
-      display: flex;
-      flex-direction: column;
+      position: relative;
+      overflow: hidden;
     }
 
-    .stat-card:hover {
-      transform: translateY(-8px);
-      box-shadow: var(--hover-shadow);
+    .stat-card-modern::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--primary);
+      opacity: 0;
+      transition: opacity 0.3s;
     }
 
-    .stat-icon {
-      width: 50px;
-      height: 50px;
-      background: var(--primary-light);
-      border-radius: 14px;
+    .stat-card-modern:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    .stat-card-modern:hover::before {
+      opacity: 1;
+    }
+
+    .stat-card-modern.danger::before { background: var(--danger); }
+    .stat-card-modern.info::before { background: var(--info); }
+    .stat-card-modern.success::before { background: var(--success); }
+
+    .stat-icon-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--primary);
-      font-size: 22px;
-      margin-bottom: 15px;
+      font-size: 20px;
+      margin-bottom: 16px;
+      transition: all 0.3s;
     }
 
-    .stat-card:hover .stat-icon {
-      background: var(--primary);
-      color: white;
-      transform: scale(1.1);
+    .stat-icon-circle.primary {
+      background: var(--primary-50);
+      color: var(--primary);
+    }
+
+    .stat-icon-circle.danger {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .stat-icon-circle.info {
+      background: #f0f9ff;
+      color: var(--info);
+    }
+
+    .stat-icon-circle.success {
+      background: #ecfdf5;
+      color: var(--success);
+    }
+
+    .stat-card-modern:hover .stat-icon-circle {
+      transform: scale(1.08);
     }
 
     .stat-label {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #6c757d;
-      margin-bottom: 5px;
+      letter-spacing: 0.8px;
+      color: var(--gray-400);
+      margin-bottom: 6px;
+      font-weight: 600;
     }
 
-    .stat-number {
-      font-size: 2.2rem;
-      font-weight: 800;
+    .stat-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
       color: var(--dark);
       line-height: 1;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
 
-    .stat-trend {
-      font-size: 0.75rem;
-      color: #6c757d;
+    .stat-subtitle {
+      font-size: 0.78rem;
+      color: var(--gray-400);
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      font-weight: 500;
     }
 
     /* ===== CHART CARD ===== */
-    .chart-card {
+    .chart-card-modern {
       background: white;
       border-radius: var(--border-radius);
-      padding: 25px;
+      padding: 28px;
       box-shadow: var(--card-shadow);
-      border: 1px solid rgba(0,0,0,0.02);
-      margin-bottom: 25px;
+      border: 1px solid var(--gray-100);
+      margin-bottom: 24px;
     }
 
     .chart-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       flex-wrap: wrap;
-      gap: 15px;
+      gap: 16px;
     }
 
     .chart-title {
       font-size: 1.1rem;
-      font-weight: 700;
       color: var(--dark);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      margin: 0;
+    }
+
+    .chart-title-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--primary-50);
+      border-radius: var(--border-radius-xs);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 18px;
     }
 
     .chart-container {
       position: relative;
-      height: 300px;
+      height: 320px;
       width: 100%;
     }
 
-    .custom-select {
-      width: auto;
-      min-width: 220px;
-      border-radius: 12px;
-      border: 2px solid #dee2e6;
-      padding: 8px 16px;
+    .chart-note {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: var(--gray-50);
+      border-radius: var(--border-radius-xs);
+      font-size: 0.8rem;
+      color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chart-note i {
+      color: var(--info);
+    }
+
+    .custom-select-modern {
+      border-radius: var(--border-radius-xs);
+      border: 2px solid var(--gray-200);
+      padding: 10px 40px 10px 16px;
       font-size: 0.9rem;
       font-weight: 500;
       background-color: white;
+      color: var(--dark);
+      min-width: 200px;
+      cursor: pointer;
+      transition: all 0.2s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
     }
 
-    /* ===== CONTACT CARD ===== */
-    .contact-card {
+    .custom-select-modern:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(26,86,219,0.08);
+      outline: none;
+    }
+
+    /* ===== SIDEBAR CARDS ===== */
+    .contact-card-modern {
       background: white;
       border-radius: var(--border-radius);
-      padding: 25px;
+      padding: 24px;
       box-shadow: var(--card-shadow);
-      margin-bottom: 25px;
+      border: 1px solid var(--gray-100);
+      margin-bottom: 20px;
     }
 
     .contact-header {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 14px;
       margin-bottom: 20px;
     }
 
-    .contact-header-icon {
-      width: 50px;
-      height: 50px;
-      background: #25d366;
-      border-radius: 14px;
+    .contact-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #25d366, #128C7E);
+      border-radius: var(--border-radius-xs);
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 24px;
+      font-size: 22px;
+      box-shadow: 0 4px 12px rgba(37,211,102,0.25);
     }
 
-    .contact-phone {
+    .contact-header-info h5 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--dark);
+    }
+
+    .contact-header-info span {
+      font-size: 0.78rem;
+      color: var(--gray-400);
+    }
+
+    .contact-phone-display {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #f8f9fa;
-      padding: 15px;
-      border-radius: 12px;
-      margin-bottom: 15px;
+      background: var(--gray-50);
+      padding: 16px;
+      border-radius: var(--border-radius-xs);
+      margin-bottom: 16px;
+      border: 1px solid var(--gray-100);
     }
 
-    .contact-phone-number {
-      font-size: 1.2rem;
-      font-weight: 700;
+    .contact-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
       color: var(--dark);
     }
 
-    .btn-wa {
+    .contact-status {
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: #ecfdf5;
+      color: var(--success);
+    }
+
+    .contact-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-wa-modern {
       background: #25d366;
       color: white;
       border: none;
-      padding: 10px;
-      border-radius: 12px;
+      padding: 12px 20px;
+      border-radius: var(--border-radius-xs);
       font-weight: 600;
+      font-size: 0.85rem;
+      flex: 1;
       transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
-    .btn-wa:hover {
+    .btn-wa-modern:hover {
       background: #128C7E;
       color: white;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(37,211,102,0.3);
     }
 
-    .btn-light {
-      background: #f8f9fa;
-      border: none;
-      padding: 10px;
-      border-radius: 12px;
-      font-weight: 600;
+    .btn-secondary-modern {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
       color: var(--dark);
+      padding: 12px 20px;
+      border-radius: var(--border-radius-xs);
+      font-weight: 600;
+      font-size: 0.85rem;
+      flex: 1;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
-    .quick-links {
+    .btn-secondary-modern:hover {
+      background: white;
+      border-color: var(--primary);
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    /* ===== QUICK LINKS ===== */
+    .quick-links-modern {
       background: white;
       border-radius: var(--border-radius);
-      padding: 25px;
+      padding: 24px;
       box-shadow: var(--card-shadow);
+      border: 1px solid var(--gray-100);
     }
 
     .quick-links-header {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 14px;
       margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--gray-100);
     }
 
     .quick-links-icon {
-      width: 50px;
-      height: 50px;
-      background: var(--warning);
-      border-radius: 14px;
+      width: 48px;
+      height: 48px;
+      background: var(--warning-light);
+      border-radius: var(--border-radius-xs);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
-      font-size: 24px;
+      color: var(--warning);
+      font-size: 22px;
+    }
+
+    .quick-links-header-info h5 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--dark);
+    }
+
+    .quick-links-header-info span {
+      font-size: 0.78rem;
+      color: var(--gray-400);
     }
 
     .quick-link-item {
       display: flex;
       align-items: center;
-      gap: 15px;
-      padding: 12px 15px;
-      border-bottom: 1px solid #dee2e6;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: var(--border-radius-xs);
       color: var(--dark);
-      transition: all 0.3s;
+      transition: all 0.2s;
       text-decoration: none;
+      margin-bottom: 4px;
     }
 
     .quick-link-item:hover {
-      background: var(--primary-light);
+      background: var(--primary-50);
       color: var(--primary);
       text-decoration: none;
-      transform: translateX(5px);
+      transform: translateX(4px);
     }
 
-    .quick-link-item i:first-child {
-      width: 20px;
+    .quick-link-icon-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--gray-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-500);
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .quick-link-item:hover .quick-link-icon-circle {
+      background: white;
       color: var(--primary);
+    }
+
+    .quick-link-text {
+      flex: 1;
+      font-weight: 500;
+      font-size: 0.88rem;
+    }
+
+    .quick-link-arrow {
+      color: var(--gray-300);
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .quick-link-item:hover .quick-link-arrow {
+      color: var(--primary);
+      transform: translateX(2px);
     }
 
     /* ===== FOOTER ===== */
@@ -560,65 +890,89 @@
       margin-top: 60px;
     }
 
-    .footer-brand {
-      font-size: 1.5rem;
-      font-weight: 800;
+    .footer-branding {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       margin-bottom: 20px;
+    }
+
+    .footer-logo {
+      width: 42px;
+      height: 42px;
+      background: rgba(255,255,255,0.1);
+      border-radius: var(--border-radius-xs);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+    }
+
+    .footer-brand-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: white;
+    }
+
+    .footer-description {
+      color: rgba(255,255,255,0.6);
+      line-height: 1.8;
+      font-size: 0.9rem;
+    }
+
+    .footer-contact-item {
       display: flex;
       align-items: center;
       gap: 10px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 8px;
+      font-size: 0.9rem;
     }
 
-    .footer-text {
-      color: rgba(255,255,255,0.7);
-      line-height: 1.8;
+    .footer-contact-item i {
+      width: 20px;
+      color: rgba(255,255,255,0.4);
     }
 
     .footer-divider {
-      border-color: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.08);
       margin: 30px 0;
     }
 
     .footer-copyright {
-      color: rgba(255,255,255,0.5);
-      font-size: 0.9rem;
-    }
-
-    .footer-copyright i {
-      color: #ff6b6b;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.85rem;
+      text-align: center;
     }
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 991px) {
-      .hero-title { font-size: 2.5rem; }
-      .hero-title span { font-size: 2rem; }
-      .hero-subtitle { max-width: 100%; }
-      .hero-stats { gap: 20px; flex-wrap: wrap; }
+      .hero-title { font-size: 2.2rem; }
+      .hero-metrics { gap: 20px; }
+      .hero-metric-value { font-size: 1.6rem; }
     }
 
     @media (max-width: 768px) {
-      .hero { padding: 40px 0 100px; }
-      .hero-title { font-size: 2rem; }
-      .hero-title span { font-size: 1.8rem; }
-      .stats-grid { margin-bottom: 30px; }
-      .stat-number { font-size: 1.8rem; }
-      .top-header .logo-item span { display: none !important; }
-      .header-logo { gap: 10px; }
+      .hero-section { padding: 40px 0 110px; }
+      .hero-title { font-size: 1.8rem; }
+      .hero-description { font-size: 0.95rem; }
+      .stats-grid { margin-bottom: 24px; }
+      .stat-value { font-size: 1.6rem; }
       .chart-header { flex-direction: column; align-items: flex-start; }
-      .custom-select { width: 100%; }
-      .periode-wrapper { margin-top: -40px; }
-      .periode-selector { padding: 15px 20px; }
+      .custom-select-modern { width: 100%; }
+      .periode-wrapper { margin-top: -50px; }
+      .periode-card { padding: 16px 20px; }
+      .brand-text { font-size: 0.85rem; }
     }
 
     @media (max-width: 576px) {
-      .hero-title { font-size: 1.8rem; }
-      .btn-gradient, .btn-outline-gradient { width: 100%; margin-bottom: 10px; }
-      .hero-stats { justify-content: space-between; }
-      .hero-stat-value { font-size: 1.6rem; }
-      .live-badge span:not(.live-dot) { display: none; }
-      .live-badge { padding: 6px 10px; }
+      .hero-title { font-size: 1.6rem; }
+      .btn-primary-modern, .btn-outline-modern { width: 100%; justify-content: center; }
+      .hero-actions { flex-direction: column; }
       .periode-label { width: 100%; justify-content: center; }
-      .btn-periode { width: 100%; }
+      .btn-filter { width: 100%; justify-content: center; }
+      .periode-card { gap: 12px; }
     }
   </style>
 </head>
@@ -628,32 +982,20 @@
 <header class="top-header">
   <div class="container">
     <div class="d-flex justify-content-between align-items-center">
-      <div class="header-logo">
-        <div class="logo-item">
-          <img src="assets/img/logo/logo-tksk.webp" 
-               alt="Logo TKSK" 
-               width="40" 
-               height="40"
-               loading="lazy"
-               onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%3E%3Crect%20width%3D%2240%22%20height%3D%2240%22%20fill%3D%22%230a58ca%22%2F%3E%3Ctext%20x%3D%228%22%20y%3D%2225%22%20font-size%3D%2214%22%20fill%3D%22white%22%3ETKSK%3C%2Ftext%3E%3C%2Fsvg%3E';">
-          <span class="font-weight-bold text-dark d-none d-md-inline" style="font-size: 0.9rem;">TKSK</span>
+      <div class="header-brand">
+        <div class="brand-logo">
+          <i class="fas fa-shield-alt"></i>
         </div>
-        <div class="logo-divider"></div>
-        <div class="logo-item">
-          <img src="assets/img/logo/logo-puskesos.webp" 
-               alt="Logo Puskesos" 
-               width="40" 
-               height="40"
-               loading="lazy"
-               onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%3E%3Crect%20width%3D%2240%22%20height%3D%2240%22%20fill%3D%22%2328a745%22%2F%3E%3Ctext%20x%3D%225%22%20y%3D%2225%22%20font-size%3D%2212%22%20fill%3D%22white%22%3EPUSKESOS%3C%2Ftext%3E%3C%2Fsvg%3E';">
-          <span class="font-weight-bold text-dark d-none d-md-inline" style="font-size: 0.9rem;">Puskesos</span>
+        <div>
+          <div class="brand-text">TKSK & Puskesos</div>
+          <div class="brand-subtext">Kecamatan Sumber</div>
         </div>
       </div>
       
-      <div class="d-flex align-items-center">
+      <div class="header-actions">
         <span class="live-badge">
           <span class="live-dot"></span>
-          <span id="realtimeClock" class="font-weight-bold">Memuat...</span>
+          <span id="realtimeClock">Memuat...</span>
         </span>
       </div>
     </div>
@@ -664,51 +1006,89 @@
 <div id="navbar"></div>
 
 <!-- ===== HERO SECTION ===== -->
-<section class="hero">
+<section class="hero-section">
+  <div class="hero-pattern"></div>
+  <div class="hero-pattern-dots"></div>
   <div class="container">
     <div class="row align-items-center">
-      <div class="col-lg-7" data-aos="fade-right" data-aos-duration="1000">
+      <div class="col-lg-7" data-aos="fade-right" data-aos-duration="800">
+        <div class="hero-badge">
+          <i class="fas fa-chart-line"></i>
+          <span>Data Tunggal Sosial Ekonomi Nasional</span>
+        </div>
+        
         <h1 class="hero-title">
-          TKSK SUMBER DAN FORUM PUSKESOS KECAMATAN SUMBER 
-          <span id="animatedTitle"></span>
+          Integrasi Data<br>
+          <span class="hero-title-highlight">Kesejahteraan Sosial</span>
         </h1>
-        <p class="hero-subtitle">
-          Integrasi Data Tunggal Sosial Ekonomi Nasional (DTSEN) Kecamatan Sumber. 
-          Transparan, Akuntabel, dan Berbasis Aksi Nyata.
+        
+        <p class="hero-description">
+          Sistem pemantauan dan analisis data DTSEN Kecamatan Sumber yang transparan, 
+          akuntabel, dan berbasis aksi nyata untuk kesejahteraan masyarakat.
         </p>
         
-        <div class="d-flex flex-wrap gap-3 mb-4">
-          <a href="data.html" class="btn btn-gradient">
-            <i class="fas fa-chart-line mr-2"></i> Analisis Kesejahteraan
+        <div class="hero-actions">
+          <a href="data.html" class="btn-primary-modern">
+            <i class="fas fa-chart-bar"></i> Analisis Data
           </a>
-          <a href="Pelayanan.html" class="btn btn-outline-gradient">
-            <i class="fas fa-file-signature mr-2"></i> Data Pelayanan
+          <a href="Pelayanan.html" class="btn-outline-modern">
+            <i class="fas fa-file-alt"></i> Data Pelayanan
           </a>
         </div>
         
-        <div class="hero-stats" id="heroStats">
+        <div class="hero-metrics" id="heroStats">
           <!-- Akan diisi via JavaScript -->
         </div>
       </div>
       
-      <div class="col-lg-5 d-none d-lg-block" data-aos="fade-left" data-aos-duration="1000">
-        <div style="background: linear-gradient(145deg, #e7f1ff, #d0e2ff); border-radius: 30px; padding: 30px; text-align: center;">
-          <i class="fas fa-chart-pie" style="font-size: 80px; color: var(--primary); opacity: 0.8;"></i>
-          <h4 style="color: var(--primary); margin-top: 20px; font-weight: 700;">DARI DATA KE AKSI</h4>
-          <p style="color: var(--dark-light); margin-bottom: 0;">Kecamatan Sumber</p>
+      <div class="col-lg-5 d-none d-lg-block" data-aos="fade-left" data-aos-duration="800">
+        <div class="hero-card-float">
+          <div class="stat-display">
+            <div class="stat-display-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-display-info">
+              <h4 id="heroTotalKK">0</h4>
+              <span>Total Keluarga</span>
+            </div>
+          </div>
+          
+          <div class="hero-progress-bars">
+            <div class="mini-progress">
+              <span class="mini-progress-label">Desil 1-2</span>
+              <div class="mini-progress-bar">
+                <div class="mini-progress-fill" id="heroProgressD12" style="width: 0%; background: #dc2626;"></div>
+              </div>
+              <span style="font-size:0.75rem;color:var(--gray-500);" id="heroPercentD12">0%</span>
+            </div>
+            <div class="mini-progress">
+              <span class="mini-progress-label">Desil 3-5</span>
+              <div class="mini-progress-bar">
+                <div class="mini-progress-fill" style="width: 45%; background: #d97706;"></div>
+              </div>
+              <span style="font-size:0.75rem;color:var(--gray-500);">45%</span>
+            </div>
+            <div class="mini-progress">
+              <span class="mini-progress-label">Desil 6-10</span>
+              <div class="mini-progress-bar">
+                <div class="mini-progress-fill" style="width: 35%; background: #059669;"></div>
+              </div>
+              <span style="font-size:0.75rem;color:var(--gray-500);">35%</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== PERIODE SELECTOR (DINAICKAN) ===== -->
+<!-- ===== PERIODE SELECTOR ===== -->
 <div class="periode-wrapper">
   <div class="container">
-    <div class="periode-selector" data-aos="fade-up" data-aos-delay="100">
+    <div class="periode-card" data-aos="fade-up" data-aos-delay="100">
       <div class="periode-label">
         <i class="fas fa-calendar-alt"></i>
-        <span>Periode Data:</span>
+        <span>Filter Periode</span>
       </div>
       <div class="periode-controls">
         <div class="periode-select">
@@ -737,7 +1117,7 @@
             <option value="2026">2026</option>
           </select>
         </div>
-        <button class="btn-periode" id="btnTerapkanPeriode">
+        <button class="btn-filter" id="btnTerapkanPeriode">
           <i class="fas fa-filter"></i> Terapkan
         </button>
       </div>
@@ -747,55 +1127,55 @@
 
 <!-- ===== STATS CARDS ===== -->
 <div class="container stats-grid">
-  <div class="row g-4">
-    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="200">
-      <div class="stat-card">
-        <div class="stat-icon">
+  <div class="row">
+    <div class="col-md-3 col-sm-6 mb-3 mb-md-0" data-aos="fade-up" data-aos-delay="200">
+      <div class="stat-card-modern">
+        <div class="stat-icon-circle primary">
           <i class="fas fa-home"></i>
         </div>
-        <span class="stat-label">Total Keluarga DTSEN</span>
-        <span class="stat-number" id="totalKK">0</span>
-        <span class="stat-trend">
-          <i class="fas fa-database mr-1"></i> Real-time
+        <span class="stat-label">Total Keluarga</span>
+        <span class="stat-value" id="totalKK">0</span>
+        <span class="stat-subtitle">
+          <i class="fas fa-database"></i> Data DTSEN
         </span>
       </div>
     </div>
     
-    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="300">
-      <div class="stat-card">
-        <div class="stat-icon">
+    <div class="col-md-3 col-sm-6 mb-3 mb-md-0" data-aos="fade-up" data-aos-delay="300">
+      <div class="stat-card-modern danger">
+        <div class="stat-icon-circle danger">
           <i class="fas fa-exclamation-triangle"></i>
         </div>
-        <span class="stat-label">Miskin Ekstrem (D1-2)</span>
-        <span class="stat-number text-danger" id="totalD12">0</span>
-        <span class="stat-trend text-danger">
-          <i class="fas fa-arrow-up mr-1"></i> Prioritas
+        <span class="stat-label">Miskin Ekstrem</span>
+        <span class="stat-value text-danger" id="totalD12">0</span>
+        <span class="stat-subtitle text-danger">
+          <i class="fas fa-arrow-up"></i> Desil 1-2
         </span>
       </div>
     </div>
     
-    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="400">
-      <div class="stat-card">
-        <div class="stat-icon">
+    <div class="col-md-3 col-sm-6 mb-3 mb-md-0" data-aos="fade-up" data-aos-delay="400">
+      <div class="stat-card-modern info">
+        <div class="stat-icon-circle info">
           <i class="fas fa-headset"></i>
         </div>
         <span class="stat-label">Total Layanan</span>
-        <span class="stat-number text-info" id="totalLayanan">0</span>
-        <span class="stat-trend text-info">
-          <i class="fas fa-clock mr-1"></i> Periode Terpilih
+        <span class="stat-value text-info" id="totalLayanan">0</span>
+        <span class="stat-subtitle text-info">
+          <i class="fas fa-clock"></i> Periode Terpilih
         </span>
       </div>
     </div>
     
     <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="500">
-      <div class="stat-card">
-        <div class="stat-icon">
+      <div class="stat-card-modern success">
+        <div class="stat-icon-circle success">
           <i class="fas fa-file-invoice"></i>
         </div>
-        <span class="stat-label">Total SKTM Terbit</span>
-        <span class="stat-number text-success" id="totalSktm">0</span>
-        <span class="stat-trend text-success">
-          <i class="fas fa-check-circle mr-1"></i> Terverifikasi
+        <span class="stat-label">SKTM Terbit</span>
+        <span class="stat-value text-success" id="totalSktm">0</span>
+        <span class="stat-subtitle text-success">
+          <i class="fas fa-check-circle"></i> Terverifikasi
         </span>
       </div>
     </div>
@@ -803,26 +1183,28 @@
 </div>
 
 <!-- ===== MAIN CONTENT ===== -->
-<main class="container py-4">
-  <div class="row g-4">
+<main class="container py-2">
+  <div class="row">
     <!-- CHART SECTION -->
     <div class="col-lg-8">
-      <div class="chart-card" data-aos="fade-up" data-aos-delay="200">
+      <div class="chart-card-modern" data-aos="fade-up" data-aos-delay="200">
         <div class="chart-header">
           <h3 class="chart-title">
-            <i class="fas fa-chart-bar mr-2 text-primary"></i>
+            <div class="chart-title-icon">
+              <i class="fas fa-chart-bar"></i>
+            </div>
             Distribusi Desil Per Wilayah
           </h3>
-          <select id="wilayahSelect" class="custom-select">
+          <select id="wilayahSelect" class="custom-select-modern">
             <option value="" disabled selected>Memuat data wilayah...</option>
           </select>
         </div>
         <div class="chart-container">
           <canvas id="desilChart"></canvas>
         </div>
-        <div class="mt-3 text-muted small">
-          <i class="fas fa-info-circle mr-1"></i>
-          D1 (Sangat Miskin), D2 (Miskin), D3-4 (Rentan), D5 (Menengah Bawah), D6-10 (Menengah ke atas)
+        <div class="chart-note">
+          <i class="fas fa-info-circle"></i>
+          <span>D1 (Sangat Miskin), D2 (Miskin), D3-4 (Rentan), D5 (Menengah Bawah), D6-10 (Menengah ke atas)</span>
         </div>
       </div>
     </div>
@@ -830,76 +1212,86 @@
     <!-- RIGHT SIDEBAR -->
     <div class="col-lg-4">
       <!-- CONTACT CARD -->
-      <div class="contact-card" data-aos="fade-up" data-aos-delay="300">
+      <div class="contact-card-modern" data-aos="fade-up" data-aos-delay="300">
         <div class="contact-header">
-          <div class="contact-header-icon">
+          <div class="contact-icon">
             <i class="fab fa-whatsapp"></i>
           </div>
-          <div>
+          <div class="contact-header-info">
             <h5>Pusat Bantuan</h5>
-            <p class="text-muted small mb-0">Respon 1x24 jam</p>
+            <span>Respon 1x24 jam</span>
           </div>
         </div>
         
-        <div class="contact-phone">
-          <span class="contact-phone-number">0882-1494-0995</span>
-          <span class="badge badge-success px-3 py-2">Aktif</span>
+        <div class="contact-phone-display">
+          <span class="contact-number">0882-1494-0995</span>
+          <span class="contact-status">Aktif</span>
         </div>
         
-        <div class="d-flex gap-2">
-          <a href="https://wa.me/6288214940995" target="_blank" class="btn btn-wa flex-grow-1">
-            <i class="fab fa-whatsapp mr-2"></i> Hubungi WA
+        <div class="contact-buttons">
+          <a href="https://wa.me/6288214940995" target="_blank" class="btn-wa-modern">
+            <i class="fab fa-whatsapp"></i> WhatsApp
           </a>
-          <a href="kontak.html" class="btn btn-light flex-grow-1">
-            <i class="fas fa-envelope mr-2"></i> Kontak
+          <a href="kontak.html" class="btn-secondary-modern">
+            <i class="fas fa-envelope"></i> Kontak
           </a>
         </div>
       </div>
       
       <!-- QUICK LINKS -->
-      <div class="quick-links" data-aos="fade-up" data-aos-delay="400">
+      <div class="quick-links-modern" data-aos="fade-up" data-aos-delay="400">
         <div class="quick-links-header">
           <div class="quick-links-icon">
             <i class="fas fa-bolt"></i>
           </div>
-          <div>
+          <div class="quick-links-header-info">
             <h5>Akses Cepat</h5>
-            <p class="text-muted small mb-0">Layanan prioritas</p>
+            <span>Layanan prioritas</span>
           </div>
         </div>
         
-        <div class="list-group list-group-flush bg-transparent">
-          <a href="data.html" class="quick-link-item">
+        <a href="data.html" class="quick-link-item">
+          <div class="quick-link-icon-circle">
             <i class="fas fa-chart-line"></i>
-            <span>Analisis Kesejahteraan</span>
-            <i class="fas fa-chevron-right ml-auto text-muted"></i>
-          </a>
-          <a href="Pelayanan.html" class="quick-link-item">
+          </div>
+          <span class="quick-link-text">Analisis Kesejahteraan</span>
+          <i class="fas fa-chevron-right quick-link-arrow"></i>
+        </a>
+        <a href="Pelayanan.html" class="quick-link-item">
+          <div class="quick-link-icon-circle">
             <i class="fas fa-file-signature"></i>
-            <span>Data Pelayanan SKTM</span>
-            <i class="fas fa-chevron-right ml-auto text-muted"></i>
-          </a>
-          <a href="verifikasi.html" class="quick-link-item">
+          </div>
+          <span class="quick-link-text">Data Pelayanan SKTM</span>
+          <i class="fas fa-chevron-right quick-link-arrow"></i>
+        </a>
+        <a href="verifikasi.html" class="quick-link-item">
+          <div class="quick-link-icon-circle">
             <i class="fas fa-qrcode"></i>
-            <span>Verifikasi Dokumen</span>
-            <i class="fas fa-chevron-right ml-auto text-muted"></i>
-          </a>
-          <a href="prioritas.html" class="quick-link-item">
+          </div>
+          <span class="quick-link-text">Verifikasi Dokumen</span>
+          <i class="fas fa-chevron-right quick-link-arrow"></i>
+        </a>
+        <a href="prioritas.html" class="quick-link-item">
+          <div class="quick-link-icon-circle">
             <i class="fas fa-exclamation-triangle"></i>
-            <span>Wilayah Prioritas</span>
-            <i class="fas fa-chevron-right ml-auto text-muted"></i>
-          </a>
-          <a href="admin.html" class="quick-link-item">
+          </div>
+          <span class="quick-link-text">Wilayah Prioritas</span>
+          <i class="fas fa-chevron-right quick-link-arrow"></i>
+        </a>
+        <a href="admin.html" class="quick-link-item">
+          <div class="quick-link-icon-circle">
             <i class="fas fa-lock"></i>
-            <span>Portal Admin</span>
-            <i class="fas fa-chevron-right ml-auto text-muted"></i>
-          </a>
-          <a href="laporan_bulanan.html" class="quick-link-item">
-            <i class="fas fa-lock"></i>
-            <span>Laporan Bulanan</span></span>
-            <i class="fas fa-chevron-right ml-auto text-muted"></i>
-          </a>
-        </div>
+          </div>
+          <span class="quick-link-text">Portal Admin</span>
+          <i class="fas fa-chevron-right quick-link-arrow"></i>
+        </a>
+        <a href="laporan_bulanan.html" class="quick-link-item">
+          <div class="quick-link-icon-circle">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <span class="quick-link-text">Laporan Bulanan</span>
+          <i class="fas fa-chevron-right quick-link-arrow"></i>
+        </a>
       </div>
     </div>
   </div>
@@ -910,40 +1302,39 @@
   <div class="container">
     <div class="row">
       <div class="col-md-8 mb-4 mb-md-0">
-        <div class="footer-brand">
-          <img src="assets/img/logo/logo-tksk.webp" alt="TKSK" height="35" class="mr-2" onerror="this.style.display='none';">
-          <span>DARI DATA KE AKSI</span>
+        <div class="footer-branding">
+          <div class="footer-logo">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <span class="footer-brand-text">DARI DATA KE AKSI</span>
         </div>
-        <p class="footer-text">
+        <p class="footer-description">
           Sistem Data Tunggal Sosial Ekonomi Nasional (DTSEN) Kecamatan Sumber, Kabupaten Cirebon.
           Berkolaborasi dengan Tenaga Kesejahteraan Sosial Kecamatan (TKSK) dan Forum Puskesos.
         </p>
       </div>
-      <div class="col-md-4 text-md-right">
-        <p class="footer-text mb-1">
-          <i class="fas fa-map-marker-alt mr-2"></i> Jl. Sunan Malik Ibrahim No.02, Sumber
-        </p>
-        <p class="footer-text mb-1">
-          <i class="fas fa-envelope mr-2"></i> tksksumber@gmail.com
-        </p>
-        <p class="footer-text">
-          <i class="fas fa-phone-alt mr-2"></i> 0882-1494-0995
-        </p>
+      <div class="col-md-4">
+        <div class="footer-contact-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>Jl. Sunan Malik Ibrahim No.02, Sumber</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>tksksumber@gmail.com</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <span>0882-1494-0995</span>
+        </div>
       </div>
     </div>
     
     <hr class="footer-divider">
     
-    <div class="row">
-      <div class="col-12 text-center">
-        <p class="footer-copyright mb-0">
-          © 2026 TKSK & Forum Puskesos Kecamatan Sumber. 
-          <span class="d-block d-md-inline mt-2 mt-md-0">
-            Dibangun dengan <i class="fas fa-heart text-danger"></i> untuk pelayanan publik.
-          </span>
-        </p>
-      </div>
-    </div>
+    <p class="footer-copyright">
+      © 2026 TKSK & Forum Puskesos Kecamatan Sumber. 
+      Dibangun dengan <i class="fas fa-heart" style="color:#dc2626;"></i> untuk pelayanan publik.
+    </p>
   </div>
 </footer>
 
@@ -1000,22 +1391,6 @@
       console.log('Navbar not loaded - using fallback');
       document.getElementById('navbar').innerHTML = '<nav class="navbar navbar-expand-lg navbar-light bg-light"><div class="container"><span class="navbar-text">Menu tidak tersedia</span></div></nav>';
     });
-
-  // ============================================================
-  // TYPING EFFECT
-  // ============================================================
-  const titleText = "Dari Data ke Aksi";
-  const titleElement = document.getElementById("animatedTitle");
-  let charIndex = 0;
-  
-  function typeEffect() {
-    if (charIndex < titleText.length) {
-      titleElement.innerHTML += titleText.charAt(charIndex);
-      charIndex++;
-      setTimeout(typeEffect, 100);
-    }
-  }
-  window.addEventListener('load', typeEffect);
 
   // ============================================================
   // REAL-TIME CLOCK
@@ -1090,19 +1465,24 @@
     
     // Reset hero stats
     document.getElementById('heroStats').innerHTML = `
-      <div class="hero-stat-item">
-        <span class="hero-stat-value">0</span>
-        <span class="hero-stat-label">Desa/Kelurahan</span>
+      <div class="hero-metric">
+        <span class="hero-metric-value">0</span>
+        <span class="hero-metric-label">Desa/Kelurahan</span>
       </div>
-      <div class="hero-stat-item">
-        <span class="hero-stat-value">0%</span>
-        <span class="hero-stat-label">% Prioritas</span>
+      <div class="hero-metric">
+        <span class="hero-metric-value">0%</span>
+        <span class="hero-metric-label">Prioritas</span>
       </div>
-      <div class="hero-stat-item">
-        <span class="hero-stat-value">${currentYear}</span>
-        <span class="hero-stat-label">Periode</span>
+      <div class="hero-metric">
+        <span class="hero-metric-value">${currentYear}</span>
+        <span class="hero-metric-label">Periode</span>
       </div>
     `;
+    
+    // Reset hero card
+    document.getElementById('heroTotalKK').innerText = '0';
+    document.getElementById('heroProgressD12').style.width = '0%';
+    document.getElementById('heroPercentD12').innerText = '0%';
     
     // Reset wilayah data
     wilayahData = [];
@@ -1130,7 +1510,6 @@
       if (!namaWilayah) return;
       
       // Gunakan data terbaru berdasarkan createdAt jika ada multiple data untuk wilayah yang sama
-      // Tapi karena kita sudah filter per periode, seharusnya tidak ada duplikat
       wilayahMap.set(namaWilayah, item);
     });
     
@@ -1142,7 +1521,7 @@
     
     // Proses setiap data wilayah
     latestData.forEach((item) => {
-      const namaWilayah = item.nama; // Field nama sesuai database
+      const namaWilayah = item.nama;
       
       // Ambil data desil - pastikan array
       let desilArray = item.desil || [];
@@ -1201,19 +1580,24 @@
     }
     
     heroStats.innerHTML = `
-      <div class="hero-stat-item">
-        <span class="hero-stat-value">${wilayahData.length}</span>
-        <span class="hero-stat-label">Desa/Kelurahan</span>
+      <div class="hero-metric">
+        <span class="hero-metric-value">${wilayahData.length}</span>
+        <span class="hero-metric-label">Desa/Kelurahan</span>
       </div>
-      <div class="hero-stat-item">
-        <span class="hero-stat-value">${persenPrioritas}%</span>
-        <span class="hero-stat-label">% Prioritas</span>
+      <div class="hero-metric">
+        <span class="hero-metric-value">${persenPrioritas}%</span>
+        <span class="hero-metric-label">Prioritas</span>
       </div>
-      <div class="hero-stat-item">
-        <span class="hero-stat-value">${periodeText}</span>
-        <span class="hero-stat-label">Periode Aktif</span>
+      <div class="hero-metric">
+        <span class="hero-metric-value">${periodeText}</span>
+        <span class="hero-metric-label">Periode Aktif</span>
       </div>
     `;
+    
+    // Update hero card progress
+    document.getElementById('heroTotalKK').innerText = totalKK.toLocaleString('id-ID');
+    document.getElementById('heroProgressD12').style.width = persenPrioritas + '%';
+    document.getElementById('heroPercentD12').innerText = persenPrioritas + '%';
 
     // Update wilayah select
     updateWilayahSelect();
@@ -1285,17 +1669,17 @@
           label: 'Jumlah Keluarga (KK)',
           data: chartData,
           backgroundColor: [
-            'rgba(220, 53, 69, 0.9)',
-            'rgba(253, 126, 20, 0.9)',
-            'rgba(255, 193, 7, 0.9)',
-            'rgba(255, 224, 130, 0.9)',
-            'rgba(23, 162, 184, 0.9)',
-            'rgba(40, 167, 69, 0.9)'
+            'rgba(220, 38, 38, 0.85)',
+            'rgba(234, 88, 12, 0.85)',
+            'rgba(217, 119, 6, 0.85)',
+            'rgba(251, 191, 36, 0.85)',
+            'rgba(2, 132, 199, 0.85)',
+            'rgba(5, 150, 105, 0.85)'
           ],
           borderWidth: 0,
-          borderRadius: 6,
-          barPercentage: 0.7,
-          categoryPercentage: 0.9
+          borderRadius: 8,
+          barPercentage: 0.65,
+          categoryPercentage: 0.85
         }]
       },
       options: {
@@ -1304,16 +1688,27 @@
         plugins: {
           legend: { display: false },
           tooltip: {
+            backgroundColor: 'rgba(15,23,42,0.9)',
+            padding: 12,
+            cornerRadius: 8,
             callbacks: {
               label: (context) => ` ${context.raw.toLocaleString('id-ID')} KK`
             }
           }
         },
         scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              font: { size: 11, family: "'Plus Jakarta Sans', sans-serif" }
+            }
+          },
           y: {
             beginAtZero: true,
+            grid: { color: 'rgba(0,0,0,0.04)' },
             ticks: { 
-              callback: (value) => value.toLocaleString('id-ID')
+              callback: (value) => value.toLocaleString('id-ID'),
+              font: { size: 11, family: "'Plus Jakarta Sans', sans-serif" }
             }
           }
         }
@@ -1336,7 +1731,7 @@
         });
       });
 
-      console.log('Data loaded:', allData.length, 'records'); // Debug
+      console.log('Data loaded:', allData.length, 'records');
       
       // Terapkan filter periode
       filterDataByPeriode();
@@ -1377,4 +1772,3 @@
 
 </body>
 </html>
-
