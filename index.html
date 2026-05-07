@@ -77,42 +77,41 @@
     /* ===== TOP HEADER ===== */
     .top-header {
       background: white;
-      padding: 12px 0;
+      padding: 10px 0;
       border-bottom: 1px solid var(--gray-200);
       position: relative;
       z-index: 1030;
     }
 
-    .header-brand {
+    .header-logo {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 15px;
     }
 
-    .brand-logo {
-      width: 42px;
-      height: 42px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      border-radius: var(--border-radius-xs);
+    .logo-item {
       display: flex;
       align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 20px;
-      box-shadow: 0 4px 12px rgba(26,86,219,0.2);
+      gap: 8px;
     }
 
-    .brand-text {
+    .logo-item img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .logo-item span {
       font-weight: 700;
-      font-size: 0.95rem;
       color: var(--dark);
-      line-height: 1.2;
+      font-size: 0.85rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    .brand-subtext {
-      font-size: 0.75rem;
-      color: var(--gray-500);
-      font-weight: 500;
+    .logo-divider {
+      width: 1px;
+      height: 30px;
+      background: linear-gradient(to bottom, transparent, var(--gray-200), transparent);
     }
 
     .header-actions {
@@ -387,6 +386,15 @@
       color: var(--gray-500);
       min-width: 70px;
       font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .mini-progress-value {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      white-space: nowrap;
+      min-width: 35px;
+      text-align: right;
     }
 
     /* ===== PERIODE SELECTOR ===== */
@@ -443,13 +451,22 @@
       width: 100%;
       border-radius: 50px;
       border: 2px solid var(--gray-200);
-      padding: 10px 20px;
+      padding: 10px 36px 10px 20px;
       font-size: 0.9rem;
       font-weight: 500;
       background-color: white;
       cursor: pointer;
       transition: all 0.2s;
       color: var(--dark);
+      height: auto;
+      line-height: 1.5;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 12px;
     }
 
     .periode-select .custom-select:focus {
@@ -646,21 +663,27 @@
       color: var(--info);
     }
 
+    /* Custom select untuk chart */
     .custom-select-modern {
-      border-radius: var(--border-radius-xs);
+      border-radius: 50px;
       border: 2px solid var(--gray-200);
-      padding: 10px 40px 10px 16px;
+      padding: 10px 36px 10px 20px;
       font-size: 0.9rem;
       font-weight: 500;
       background-color: white;
       color: var(--dark);
-      min-width: 200px;
+      min-width: 220px;
       cursor: pointer;
       transition: all 0.2s;
+      height: auto;
+      line-height: 1.5;
       appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 14px center;
+      background-size: 12px;
     }
 
     .custom-select-modern:focus {
@@ -703,11 +726,13 @@
       margin: 0;
       font-size: 1rem;
       color: var(--dark);
+      font-family: 'DM Serif Display', serif;
     }
 
     .contact-header-info span {
       font-size: 0.78rem;
       color: var(--gray-400);
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     .contact-phone-display {
@@ -734,6 +759,7 @@
       font-weight: 600;
       background: #ecfdf5;
       color: var(--success);
+      white-space: nowrap;
     }
 
     .contact-buttons {
@@ -755,6 +781,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      white-space: nowrap;
     }
 
     .btn-wa-modern:hover {
@@ -778,6 +805,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      white-space: nowrap;
     }
 
     .btn-secondary-modern:hover {
@@ -821,11 +849,13 @@
       margin: 0;
       font-size: 1rem;
       color: var(--dark);
+      font-family: 'DM Serif Display', serif;
     }
 
     .quick-links-header-info span {
       font-size: 0.78rem;
       color: var(--gray-400);
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     .quick-link-item {
@@ -858,6 +888,7 @@
       color: var(--gray-500);
       font-size: 14px;
       transition: all 0.2s;
+      flex-shrink: 0;
     }
 
     .quick-link-item:hover .quick-link-icon-circle {
@@ -875,6 +906,7 @@
       color: var(--gray-300);
       font-size: 12px;
       transition: all 0.2s;
+      flex-shrink: 0;
     }
 
     .quick-link-item:hover .quick-link-arrow {
@@ -897,16 +929,9 @@
       margin-bottom: 20px;
     }
 
-    .footer-logo {
-      width: 42px;
-      height: 42px;
-      background: rgba(255,255,255,0.1);
-      border-radius: var(--border-radius-xs);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 20px;
+    .footer-branding img {
+      height: 35px;
+      width: auto;
     }
 
     .footer-brand-text {
@@ -951,6 +976,7 @@
       .hero-title { font-size: 2.2rem; }
       .hero-metrics { gap: 20px; }
       .hero-metric-value { font-size: 1.6rem; }
+      .periode-select { min-width: 130px; }
     }
 
     @media (max-width: 768px) {
@@ -960,19 +986,32 @@
       .stats-grid { margin-bottom: 24px; }
       .stat-value { font-size: 1.6rem; }
       .chart-header { flex-direction: column; align-items: flex-start; }
-      .custom-select-modern { width: 100%; }
+      .custom-select-modern { width: 100%; min-width: unset; }
       .periode-wrapper { margin-top: -50px; }
-      .periode-card { padding: 16px 20px; }
-      .brand-text { font-size: 0.85rem; }
+      .periode-card { padding: 16px 20px; gap: 12px; }
+      .periode-controls { gap: 8px; }
+      .periode-select { min-width: 120px; }
+      .periode-select .custom-select { font-size: 0.82rem; padding: 10px 32px 10px 16px; }
+      .logo-item span { display: none !important; }
+      .header-logo { gap: 10px; }
     }
 
     @media (max-width: 576px) {
       .hero-title { font-size: 1.6rem; }
       .btn-primary-modern, .btn-outline-modern { width: 100%; justify-content: center; }
       .hero-actions { flex-direction: column; }
+      .hero-metrics { gap: 16px; }
+      .hero-metric-value { font-size: 1.4rem; }
       .periode-label { width: 100%; justify-content: center; }
       .btn-filter { width: 100%; justify-content: center; }
-      .periode-card { gap: 12px; }
+      .periode-card { gap: 10px; }
+      .periode-controls { flex-direction: column; width: 100%; }
+      .periode-select { width: 100%; }
+      .periode-select .custom-select { font-size: 0.85rem; padding: 10px 36px 10px 18px; }
+      .live-badge span:not(.live-dot) { display: none; }
+      .live-badge { padding: 6px 10px; }
+      .contact-buttons { flex-direction: column; }
+      .custom-select-modern { font-size: 0.85rem; padding: 10px 36px 10px 18px; }
     }
   </style>
 </head>
@@ -982,20 +1021,32 @@
 <header class="top-header">
   <div class="container">
     <div class="d-flex justify-content-between align-items-center">
-      <div class="header-brand">
-        <div class="brand-logo">
-          <i class="fas fa-shield-alt"></i>
+      <div class="header-logo">
+        <div class="logo-item">
+          <img src="assets/img/logo/logo-tksk.webp" 
+               alt="Logo TKSK" 
+               width="40" 
+               height="40"
+               loading="lazy"
+               onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%3E%3Crect%20width%3D%2240%22%20height%3D%2240%22%20fill%3D%22%231a56db%22%2F%3E%3Ctext%20x%3D%228%22%20y%3D%2225%22%20font-size%3D%2214%22%20fill%3D%22white%22%3ETKSK%3C%2Ftext%3E%3C%2Fsvg%3E';">
+          <span class="d-none d-md-inline">TKSK</span>
         </div>
-        <div>
-          <div class="brand-text">TKSK & Puskesos</div>
-          <div class="brand-subtext">Kecamatan Sumber</div>
+        <div class="logo-divider"></div>
+        <div class="logo-item">
+          <img src="assets/img/logo/logo-puskesos.webp" 
+               alt="Logo Puskesos" 
+               width="40" 
+               height="40"
+               loading="lazy"
+               onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%3E%3Crect%20width%3D%2240%22%20height%3D%2240%22%20fill%3D%22%23059669%22%2F%3E%3Ctext%20x%3D%225%22%20y%3D%2225%22%20font-size%3D%2212%22%20fill%3D%22white%22%3EPUSKESOS%3C%2Ftext%3E%3C%2Fsvg%3E';">
+          <span class="d-none d-md-inline">Puskesos</span>
         </div>
       </div>
       
       <div class="header-actions">
         <span class="live-badge">
           <span class="live-dot"></span>
-          <span id="realtimeClock">Memuat...</span>
+          <span id="realtimeClock" class="font-weight-bold">Memuat...</span>
         </span>
       </div>
     </div>
@@ -1059,21 +1110,21 @@
               <div class="mini-progress-bar">
                 <div class="mini-progress-fill" id="heroProgressD12" style="width: 0%; background: #dc2626;"></div>
               </div>
-              <span style="font-size:0.75rem;color:var(--gray-500);" id="heroPercentD12">0%</span>
+              <span class="mini-progress-value" id="heroPercentD12">0%</span>
             </div>
             <div class="mini-progress">
               <span class="mini-progress-label">Desil 3-5</span>
               <div class="mini-progress-bar">
                 <div class="mini-progress-fill" style="width: 45%; background: #d97706;"></div>
               </div>
-              <span style="font-size:0.75rem;color:var(--gray-500);">45%</span>
+              <span class="mini-progress-value">45%</span>
             </div>
             <div class="mini-progress">
               <span class="mini-progress-label">Desil 6-10</span>
               <div class="mini-progress-bar">
                 <div class="mini-progress-fill" style="width: 35%; background: #059669;"></div>
               </div>
-              <span style="font-size:0.75rem;color:var(--gray-500);">35%</span>
+              <span class="mini-progress-value">35%</span>
             </div>
           </div>
         </div>
@@ -1303,9 +1354,7 @@
     <div class="row">
       <div class="col-md-8 mb-4 mb-md-0">
         <div class="footer-branding">
-          <div class="footer-logo">
-            <i class="fas fa-shield-alt"></i>
-          </div>
+          <img src="assets/img/logo/logo-tksk.webp" alt="TKSK" height="35" onerror="this.style.display='none';">
           <span class="footer-brand-text">DARI DATA KE AKSI</span>
         </div>
         <p class="footer-description">
