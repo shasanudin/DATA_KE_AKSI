@@ -12,7 +12,7 @@
         * { box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
-            background: #eef2f7;
+            background: #f0f2f5;
             padding: 0 0 50px;
         }
         /* HEADER / NAVBAR STYLE */
@@ -45,9 +45,13 @@
         .card-form {
             border: none;
             border-radius: 20px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
             background: white;
             margin-bottom: 30px;
+            transition: transform 0.2s;
+        }
+        .card-form:hover {
+            transform: translateY(-2px);
         }
         .card-header-form {
             background: linear-gradient(135deg, #0b2a4f, #123b6e);
@@ -56,6 +60,9 @@
             padding: 18px 25px;
             font-weight: 600;
         }
+        .card-header-form.masuk {
+            background: linear-gradient(135deg, #1d4e4b, #146b64);
+        }
         .badge-arsip {
             background: #f0f4ff;
             color: #0b2a4f;
@@ -63,17 +70,19 @@
             padding: 8px 16px;
             font-size: 13px;
         }
-        /* KERTAS A4 DENGAN KOP RESMI */
+        /* KERTAS A4 UNTUK CETAK - TIMES NEW ROMAN 12PT */
         .paper-a4 {
             background: white;
             width: 210mm;
             min-height: 297mm;
             padding: 12mm 18mm;
             margin: 30px auto;
-            box-shadow: 0 20px 40px rgba(0,20,40,0.2);
+            box-shadow: 0 20px 40px rgba(0,20,40,0.15);
             font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt;
             color: #000;
-            page-break-after: always;
+            page-break-after: avoid;
+            position: relative;
         }
         /* KOP SURAT STANDAR PEMERINTAH */
         .kop-surat-container {
@@ -81,8 +90,8 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 3px solid #000;
-            padding-bottom: 6px;
-            margin-bottom: 8px;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
         }
         .logo-box {
             width: 75px;
@@ -98,40 +107,45 @@
             flex-grow: 1;
         }
         .instansi-utama {
-            font-size: 12px;
+            font-size: 10pt;
             font-weight: 600;
             margin: 0;
             letter-spacing: 0.3px;
             text-transform: uppercase;
         }
         .nama-lembaga {
-            font-size: 16px;
+            font-size: 14pt;
             font-weight: 700;
-            margin: 1px 0;
+            margin: 2px 0;
             text-transform: uppercase;
             color: #000;
         }
         .nama-program {
-            font-size: 22px;
+            font-size: 18pt;
             font-weight: 800;
             margin: 2px 0;
             letter-spacing: 1px;
             color: #000;
         }
         .alamat-kantor {
-            font-size: 10px;
+            font-size: 8pt;
             margin: 1px 0;
             font-style: normal;
             line-height: 1.2;
         }
-        /* ISI SURAT FONT SIZE 12 */
+        /* ISI SURAT - TIMES NEW ROMAN 12PT */
         .surat-body {
-            font-size: 12px;
+            font-size: 12pt;
             line-height: 1.5;
             text-align: justify;
             font-family: 'Times New Roman', Times, serif;
         }
-        /* TTD dan QR - SESUAI GAMBAR PERTAMA (tanpa verifikasi box) */
+        .surat-tujuan {
+            font-size: 12pt;
+            margin-bottom: 15px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        /* TTD dan QR */
         .ttd-wrapper {
             display: flex;
             margin-top: 40px;
@@ -146,7 +160,7 @@
             margin-left: auto;
         }
         .qr-container {
-            margin: 2px auto;
+            margin: 5px auto;
             width: 90px;
         }
         .qr-placeholder {
@@ -169,44 +183,46 @@
             height: 80px;
         }
         .id-verifikasi {
-            font-size: 9px;
-            margin-top: 3px;
-            color: #666;
+            font-size: 8pt;
+            margin-top: 5px;
+            color: #555;
             word-break: break-all;
             word-wrap: break-word;
             max-width: 100%;
-            padding: 0 2px;
             line-height: 1.2;
         }
         .nama-ttd {
             font-weight: 700;
-            margin-top: 2px;
+            margin-top: 5px;
             text-decoration: underline;
-            font-size: 13px;
+            font-size: 12pt;
             margin-bottom: 2px;
         }
         .arsip-meta {
-            font-size: 9px;
+            font-size: 9pt;
             color: #5e6f8d;
             border-top: 1px dotted #aaa;
-            margin-top: 20px;
+            margin-top: 25px;
             padding-top: 8px;
             text-align: left;
+            font-family: 'Times New Roman', Times, serif;
         }
         /* TABEL ARSIP */
         .tabel-arsip {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11px;
+            font-size: 12px;
         }
         .tabel-arsip th {
             background: #eef3fc;
             border: 1px solid #bac9e0;
-            padding: 8px 5px;
+            padding: 10px 8px;
+            font-weight: 600;
         }
         .tabel-arsip td {
             border: 1px solid #cbd5e1;
-            padding: 6px 5px;
+            padding: 8px 6px;
+            vertical-align: middle;
         }
         .btn-print {
             background: #1e3a5f;
@@ -215,12 +231,23 @@
             border-radius: 40px;
             padding: 10px 30px;
             font-weight: 600;
+            transition: all 0.2s;
         }
         .btn-print:hover {
             background: #102a44;
+            transform: scale(1.02);
+        }
+        .btn-outline-secondary {
+            border-radius: 40px;
+        }
+        /* Header logo bagian atas */
+        .header-logo {
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         @media print {
-            .no-print, .card, .navbar-custom, .footer-custom, .btn, .input-section {
+            .no-print, .card, .navbar-custom, .footer-custom, .btn, .input-section, .header-logo, .badge-arsip {
                 display: none !important;
             }
             .paper-a4 {
@@ -228,12 +255,31 @@
                 margin: 0 auto;
                 width: 100%;
                 height: auto;
-                page-break-after: always;
+                page-break-after: avoid;
+                padding: 12mm 18mm;
             }
             @page {
                 size: A4;
-                margin: 12mm 18mm;
+                margin: 12mm 15mm;
             }
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+            .surat-body, .surat-tujuan, .ttd-col, .arsip-meta {
+                font-family: 'Times New Roman', Times, serif !important;
+            }
+        }
+        /* info arsip */
+        .info-arsip {
+            font-size: 12px;
+            padding: 8px 12px;
+        }
+        .btn-sm-action {
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
         }
     </style>
 </head>
@@ -241,16 +287,16 @@
 <!-- ============ HEADER / NAVBAR ============ -->
 <nav class="navbar navbar-expand-lg navbar-custom no-print">
     <div class="container">
-        <a class="navbar-brand" href="index.html">
+        <a class="navbar-brand" href="#">
             <i class="fas fa-file-alt mr-2"></i> DTSEN - TKSK & Puskesos Sumber
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon" style="color: white; font-size: 1.5rem;"><i class="fas fa-bars"></i></span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"><i class="fas fa-bars text-white"></i></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.html"><i class="fas fa-home mr-1"></i> Beranda</a>
+                    <a class="nav-link" href="#"><i class="fas fa-home mr-1"></i> Beranda</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#"><i class="fas fa-envelope mr-1"></i> Surat</a>
@@ -263,24 +309,24 @@
     </div>
 </nav>
 
-<!-- ============ HEADER LOGO ============ -->
-<header class="container py-3 bg-white no-print" style="border-radius: 12px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-    <div class="row align-items-center">
-        <div class="col-md-6">
+<!-- Header logo sederhana -->
+<div class="container no-print">
+    <div class="header-logo bg-white py-3 px-4 d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
             <img src="assets/img/logo/logo-tksk.png" height="45" alt="Logo TKSK" onerror="this.style.display='none'">
-            <img src="assets/img/logo/logo-puskesos.png" height="45" class="ml-3 border-left pl-3" alt="Logo Puskesos" onerror="this.style.display='none'">
+            <img src="assets/img/logo/logo-puskesos.png" height="45" class="ml-3 pl-3 border-left" alt="Logo Puskesos" onerror="this.style.display='none'">
         </div>
-        <div class="col-md-6 text-right d-none d-md-block">
+        <div>
             <span class="badge badge-primary px-3 py-2" style="background: #0b2a4f;">
                 <i class="fas fa-file-alt mr-1"></i> DTSEN - TKSK & Puskesos Sumber
             </span>
         </div>
     </div>
-</header>
+</div>
 
 <div class="container input-section no-print">
     <!-- JUDUL -->
-    <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-3">
         <h3 class="font-weight-bold" style="color: #0b2a4f;"><i class="fas fa-envelope-open-text mr-2"></i>Surat Keluar / Masuk Forum Puskesos</h3>
         <span class="badge-arsip"><i class="fas fa-archive mr-1"></i> Tercatat otomatis</span>
     </div>
@@ -313,7 +359,7 @@
                         </div>
                         <div class="form-group">
                             <label>Isi Ringkas (opsional)</label>
-                            <textarea class="form-control" id="isiKeluar" rows="2"></textarea>
+                            <textarea class="form-control" id="isiKeluar" rows="2" placeholder="Isi surat dapat disesuaikan..."></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary btn-block" style="background: #0b2a4f; border: none;">
                             <i class="fas fa-save mr-1"></i> Simpan & Cetak Keluar
@@ -325,7 +371,7 @@
         <!-- SURAT MASUK -->
         <div class="col-md-6 mb-4">
             <div class="card card-form">
-                <div class="card-header-form" style="background: linear-gradient(135deg, #1d4e4b, #146b64);">
+                <div class="card-header-form masuk" style="background: linear-gradient(135deg, #1d4e4b, #146b64);">
                     <i class="fas fa-inbox mr-2"></i> Input Surat Masuk
                 </div>
                 <div class="card-body">
@@ -367,22 +413,24 @@
             <i class="fas fa-database mr-2"></i> ARSIP TERCATAT (10 data terakhir)
         </div>
         <div class="card-body p-0">
-            <table class="tabel-arsip" id="tabelArsip">
-                <thead>
-                    <tr><th>Jenis</th><th>Nomor</th><th>Tgl</th><th>Asal/Tujuan</th><th>Perihal</th><th>ID Verifikasi</th></tr>
-                </thead>
-                <tbody id="arsipBody"></tbody>
-            </table>
-            <div class="p-2 small text-muted text-right" id="infoArsip"></div>
+            <div style="overflow-x: auto;">
+                <table class="tabel-arsip" id="tabelArsip">
+                    <thead>
+                        <tr><th>Jenis</th><th>Nomor</th><th>Tgl</th><th>Asal/Tujuan</th><th>Perihal</th><th>ID Verifikasi</th></tr>
+                    </thead>
+                    <tbody id="arsipBody"></tbody>
+                </table>
+            </div>
+            <div class="info-arsip text-muted text-right" id="infoArsip"></div>
         </div>
     </div>
-    <div class="text-center my-3 no-print">
+    <div class="text-center my-4 no-print">
         <button class="btn btn-print mr-2" id="cetakSuratTerakhir"><i class="fas fa-print"></i> Cetak surat terakhir</button>
         <button class="btn btn-outline-secondary" id="resetArsip"><i class="fas fa-trash-alt"></i> Reset demo</button>
     </div>
 </div>
 
-<!-- ============ AREA CETAK SURAT (TANPA VERIFIKASI BOX) ============ -->
+<!-- ============ AREA CETAK SURAT (TIMES NEW ROMAN 12PT) ============ -->
 <div class="paper-a4" id="suratCetakArea">
     <!-- KOP SURAT STANDAR PEMERINTAH -->
     <div class="kop-surat-container">
@@ -402,7 +450,7 @@
     </div>
 
     <!-- NOMOR, LAMPIRAN, PERIHAL -->
-    <table width="100%" style="margin-bottom: 6px; font-size: 12px; border-collapse: collapse;">
+    <table width="100%" style="margin-bottom: 8px; border-collapse: collapse; font-family: 'Times New Roman', Times, serif; font-size: 12pt;">
         <tr><td width="12%">Nomor</td><td width="2%">:</td><td id="cetakNomorSurat">460 / --- / TKSK-SBR / 2025</td></tr>
         <tr><td>Sifat</td><td>:</td><td>Penting / Segera</td></tr>
         <tr><td>Lampiran</td><td>:</td><td id="cetakLampiran">-</td></tr>
@@ -410,10 +458,10 @@
     </table>
 
     <!-- TUJUAN SURAT -->
-    <p style="font-size: 12px; margin-bottom: 15px;" id="cetakTujuanSurat">Yth. ......... di Tempat</p>
+    <p class="surat-tujuan" id="cetakTujuanSurat">Yth. ......... di Tempat</p>
 
-    <!-- ISI SURAT FONT 12 (Undangan Buka Puasa) -->
-    <div class="surat-body" id="cetakIsiSurat" style="font-size: 12px;">
+    <!-- ISI SURAT dengan font 12pt Times New Roman -->
+    <div class="surat-body" id="cetakIsiSurat">
         Dalam rangka meningkatkan koordinasi serta mempererat silaturahmi di bulan suci Ramadan, kami mengundang Bapak/Ibu untuk menghadiri Rapat Koordinasi dan Buka Puasa Bersama yang akan dilaksanakan pada:
         <br><br>
         Hari/Tanggal : Kamis, 12 Maret 2026<br>
@@ -425,37 +473,26 @@
         Demikian undangan ini kami sampaikan. Atas perhatian dan kehadiran Bapak/Ibu, kami ucapkan terima kasih.
     </div>
 
-    <!-- TANDA TANGAN DAN QR (TANPA VERIFIKASI BOX) -->
+    <!-- TANDA TANGAN DAN QR -->
     <div class="ttd-wrapper">
         <div class="ttd-col">
-            <!-- Tempat dan Tanggal -->
-            <div style="margin-bottom: 3px;">
-                <p style="font-size: 11px; margin-bottom: 1px;">Sumber, <span id="cetakTglSurat" class="font-weight-bold">11 Maret 2026</span></p>
+            <div style="margin-bottom: 5px;">
+                <p style="font-size: 11pt; margin-bottom: 1px;">Sumber, <span id="cetakTglSurat" class="font-weight-bold">11 Maret 2026</span></p>
             </div>
-            
-            <!-- a.n. Forum Puskesos -->
-            <p style="font-size: 11px; margin-bottom: 1px;">a.n. Forum Puskesos Kecamatan Sumber,</p>
-            
-            <!-- QR CODE -->
+            <p style="font-size: 11pt; margin-bottom: 2px;">a.n. Forum Puskesos Kecamatan Sumber,</p>
             <div class="qr-container">
                 <div id="qrCodeSurat" class="qr-placeholder"></div>
             </div>
-
-            <!-- Nama Lengkap dan Gelar -->
-            <p class="nama-ttd" id="cetakNamaPenandatangan">
-                SHIDIQ HASANUDIN, S.IP
-            </p>
-            
-            <!-- ID Verifikasi -->
+            <p class="nama-ttd" id="cetakNamaPenandatangan">SHIDIQ HASANUDIN, S.IP</p>
             <div class="id-verifikasi">
                 <span style="font-weight: 600;">ID Verifikasi:</span><br>
-                <span id="cetakIdVerifikasi" class="font-weight-bold" style="background: #f0f0f0; padding: 2px 4px; display: inline-block; border-radius: 3px; font-size: 9px; word-break: break-all; max-width: 100%;">VFR-20260311-3X42SE</span>
+                <span id="cetakIdVerifikasi" class="font-weight-bold" style="background: #f0f0f0; padding: 2px 4px; display: inline-block; border-radius: 3px;">VFR-20260311-3X42SE</span>
             </div>
         </div>
     </div>
 
     <!-- FOOTER ARSIP -->
-    <div class="arsip-meta" id="cetakArsipMeta" style="font-size: 10px;">
+    <div class="arsip-meta" id="cetakArsipMeta">
         Dokumen elektronik - sah tanpa tanda tangan basah. Arsip tersimpan otomatis.
     </div>
 </div>
@@ -468,14 +505,12 @@
     </div>
 </footer>
 
-<!-- Script -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
 (function() {
-    // ========== MODEL ARSIP (localStorage) ==========
     let arsipSurat = JSON.parse(localStorage.getItem('arsipSurat')) || [];
 
     function simpanArsip() {
@@ -489,6 +524,12 @@
         return `VFR-${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2,'0')}${date.getDate().toString().padStart(2,'0')}-${rand}`;
     }
 
+    function formatTanggalIndo(tglString) {
+        if (!tglString) return '';
+        const tgl = new Date(tglString);
+        return tgl.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
     function renderTabelArsip() {
         const tbody = document.getElementById('arsipBody');
         if (!tbody) return;
@@ -498,7 +539,7 @@
             html += `<tr>
                 <td><span class="badge badge-${item.jenis === 'keluar' ? 'primary' : 'success'}">${item.jenis === 'keluar' ? 'KELUAR' : 'MASUK'}</span></td>
                 <td>${item.nomor || ''}</td>
-                <td>${item.tanggal || ''}</td>
+                <td>${formatTanggalIndo(item.tanggal)}</td>
                 <td>${item.asalTujuan || ''}</td>
                 <td>${item.perihal || ''}</td>
                 <td><small>${item.idVerifikasi || ''}</small></td>
@@ -525,7 +566,6 @@
         return baru;
     }
 
-    // Generate QR
     function generateQR(text, elementId) {
         const qrDiv = document.getElementById(elementId);
         if (!qrDiv) return;
@@ -548,19 +588,16 @@
         }
     }
 
-    // Fungsi mengisi area cetak
     function cetakSurat(arsipItem) {
         document.getElementById('cetakNomorSurat').innerText = arsipItem.nomor || '-';
-        document.getElementById('cetakLampiran').innerText = '-';
         document.getElementById('cetakPerihal').innerText = arsipItem.perihal || '-';
         
         if (arsipItem.jenis === 'keluar') {
             document.getElementById('cetakTujuanSurat').innerHTML = `Yth. <strong>${arsipItem.asalTujuan || '.........'}</strong><br>di Tempat`;
         } else {
-            document.getElementById('cetakTujuanSurat').innerHTML = `Yang bertanda tangan di bawah ini, <strong>${arsipItem.asalTujuan || '.........'}</strong>`;
+            document.getElementById('cetakTujuanSurat').innerHTML = `Yang bertanda tangan di bawah ini,<br><strong>${arsipItem.asalTujuan || '.........'}</strong>`;
         }
 
-        // Untuk surat undangan, kita gunakan template undangan buka puasa
         let isi = `Dalam rangka meningkatkan koordinasi serta mempererat silaturahmi di bulan suci Ramadan, kami mengundang Bapak/Ibu untuk menghadiri Rapat Koordinasi dan Buka Puasa Bersama yang akan dilaksanakan pada:
         <br><br>
         Hari/Tanggal : Kamis, 12 Maret 2026<br>
@@ -574,14 +611,13 @@
         if (arsipItem.isi && arsipItem.isi.trim() !== '') {
             isi = arsipItem.isi.replace(/\n/g, '<br>');
         }
-        
         document.getElementById('cetakIsiSurat').innerHTML = isi;
 
-        const tgl = arsipItem.tanggal ? new Date(arsipItem.tanggal).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' }) : '11 Maret 2026';
-        document.getElementById('cetakTglSurat').innerText = tgl;
+        const tglFormatted = arsipItem.tanggal ? new Date(arsipItem.tanggal).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' }) : '11 Maret 2026';
+        document.getElementById('cetakTglSurat').innerText = tglFormatted;
         document.getElementById('cetakNamaPenandatangan').innerText = 'SHIDIQ HASANUDIN, S.IP';
-        document.getElementById('cetakIdVerifikasi').innerText = arsipItem.idVerifikasi || 'VFR-20260311-3X42SE';
-        document.getElementById('cetakArsipMeta').innerHTML = `Dokumen elektronik - sah tanpa tanda tangan basah. Arsip tersimpan otomatis.`;
+        document.getElementById('cetakIdVerifikasi').innerHTML = arsipItem.idVerifikasi || 'VFR-20260311-3X42SE';
+        document.getElementById('cetakArsipMeta').innerHTML = `Dokumen elektronik - sah tanpa tanda tangan basah. Arsip tersimpan otomatis. ID: ${arsipItem.idVerifikasi}`;
 
         const qrData = {
             id: arsipItem.idVerifikasi,
@@ -593,6 +629,7 @@
         generateQR(JSON.stringify(qrData), 'qrCodeSurat');
     }
 
+    // Event listeners
     document.getElementById('formKeluar')?.addEventListener('submit', function(e) {
         e.preventDefault();
         const nomor = document.getElementById('nomorKeluar').value.trim();
@@ -600,10 +637,10 @@
         const tujuan = document.getElementById('tujuanKeluar').value.trim();
         const perihal = document.getElementById('perihalKeluar').value.trim();
         const isi = document.getElementById('isiKeluar').value.trim();
-        const dataArsip = { nomor, tanggal: tgl, asalTujuan: tujuan, perihal, isi };
-        const baru = tambahArsip('keluar', dataArsip);
+        if(!nomor || !tgl || !tujuan || !perihal) { alert('Lengkapi data!'); return; }
+        const baru = tambahArsip('keluar', { nomor, tanggal: tgl, asalTujuan: tujuan, perihal, isi });
         cetakSurat(baru);
-        alert('Surat keluar tersimpan. Silakan cetak.');
+        alert('Surat keluar tersimpan. Siap cetak.');
         this.reset();
     });
 
@@ -614,27 +651,23 @@
         const asal = document.getElementById('asalMasuk').value.trim();
         const perihal = document.getElementById('perihalMasuk').value.trim();
         const isi = document.getElementById('isiMasuk').value.trim();
-        const dataArsip = { nomor, tanggal: tgl, asalTujuan: asal, perihal, isi };
-        const baru = tambahArsip('masuk', dataArsip);
+        if(!nomor || !tgl || !asal || !perihal) { alert('Lengkapi data!'); return; }
+        const baru = tambahArsip('masuk', { nomor, tanggal: tgl, asalTujuan: asal, perihal, isi });
         cetakSurat(baru);
-        alert('Surat masuk tersimpan. Silakan cetak.');
+        alert('Surat masuk tersimpan. Siap cetak.');
         this.reset();
     });
 
     document.getElementById('cetakSuratTerakhir')?.addEventListener('click', function() {
-        if (arsipSurat.length === 0) {
-            alert('Belum ada arsip.');
-            return;
-        }
+        if (arsipSurat.length === 0) { alert('Belum ada arsip.'); return; }
         const last = arsipSurat[arsipSurat.length - 1];
         cetakSurat(last);
         window.print();
     });
 
     document.getElementById('resetArsip')?.addEventListener('click', function() {
-        if (confirm('Hapus semua arsip?')) {
+        if (confirm('Hapus semua arsip dan reset data demo?')) {
             arsipSurat = [];
-            simpanArsip();
             const demo1 = {
                 idVerifikasi: generateIdVerifikasi(),
                 jenis: 'keluar',
@@ -658,6 +691,7 @@
             arsipSurat.push(demo1, demo2);
             simpanArsip();
             cetakSurat(arsipSurat[arsipSurat.length-1]);
+            alert('Data direset dengan 2 contoh arsip');
         }
     });
 
