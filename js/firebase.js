@@ -1,20 +1,11 @@
-import {
-initializeApp
-}
-from 
-"https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+// =====================================================
+// Firebase Configuration
+// =====================================================
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
-import {
-getFirestore
-}
-from
-"https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
-
-
-
-const firebaseConfig={
-
+const firebaseConfig = {
   apiKey: "AIzaSyAhQvRHBYX7dGW7QiSVN24cukmYHrN6d1c",
   authDomain: "data-ke-aksi-auth.firebaseapp.com",
   projectId: "data-ke-aksi-auth",
@@ -24,11 +15,7 @@ const firebaseConfig={
   measurementId: "G-9NMBBB79EQ"
 };
 
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-
-const app=
-initializeApp(firebaseConfig);
-
-
-export const db=
-getFirestore(app);
+export { db };
