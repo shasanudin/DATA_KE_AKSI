@@ -1,7 +1,11 @@
-import {
-db
-}
-from "./firebase.js";
+// =====================================================
+// NIRBITA CORE ENGINE v0.2
+// Nexus Intelligence Risk Based Territorial Analysis
+// DTSEN Desil Intelligence
+// =====================================================
+
+
+import { db } from "./firebase.js";
 
 
 import {
@@ -21,56 +25,189 @@ from
 
 
 
-let wilayah=[];
+// =====================================================
+// GLOBAL DATA
+// =====================================================
+
+
+let wilayahData = [];
+
+let riskChart = null;
 
 
 
 
-// =============================
-// NIRBITA SCORE ENGINE
-// =============================
+
+// =====================================================
+// NIRBITA ANALYTIC ENGINE
+// =====================================================
 
 
-function nirbitaScore(data){
+function calculateNirbita(data){
 
 
-let d1 =
-data.desil?.[0] || 0;
+    const desil = data.desil || [];
 
 
-let d2 =
-data.desil?.[1] || 0;
+    const d1 = Number(desil[0] || 0);
 
-
-let pengaduan =
-data.layanan?.pengaduan || 0;
+    const d2 = Number(desil[1] || 0);
 
 
 
-let konsultasi =
-data.konsultasi_bulan_lalu || 0;
+    // Total seluruh KK desil 1-10
+
+    const totalKK = desil.reduce(
+
+        (total,value)=>
+        total + Number(value || 0),
+
+        0
+
+    );
 
 
 
-let score =
+    if(totalKK===0){
 
-(
-(d1*0.45)
-+
-(d2*0.25)
-+
-(pengaduan*0.10)
-+
-((50-konsultasi)*0.20)
+        return {
 
-);
+            score:0,
+
+            status:"Tidak Ada Data",
+
+            d1,
+
+            d2,
+
+            totalKK:0,
+
+            percentage:0
+
+        };
+
+    }
 
 
 
-return Math.min(
-100,
-Math.round(score)
-);
+
+    // =========================================
+    // Persentase kemiskinan ekstrem + miskin
+    // =========================================
+
+
+    const vulnerablePercent =
+
+    ((d1+d2)/totalKK)*100;
+
+
+
+
+    // =========================================
+    // Base Score
+    // =========================================
+
+
+    let score =
+
+    (
+
+        ((d1/totalKK)*60)
+
+        +
+
+        ((d2/totalKK)*30)
+
+    );
+
+
+
+
+
+    let status;
+
+    let level;
+
+
+
+
+
+    // =========================================
+    // PRIORITAS BERDASARKAN JUMLAH D1
+    // =========================================
+
+
+    if(d1 > 300){
+
+
+        score +=10;
+
+        status="Prioritas Tinggi";
+
+        level="HIGH";
+
+
+    }
+
+
+    else if(d1 > 200){
+
+
+        score +=7;
+
+        status="Prioritas Sedang";
+
+        level="MEDIUM";
+
+
+    }
+
+
+    else{
+
+
+        score +=3;
+
+        status="Prioritas Rendah";
+
+        level="LOW";
+
+
+    }
+
+
+
+
+
+    return {
+
+
+        score:Math.round(score),
+
+
+        status,
+
+
+        level,
+
+
+        d1,
+
+
+        d2,
+
+
+        totalKK,
+
+
+        vulnerablePercent:
+
+        vulnerablePercent.toFixed(2)
+
+
+
+    };
+
 
 
 }
@@ -80,27 +217,26 @@ Math.round(score)
 
 
 
-// =============================
+
+// =====================================================
 // LOAD FIREBASE
-// =============================
+// =====================================================
 
 
-function loadData(){
+function loadNirbita(){
 
 
-const q=
+const q = query(
 
-query(
+    collection(
+        db,
+        "wilayah_desa"
+    ),
 
-collection(
-db,
-"wilayah_desa"
-),
-
-orderBy(
-"periode.tahun",
-"desc"
-)
+    orderBy(
+        "periode.tahun",
+        "desc"
+    )
 
 );
 
@@ -109,33 +245,64 @@ orderBy(
 onSnapshot(q,(snapshot)=>{
 
 
-wilayah=[];
+    wilayahData=[];
 
 
 
-snapshot.forEach(doc=>{
+    snapshot.forEach(doc=>{
 
 
-let d=doc.data();
-
-
-d.score=
-nirbitaScore(d);
+        let item = doc.data();
 
 
 
-wilayah.push(d);
+        let analysis =
+
+        calculateNirbita(item);
+
+
+
+        wilayahData.push({
+
+
+            id:doc.id,
+
+
+            ...item,
+
+
+            nirbita:analysis
+
+
+        });
+
+
+
+    });
+
+
+
+    renderDashboard();
+
+
+
+},
+
+
+(error)=>{
+
+
+console.error(
+
+"NIRBITA FIREBASE ERROR",
+
+error
+
+);
 
 
 });
 
-
-
-renderDashboard();
-
-
-
-});
 
 
 }
@@ -145,54 +312,84 @@ renderDashboard();
 
 
 
-// =============================
-// DASHBOARD
-// =============================
+
+
+
+// =====================================================
+// DASHBOARD STATISTIC
+// =====================================================
 
 
 function renderDashboard(){
 
 
 
+if(wilayahData.length===0)
+
+return;
+
+
+
+
+// Total wilayah
+
+
 document.getElementById(
 "totalWilayah"
-).innerHTML=
+).innerHTML =
 
-wilayah.length;
-
-
+wilayahData.length;
 
 
-let avg=
 
-Math.round(
 
-wilayah.reduce(
-(a,b)=>a+b.score,
+
+
+// Average score
+
+
+let average =
+
+wilayahData.reduce(
+
+(a,b)=>
+
+a+b.nirbita.score,
+
 0
-)
-/wilayah.length
 
-);
+)/wilayahData.length;
+
 
 
 
 document.getElementById(
 "avgScore"
-).innerHTML=
+).innerHTML =
 
-avg;
-
-
+Math.round(average);
 
 
-let priority=
 
-wilayah.filter(
 
-x=>x.score>=70
+
+
+
+
+// Prioritas tinggi
+
+
+let high =
+
+wilayahData.filter(
+
+x=>
+
+x.nirbita.level==="HIGH"
 
 ).length;
+
+
 
 
 
@@ -200,7 +397,9 @@ document.getElementById(
 "priority"
 ).innerHTML=
 
-priority;
+high;
+
+
 
 
 
@@ -210,6 +409,7 @@ renderRanking();
 renderChart();
 
 
+
 }
 
 
@@ -218,19 +418,51 @@ renderChart();
 
 
 
+
+// =====================================================
+// RANKING PRIORITAS
+// =====================================================
+
+
 function renderRanking(){
 
 
 
-let data=
+let table =
 
-[...wilayah]
+document.getElementById(
+"rankingTable"
+);
+
+
+
+if(!table)
+
+return;
+
+
+
+
+
+let ranking =
+
+[...wilayahData]
+
 
 .sort(
-(a,b)=>b.score-a.score
+
+(a,b)=>
+
+b.nirbita.score -
+
+a.nirbita.score
+
 )
 
-.slice(0,10);
+
+.slice(0,15);
+
+
 
 
 
@@ -238,27 +470,95 @@ let html="";
 
 
 
-data.forEach(x=>{
+ranking.forEach((desa,index)=>{
 
 
-html+=`
+
+let badge="bg-success";
+
+
+
+if(
+desa.nirbita.level==="HIGH"
+)
+
+badge="bg-danger";
+
+
+
+else if(
+desa.nirbita.level==="MEDIUM"
+)
+
+badge="bg-warning";
+
+
+
+
+html +=`
+
 
 <tr>
 
+
 <td>
 
-${x.nama}
+${index+1}
 
 </td>
 
 
+
 <td>
 
-<span class="badge bg-danger">
+<strong>
 
-${x.score}
+${desa.nama || "Tanpa Nama"}
+
+</strong>
+
+
+<br>
+
+
+<small>
+
+D1:
+${desa.nirbita.d1}
+
+KK
+
+|
+
+D2:
+${desa.nirbita.d2}
+
+KK
+
+</small>
+
+
+</td>
+
+
+
+<td>
+
+
+<span class="badge ${badge}">
+
+${desa.nirbita.status}
 
 </span>
+
+
+<br>
+
+
+Score:
+
+${desa.nirbita.score}
+
 
 
 </td>
@@ -266,16 +566,18 @@ ${x.score}
 
 </tr>
 
+
 `;
+
 
 
 });
 
 
 
-document.getElementById(
-"rankingTable"
-).innerHTML=html;
+
+table.innerHTML=html;
+
 
 
 }
@@ -286,40 +588,79 @@ document.getElementById(
 
 
 
+
+
+
+// =====================================================
+// RISK CHART
+// =====================================================
+
+
 function renderChart(){
 
 
-let high=
 
-wilayah.filter(
-x=>x.score>=70
+let high =
+
+wilayahData.filter(
+
+x=>x.nirbita.level==="HIGH"
+
 ).length;
 
 
 
-let medium=
+let medium =
 
-wilayah.filter(
-x=>x.score>=40 &&
-x.score<70
+wilayahData.filter(
+
+x=>x.nirbita.level==="MEDIUM"
+
 ).length;
 
 
 
-let low=
+let low =
 
-wilayah.filter(
-x=>x.score<40
+wilayahData.filter(
+
+x=>x.nirbita.level==="LOW"
+
 ).length;
 
 
 
 
-new Chart(
+
+const canvas =
 
 document.getElementById(
 "riskChart"
-),
+);
+
+
+
+if(!canvas)
+
+return;
+
+
+
+
+if(riskChart)
+
+{
+
+riskChart.destroy();
+
+}
+
+
+
+
+riskChart = new Chart(
+
+canvas,
 
 {
 
@@ -332,9 +673,11 @@ data:{
 
 labels:[
 
-"Tinggi",
-"Sedang",
-"Rendah"
+"Prioritas Tinggi",
+
+"Prioritas Sedang",
+
+"Prioritas Rendah"
 
 ],
 
@@ -345,7 +688,9 @@ datasets:[{
 data:[
 
 high,
+
 medium,
+
 low
 
 ]
@@ -354,15 +699,44 @@ low
 }]
 
 
+},
+
+
+
+options:{
+
+
+responsive:true,
+
+
+plugins:{
+
+
+legend:{
+
+
+position:"bottom"
+
+
+}
+
+
 }
 
 
 
 }
+
+
+
+}
+
+
 
 );
 
 
+
 }
 
 
@@ -371,4 +745,34 @@ low
 
 
 
-loadData();
+
+
+// =====================================================
+// EXPORT DATA GLOBAL
+// =====================================================
+
+
+window.NIRBITA={
+
+
+getData(){
+
+return wilayahData;
+
+},
+
+
+calculateNirbita
+
+
+};
+
+
+
+
+
+
+
+// START ENGINE
+
+loadNirbita();
