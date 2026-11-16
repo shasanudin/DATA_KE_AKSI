@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Portofolio Shidiq Hasanudin, S.IP. - TKSK Kecamatan Sumber, Pegiat Kepemiluan, Aktivis Kepemudaan Kabupaten Cirebon.">
+<title>Shidiq Hasanudin, S.IP. | Portofolio TKSK Sumber</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#0f4c81;
+    --primary-dark:#0a3557;
+    --accent:#f5a623;
+    --accent-soft:#fff4e0;
+    --bg:#f7f9fc;
+    --card:#ffffff;
+    --text:#1e293b;
+    --muted:#64748b;
+    --border:#e2e8f0;
+    --radius:16px;
+    --shadow:0 4px 20px rgba(15,76,129,.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--primary);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* HERO */
+  .hero{
+    background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 55%,#1a6bab 100%);
+    color:#fff;padding:70px 20px 90px;position:relative;overflow:hidden;
+  }
+  .hero::before{
+    content:"";position:absolute;top:-60px;right:-60px;width:320px;height:320px;
+    background:radial-gradient(circle,rgba(245,166,35,.25),transparent 70%);
+    border-radius:50%;
+  }
+  .hero::after{
+    content:"";position:absolute;bottom:-80px;left:-40px;width:260px;height:260px;
+    background:radial-gradient(circle,rgba(255,255,255,.08),transparent 70%);
+    border-radius:50%;
+  }
+  .hero-inner{max-width:960px;margin:0 auto;position:relative;z-index:2}
+  .badge{
+    display:inline-block;background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.25);color:#fff;
+    padding:6px 16px;border-radius:100px;font-size:.8rem;font-weight:600;
+    letter-spacing:.5px;text-transform:uppercase;margin-bottom:22px;
+    backdrop-filter:blur(4px);
+  }
+  .hero h1{font-size:clamp(1.9rem,4.5vw,3rem);font-weight:800;line-height:1.15;margin-bottom:10px}
+  .hero .role{font-size:clamp(1rem,2.2vw,1.25rem);font-weight:600;color:var(--accent);margin-bottom:8px}
+  .hero .loc{font-size:.95rem;opacity:.85;margin-bottom:26px}
+  .hero .loc svg{vertical-align:-3px;margin-right:6px}
+  .hero-links{display:flex;flex-wrap:wrap;gap:12px}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:12px 22px;border-radius:12px;font-weight:600;font-size:.9rem;
+    transition:.25s;border:1px solid transparent;
+  }
+  .btn-primary{background:var(--accent);color:#1a1a1a}
+  .btn-primary:hover{background:#ffb73d;text-decoration:none;transform:translateY(-2px)}
+  .btn-ghost{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.3)}
+  .btn-ghost:hover{background:rgba(255,255,255,.2);text-decoration:none;transform:translateY(-2px)}
+
+  /* NAV */
+  .nav{
+    background:var(--card);border-bottom:1px solid var(--border);
+    position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.04);
+  }
+  .nav-inner{
+    max-width:960px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;
+    padding:10px 20px;scrollbar-width:none;
+  }
+  .nav-inner::-webkit-scrollbar{display:none}
+  .nav a{
+    padding:8px 16px;border-radius:100px;font-size:.85rem;font-weight:600;
+    color:var(--muted);white-space:nowrap;transition:.2s;
+  }
+  .nav a:hover{background:var(--accent-soft);color:var(--primary);text-decoration:none}
+
+  /* MAIN */
+  main{max-width:960px;margin:0 auto;padding:0 20px 80px}
+  section{margin-top:56px}
+  .section-title{
+    display:flex;align-items:center;gap:12px;margin-bottom:24px;
+  }
+  .section-title .bar{width:5px;height:28px;border-radius:3px;background:linear-gradient(var(--primary),var(--accent))}
+  .section-title h2{font-size:1.5rem;font-weight:800;color:var(--primary-dark)}
+
+  /* CARD */
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:28px;box-shadow:var(--shadow);transition:.25s;
+  }
+  .card:hover{box-shadow:0 8px 30px rgba(15,76,129,.12)}
+  .card p+p{margin-top:14px}
+
+  /* ABOUT */
+  .about-card{border-left:5px solid var(--accent)}
+  .about-card p{color:#334155;text-align:justify}
+
+  /* INNOVATION */
+  .innov-card{
+    background:linear-gradient(135deg,#0f4c81,#1a6bab);color:#fff;border:none;
+    position:relative;overflow:hidden;
+  }
+  .innov-card::after{
+    content:"";position:absolute;top:-40px;right:-40px;width:180px;height:180px;
+    background:radial-gradient(circle,rgba(245,166,35,.3),transparent 70%);border-radius:50%;
+  }
+  .innov-card h3{font-size:1.15rem;font-weight:700;margin-bottom:10px;position:relative;z-index:1}
+  .innov-card p{opacity:.92;position:relative;z-index:1;text-align:justify}
+  .innov-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;position:relative;z-index:1}
+  .chip{
+    display:inline-flex;align-items:center;gap:6px;
+    background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+    padding:7px 15px;border-radius:100px;font-size:.82rem;font-weight:600;color:#fff;
+    transition:.2s;
+  }
+  .chip:hover{background:var(--accent);color:#1a1a1a;border-color:var(--accent);text-decoration:none}
+
+  /* SKILLS GRID */
+  .grid{display:grid;gap:18px}
+  @media(min-width:640px){.grid-2{grid-template-columns:1fr 1fr}}
+  .skill-card h3{
+    font-size:1rem;font-weight:700;color:var(--primary-dark);
+    margin-bottom:10px;display:flex;align-items:center;gap:8px;
+  }
+  .skill-card h3 .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);flex-shrink:0}
+  .skill-card p{font-size:.92rem;color:#475569;text-align:justify}
+
+  /* TIMELINE */
+  .timeline{position:relative;padding-left:28px}
+  .timeline::before{
+    content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;
+    background:linear-gradient(var(--primary),var(--accent));
+  }
+  .tl-item{position:relative;padding-bottom:22px}
+  .tl-item:last-child{padding-bottom:0}
+  .tl-item::before{
+    content:"";position:absolute;left:-28px;top:7px;width:14px;height:14px;
+    border-radius:50%;background:#fff;border:3px solid var(--primary);
+  }
+  .tl-item h3{font-size:1rem;font-weight:700;color:var(--primary-dark);margin-bottom:4px}
+  .tl-item .org{font-size:.85rem;font-weight:600;color:var(--accent);margin-bottom:6px}
+  .tl-item p{font-size:.9rem;color:var(--muted)}
+
+  /* AWARDS */
+  .award-card{
+    display:flex;gap:16px;align-items:flex-start;
+    background:linear-gradient(135deg,#fffaf0,#fff4e0);
+    border:1px solid #f5d9a8;
+  }
+  .award-icon{
+    flex-shrink:0;width:46px;height:46px;border-radius:12px;
+    background:var(--accent);display:flex;align-items:center;justify-content:center;
+    font-size:1.3rem;
+  }
+  .award-card h3{font-size:.98rem;font-weight:700;color:var(--primary-dark);margin-bottom:5px}
+  .award-card p{font-size:.9rem;color:#6b5a35}
+
+  /* PUBLICATIONS */
+  .pub-card h3{font-size:.98rem;font-weight:700;color:var(--primary-dark);margin-bottom:6px}
+  .pub-card .tag{
+    display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.5px;color:var(--primary);background:#e8f1fa;
+    padding:3px 10px;border-radius:100px;margin-bottom:8px;
+  }
+  .pub-card p{font-size:.9rem;color:var(--muted)}
+
+  /* CONTACT */
+  .contact-card{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;border:none}
+  .contact-card h2{color:#fff}
+  .contact-grid{display:grid;gap:12px;margin-top:20px}
+  @media(min-width:560px){.contact-grid{grid-template-columns:1fr 1fr}}
+  .contact-item{
+    display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:13px 16px;
+    transition:.2s;
+  }
+  .contact-item:hover{background:rgba(255,255,255,.16);text-decoration:none;transform:translateX(3px)}
+  .contact-item .ico{font-size:1.2rem;flex-shrink:0}
+  .contact-item .lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;opacity:.75;font-weight:600}
+  .contact-item .val{font-size:.88rem;font-weight:600;color:#fff;word-break:break-word}
+
+  footer{
+    text-align:center;padding:36px 20px;color:var(--muted);font-size:.85rem;
+    border-top:1px solid var(--border);background:var(--card);margin-top:60px;
+  }
+  footer strong{color:var(--primary-dark)}
+
+  /* REVEAL ANIMATION */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.visible{opacity:1;transform:none}
+
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <span class="badge">Portofolio Terpadu</span>
+    <h1>Shidiq Hasanudin, S.IP.</h1>
+    <div class="role">TKSK Kecamatan Sumber &nbsp;•&nbsp; Pegiat Kepemiluan &nbsp;•&nbsp; Aktivis Kepemudaan</div>
+    <div class="loc">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+      Kecamatan Sumber, Kabupaten Cirebon, Jawa Barat
+    </div>
+    <div class="hero-links">
+      <a class="btn btn-primary" href="https://shasanudin.github.io/DATA_KE_AKSI/unduh.html" target="_blank" rel="noopener">
+        🚀 Akses Portal DTSEN
+      </a>
+      <a class="btn btn-ghost" href="#kontak">📩 Hubungi Saya</a>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#tentang">Tentang</a>
+    <a href="#inovasi">Inovasi Digital</a>
+    <a href="#keahlian">Keahlian</a>
+    <a href="#rekam-jejak">Rekam Jejak</a>
+    <a href="#penghargaan">Penghargaan</a>
+    <a href="#publikasi">Publikasi</a>
+    <a href="#kontak">Kontak</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- TENTANG -->
+  <section id="tentang" class="reveal">
+    <div class="section-title"><div class="bar"></div><h2>Tentang Saya</h2></div>
+    <div class="card about-card">
+      <p><strong>Shidiq Hasanudin, S.IP.</strong> (akrab disapa <em>Aden</em>) adalah seorang fasilitator kesejahteraan masyarakat, praktisi kebijakan sosial, dan pegiat kepemiluan asal Kecamatan Sumber, Kabupaten Cirebon. Lulusan Ilmu Pemerintahan dari Universitas Muhammadiyah Cirebon (UMC) ini berfokus pada pengawalan program perlindungan sosial di tingkat akar rumput melalui perannya sebagai Tenaga Kesejahteraan Sosial Kecamatan (TKSK) dan kolaborator Forum Pusat Kesejahteraan Sosial (Puskesos) Kecamatan Sumber.</p>
+      <p>Selain aktif mendampingi masyarakat rentan di lapangan, ia menggagas transformasi digital pendataan kesejahteraan lokal melalui sistem pemantauan berbasis Data Tunggal Sosial Ekonomi Nasional (DTSEN) agar distribusi bantuan pemerintah berjalan transparan, akuntabel, dan tepat sasaran. Di luar sektor sosial, ia juga memiliki rekam jejak kuat dalam penyelenggaraan pemilu serta pemberdayaan generasi muda di Kabupaten Cirebon.</p>
+    </div>
+  </section>
+
+  <!-- INOVASI -->
+  <section id="inovasi" class="reveal">
+    <div class="section-title"><div class="bar"></div><h2>Inovasi Digital &amp; Sistem Informasi</h2></div>
+    <div class="card innov-card">
+      <h3>💡 TKSK – Dari Data ke Aksi (Sistem DTSEN Kecamatan Sumber)</h3>
+      <p>Menginisiasi dan mengelola sistem pemantauan serta analisis kesejahteraan sosial Kecamatan Sumber berbasis Data Tunggal Sosial Ekonomi Nasional (DTSEN) Kemensos RI. Sistem ini mengintegrasikan pemetaan wilayah prioritas intervensi (Desil 1–10), data pelayanan Surat Keterangan Tidak Mampu (SKTM), pelaporan bulanan, hingga verifikasi dokumen elektronik.</p>
+      <div class="innov-links">
+        <a class="chip" href="https://shasanudin.github.io/DATA_KE_AKSI/unduh.html" target="_blank" rel="noopener">🌐 Platform DTSEN</a>
+        <a class="chip" href="https://shasanudin.github.io/DATA_KE_AKSI/" target="_blank" rel="noopener">📊 Beranda Data</a>
+        <a class="chip" href="https://shasanudin.github.io/DATA_KE_AKSI/prioritas.html" target="_blank" rel="noopener">🎯 Prioritas Intervensi</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- KEAHLIAN -->
+  <section id="keahlian" class="reveal">
+    <div class="section-title"><div class="bar"></div><h2>Bidang Keahlian &amp; Fokus Utama</h2></div>
+    <div class="grid grid-2">
+      <div class="card skill-card">
+        <h3><span class="dot"></span>Tata Kelola Kesejahteraan Sosial</h3>
+        <p>Pendampingan masyarakat rentan, verifikasi dan validasi DTSEN, pelayanan administrasi sosial (SKTM), serta pengawalan bantuan pangan dan tunai.</p>
+      </div>
+      <div class="card skill-card">
+        <h3><span class="dot"></span>Analisis Data &amp; Kebijakan Publik</h3>
+        <p>Pemetaan status sosial-ekonomi penduduk berbasis klasifikasi desil serta penentuan skala prioritas intervensi kewilayahan.</p>
+      </div>
+      <div class="card skill-card">
+        <h3><span class="dot"></span>Manajemen Kepemiluan</h3>
+        <p>Penyelenggaraan pemilu tingkat kecamatan dan optimalisasi digitalisasi rekapitulasi suara.</p>
+      </div>
+      <div class="card skill-card">
+        <h3><span class="dot"></span>Pemberdayaan Pemuda &amp; Komunitas</h3>
+        <p>Pengorganisasian sosial, kepeloporan pemuda bidang sumber daya alam, serta advokasi kebijakan daerah.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REKAM JEJAK -->
+  <section id="rekam-jejak" class="reveal">
+    <div class="section-title"><div class="bar"></div><h2>Rekam Jejak &amp; Pengalaman Organisasi</h2></div>
+    <div class="card">
+      <div class="timeline">
+        <div class="tl-item">
+          <h3>Tenaga Kesejahteraan Sosial Kecamatan (TKSK)</h3>
+          <div class="org">Kecamatan Sumber, Kabupaten Cirebon</div>
+          <p>Bertanggung jawab atas koordinasi, fasilitasi perlindungan sosial, dan verifikasi data DTSEN tingkat kecamatan.</p>
+        </div>
+        <div class="tl-item">
+          <h3>Anggota Panitia Pemilihan Kecamatan (PPK)</h3>
+          <div class="org">Kecamatan Sumber, Kabupaten Cirebon</div>
+          <p>Mengawal teknis penyelenggaraan pemilu dan pelaporan digital.</p>
+        </div>
+        <div class="tl-item">
+          <h3>Sekretaris Koordinator Wilayah (Korwil)</h3>
+          <div class="org">Karang Taruna Kabupaten Cirebon</div>
+          <p>Menggerakkan program pemberdayaan sosial dan ekonomi pemuda desa/kelurahan.</p>
+        </div>
+        <div class="tl-item">
+          <h3>Pengurus Organisasi Kepemudaan</h3>
+          <div class="org">Pemuda ICMI Kabupaten Cirebon</div>
+          <p>Aktif dalam forum kajian gagasan dan pembangunan daerah.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PENGHARGAAN -->
+  <section id="penghargaan" class="reveal">
+    <div class="section-title"><div class="bar"></div><h2>Penghargaan &amp; Pencapaian</h2></div>
+    <div class="grid" style="gap:16px">
+      <div class="card award-card">
+        <div class="award-icon">🏆</div>
+        <div>
+          <h3>KPU Kabupaten Cirebon Award</h3>
+          <p>Kategori <strong>Penggunaan Aplikasi Sirekap Terbaik</strong> atas inovasi dan ketepatan digitalisasi rekapitulasi suara di PPK Sumber.</p>
+        </div>
+      </div>
+      <div class="card award-card">
+        <div class="award-icon">🥈</div>
+        <div>
+          <h3>Pemenang II Pemuda Pelopor Tingkat Kabupaten Cirebon (2019)</h3>
+          <p>Dianugerahi oleh Dinas Kebudayaan, Pariwisata, Pemuda, dan Olahraga (Disbudparpora) Kabupaten Cirebon pada Bidang Sumber Daya Alam.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PUBLIKASI -->
+  <section id="publikasi" class="reveal">
+    <div class="section-title"><div class="bar"></div><h2>Publikasi Karya, Kajian &amp; Liputan Media</h2></div>
+    <div class="grid grid-2">
+      <div class="card pub-card">
+        <span class="tag">Dokumen Kajian</span>
+        <h3>Mengungkap Status Sosial Indonesia Melalui DTSEN</h3>
+        <p>Klasifikasi Desil Status Sosial Indonesia — tersedia di Scribd.</p>
+      </div>
+      <div class="card pub-card">
+        <span class="tag">Artikel Opini</span>
+        <h3>Membaca Peta Kesejahteraan</h3>
+        <p>Mengapa Klasifikasi Desil dalam DTSEN Penting untuk Bantuan Sosial Tepat Sasaran? — terbit di Kompasiana.</p>
+      </div>
+      <div class="card pub-card">
+        <span class="tag">Jurnal Ilmiah (2023)</span>
+        <h3>Policy Implementation of the Prosperous Rice Assistance Program</h3>
+        <p>Research Study in Tukmudal Village, Cirebon Regency — terpublikasi pada Journal of Social &amp; Political Sciences.</p>
+      </div>
+      <div class="card pub-card">
+        <span class="tag">Liputan Media</span>
+        <h3>Lima Pemuda Pelopor Bersaing di Jabar</h3>
+        <p>Diberitakan oleh Radar Cirebon.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTAK -->
+  <section id="kontak" class="reveal">
+    <div class="section-title"><div class="bar"></div><h2>Kontak &amp; Jejaring Digital</h2></div>
+    <div class="card contact-card">
+      <div class="contact-grid">
+        <a class="contact-item" href="https://shasanudin.github.io/DATA_KE_AKSI/unduh.html" target="_blank" rel="noopener">
+          <span class="ico">🌐</span>
+          <span><span class="lbl">Portal Layanan</span><br><span class="val">DTSEN TKSK &amp; Puskesos Sumber</span></span>
+        </a>
+        <a class="contact-item" href="https://www.linkedin.com/in/shidiqhasanudin" target="_blank" rel="noopener">
+          <span class="ico">💼</span>
+          <span><span class="lbl">LinkedIn</span><br><span class="val">Shidiq Hasanudin</span></span>
+        </a>
+        <a class="contact-item" href="https://www.kompasiana.com/shidiqhasanudin" target="_blank" rel="noopener">
+          <span class="ico">✍️</span>
+          <span><span class="lbl">Kompasiana</span><br><span class="val">Shidiq Hasanudin</span></span>
+        </a>
+        <a class="contact-item" href="https://www.instagram.com/shidiqhasanudin" target="_blank" rel="noopener">
+          <span class="ico">📸</span>
+          <span><span class="lbl">Instagram</span><br><span class="val">@shidiqhasanudin</span></span>
+        </a>
+        <a class="contact-item" href="mailto:tksksumber@gmail.com">
+          <span class="ico">📧</span>
+          <span><span class="lbl">Email TKSK</span><br><span class="val">tksksumber@gmail.com</span></span>
+        </a>
+        <a class="contact-item" href="mailto:tksk.sumber@cirebonkab.go.id">
+          <span class="ico">🏛️</span>
+          <span><span class="lbl">Email Dinas</span><br><span class="val">tksk.sumber@cirebonkab.go.id</span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <strong>Shidiq Hasanudin, S.IP.</strong> — TKSK Kecamatan Sumber, Kabupaten Cirebon<br>
+  &copy; <span id="year"></span> · Dibangun untuk transparansi data kesejahteraan sosial.
+</footer>
+
+<script>
+  // Tahun otomatis
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Animasi reveal saat scroll
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, {threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+  // Sorot nav aktif saat scroll
+  const sections = document.querySelectorAll('main section[id]');
+  const navLinks = document.querySelectorAll('.nav a');
+  window.addEventListener('scroll', ()=>{
+    let current = '';
+    sections.forEach(sec=>{
+      if(window.scrollY >= sec.offsetTop - 120) current = sec.id;
+    });
+    navLinks.forEach(a=>{
+      const isActive = a.getAttribute('href') === '#'+current;
+      a.style.background = isActive ? 'var(--accent-soft)' : '';
+      a.style.color = isActive ? 'var(--primary)' : '';
+    });
+  }, {passive:true});
+</script>
+</body>
+</html>
